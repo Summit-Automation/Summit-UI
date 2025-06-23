@@ -1,8 +1,10 @@
+// app/crm/CustomerRow.tsx
 'use client';
 
 import { useState } from 'react';
+import { Customer } from '@/types/customer';
 
-export default function CustomerRow({ customer }: { customer: any }) {
+export default function CustomerRow({ customer }: { customer: Customer }) {
     const [expanded, setExpanded] = useState(false);
 
     return (

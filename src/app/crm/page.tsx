@@ -1,3 +1,5 @@
+// app/crm/page.tsx
+import { Customer } from '@/types/customer';
 import { getCustomers } from './getCustomers';
 import CustomerRow from './CustomerRow';
 
