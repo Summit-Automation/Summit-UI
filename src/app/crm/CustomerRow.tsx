@@ -1,10 +1,20 @@
 // app/crm/CustomerRow.tsx
 'use client';
 
-import { useState } from 'react';
-import { Customer } from '@/types/customer';
+import {useState} from 'react';
+import {Customer} from '@/types/customer';
+import {Interaction} from "@/types/interaction";
 
-export default function CustomerRow({ customer }: { customer: Customer }) {
+import CustomerInteractions from './CustomerInteractions';
+
+
+export default function CustomerRow({
+                                        customer,
+                                        interactions
+                                    }: {
+    customer: Customer;
+    interactions: Interaction[];
+}) {
     const [expanded, setExpanded] = useState(false);
 
     return (
@@ -14,7 +24,8 @@ export default function CustomerRow({ customer }: { customer: Customer }) {
                 onClick={() => setExpanded(!expanded)}
             >
                 <td className="p-2 font-medium">{customer.full_name}</td>
-                <td className="p-2 font-large">{customer.business || <span className="text-gray-400 italic">None</span>}</td>
+                <td className="p-2 font-large">{customer.business ||
+                    <span className="text-gray-400 italic">None</span>}</td>
                 <td className="p-2">{customer.email}</td>
                 <td className="p-2">{customer.phone}</td>
                 <td className="p-2">
@@ -31,24 +42,31 @@ export default function CustomerRow({ customer }: { customer: Customer }) {
                 </td>
             </tr>
             {expanded && (
-                <tr className="bg-slate-800 border-t border-slate-700">
-                    <td colSpan={6} className="p-4 text-sm text-slate-300">
-                        <p className="italic">Interactions coming soon for {customer.full_name}.</p>
-                    </td>
-                </tr>
+                <CustomerInteractions
+                    fullName={customer.full_name}
+                    interactions={interactions}
+                />
             )}
+
         </>
     );
 }
 
 function statusColor(status: string) {
     switch (status) {
-        case 'lead': return 'text-sky-400 bg-sky-100/10';
-        case 'prospect': return 'text-yellow-400 bg-yellow-100/10';
-        case 'qualified': return 'text-purple-400 bg-purple-100/10';
-        case 'contacted': return 'text-orange-400 bg-orange-100/10';
-        case 'proposal': return 'text-indigo-400 bg-indigo-100/10';
-        case 'closed': return 'text-green-400 bg-green-100/10';
-        default: return 'text-gray-400 bg-gray-100/10';
+        case 'lead':
+            return 'text-sky-400 bg-sky-100/10';
+        case 'prospect':
+            return 'text-yellow-400 bg-yellow-100/10';
+        case 'qualified':
+            return 'text-purple-400 bg-purple-100/10';
+        case 'contacted':
+            return 'text-orange-400 bg-orange-100/10';
+        case 'proposal':
+            return 'text-indigo-400 bg-indigo-100/10';
+        case 'closed':
+            return 'text-green-400 bg-green-100/10';
+        default:
+            return 'text-gray-400 bg-gray-100/10';
     }
 }

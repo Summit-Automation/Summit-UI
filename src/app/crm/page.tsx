@@ -1,10 +1,15 @@
 // app/crm/page.tsx
 import { Customer } from '@/types/customer';
+import { Interaction } from "@/types/interaction";
 import { getCustomers } from './getCustomers';
+import { getInteractions } from "@/app/crm/getInteractions";
 import CustomerRow from './CustomerRow';
 
 export default async function CRMPage() {
-    const customers = await getCustomers();
+    const [customers, interactions] = await Promise.all([
+        getCustomers(),
+        getInteractions(),
+    ]);
 
     return (
         <div className="p-6">
@@ -26,7 +31,13 @@ export default async function CRMPage() {
                     </thead>
                     <tbody>
                     {customers.map((customer) => (
-                        <CustomerRow key={customer.id} customer={customer} />
+                        <CustomerRow
+                            key={customer.id}
+                            customer={customer}
+                            interactions={interactions.filter(
+                                interaction => interaction.customer_id === customer.id
+                            )}
+                        />
                     ))}
                     </tbody>
                 </table>
