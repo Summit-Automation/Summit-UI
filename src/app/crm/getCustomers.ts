@@ -6,15 +6,29 @@ import { Customer } from '@/types/customer';
 import { createClient } from '@/utils/supabase/server';
 
 export async function getCustomers() : Promise<Customer[]> {
-    const supabase = await createClient();
+    try {
+        const supabase = await createClient();
 
-    const { data, error } = await supabase
-        .from('customers').select('*');
+        const {data, error} = await supabase
+            .from('customers')
+            .select('*')
+            .order('created_at', { ascending: false });
 
-    if (error) {
-        console.error('Error fetching customers:', error.message);
+        if (error) {
+            console.warn(
+                'Supabase error fetching from \'customers\' table', error);
+            return [];
+        }
+
+        if (!data || data.length === 0) {
+            console.warn('No valid data returned from \'customers\' table. Got:', data);
+            return [];
+        }
+
+        return data || [];
+    }
+    catch (error) {
+        console.error('Error in getCustomers:', error);
         return [];
     }
-
-    return data;
 }
