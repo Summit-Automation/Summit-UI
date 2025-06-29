@@ -1,21 +1,21 @@
 import './globals.css'
 import Sidebar from '@/components/Sidebar'
-import React from "react";
+import React from 'react'
 
 export const metadata = {
-    title: 'Summit Automation',
-    description: 'Contractor CRM and Bookkeeper',
+    title: 'Summit Automation', description: 'Contractor CRM and Bookkeeper',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <html lang="en">
-        <body className="flex bg-slate-900 text-slate-100 font-sans">
-        <Sidebar />
-        <main className="flex-1 p-6 min-h-screen bg-slate-900 overflow-auto">
+export default function RootLayout({children}: { children: React.ReactNode }) {
+    return (<html lang="en">
+        <body className="bg-slate-900 text-slate-100 font-sans">
+        <Sidebar/>
+
+        {/* Main content with margin to account for sidebar width */}
+        <main className="ml-64 p-6 min-h-screen overflow-auto">
             {children}
         </main>
         </body>
-        </html>
-    );
+        </html>)
 }
+
