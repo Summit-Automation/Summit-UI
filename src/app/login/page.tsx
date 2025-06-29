@@ -15,7 +15,7 @@ export default function LoginPage() {
                         name="email"
                         type="email"
                         required
-                        className="border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
                     />
                 </div>
 
@@ -26,7 +26,7 @@ export default function LoginPage() {
                         name="password"
                         type="password"
                         required
-                        className="border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
                     />
                 </div>
 

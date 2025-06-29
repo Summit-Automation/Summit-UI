@@ -1,11 +1,11 @@
 // app/crm/getInteractions.ts
 'use server'
 
-import { Interaction } from "@/types/interaction";
+import {Interaction} from "@/types/interaction";
 
-import { createClient } from "@/utils/supabase/server";
+import {createClient} from "@/utils/supabase/server";
 
-export async function getInteractions() : Promise<Interaction[]> {
+export async function getInteractions(): Promise<Interaction[]> {
     try {
         const supabase = await createClient();
 
@@ -26,8 +26,7 @@ export async function getInteractions() : Promise<Interaction[]> {
         }
 
         return data || [];
-    }
-    catch (error) {
+    } catch (error) {
         console.error('Error in getInteractions:', error);
         return [];
     }

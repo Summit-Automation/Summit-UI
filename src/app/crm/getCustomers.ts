@@ -1,18 +1,18 @@
 // app/crm/getCustomers.ts
 'use server'
 
-import { Customer } from '@/types/customer';
+import {Customer} from '@/types/customer';
 
-import { createClient } from '@/utils/supabase/server';
+import {createClient} from '@/utils/supabase/server';
 
-export async function getCustomers() : Promise<Customer[]> {
+export async function getCustomers(): Promise<Customer[]> {
     try {
         const supabase = await createClient();
 
         const {data, error} = await supabase
             .from('customers')
             .select('*')
-            .order('created_at', { ascending: false });
+            .order('created_at', {ascending: false});
 
         if (error) {
             console.warn(
@@ -26,8 +26,7 @@ export async function getCustomers() : Promise<Customer[]> {
         }
 
         return data || [];
-    }
-    catch (error) {
+    } catch (error) {
         console.error('Error in getCustomers:', error);
         return [];
     }
