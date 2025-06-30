@@ -1,4 +1,4 @@
-import { getTransactions } from './getTransactions';
+import {getTransactions} from './getTransactions';
 import TransactionRow from './TransactionRow';
 import BookkeeperPie from './BookkeeperPie';
 
@@ -24,12 +24,10 @@ export default async function BookkeeperPage() {
             <h2 className="text-3xl font-bold mb-4">📒 Bookkeeper Dashboard</h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* 📊 Summary Stats */}
                 <div className="space-y-4">
+                    {/* 📊 Summary Stats */}
                     <div
-                        className={`rounded-lg p-4 shadow border-5 border-gray-200 ${
-                            netBalance >= 0 ? 'bg-green-900 text-white' : 'bg-red-700 text-white'
-                        }`}
+                        className={`rounded-lg p-4 shadow border-5 border-gray-200 ${netBalance >= 0 ? 'bg-green-900 text-white' : 'bg-red-700 text-white'}`}
                     >
                         <h3 className="text-xl font-semibold">Net Balance</h3>
                         <p className="text-2xl font-bold">${netBalance.toFixed(2)}</p>
@@ -42,14 +40,14 @@ export default async function BookkeeperPage() {
                         <h3 className="text-lg font-semibold">Total Expenses</h3>
                         <p className="text-2xl font-bold">${totalExpenses.toFixed(2)}</p>
                     </div>
-
                 </div>
 
                 {/* 🥧 Pie Chart */}
                 <div className="w-full h-full flex items-center justify-center">
-                    <BookkeeperPie income={totalIncome} expenses={totalExpenses} />
+                    <BookkeeperPie income={totalIncome} expenses={totalExpenses}/>
                 </div>
             </div>
+
 
             <fieldset className="mb-6">
                 <legend className="text-sm text-gray-500 font-semibold mb-2">
@@ -95,8 +93,7 @@ export default async function BookkeeperPage() {
 
             {/* Transaction Table */}
             {transactions.length === 0 ? (
-                <p className="text-gray-500 italic mt-4">No transactions recorded yet.</p>
-            ) : (
+                <p className="text-gray-500 italic mt-4">No transactions recorded yet.</p>) : (
                 <div className="overflow-x-auto shadow border rounded mt-4">
                     <table className="min-w-full text-sm text-left">
                         <thead className="bg-slate-700 text-slate-100">
@@ -110,15 +107,10 @@ export default async function BookkeeperPage() {
                         </tr>
                         </thead>
                         <tbody>
-                        {transactions.map((txn) => (
-                            <TransactionRow key={txn.id} transaction={txn} />
-                        ))}
+                        {transactions.map((txn) => (<TransactionRow key={txn.id} transaction={txn}/>))}
                         </tbody>
                     </table>
-                </div>
-            )}
+                </div>)}
 
-
-        </div>
-    );
+        </div>);
 }

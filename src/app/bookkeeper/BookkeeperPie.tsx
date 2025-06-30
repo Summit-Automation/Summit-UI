@@ -1,6 +1,6 @@
 'use client';
 
-import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 type PieData = {
     name: string;
@@ -16,23 +16,26 @@ export default function BookkeeperPie({ income, expenses }: { income: number; ex
     const COLORS = ['#16a34a', '#dc2626']; // green, red
 
     return (
-        <div className="w-full sm:w-1/2 mx-auto mt-8">
-            <ResponsiveContainer width="100%" height={300}>
+        <div className=" bg-slate-800 w-full text-white p-4 rounded-lg shadow border border-slate-700">
+            <h3 className="text-lg font-semibold mb-2">Income vs. Expenses</h3>
+            <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
                     <Pie
                         data={data}
+                        dataKey="value"
+                        nameKey="name"
                         cx="50%"
                         cy="50%"
-                        outerRadius={120}
+                        outerRadius={80}
                         fill="#8884d8"
-                        dataKey="value"
                         label
                     >
                         {data.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index]} />
                         ))}
                     </Pie>
-                    <Legend verticalAlign="bottom" />
+                    <Tooltip />
+                    <Legend verticalAlign="bottom" height={36}/>
                 </PieChart>
             </ResponsiveContainer>
         </div>
