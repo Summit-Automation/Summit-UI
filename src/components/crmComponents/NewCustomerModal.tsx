@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createCustomer } from '../lib/services/crmServices/createCustomer';
+import { createCustomer } from '@/app/lib/services/crmServices/createCustomer';
 
 export default function NewCustomerModal({ onSuccess }: { onSuccess?: () => void }) {
     const [isOpen, setIsOpen] = useState(false);

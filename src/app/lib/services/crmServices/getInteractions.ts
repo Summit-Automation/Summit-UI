@@ -2,7 +2,6 @@
 'use server'
 
 import {Interaction} from "@/types/interaction";
-
 import {createClient} from "@/utils/supabase/server";
 
 export async function getInteractions(): Promise<Interaction[]> {

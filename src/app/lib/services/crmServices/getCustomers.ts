@@ -2,7 +2,6 @@
 'use server'
 
 import {Customer} from '@/types/customer';
-
 import {createClient} from '@/utils/supabase/server';
 
 export async function getCustomers(): Promise<Customer[]> {
