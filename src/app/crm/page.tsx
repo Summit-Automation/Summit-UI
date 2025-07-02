@@ -1,7 +1,7 @@
-import { getCustomers } from './getCustomers';
-import { getInteractions } from './getInteractions';
+import { getCustomers } from '../lib/services/crmServices/getCustomers';
+import { getInteractions } from '../lib/services/crmServices/getInteractions';
 import CRMCustomerView from './CRMCustomerView';
-import CRMStatusPie from "@/app/crm/CRMStatusPie";
+import CRMStatusPie from "@/components/crmComponents/CRMStatusPie";
 
 export default async function CRMPage() {
     const [customers, interactions] = await Promise.all([
