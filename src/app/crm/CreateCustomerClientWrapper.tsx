@@ -1,6 +1,6 @@
 'use client';
 
-import NewCustomerModal from './NewCustomerModal';
+import NewCustomerModal from '@/components/crmComponents/NewCustomerModal';
 import { useRouter } from 'next/navigation';
 
 export default function CreateCustomerClientWrapper() {

@@ -1,6 +1,6 @@
-import {getTransactions} from '../lib/services/bookkeeperServices/getTransactions';
-import TransactionRow from './TransactionRow';
-import BookkeeperPie from '../../components/bookkeeperComponents/BookkeeperPie';
+import {getTransactions} from '@/app/lib/services/bookkeeperServices/getTransactions';
+import TransactionRow from '@/app/bookkeeper/TransactionRow';
+import BookkeeperPie from '@/components/bookkeeperComponents/BookkeeperPie';
 
 
 export default async function BookkeeperPage() {
