@@ -1,38 +1,42 @@
-# Summit-UI 
+# Summit-UI
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+[![Dependabot Updates](https://github.com/Summit-Automation/Summit-UI/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/Summit-Automation/Summit-UI/actions/workflows/dependabot/dependabot-updates)
+[![CodeQL Advanced](https://github.com/Summit-Automation/Summit-UI/actions/workflows/codeql.yml/badge.svg)](https://github.com/Summit-Automation/Summit-UI/actions/workflows/codeql.yml)
 
-## Getting Started
+**Summit-UI** is the frontend for [SummitSuite](https://github.com/Summit-Automation/SummitSuite), a modern business automation platform built with contractors and small businesses in mind. This app is built using [Next.js App Router](https://nextjs.org/docs/app), [React](https://react.dev), and [Tailwind CSS](https://tailwindcss.com), and communicates with Supabase for authentication and data management.
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+- 📇 CRM Dashboard: Manage leads, track customer interactions, and sales stages
+- 📊 Bookkeeper: Upload receipts and view business cashflow and summaries
+- 🤖 Flowise AI Integration: Smart agents embedded into business workflows
+- 🔐 Supabase Auth: Role-based access for secure multi-user use
+- 🎨 Responsive UI: Tailwind-based dark mode layout, powered by Geist font
+- 📦 Component-based architecture with ESLint, Prettier, and CodeQL support
+
+---
+
+## 🧰 Tech Stack
+
+| Layer        | Tooling                         |
+|-------------|----------------------------------|
+| Framework    | [Next.js 14](https://nextjs.org) (App Router) |
+| UI           | [React](https://react.dev) + [Tailwind CSS](https://tailwindcss.com) |
+| Fonts        | [Geist](https://vercel.com/font) via `next/font` |
+| Backend      | [Supabase](https://supabase.com) (Auth + DB + Storage) |
+| CI/CD        | GitHub Actions (Dependabot + CodeQL) |
+| Auth         | Supabase Auth (with RLS) |
+| Charts       | [Recharts](https://recharts.org/) |
+| Icons        | [Lucide](https://lucide.dev/) |
+
+---
+
+## 🛠️ Local Development
+
+Install dependencies and start the dev server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
