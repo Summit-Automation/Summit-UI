@@ -3,6 +3,7 @@ import { getInteractions } from '@/app/lib/services/crmServices/getInteractions'
 import CRMCustomerView from '@/app/crm/CRMCustomerView';
 import CRMStatusPie from "@/components/crmComponents/CRMStatusPie";
 import CreateCustomerClientWrapper from "@/app/crm/CreateCustomerClientWrapper";
+import CreateInteractionClientWrapper from "@/app/crm/CreateInteractionClientWrapper";
 
 export default async function CRMPage() {
     const [customers, interactions] = await Promise.all([
@@ -43,8 +44,14 @@ export default async function CRMPage() {
                     <CRMStatusPie customers={customers} />
                 </div>
             </div>
-            <CreateCustomerClientWrapper />
 
+            {/* Actions */}
+            <div className="flex flex-col sm:flex-row gap-4">
+                <CreateCustomerClientWrapper />
+                <CreateInteractionClientWrapper customers={customers} />
+            </div>
+
+            {/* Divider */}
             {/* Table or Cards*/}
             <CRMCustomerView customers={customers} interactions={interactions} />
         </div>
