@@ -2,6 +2,7 @@ import { getCustomers } from '../lib/services/crmServices/getCustomers';
 import { getInteractions } from '../lib/services/crmServices/getInteractions';
 import CRMCustomerView from './CRMCustomerView';
 import CRMStatusPie from "@/components/crmComponents/CRMStatusPie";
+import CreateCustomerClientWrapper from "@/app/crm/CreateCustomerClientWrapper";
 
 export default async function CRMPage() {
     const [customers, interactions] = await Promise.all([
@@ -42,6 +43,7 @@ export default async function CRMPage() {
                     <CRMStatusPie customers={customers} />
                 </div>
             </div>
+            <CreateCustomerClientWrapper />
 
             {/* Table or Cards*/}
             <CRMCustomerView customers={customers} interactions={interactions} />
