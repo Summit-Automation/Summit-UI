@@ -1,5 +1,5 @@
 import '@/app/globals.css'
-import Sidebar from '@/components/Sidebar'
+import Sidebar from '@/components/globalComponents/Sidebar'
 import React from 'react'
 
 export const metadata = {
