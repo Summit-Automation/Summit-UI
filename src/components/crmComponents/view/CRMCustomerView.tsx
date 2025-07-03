@@ -4,8 +4,8 @@
 import { useState } from 'react';
 import { Customer } from '@/types/customer';
 import { Interaction } from '@/types/interaction';
-import CustomerRow from '@/app/crm/customerTableView/CustomerRow';
-import CustomerCard from '@/app/crm/customerCardView/CustomerCard';
+import CustomerRow from '@/components/crmComponents/view/customerTableView/CustomerRow';
+import CustomerCard from '@/components/crmComponents/view/customerCardView/CustomerCard';
 
 export default function CRMCustomerView({
                                             customers,

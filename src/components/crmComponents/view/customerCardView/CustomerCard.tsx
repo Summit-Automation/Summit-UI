@@ -3,7 +3,7 @@
 import {useState} from 'react';
 import {Customer} from '@/types/customer';
 import {Interaction} from '@/types/interaction';
-import CustomerInteractionsCard from '@/app/crm/customerCardView/CustomerInteractionsCard';
+import CustomerInteractionsCard from '@/components/crmComponents/view/customerCardView/CustomerInteractionsCard';
 import {ChevronDown, ChevronUp} from 'lucide-react';
 
 export default function CustomerCard({

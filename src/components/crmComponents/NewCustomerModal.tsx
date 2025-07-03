@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { createCustomer } from '@/app/lib/services/crmServices/createCustomer';
 
 export default function NewCustomerModal({ onSuccess }: { onSuccess?: () => void }) {
