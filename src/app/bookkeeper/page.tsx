@@ -1,9 +1,14 @@
 import {getTransactions} from '@/app/lib/services/bookkeeperServices/getTransactions';
+import {getCustomers} from "@/app/lib/services/crmServices/getCustomers";
+import {getInteractions} from "@/app/lib/services/crmServices/getInteractions";
 import TransactionRow from '@/app/bookkeeper/TransactionRow';
 import BookkeeperPie from '@/components/bookkeeperComponents/BookkeeperPie';
+import CreateTransactionClientWrapper from '@/app/bookkeeper/CreateTransactionClientWrapper';
 
 
 export default async function BookkeeperPage() {
+    const customers = await getCustomers();
+    const interactions = await getInteractions();
     const transactions = await getTransactions();
 
 
@@ -55,6 +60,12 @@ export default async function BookkeeperPage() {
                 </legend>
                 <div className="flex flex-wrap gap-3">
                     <div className="flex flex-wrap gap-3 mb-4">
+
+                        <CreateTransactionClientWrapper
+                            customers={customers}
+                            interactions={interactions}
+                        />
+
                         <button
                             className="bg-blue-800 text-white px-4 py-2 rounded shadow-sm hover:bg-blue-700"
                             disabled

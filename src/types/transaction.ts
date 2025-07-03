@@ -23,7 +23,11 @@ export type Transaction = {
     // UUID of the user or null if system-generated
     uploaded_by: string | null;
 
+    customer_id: string | null;
+
     customer_name: string | null;
+
+    interaction_id: string | null;
 
     interaction_title: string | null;
 

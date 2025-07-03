@@ -3,7 +3,6 @@
 'use server'
 
 import {Transaction} from '@/types/transaction';
-
 import {createClient} from '@/utils/supabase/server';
 
 export async function getTransactions(): Promise<Transaction[]> {
