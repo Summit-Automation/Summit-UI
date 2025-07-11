@@ -12,7 +12,7 @@
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/postgrest-js": "^1.19.4",
     "@supabase/ssr": "^0.6.1",
-    "@supabase/supabase-js": "^2.50.0",
+    "@supabase/supabase-js": "^2.50.5",
     "lucide-react": "^0.525.0",
     "next": "15.3.5",
     "postgres": "^3.4.7",
