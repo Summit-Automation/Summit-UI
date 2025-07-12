@@ -8,12 +8,16 @@ type Props = {
 };
 
 const STATUS_COLORS: Record<string, string> = {
-    qualified: '#0ea5e9', // sky-500
-    proposal: '#6366f1',  // indigo-500
-    closed: '#22c55e',    // green-500
-    churned: '#ef4444',   // red-500
-    default: '#94a3b8',   // slate-400
+    lead: '#0ea5e9',       // sky-500 → vibrant and modern
+    prospect: '#facc15',   // yellow-400 → brighter than yellow-500 for better contrast
+    qualified: '#a855f7',  // purple-500 → vivid and distinct
+    contacted: '#f97316',  // orange-500 → better than amber-500 for clarity
+    proposal: '#6366f1',   // indigo-500 → calm, trustworthy
+    closed: '#22c55e',     // green-500 → positive outcome
+    churned: '#ef4444',    // red-500 → intuitive for loss
+    default: '#94a3b8'     // slate-400 → neutral fallback
 };
+
 
 export default function CRMStatusPie({ customers }: Props) {
     // Count customers per status
