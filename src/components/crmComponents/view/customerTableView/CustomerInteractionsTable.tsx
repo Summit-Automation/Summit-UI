@@ -1,69 +1,110 @@
 'use client';
 
+import { useMemo } from 'react';
+import { TableRow, TableCell } from '@/components/ui/table';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Phone, Mail, CalendarCheck, Info } from 'lucide-react';
 import { Interaction } from '@/types/interaction';
+import {JSX} from "react/jsx-runtime";
 
 const TYPE_COLORS: Record<string, string> = {
-    call: 'bg-amber-500 text-white',
-    email: 'bg-sky-500 text-white',
-    meeting: 'bg-indigo-500 text-white',
-    default: 'bg-slate-500 text-white',
+    call:    'bg-amber-600 text-amber-100',
+    email:   'bg-sky-600   text-sky-100',
+    meeting: 'bg-indigo-600 text-indigo-100',
+    default: 'bg-slate-600  text-slate-100',
+};
+
+const TYPE_ICONS: Record<string, JSX.Element> = {
+    call:    <Phone        className="w-4 h-4 text-amber-300" />,
+    email:   <Mail         className="w-4 h-4 text-sky-300" />,
+    meeting: <CalendarCheck className="w-4 h-4 text-indigo-300" />,
+    default: <Info         className="w-4 h-4 text-slate-300" />,
 };
 
 export default function CustomerInteractionsTable({
-                                                 fullName,
-                                                 interactions,
-                                             }: {
+                                                      fullName,
+                                                      interactions,
+                                                  }: {
     fullName: string;
     interactions: Interaction[];
 }) {
-    return (
-        <tr className="bg-slate-800 border-t border-slate-700">
-            <td colSpan={6} className="p-4 text-sm text-slate-300">
-                <p className="italic mb-4 font-medium text-slate-400">
-                    Interactions for <span className="text-white font-semibold">{fullName}</span>:
-                </p>
+    const sorted = useMemo(
+        () =>
+            [...interactions].sort(
+                (a, b) =>
+                    new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+            ),
+        [interactions]
+    );
 
-                {interactions.length === 0 ? (
-                    <p className="text-gray-500 italic">No interactions recorded.</p>
+    return (
+        <TableRow className="bg-slate-900 border-t border-slate-800">
+            <TableCell colSpan={6} className="p-6">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-lg font-semibold text-white">
+                        Interactions for <span className="text-sky-300">{fullName}</span>
+                    </h3>
+                    <Badge className="bg-slate-800 text-slate-200 uppercase text-xs px-3 py-1">
+                        {interactions.length} {interactions.length === 1 ? 'interaction' : 'interactions'}
+                    </Badge>
+                </div>
+
+                {sorted.length === 0 ? (
+                    <p className="text-slate-500 italic">No interactions recorded.</p>
                 ) : (
-                    <ul className="space-y-4">
-                        {interactions
-                            .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-                            .map((interaction) => {
-                                const tagColor = TYPE_COLORS[interaction.type] || TYPE_COLORS.default;
+                    <ScrollArea className="h-[360px] w-full">
+                        <div className="flex flex-col gap-5">
+                            {sorted.map((interaction) => {
+                                const color = TYPE_COLORS[interaction.type] || TYPE_COLORS.default;
+                                const icon  = TYPE_ICONS[interaction.type]  || TYPE_ICONS.default;
+
                                 return (
-                                    <li
+                                    <Card
                                         key={interaction.id}
-                                        className="bg-slate-700 border border-slate-600 rounded-lg p-4 shadow-sm"
+                                        className="bg-slate-800 border border-slate-700 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
                                     >
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="text-sm font-semibold text-white">{interaction.title}</span>
-                                            <span
-                                                className={`text-xs px-2 py-0.5 rounded-full uppercase tracking-wide font-semibold ${tagColor}`}
-                                            >
+                                        <CardHeader className="flex items-center justify-between p-4">
+                                            <div className="flex items-center gap-2">
+                                                {icon}
+                                                <CardTitle className="text-sm font-semibold text-white">
+                                                    {interaction.title}
+                                                </CardTitle>
+                                            </div>
+                                            <Badge className={`uppercase text-xs px-2 py-0.5 ${color}`}>
                                                 {interaction.type}
-                                            </span>
-                                        </div>
-                                        <div className="text-xs text-slate-400 italic mb-2">
-                                            {new Date(interaction.created_at).toLocaleString()}
-                                        </div>
-                                        <div className="text-sm text-slate-200 mb-2">{interaction.notes}</div>
-                                        <div className="text-xs text-slate-400">
-                                            Outcome:{' '}
-                                            <span className="text-slate-300 font-medium">{interaction.outcome}</span>
-                                            {interaction.follow_up_required && (
-                                                <span className="ml-4 text-red-400 font-bold">
-                                                    🔁 Follow-up required
-                                                </span>
-                                            )}
-                                        </div>
-                                    </li>
+                                            </Badge>
+                                        </CardHeader>
+                                        <CardContent className="space-y-2 p-4">
+                                            <time className="block text-xs text-slate-400">
+                                                {new Date(interaction.created_at).toLocaleString()}
+                                            </time>
+                                            <p className="text-sm text-slate-200">
+                                                {interaction.notes}
+                                            </p>
+                                            <div className="flex justify-between items-center text-xs text-slate-400">
+                        <span>
+                          Outcome:{' '}
+                            <span className="font-medium text-slate-200">
+                            {interaction.outcome}
+                          </span>
+                        </span>
+                                                {interaction.follow_up_required && (
+                                                    <Badge className="bg-red-600 text-white text-xs px-2 py-0.5">
+                                                        🔁 Follow-up
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                        </CardContent>
+                                    </Card>
                                 );
                             })}
-                    </ul>
+                        </div>
+                    </ScrollArea>
                 )}
-            </td>
-        </tr>
+            </TableCell>
+        </TableRow>
     );
 }
-

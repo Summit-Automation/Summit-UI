@@ -64,7 +64,7 @@ export default async function DashboardPage() {
         </div>);
     }
 
-    return (<div className="min-h-screen bg-background text-foreground">
+    return (<div className="min-h-screen bg-slate-950 text-foreground">
         <div className="container mx-auto p-6 space-y-6">
             {/* Header Section */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -244,7 +244,7 @@ export default async function DashboardPage() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <CustomerStatusPie customers={customers}/>
+                                <CustomerStatusPie customers={customers} size="lg"/>
                             </CardContent>
                         </Card>
 

@@ -1,8 +1,47 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+    DialogClose,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import {
+    Form,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormControl,
+    FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import { createInteraction } from '@/app/lib/services/crmServices/createInteraction';
 import { Customer } from '@/types/customer';
+
+type FormValues = {
+    customer_id: string;
+    type: 'call' | 'email' | 'meeting' | 'site visit' | 'other';
+    title: string;
+    notes: string;
+    outcome: string;
+    follow_up_required: boolean;
+};
 
 export default function NewInteractionModal({
                                                 customers,
@@ -11,147 +50,171 @@ export default function NewInteractionModal({
     customers: Customer[];
     onSuccess?: () => void;
 }) {
-    const [isOpen, setIsOpen] = useState(false);
-    const [form, setForm] = useState({
-        customer_id: '',
-        customer_name: '',
-        type: 'call',
-        title: '',
-        notes: '',
-        outcome: '',
-        follow_up_required: false,
+    const form = useForm<FormValues>({
+        defaultValues: {
+            customer_id: '',
+            type: 'call',
+            title: '',
+            notes: '',
+            outcome: '',
+            follow_up_required: false,
+        },
+        mode: 'onBlur',
     });
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-    ) => {
-        const { name, value } = e.target;
-        setForm({ ...form, [name]: value });
-    };
-
-    const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({ ...form, follow_up_required: e.target.checked });
-    };
-
-    const handleCustomerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const customerId = e.target.value;
-        const customer = customers.find((c) => c.id === customerId);
-        if (customer) {
-            setForm({
-                ...form,
-                customer_id: customer.id,
-                customer_name: customer.full_name,
-            });
-        }
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const success = await createInteraction(form);
-        if (success) {
-            setIsOpen(false);
+    const onSubmit = async (values: FormValues) => {
+        const ok = await createInteraction(values);
+        if (ok) {
+            form.reset();
             onSuccess?.();
         } else {
-            alert('Failed to create interaction');
+            form.setError('title', { message: 'Failed to log interaction' });
         }
     };
 
     return (
-        <>
-            <button
-                onClick={() => setIsOpen(true)}
-                className="bg-yellow-600 text-white px-4 py-2 rounded shadow hover:bg-yellow-700 transition"
-            >
-                + New Interaction
-            </button>
+        <Dialog>
+            <DialogTrigger asChild>
+                {/* same accent button as New Customer */}
+                <Button variant="outline" className="bg-accent text-accent-fg hover:bg-accent/90">
+                    + New Interaction
+                </Button>
+            </DialogTrigger>
 
-            {isOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-slate-700 rounded-lg p-6 w-full max-w-xl shadow-xl space-y-4">
-                        <h3 className="text-xl font-bold text-gray-200">Log New Interaction</h3>
-                        <form onSubmit={handleSubmit} className="space-y-3">
-                            <select
-                                name="customer_id"
-                                required
-                                value={form.customer_id}
-                                onChange={handleCustomerChange}
-                                className="w-full p-2 border rounded"
-                            >
-                                <option value="">Select a customer</option>
-                                {customers.map((c) => (
-                                    <option key={c.id} value={c.id}>
-                                        {c.full_name} {c.business ? `– ${c.business}` : ''}
-                                    </option>
-                                ))}
-                            </select>
+            {/* same primary modal background as New Customer */}
+            <DialogContent className="max-w-xl bg-primary/90 backdrop-blur-lg border border-border rounded-xl shadow-premium">
+                <DialogHeader>
+                    <DialogTitle className="text-white">Log New Interaction</DialogTitle>
+                    <DialogDescription className="text-slate-300">
+                        Select a customer and fill in the details below.
+                    </DialogDescription>
+                </DialogHeader>
 
-                            <select
-                                name="type"
-                                value={form.type}
-                                onChange={handleChange}
-                                className="w-full p-2 border rounded"
-                            >
-                                <option value="call">Call</option>
-                                <option value="email">Email</option>
-                                <option value="meeting">Meeting</option>
-                                <option value="site visit">Site Visit</option>
-                                <option value="other">Other</option>
-                            </select>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
+                        {/* Customer */}
+                        <FormField
+                            control={form.control}
+                            name="customer_id"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-slate-300">Customer</FormLabel>
+                                    <FormControl>
+                                        <Select onValueChange={field.onChange} value={field.value}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a customer…" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {customers.map((c) => (
+                                                    <SelectItem key={c.id} value={c.id}>
+                                                        {c.full_name}
+                                                        {c.business ? ` – ${c.business}` : ''}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                            <input
-                                type="text"
-                                name="title"
-                                placeholder="Title"
-                                value={form.title}
-                                onChange={handleChange}
-                                className="w-full p-2 border rounded"
-                            />
+                        {/* Type */}
+                        <FormField
+                            control={form.control}
+                            name="type"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-slate-300">Type</FormLabel>
+                                    <FormControl>
+                                        <Select onValueChange={field.onChange} value={field.value}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select type…" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="call">Call</SelectItem>
+                                                <SelectItem value="email">Email</SelectItem>
+                                                <SelectItem value="meeting">Meeting</SelectItem>
+                                                <SelectItem value="site visit">Site Visit</SelectItem>
+                                                <SelectItem value="other">Other</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                            <textarea
-                                name="notes"
-                                placeholder="Notes"
-                                value={form.notes}
-                                onChange={handleChange}
-                                className="w-full p-2 border rounded"
-                            />
+                        {/* Title */}
+                        <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-slate-300">Title</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder="Conversation title…" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                            <input
-                                type="text"
-                                name="outcome"
-                                placeholder="Outcome"
-                                value={form.outcome}
-                                onChange={handleChange}
-                                className="w-full p-2 border rounded"
-                            />
+                        {/* Notes */}
+                        <FormField
+                            control={form.control}
+                            name="notes"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-slate-300">Notes</FormLabel>
+                                    <FormControl>
+                                        <Textarea {...field} placeholder="Detailed notes…" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                            <label className="inline-flex items-center gap-2 text-gray-200">
-                                <input
-                                    type="checkbox"
-                                    checked={form.follow_up_required}
-                                    onChange={handleCheckbox}
-                                />
-                                Follow-up required
-                            </label>
+                        {/* Outcome */}
+                        <FormField
+                            control={form.control}
+                            name="outcome"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-slate-300">Outcome</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder="Result of the interaction…" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                            <div className="flex justify-between mt-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsOpen(false)}
-                                    className="px-3 py-2 rounded bg-gray-400 hover:bg-gray-500"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                                >
-                                    Save Interaction
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
-        </>
+                        {/* Follow-up Required */}
+                        <FormField
+                            control={form.control}
+                            name="follow_up_required"
+                            render={({ field }) => (
+                                <FormItem className="flex items-center space-x-2">
+                                    <FormControl>
+                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                    </FormControl>
+                                    <FormLabel className="text-slate-300">Follow-up required</FormLabel>
+                                </FormItem>
+                            )}
+                        />
+
+                        <DialogFooter className="flex justify-end space-x-2 pt-4">
+                            <DialogClose asChild>
+                                <Button variant="ghost">Cancel</Button>
+                            </DialogClose>
+                            <Button variant="outline" type="submit">
+                                Save Interaction
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
     );
 }

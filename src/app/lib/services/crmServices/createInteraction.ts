@@ -3,7 +3,7 @@
 import {createClient} from '@/utils/supabase/server';
 import {Interaction} from '@/types/interaction';
 
-type NewInteractionInput = Omit<Interaction, 'id' | 'created_at' | 'updated_at' | 'interaction_index'>;
+type NewInteractionInput = Omit<Interaction, 'id' | 'customer_name' | 'created_at' | 'updated_at' | 'interaction_index'>;
 
 export async function createInteraction(input: NewInteractionInput): Promise<boolean> {
     try {

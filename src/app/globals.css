@@ -6,7 +6,8 @@
 ---------------------------------------*/
 :root {
     /* Brand neutrals */
-    --rich-black:      #020617;   /* for deepest backgrounds */
+    --DEFAULT:         #0f172a; /* slate-900 */
+    --rich-black:      #0f172a;   /* for deepest backgrounds */
     --oxford-blue:     #0c1528;   /* page background (formerly slate-900) */
     --slate-charcoal:  #1e293b;   /* cards/panels (formerly slate-800) */
     --slate-steel:     #334155;   /* borders, dividers & hover highlights */
@@ -15,6 +16,7 @@
     --mint-green:      #10b981;   /* success */
     --imperial-red:    #e53e3e;   /* error */
     --warn:            #facc15;   /* warning */
+
 
 
 
@@ -36,7 +38,7 @@
     --icon:            #38bdf8;   /* sky-500 icons */
 
     /* Interactive accents */
-    --primary:         var(--palatinate-blue);
+    --primary:         var(--DEFAULT);
     --primary-foreground: #ffffff;
 
     --accent:          var(--mint-green);

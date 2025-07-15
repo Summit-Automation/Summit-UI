@@ -1,69 +1,121 @@
 'use client';
 
-import {useState} from 'react';
-import {Customer} from '@/types/customer';
-import {Interaction} from '@/types/interaction';
-import CustomerInteractionsCard from '@/components/crmComponents/view/customerCardView/CustomerInteractionsCard';
-import {ChevronDown, ChevronUp} from 'lucide-react';
+import { useState } from 'react';
+import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardContent,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import {
+    ChevronDown,
+    ChevronUp,
+    Users,
+    Mail,
+    Phone,
+    Calendar,
+} from 'lucide-react';
+import CustomerInteractionsCard from './CustomerInteractionsCard';
+import { Customer } from '@/types/customer';
+import { Interaction } from '@/types/interaction';
 
 export default function CustomerCard({
-                                         customer, interactions,
+                                         customer,
+                                         interactions,
                                      }: {
-    customer: Customer; interactions: Interaction[];
+    customer: Customer;
+    interactions: Interaction[];
 }) {
-    const [expanded, setExpanded] = useState(false);
+    const [open, setOpen] = useState(false);
 
-    return (<div className="bg-slate-800 rounded-lg border border-slate-700 shadow p-4 space-y-2">
-            <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-white">{customer.full_name}</h3>
-                <button onClick={() => setExpanded(!expanded)} className="text-slate-400 hover:text-slate-200">
-                    {expanded ? <ChevronUp size={18}/> : <ChevronDown size={18}/>}
-                </button>
-            </div>
-            <p className="text-sm text-slate-300">
-                <span className="font-medium text-white">Business:</span>{' '}
-                {customer.business || <span className="italic text-gray-400">None</span>}
-            </p>
-            <p className="text-sm text-slate-300">
-                <span className="font-medium text-white">Email:</span> {customer.email}
-            </p>
-            <p className="text-sm text-slate-300">
-                <span className="font-medium text-white">Phone:</span> {customer.phone}
-            </p>
-            <p>
-                <span className={`text-xs px-2 py-1 rounded font-semibold ${statusColor(customer.status)}`}>
-                    {customer.status}
-                </span>
-            </p>
-            <p className="text-xs text-slate-400">
-                Created:{' '}
-                {new Date(customer.created_at).toLocaleDateString('en-US', {
-                    year: 'numeric', month: 'short', day: 'numeric',
-                })}
-            </p>
+    return (
+        <Card className="bg-slate-900/50 border border-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200">
+            <CardHeader className="flex items-center justify-between p-4">
+                <div className="flex items-center gap-3">
+                    <Users className="w-6 h-6 text-slate-300" />
+                    <CardTitle className="text-lg font-semibold text-white">
+                        {customer.full_name}
+                    </CardTitle>
+                </div>
+                <Button variant="ghost" size="icon" onClick={() => setOpen((o) => !o)}>
+                    {open ? (
+                        <ChevronUp className="w-5 h-5 text-slate-300" />
+                    ) : (
+                        <ChevronDown className="w-5 h-5 text-slate-300" />
+                    )}
+                </Button>
+            </CardHeader>
 
-            {expanded && (<CustomerInteractionsCard
-                    fullName={customer.full_name}
-                    interactions={interactions}
-                />)}
-        </div>);
+            <CardContent className="p-4 space-y-4">
+                <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-slate-400" />
+                    <span className="text-slate-400">Business:</span>
+                    <span className="text-white">
+            {customer.business || <em className="text-slate-500">None</em>}
+          </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-slate-400" />
+                    <span className="text-slate-400">Email:</span>
+                    <span className="text-white truncate">{customer.email}</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-slate-400" />
+                    <span className="text-slate-400">Phone:</span>
+                    <span className="text-white">{customer.phone}</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <Badge
+                        className={`rounded-full px-3 py-1 text-xs ${statusColor(
+                            customer.status
+                        )}`}
+                    >
+                        {customer.status}
+                    </Badge>
+                </div>
+
+                <div className="flex items-center gap-2 text-sm text-slate-400">
+                    <Calendar className="w-4 h-4" />
+                    {new Date(customer.created_at).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                    })}
+                </div>
+
+                {open && (
+                    <div className="mt-4">
+                        <CustomerInteractionsCard
+                            fullName={customer.full_name}
+                            interactions={interactions}
+                        />
+                    </div>
+                )}
+            </CardContent>
+        </Card>
+    );
 }
 
 function statusColor(status: string) {
     switch (status) {
         case 'lead':
-            return 'text-sky-400 bg-sky-800/50';
+            return 'bg-sky-600 text-sky-100';
         case 'prospect':
-            return 'text-yellow-300 bg-yellow-800/40';
+            return 'bg-yellow-600 text-yellow-100';
         case 'qualified':
-            return 'text-purple-300 bg-purple-800/40';
+            return 'bg-purple-600 text-purple-100';
         case 'contacted':
-            return 'text-orange-300 bg-orange-800/40';
+            return 'bg-orange-600 text-orange-100';
         case 'proposal':
-            return 'text-indigo-300 bg-indigo-800/40';
+            return 'bg-indigo-600 text-indigo-100';
         case 'closed':
-            return 'text-green-300 bg-green-800/40';
+            return 'bg-emerald-600 text-emerald-100';
         default:
-            return 'text-gray-400 bg-gray-700';
+            return 'bg-slate-600 text-slate-100';
     }
 }

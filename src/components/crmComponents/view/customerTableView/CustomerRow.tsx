@@ -1,68 +1,83 @@
 'use client';
 
-import {useState} from 'react';
-import {Customer} from '@/types/customer';
-import {Interaction} from '@/types/interaction';
+import { useState } from 'react';
+import { TableRow, TableCell } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { ChevronDown, ChevronUp, Calendar } from 'lucide-react';
 import CustomerInteractionsTable from './CustomerInteractionsTable';
-import {ChevronDown, ChevronUp} from 'lucide-react';
+import { Customer } from '@/types/customer';
+import { Interaction } from '@/types/interaction';
 
 export default function CustomerRow({
-                                        customer, interactions,
+                                        customer,
+                                        interactions,
                                     }: {
-    customer: Customer; interactions: Interaction[];
+    customer: Customer;
+    interactions: Interaction[];
 }) {
-    const [expanded, setExpanded] = useState(false);
+    const [open, setOpen] = useState(false);
 
-    return (<>
-            <tr
-                className="cursor-pointer hover:bg-slate-800 transition group"
-                onClick={() => setExpanded((prev) => !prev)}
+    return (
+        <>
+            <TableRow
+                onClick={() => setOpen((o) => !o)}
+                className="bg-slate-900/50 border-b border-slate-800 hover:bg-slate-900/70 transition-all duration-200 cursor-pointer"
             >
-                <td className="p-2 font-medium text-white flex items-center gap-2">
-                    {expanded ? <ChevronUp size={16} className="text-slate-400"/> :
-                        <ChevronDown size={16} className="text-slate-500 group-hover:text-slate-300"/>}
-                    {customer.full_name}
-                </td>
-                <td className="p-2">
-                    {customer.business ? (<span>{customer.business}</span>) : (
-                        <span className="text-gray-400 italic">None</span>)}
-                </td>
-                <td className="p-2">{customer.email}</td>
-                <td className="p-2">{customer.phone}</td>
-                <td className="p-2">
-                    <span className={`px-2 py-1 rounded text-xs font-semibold ${statusColor(customer.status)}`}>
+                <TableCell className="flex items-center gap-3 p-4">
+                    {open
+                        ? <ChevronUp size={20} className="text-slate-400" />
+                        : <ChevronDown size={20} className="text-slate-500" />
+                    }
+                    <span className="text-white font-semibold">{customer.full_name}</span>
+                </TableCell>
+                <TableCell className="p-4">
+          <span className="text-slate-200">
+            {customer.business || <span className="text-slate-500 italic">None</span>}
+          </span>
+                </TableCell>
+                <TableCell className="p-4">
+                    <span className="text-slate-200 truncate block max-w-xs">{customer.email}</span>
+                </TableCell>
+                <TableCell className="p-4">
+                    <span className="text-slate-200">{customer.phone}</span>
+                </TableCell>
+                <TableCell className="p-4">
+                    <Badge className={`${statusColor(customer.status)} px-3 py-0.5 rounded-full text-xs`}>
                         {customer.status}
-                    </span>
-                </td>
-                <td className="p-2 text-gray-400">
+                    </Badge>
+                </TableCell>
+                <TableCell className="flex items-center gap-1 p-4 text-sm text-slate-400">
+                    <Calendar className="w-4 h-4" />
                     {new Date(customer.created_at).toLocaleDateString('en-US', {
-                        year: 'numeric', month: 'short', day: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
                     })}
-                </td>
-            </tr>
+                </TableCell>
+            </TableRow>
 
-            {expanded && (<CustomerInteractionsTable
-                    fullName={customer.full_name}
-                    interactions={interactions}
-                />)}
-        </>);
+            {open && (
+                <TableRow>
+                    <TableCell colSpan={6} className="p-0">
+                        <CustomerInteractionsTable
+                            fullName={customer.full_name}
+                            interactions={interactions}
+                        />
+                    </TableCell>
+                </TableRow>
+            )}
+        </>
+    );
 }
 
 function statusColor(status: string) {
     switch (status) {
-        case 'lead':
-            return 'text-sky-400 bg-sky-800/50';
-        case 'prospect':
-            return 'text-yellow-300 bg-yellow-800/40';
-        case 'qualified':
-            return 'text-purple-300 bg-purple-800/40';
-        case 'contacted':
-            return 'text-orange-300 bg-orange-800/40';
-        case 'proposal':
-            return 'text-indigo-300 bg-indigo-800/40';
-        case 'closed':
-            return 'text-green-300 bg-green-800/40';
-        default:
-            return 'text-gray-400 bg-gray-700';
+        case 'lead':      return 'bg-sky-600 text-sky-100';
+        case 'prospect':  return 'bg-yellow-600 text-yellow-100';
+        case 'qualified': return 'bg-purple-600 text-purple-100';
+        case 'contacted': return 'bg-orange-600 text-orange-100';
+        case 'proposal':  return 'bg-indigo-600 text-indigo-100';
+        case 'closed':    return 'bg-emerald-600 text-emerald-100';
+        default:          return 'bg-slate-600 text-slate-100';
     }
 }
