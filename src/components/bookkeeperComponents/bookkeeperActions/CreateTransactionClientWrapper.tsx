@@ -1,56 +1,44 @@
 'use client';
 
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import NewTransactionModal from '@/components/bookkeeperComponents/NewTransactionModal';
 import {getCustomers} from '@/app/lib/services/crmServices/getCustomers';
 import {getInteractions} from '@/app/lib/services/crmServices/getInteractions';
 import {Customer} from '@/types/customer';
 import {Interaction} from '@/types/interaction';
+import {Button} from '@/components/ui/button';
 
 export default function CreateTransactionClientWrapper() {
     const router = useRouter();
+    const [open, setOpen] = useState(false);
 
-    const [modalOpen, setModalOpen] = useState(false);
-    const [customers, setCustomers] = useState<Customer[] | null>(null);
-    const [interactions, setInteractions] = useState<Interaction[] | null>(null);
-    const [loading, setLoading] = useState(false);
+    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [interactions, setInteractions] = useState<Interaction[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    // Lazy-load data when modal is opened
     useEffect(() => {
-        if (modalOpen && !customers && !interactions) {
-            setLoading(true);
-            Promise.all([getCustomers(), getInteractions()])
-                .then(([custs, ints]) => {
-                    setCustomers(custs);
-                    setInteractions(ints);
-                })
-                .finally(() => setLoading(false));
-        }
-    }, [modalOpen]);
+        // fetch customers + interactions once on mount
+        Promise.all([getCustomers(), getInteractions()])
+            .then(([custs, ints]) => {
+                setCustomers(custs);
+                setInteractions(ints);
+            })
+            .finally(() => setLoading(false));
+    }, []);
 
-    const handleOpenModal = () => setModalOpen(true);
-    const handleCloseModal = () => setModalOpen(false);
+    if (loading) {
+        return (<Button variant="outline" disabled>
+                Loading…
+            </Button>);
+    }
 
-    return (<>
-            <button
-                onClick={handleOpenModal}
-                className="bg-teal-700 text-white px-4 py-2 rounded shadow-sm hover:bg-teal-600"
-            >
-                ➕ Add Transaction
-            </button>
-
-            {modalOpen && (<>
-                    {loading || !customers || !interactions ? (
-                        <div className="mt-4 text-gray-500">Loading form data...</div>) : (<NewTransactionModal
-                            customers={customers}
-                            interactions={interactions}
-                            onSuccess={() => {
-                                handleCloseModal();
-                                router.refresh();
-                            }}
-                            onClose={handleCloseModal}
-                        />)}
-                </>)}
-        </>);
+    return (<NewTransactionModal
+            customers={customers}
+            interactions={interactions}
+            onSuccess={() => {
+                router.refresh();
+                setOpen(false);
+            }}
+        />);
 }

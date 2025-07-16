@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 import {useForm} from 'react-hook-form';
 import {
@@ -10,74 +8,100 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from '@
 import {Input} from '@/components/ui/input';
 import {Textarea} from '@/components/ui/textarea';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select';
-import {createTransaction} from '@/app/lib/services/bookkeeperServices/createTransaction';
+import {Transaction} from '@/types/transaction';
 import {Customer} from '@/types/customer';
 import {Interaction} from '@/types/interaction';
+import {updateTransaction} from '@/app/lib/services/bookkeeperServices/updateTransaction';
+import {Pencil} from 'lucide-react';
 
-type FormValues = {
+export type UpdateTransactionInput = {
+    id: string;
     type: 'income' | 'expense';
     category: string;
     description: string;
     amount: string;
-    customer_id: string;
-    interaction_id: string;
+    customer_id: string | null;
+    interaction_id: string | null;
 };
 
-export default function NewTransactionModal({
-                                                customers, interactions, onSuccess,
-                                            }: {
-    customers: Customer[]; interactions: Interaction[]; onSuccess?: () => void;
+type FormValues = Omit<UpdateTransactionInput, 'id'> & {
+    customer_id: string; interaction_id: string;
+};
+
+export default function UpdateTransactionModal({
+                                                   transaction, onSuccess,
+                                               }: {
+    transaction: Transaction; onSuccess?: () => void;
 }) {
     const [open, setOpen] = React.useState(false);
 
     const form = useForm<FormValues>({
         defaultValues: {
-            type: 'expense', category: '', description: '', amount: '', customer_id: '', interaction_id: '',
+            type: transaction.type,
+            category: transaction.category,
+            description: transaction.description,
+            amount: transaction.amount.toString(),
+            customer_id: transaction.customer_id || '',
+            interaction_id: transaction.interaction_id || '',
         }, mode: 'onBlur',
     });
 
-    // filter interactions when a customer is selected
-    const selectedCustomer = form.watch('customer_id');
+    const {watch, handleSubmit, control, setError} = form;
+    const selectedCustomer = watch('customer_id');
+    const [customers, setCustomers] = React.useState<Customer[]>([]);
+    const [interactions, setInteractions] = React.useState<Interaction[]>([]);
+
+    React.useEffect(() => {
+        // fetch customers and interactions once
+        import('@/app/lib/services/crmServices/getCustomers').then(({getCustomers}) => getCustomers().then(setCustomers));
+        import('@/app/lib/services/crmServices/getInteractions').then(({getInteractions}) => getInteractions().then(setInteractions));
+    }, []);
+
     const customerInteractions = interactions.filter((i) => i.customer_id === selectedCustomer);
 
     const onSubmit = async (values: FormValues) => {
-        const success = await createTransaction({
-            ...values,
+        const ok = await updateTransaction({
+            id: transaction.id,
+            type: values.type,
+            category: values.category,
+            description: values.description,
             amount: values.amount.toString(),
             customer_id: values.customer_id || null,
             interaction_id: values.interaction_id || null,
             customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
             interaction_title: interactions.find((i) => i.id === values.interaction_id)?.title || null,
-            interaction_outcome: interactions.find((i) => i.id === values.interaction_id)?.outcome || null,
+            interaction_outcome: interactions.find((i) => i.id === values.interaction_id)?.outcome || null
         });
 
-        if (success) {
+        if (ok) {
             form.reset();
             setOpen(false);
             onSuccess?.();
         } else {
-            form.setError('category', {message: 'Failed to create transaction'});
+            setError('category', {message: 'Failed to update transaction'});
         }
     };
 
     return (<Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-            <Button variant="outline">+ Add Transaction</Button>
+            <Button variant="outline" size="sm" className="flex items-center space-x-1">
+                <Pencil className="h-4 w-4"/> <span>Edit</span>
+            </Button>
         </DialogTrigger>
         <DialogContent
             className="max-w-xl bg-primary/90 backdrop-blur-lg border border-border rounded-xl shadow-premium">
             <DialogHeader>
-                <DialogTitle className="text-white">Add New Transaction</DialogTitle>
+                <DialogTitle className="text-white">Edit Transaction</DialogTitle>
                 <DialogDescription className="text-slate-300">
-                    Fill out the details below.
+                    Update the fields below.
                 </DialogDescription>
             </DialogHeader>
 
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-2">
                     {/* Type */}
                     <FormField
-                        control={form.control}
+                        control={control}
                         name="type"
                         render={({field}) => (<FormItem>
                             <FormLabel className="text-slate-300">Type</FormLabel>
@@ -98,7 +122,7 @@ export default function NewTransactionModal({
 
                     {/* Category */}
                     <FormField
-                        control={form.control}
+                        control={control}
                         name="category"
                         render={({field}) => (<FormItem>
                             <FormLabel className="text-slate-300">Category</FormLabel>
@@ -111,7 +135,7 @@ export default function NewTransactionModal({
 
                     {/* Description */}
                     <FormField
-                        control={form.control}
+                        control={control}
                         name="description"
                         render={({field}) => (<FormItem>
                             <FormLabel className="text-slate-300">Description</FormLabel>
@@ -124,7 +148,7 @@ export default function NewTransactionModal({
 
                     {/* Amount */}
                     <FormField
-                        control={form.control}
+                        control={control}
                         name="amount"
                         render={({field}) => (<FormItem>
                             <FormLabel className="text-slate-300">Amount</FormLabel>
@@ -142,7 +166,7 @@ export default function NewTransactionModal({
 
                     {/* Customer */}
                     <FormField
-                        control={form.control}
+                        control={control}
                         name="customer_id"
                         render={({field}) => (<FormItem>
                             <FormLabel className="text-slate-300">Customer</FormLabel>
@@ -164,7 +188,7 @@ export default function NewTransactionModal({
 
                     {/* Interaction */}
                     <FormField
-                        control={form.control}
+                        control={control}
                         name="interaction_id"
                         render={({field}) => (<FormItem>
                             <FormLabel className="text-slate-300">Interaction</FormLabel>
@@ -188,12 +212,11 @@ export default function NewTransactionModal({
                         </FormItem>)}
                     />
 
-                    {/* Footer */}
                     <DialogFooter className="flex justify-end space-x-2 pt-4">
                         <DialogClose asChild>
                             <Button variant="ghost">Cancel</Button>
                         </DialogClose>
-                        <Button variant="outline" type="submit">Save Transaction</Button>
+                        <Button variant="outline" type="submit">Save Changes</Button>
                     </DialogFooter>
                 </form>
             </Form>
