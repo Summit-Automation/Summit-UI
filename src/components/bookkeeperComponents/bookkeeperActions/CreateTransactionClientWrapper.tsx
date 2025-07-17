@@ -3,8 +3,8 @@
 import {useEffect, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import NewTransactionModal from '@/components/bookkeeperComponents/NewTransactionModal';
-import {getCustomers} from '@/app/lib/services/crmServices/getCustomers';
-import {getInteractions} from '@/app/lib/services/crmServices/getInteractions';
+import {getCustomers} from '@/app/lib/services/crmServices/customer/getCustomers';
+import {getInteractions} from '@/app/lib/services/crmServices/interaction/getInteractions';
 import {Customer} from '@/types/customer';
 import {Interaction} from '@/types/interaction';
 import {Button} from '@/components/ui/button';
@@ -29,16 +29,16 @@ export default function CreateTransactionClientWrapper() {
 
     if (loading) {
         return (<Button variant="outline" disabled>
-                Loading…
-            </Button>);
+            Loading…
+        </Button>);
     }
 
     return (<NewTransactionModal
-            customers={customers}
-            interactions={interactions}
-            onSuccess={() => {
-                router.refresh();
-                setOpen(false);
-            }}
-        />);
+        customers={customers}
+        interactions={interactions}
+        onSuccess={() => {
+            router.refresh();
+            setOpen(false);
+        }}
+    />);
 }

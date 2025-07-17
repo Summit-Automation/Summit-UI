@@ -1,7 +1,7 @@
 // app/dashboard/DashboardPage.tsx
 
-import {getCustomers} from "@/app/lib/services/crmServices/getCustomers";
-import {getInteractions} from "@/app/lib/services/crmServices/getInteractions";
+import {getCustomers} from "@/app/lib/services/crmServices/customer/getCustomers";
+import {getInteractions} from "@/app/lib/services/crmServices/interaction/getInteractions";
 import {getTransactions} from "@/app/lib/services/bookkeeperServices/getTransactions";
 
 import {calculateMonthlyGrowth, getFollowUpsDue, getOverdueFollowUps,} from "@/utils/dashboard/dashboardUtils";

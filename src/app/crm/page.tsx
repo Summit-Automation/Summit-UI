@@ -1,5 +1,5 @@
-import {getCustomers} from '@/app/lib/services/crmServices/getCustomers';
-import {getInteractions} from '@/app/lib/services/crmServices/getInteractions';
+import {getCustomers} from '@/app/lib/services/crmServices/customer/getCustomers';
+import {getInteractions} from '@/app/lib/services/crmServices/interaction/getInteractions';
 import CRMCustomerView from '@/components/crmComponents/view/CRMCustomerView';
 import CRMStatusPie from "@/components/crmComponents/CRMStatusPie";
 import CRMSummary from "@/components/crmComponents/CRMSummary";

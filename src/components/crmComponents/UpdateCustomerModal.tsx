@@ -9,55 +9,62 @@ import {Button} from '@/components/ui/button';
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from '@/components/ui/form';
 import {Input} from '@/components/ui/input';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
-import {createCustomer} from '@/app/lib/services/crmServices/customer/createCustomer';
+import type {Customer} from '@/types/customer';
+import {updateCustomer} from '@/app/lib/services/crmServices/customer/updateCustomer';
+import {Pencil} from 'lucide-react';
 
-type FormValues = {
-    full_name: string;
-    email: string;
-    phone: string;
-    business: string;
-    status: 'lead' | 'prospect' | 'contacted' | 'qualified' | 'proposal' | 'closed';
-};
+type FormValues = Omit<Customer, 'id' | 'created_at' | 'updated_at'>;
 
-export default function NewCustomerModal({onSuccess}: { onSuccess?: () => void }) {
+export default function UpdateCustomerModal({
+                                                customer, onSuccess,
+                                            }: {
+    customer: Customer; onSuccess?: () => void;
+}) {
     const [open, setOpen] = React.useState(false);
-
     const form = useForm<FormValues>({
         defaultValues: {
-            full_name: '', email: '', phone: '', business: '', status: 'lead',
+            full_name: customer.full_name,
+            email: customer.email,
+            phone: customer.phone,
+            business: customer.business,
+            status: customer.status,
         }, mode: 'onBlur',
     });
 
+    const {handleSubmit, control, setError} = form;
+
     const onSubmit = async (values: FormValues) => {
-        const ok = await createCustomer(values);
+        const ok = await updateCustomer({id: customer.id, ...values});
         if (ok) {
             form.reset();
             setOpen(false);
             onSuccess?.();
         } else {
-            form.setError('full_name', {message: 'Failed to create customer'});
+            setError('full_name', {message: 'Failed to update customer'});
         }
     };
 
     return (<Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="bg-emerald-600 text-white hover:bg-emerald-700">
-                    + New Customer
+                <Button variant="outline" size="sm" className="flex items-center space-x-1">
+                    <Pencil className="h-4 w-4"/>
                 </Button>
             </DialogTrigger>
+
             <DialogContent
                 className="max-w-lg bg-primary/90 backdrop-blur-lg border border-border rounded-xl shadow-premium">
                 <DialogHeader>
-                    <DialogTitle className="text-white">Add New Customer</DialogTitle>
+                    <DialogTitle className="text-white">Edit Customer</DialogTitle>
                     <DialogDescription className="text-slate-300">
-                        Fill out the details to create a new customer record.
+                        Update the fields below.
                     </DialogDescription>
                 </DialogHeader>
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-2">
+                        {/* Full Name */}
                         <FormField
-                            control={form.control}
+                            control={control}
                             name="full_name"
                             render={({field}) => (<FormItem>
                                     <FormLabel className="text-slate-300">Full Name</FormLabel>
@@ -67,8 +74,10 @@ export default function NewCustomerModal({onSuccess}: { onSuccess?: () => void }
                                     <FormMessage/>
                                 </FormItem>)}
                         />
+
+                        {/* Email */}
                         <FormField
-                            control={form.control}
+                            control={control}
                             name="email"
                             render={({field}) => (<FormItem>
                                     <FormLabel className="text-slate-300">Email</FormLabel>
@@ -78,8 +87,10 @@ export default function NewCustomerModal({onSuccess}: { onSuccess?: () => void }
                                     <FormMessage/>
                                 </FormItem>)}
                         />
+
+                        {/* Phone */}
                         <FormField
-                            control={form.control}
+                            control={control}
                             name="phone"
                             render={({field}) => (<FormItem>
                                     <FormLabel className="text-slate-300">Phone</FormLabel>
@@ -89,8 +100,10 @@ export default function NewCustomerModal({onSuccess}: { onSuccess?: () => void }
                                     <FormMessage/>
                                 </FormItem>)}
                         />
+
+                        {/* Business */}
                         <FormField
-                            control={form.control}
+                            control={control}
                             name="business"
                             render={({field}) => (<FormItem>
                                     <FormLabel className="text-slate-300">Business</FormLabel>
@@ -100,8 +113,10 @@ export default function NewCustomerModal({onSuccess}: { onSuccess?: () => void }
                                     <FormMessage/>
                                 </FormItem>)}
                         />
+
+                        {/* Status */}
                         <FormField
-                            control={form.control}
+                            control={control}
                             name="status"
                             render={({field}) => (<FormItem>
                                     <FormLabel className="text-slate-300">Status</FormLabel>
@@ -128,7 +143,9 @@ export default function NewCustomerModal({onSuccess}: { onSuccess?: () => void }
                             <DialogClose asChild>
                                 <Button variant="ghost">Cancel</Button>
                             </DialogClose>
-                            <Button variant="outline" type="submit">Create</Button>
+                            <Button variant="outline" type="submit">
+                                Save Changes
+                            </Button>
                         </DialogFooter>
                     </form>
                 </Form>

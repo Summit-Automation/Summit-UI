@@ -31,7 +31,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { createInteraction } from '@/app/lib/services/crmServices/createInteraction';
+import { createInteraction } from '@/app/lib/services/crmServices/interaction/createInteraction';
 import { Customer } from '@/types/customer';
 
 type FormValues = {

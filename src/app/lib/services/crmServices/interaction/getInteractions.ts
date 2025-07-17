@@ -4,6 +4,10 @@
 import {Interaction} from "@/types/interaction";
 import {createClient} from "@/utils/supabase/server";
 
+/**
+ * Fetches all interactions from the 'interactions' table in Supabase.
+ * @returns {Promise<Interaction[]>} A promise that resolves to an array of interactions.
+ */
 export async function getInteractions(): Promise<Interaction[]> {
     try {
         const supabase = await createClient();

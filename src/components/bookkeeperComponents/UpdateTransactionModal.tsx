@@ -53,8 +53,8 @@ export default function UpdateTransactionModal({
 
     React.useEffect(() => {
         // fetch customers and interactions once
-        import('@/app/lib/services/crmServices/getCustomers').then(({getCustomers}) => getCustomers().then(setCustomers));
-        import('@/app/lib/services/crmServices/getInteractions').then(({getInteractions}) => getInteractions().then(setInteractions));
+        import('@/app/lib/services/crmServices/customer/getCustomers').then(({getCustomers}) => getCustomers().then(setCustomers));
+        import('@/app/lib/services/crmServices/interaction/getInteractions').then(({getInteractions}) => getInteractions().then(setInteractions));
     }, []);
 
     const customerInteractions = interactions.filter((i) => i.customer_id === selectedCustomer);
