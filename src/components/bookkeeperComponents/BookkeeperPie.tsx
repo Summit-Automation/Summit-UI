@@ -23,7 +23,6 @@ export default function BookkeeperPie({transactions}: { transactions: Transactio
 
     return (
         <div className="h-full flex flex-col justify-between">
-            <h3 className="text-lg font-semibold mb-2">Income vs. Expenses</h3>
             <div className="flex-1">
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>

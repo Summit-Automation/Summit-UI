@@ -5,6 +5,13 @@ import { Customer } from '@/types/customer';
 
 type NewCustomerInput = Omit<Customer, 'id' | 'created_at' | 'updated_at'>;
 
+
+/**
+ * Creates a new customer in the CRM system.
+ * This function uses a Supabase RPC function to insert the customer data.
+ * @param input the details of the new customer to be created.
+ * @return {Promise<boolean>} returns true if the customer was successfully created, false otherwise.
+ */
 export async function createCustomer(input: NewCustomerInput): Promise<boolean> {
     try {
         const supabase = await createClient();

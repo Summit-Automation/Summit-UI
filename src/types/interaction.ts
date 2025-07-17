@@ -2,8 +2,8 @@
 export type Interaction = {
     id: string;
     customer_id: string;
-    customer_name: string;
-    type: string;
+    customer_name: string | null;
+    type: 'call' | 'email' | 'meeting' | 'site visit' | 'other';
     title: string;
     notes: string;
     outcome: string;

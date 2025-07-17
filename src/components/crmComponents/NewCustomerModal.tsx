@@ -1,113 +1,137 @@
 'use client';
 
-import React, { useState } from 'react';
-import { createCustomer } from '@/app/lib/services/crmServices/createCustomer';
+import * as React from 'react';
+import {useForm} from 'react-hook-form';
+import {
+    Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
+} from '@/components/ui/dialog';
+import {Button} from '@/components/ui/button';
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from '@/components/ui/form';
+import {Input} from '@/components/ui/input';
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
+import {createCustomer} from '@/app/lib/services/crmServices/customer/createCustomer';
 
-export default function NewCustomerModal({ onSuccess }: { onSuccess?: () => void }) {
-    const [isOpen, setIsOpen] = useState(false);
-    const [form, setForm] = useState({
-        full_name: '',
-        email: '',
-        phone: '',
-        status: 'lead',
-        business: '',
+type FormValues = {
+    full_name: string;
+    email: string;
+    phone: string;
+    business: string;
+    status: 'lead' | 'prospect' | 'contacted' | 'qualified' | 'proposal' | 'closed';
+};
+
+export default function NewCustomerModal({onSuccess}: { onSuccess?: () => void }) {
+    const [open, setOpen] = React.useState(false);
+
+    const form = useForm<FormValues>({
+        defaultValues: {
+            full_name: '', email: '', phone: '', business: '', status: 'lead',
+        }, mode: 'onBlur',
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const success = await createCustomer(form);
-        if (success) {
-            setIsOpen(false);
+    const onSubmit = async (values: FormValues) => {
+        const ok = await createCustomer(values);
+        if (ok) {
+            form.reset();
+            setOpen(false);
             onSuccess?.();
         } else {
-            alert('Failed to create customer');
+            form.setError('full_name', {message: 'Failed to create customer'});
         }
     };
 
-    return (
-        <>
-            <button
-                onClick={() => setIsOpen(true)}
-                className="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition"
-            >
-                + New Customer
-            </button>
+    return (<Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline" className="bg-emerald-600 text-white hover:bg-emerald-700">
+                    + New Customer
+                </Button>
+            </DialogTrigger>
+            <DialogContent
+                className="max-w-lg bg-primary/90 backdrop-blur-lg border border-border rounded-xl shadow-premium">
+                <DialogHeader>
+                    <DialogTitle className="text-white">Add New Customer</DialogTitle>
+                    <DialogDescription className="text-slate-300">
+                        Fill out the details to create a new customer record.
+                    </DialogDescription>
+                </DialogHeader>
 
-            {isOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-slate-700 rounded-lg p-6 w-full max-w-md shadow-xl space-y-4">
-                        <h3 className="text-xl font-bold text-gray-200">Add New Customer</h3>
-                        <form onSubmit={handleSubmit} className="space-y-3">
-                            <input
-                                type="text"
-                                name="full_name"
-                                placeholder="Full Name"
-                                required
-                                value={form.full_name}
-                                onChange={handleChange}
-                                className="w-full p-2 border rounded"
-                            />
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Email"
-                                value={form.email}
-                                onChange={handleChange}
-                                className="w-full p-2 border rounded"
-                            />
-                            <input
-                                type="tel"
-                                name="phone"
-                                placeholder="Phone"
-                                value={form.phone}
-                                onChange={handleChange}
-                                className="w-full p-2 border rounded"
-                            />
-                            <input
-                                type="text"
-                                name="business"
-                                placeholder="Business Name"
-                                value={form.business}
-                                onChange={handleChange}
-                                className="w-full p-2 border rounded"
-                            />
-                            <select
-                                name="status"
-                                value={form.status}
-                                onChange={handleChange}
-                                className="w-full p-2 border rounded"
-                            >
-                                <option value="lead">Lead</option>
-                                <option value="prospect">Prospect</option>
-                                <option value="contacted">Contacted</option>
-                                <option value="qualified">Qualified</option>
-                                <option value="proposal">Proposal</option>
-                                <option value="closed">Closed</option>
-                            </select>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
+                        <FormField
+                            control={form.control}
+                            name="full_name"
+                            render={({field}) => (<FormItem>
+                                    <FormLabel className="text-slate-300">Full Name</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder="Jane Doe"/>
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>)}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({field}) => (<FormItem>
+                                    <FormLabel className="text-slate-300">Email</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} type="email" placeholder="jane@example.com"/>
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>)}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="phone"
+                            render={({field}) => (<FormItem>
+                                    <FormLabel className="text-slate-300">Phone</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} type="tel" placeholder="+1 (555) 123-4567"/>
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>)}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="business"
+                            render={({field}) => (<FormItem>
+                                    <FormLabel className="text-slate-300">Business</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder="Acme Corp"/>
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>)}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="status"
+                            render={({field}) => (<FormItem>
+                                    <FormLabel className="text-slate-300">Status</FormLabel>
+                                    <FormControl>
+                                        <Select onValueChange={field.onChange} value={field.value}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select status…"/>
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="lead">Lead</SelectItem>
+                                                <SelectItem value="prospect">Prospect</SelectItem>
+                                                <SelectItem value="contacted">Contacted</SelectItem>
+                                                <SelectItem value="qualified">Qualified</SelectItem>
+                                                <SelectItem value="proposal">Proposal</SelectItem>
+                                                <SelectItem value="closed">Closed</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>)}
+                        />
 
-                            <div className="flex justify-between mt-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsOpen(false)}
-                                    className="px-3 py-2 rounded bg-gray-400 hover:bg-gray-500"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                                >
-                                    Create
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
-        </>
-    );
+                        <DialogFooter className="flex justify-end space-x-2 pt-4">
+                            <DialogClose asChild>
+                                <Button variant="ghost">Cancel</Button>
+                            </DialogClose>
+                            <Button variant="outline" type="submit">Create</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>);
 }

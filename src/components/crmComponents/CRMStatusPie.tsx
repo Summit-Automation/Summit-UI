@@ -33,9 +33,8 @@ export default function CRMStatusPie({ customers }: Props) {
     }));
 
     return (
-        <div className="bg-slate-800 text-white p-4 rounded-lg shadow border border-slate-700">
-            <h3 className="text-lg font-semibold mb-2">Customer Status Distribution</h3>
-            <ResponsiveContainer width="100%" height={250}>
+        <div className="bg-transparent text-white p-4 rounded-lg shadow">
+            <ResponsiveContainer width="100%" height={350}>
                 <PieChart>
                     <Pie
                         data={data}

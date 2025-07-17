@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function RootLayout({children}: { children: React.ReactNode }) {
     return (<html lang="en">
-        <body className="bg-slate-900 text-slate-100 font-sans">
+        <body className="bg-slate-950 text-slate-100 font-sans">
         <Sidebar/>
 
         {/* Main content with margin to account for sidebar width */}

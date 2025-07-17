@@ -4,6 +4,10 @@
 import {Customer} from '@/types/customer';
 import {createClient} from '@/utils/supabase/server';
 
+/**
+ * Fetches all customers from the 'customers' table in Supabase.
+ * @returns {Promise<Customer[]>} A promise that resolves to an array of customers.
+ */
 export async function getCustomers(): Promise<Customer[]> {
     try {
         const supabase = await createClient();

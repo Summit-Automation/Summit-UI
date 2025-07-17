@@ -48,23 +48,46 @@ export default function InteractionTypeBar({interactions}: { interactions: Inter
     const data = groupInteractions(interactions);
     const typesToShow = Object.keys(TYPE_COLORS);
 
-    return (<div className="bg-slate-800 p-4 rounded-xl shadow border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-2">Interactions by Type</h3>
-        <ResponsiveContainer width="100%" height={350}>
-            <BarChart data={data} stackOffset="sign">
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155"/>
-                <XAxis dataKey="date" stroke="#cbd5e1"/>
-                <YAxis stroke="#cbd5e1"/>
-                <Tooltip/>
-                <Legend/>
-                {typesToShow.map(type => (<Bar
-                    key={type}
-                    dataKey={type}
-                    stackId="a"
-                    fill={TYPE_COLORS[type]}
-                    name={type.charAt(0).toUpperCase() + type.slice(1)}
-                />))}
-            </BarChart>
-        </ResponsiveContainer>
-    </div>);
+    return (
+        <div className="bg-transparent p-4 rounded-lg shadow-md">
+            <ResponsiveContainer width="100%" height={350}>
+                <BarChart data={data}>
+                    {/* grid & axes in muted slate */}
+                    <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
+                    <XAxis
+                        dataKey="date"
+                        stroke="var(--muted)"
+                        tick={{ fill: 'var(--muted)', fontSize: 12 }}
+                    />
+                    <YAxis
+                        stroke="var(--muted)"
+                        tick={{ fill: 'var(--muted)', fontSize: 12 }}
+                    />
+
+                    {/* custom tooltip with popover/card colors */}
+                    <Tooltip
+                        contentStyle={{
+                            backgroundColor: 'var(--popover)',
+                            borderColor: 'var(--border)',
+                            borderRadius: 'var(--radius)',
+                        }}
+                        itemStyle={{ color: 'var(--foreground)' }}
+                        labelStyle={{ color: 'var(--muted)' }}
+                        cursor={{ fill: 'rgba(255,255,255,0.1)' }}
+                    />
+
+                    {/* legend in muted text */}
+                    <Legend
+                        wrapperStyle={{ color: 'var(--muted)', fontSize: 12 }}
+                        iconType="square"
+                    />
+
+                    {/* one <Bar> per interaction type */}
+                    {Object.entries(TYPE_COLORS).map(([key, color]) => (
+                        <Bar key={key} dataKey={key} stackId="a" fill={color} />
+                    ))}
+                </BarChart>
+            </ResponsiveContainer>
+        </div>
+    );
 }

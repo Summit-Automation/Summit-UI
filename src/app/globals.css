@@ -1,28 +1,119 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
+/*--------------------------------------
+  Core dark-slate palette & tokens
+---------------------------------------*/
 :root {
-  --background: #0f172a;        /* slate-900 */
-  --foreground: #f1f5f9;        /* slate-100 */
-  --primary: #38bdf8;           /* sky-400 */
-  --accent: #14b8a6;            /* teal-500 */
-  --warn: #facc15;              /* yellow-400 */
-  --muted: #64748b;             /* slate-500 */
-  --sidebar-bg: #1e293b;        /* slate-800 */
-  --highlight-bg: #1f2937;      /* slate-700 */
+    /* Brand neutrals */
+    --DEFAULT:         #0f172a; /* slate-900 */
+    --rich-black:      #0f172a;   /* for deepest backgrounds */
+    --oxford-blue:     #0c1528;   /* page background (formerly slate-900) */
+    --slate-charcoal:  #1e293b;   /* cards/panels (formerly slate-800) */
+    --slate-steel:     #334155;   /* borders, dividers & hover highlights */
+    --palatinate-blue: #1d3eff;   /* primary brand color */
+    --piction-blue:    #0EA5E9;
+    --mint-green:      #10b981;   /* success */
+    --imperial-red:    #e53e3e;   /* error */
+    --warn:            #facc15;   /* warning */
 
-  --font-sans: 'Inter', 'Segoe UI', sans-serif;
-  --font-mono: 'Geist Mono', 'Fira Code', monospace;
+
+
+
+    /* Background layers */
+    --background:      var(--rich-black);
+    --card:            var(--slate-charcoal);
+    --popover:         var(--slate-charcoal);
+    --sidebar-bg:      var(--oxford-blue);
+    --highlight-bg:    var(--slate-steel);
+
+    /* Text & iconography */
+    --text-high:       #e2e8f0;   /* slate-100 */
+    --text-medium:     #94a3b8;   /* slate-400 */
+    --text-low:        #64748b;   /* slate-500 */
+    --foreground:      var(--text-high);
+    --muted:           var(--text-medium);
+    --border:          var(--slate-steel);
+    --ring:            #3b82f6;   /* sky-500 focus rings */
+    --icon:            #38bdf8;   /* sky-500 icons */
+
+    /* Interactive accents */
+    --primary:         var(--DEFAULT);
+    --primary-foreground: #ffffff;
+
+    --accent:          var(--mint-green);
+    --accent-foreground: #ffffff;
+
+    --destructive:     var(--imperial-red);
+    --destructive-foreground: #ffffff;
+
+
+    /* Typography */
+    --font-sans: 'Inter', 'Segoe UI', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    /* Radii & shadows */
+    --radius:    0.5rem;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.3);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.4);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f172a;
-    --foreground: #f1f5f9;
-  }
+
+/*--------------------------------------
+  Map to Tailwind CSS theme vars
+---------------------------------------*/
+@theme inline {
+    --radius-sm:      calc(var(--radius) - 4px);
+    --radius-md:      calc(var(--radius) - 2px);
+    --radius-lg:      var(--radius);
+    --radius-xl:      calc(var(--radius) + 4px);
+
+    --color-background:           var(--background);
+    --color-foreground:           var(--foreground);
+    --color-card:                 var(--card);
+    --color-popover:              var(--popover);
+    --color-sidebar-bg:           var(--sidebar-bg);
+    --color-highlight-bg:         var(--highlight-bg);
+
+    --color-border:               var(--border);
+    --color-ring:                 var(--ring);
+    --color-icon:                 var(--icon);
+    --color-muted:                var(--muted);
+
+    --color-primary:              var(--primary);
+    --color-primary-foreground:   var(--primary-foreground);
+    --color-accent:               var(--accent);
+    --color-accent-foreground:    var(--accent-foreground);
+    --color-warn:                 var(--warn);
+    --color-destructive:          var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/*--------------------------------------
+  Base layer: apply tokens globally
+---------------------------------------*/
+@layer base {
+    /* Border & focus rings */
+    * {
+        @apply border-border outline-ring/50;
+    }
+
+    /* Base font, bg, text */
+    body {
+        @apply font-sans bg-background text-foreground;
+    }
+
+    /* Sonner toaster styling */
+    .toaster {
+        --normal-bg:     var(--popover);
+        --normal-text:   var(--foreground);
+        --normal-border: var(--border);
+
+        --success-bg:    var(--accent);
+        --success-text:  var(--accent-foreground);
+
+        --error-bg:      var(--destructive);
+        --error-text:    var(--destructive-foreground);
+    }
 }

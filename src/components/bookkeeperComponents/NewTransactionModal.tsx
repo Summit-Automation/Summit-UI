@@ -1,138 +1,202 @@
 'use client';
 
-import React, {useState} from 'react';
+import * as React from 'react';
+import {useForm} from 'react-hook-form';
+import {
+    Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
+} from '@/components/ui/dialog';
+import {Button} from '@/components/ui/button';
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from '@/components/ui/form';
+import {Input} from '@/components/ui/input';
+import {Textarea} from '@/components/ui/textarea';
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select';
 import {createTransaction} from '@/app/lib/services/bookkeeperServices/createTransaction';
 import {Customer} from '@/types/customer';
 import {Interaction} from '@/types/interaction';
 
+type FormValues = {
+    type: 'income' | 'expense';
+    category: string;
+    description: string;
+    amount: string;
+    customer_id: string;
+    interaction_id: string;
+};
+
 export default function NewTransactionModal({
-                                                customers, interactions, onSuccess, onClose
+                                                customers, interactions, onSuccess,
                                             }: {
-    customers: Customer[], interactions: Interaction[], onSuccess?: () => void, onClose?: () => void
+    customers: Customer[]; interactions: Interaction[]; onSuccess?: () => void;
 }) {
-    const [form, setForm] = useState({
-        type: 'expense' as 'income' | 'expense',
-        category: '',
-        description: '',
-        amount: '',
-        customer_id: '',
-        interaction_id: '',
+    const [open, setOpen] = React.useState(false);
+
+    const form = useForm<FormValues>({
+        defaultValues: {
+            type: 'expense', category: '', description: '', amount: '', customer_id: '', interaction_id: '',
+        }, mode: 'onBlur',
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const {name, value} = e.target;
-        setForm((prev) => ({
-            ...prev, [name]: value, ...(name === 'customer_id' ? {interaction_id: ''} : {}),
-            // reset interaction if customer changes
-        }));
-    };
+    // filter interactions when a customer is selected
+    const selectedCustomer = form.watch('customer_id');
+    const customerInteractions = interactions.filter((i) => i.customer_id === selectedCustomer);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
+    const onSubmit = async (values: FormValues) => {
         const success = await createTransaction({
-            ...form,
-            amount: form.amount.toString(),
-            customer_id: form.customer_id || null,
-            interaction_id: form.interaction_id || null,
-            customer_name: customers.find((c) => c.id === form.customer_id)?.full_name || null,
-            interaction_title: interactions.find((i) => i.id === form.interaction_id)?.title || null,
-            interaction_outcome: interactions.find((i) => i.id === form.interaction_id)?.outcome || null,
+            ...values,
+            amount: values.amount.toString(),
+            customer_id: values.customer_id || null,
+            interaction_id: values.interaction_id || null,
+            customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
+            interaction_title: interactions.find((i) => i.id === values.interaction_id)?.title || null,
+            interaction_outcome: interactions.find((i) => i.id === values.interaction_id)?.outcome || null,
         });
 
         if (success) {
-            onClose?.();
+            form.reset();
+            setOpen(false);
             onSuccess?.();
         } else {
-            alert('Failed to create transaction');
+            form.setError('category', {message: 'Failed to create transaction'});
         }
     };
 
-    const customerInteractions = interactions.filter((i) => i.customer_id === form.customer_id);
+    return (<Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+            <Button variant="outline">+ Add Transaction</Button>
+        </DialogTrigger>
+        <DialogContent
+            className="max-w-xl bg-primary/90 backdrop-blur-lg border border-border rounded-xl shadow-premium">
+            <DialogHeader>
+                <DialogTitle className="text-white">Add New Transaction</DialogTitle>
+                <DialogDescription className="text-slate-300">
+                    Fill out the details below.
+                </DialogDescription>
+            </DialogHeader>
 
-    return (<div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-slate-700 rounded-lg p-6 w-full max-w-md shadow-xl space-y-4">
-                <h3 className="text-xl font-bold text-gray-200">Add Transaction</h3>
-                <form onSubmit={handleSubmit} className="space-y-3">
-                    <select
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
+                    {/* Type */}
+                    <FormField
+                        control={form.control}
                         name="type"
-                        value={form.type}
-                        onChange={handleChange}
-                        className="w-full p-2 border rounded"
-                    >
-                        <option value="income">Income</option>
-                        <option value="expense">Expense</option>
-                    </select>
+                        render={({field}) => (<FormItem>
+                            <FormLabel className="text-slate-300">Type</FormLabel>
+                            <FormControl>
+                                <Select onValueChange={field.onChange} value={field.value}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select type…"/>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="income">Income</SelectItem>
+                                        <SelectItem value="expense">Expense</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </FormControl>
+                            <FormMessage/>
+                        </FormItem>)}
+                    />
 
-                    <input
+                    {/* Category */}
+                    <FormField
+                        control={form.control}
                         name="category"
-                        placeholder="Category"
-                        value={form.category}
-                        onChange={handleChange}
-                        className="w-full p-2 border rounded"
+                        render={({field}) => (<FormItem>
+                            <FormLabel className="text-slate-300">Category</FormLabel>
+                            <FormControl>
+                                <Input {...field} placeholder="e.g. Consulting"/>
+                            </FormControl>
+                            <FormMessage/>
+                        </FormItem>)}
                     />
 
-                    <textarea
+                    {/* Description */}
+                    <FormField
+                        control={form.control}
                         name="description"
-                        placeholder="Description"
-                        value={form.description}
-                        onChange={handleChange}
-                        className="w-full p-2 border rounded"
+                        render={({field}) => (<FormItem>
+                            <FormLabel className="text-slate-300">Description</FormLabel>
+                            <FormControl>
+                                <Textarea {...field} placeholder="Details…"/>
+                            </FormControl>
+                            <FormMessage/>
+                        </FormItem>)}
                     />
 
-                    <input
+                    {/* Amount */}
+                    <FormField
+                        control={form.control}
                         name="amount"
-                        type="number"
-                        step="0.01"
-                        placeholder="Amount"
-                        value={form.amount}
-                        onChange={handleChange}
-                        className="w-full p-2 border rounded"
+                        render={({field}) => (<FormItem>
+                            <FormLabel className="text-slate-300">Amount</FormLabel>
+                            <FormControl>
+                                <Input
+                                    {...field}
+                                    type="number"
+                                    step="0.01"
+                                    placeholder="0.00"
+                                />
+                            </FormControl>
+                            <FormMessage/>
+                        </FormItem>)}
                     />
 
-                    {/* Customer Dropdown */}
-                    <select
+                    {/* Customer */}
+                    <FormField
+                        control={form.control}
                         name="customer_id"
-                        value={form.customer_id}
-                        onChange={handleChange}
-                        className="w-full p-2 border rounded"
-                    >
-                        <option value="">Select Customer (optional)</option>
-                        {customers.map((c) => (<option key={c.id} value={c.id}>
-                                {c.full_name}
-                            </option>))}
-                    </select>
+                        render={({field}) => (<FormItem>
+                            <FormLabel className="text-slate-300">Customer</FormLabel>
+                            <FormControl>
+                                <Select onValueChange={field.onChange} value={field.value}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Optional…"/>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {customers.map((c) => (<SelectItem key={c.id} value={c.id}>
+                                            {c.full_name}
+                                        </SelectItem>))}
+                                    </SelectContent>
+                                </Select>
+                            </FormControl>
+                            <FormMessage/>
+                        </FormItem>)}
+                    />
 
-                    {/* Interaction Dropdown */}
-                    <select
+                    {/* Interaction */}
+                    <FormField
+                        control={form.control}
                         name="interaction_id"
-                        value={form.interaction_id}
-                        onChange={handleChange}
-                        className="w-full p-2 border rounded"
-                        disabled={!form.customer_id}
-                    >
-                        <option value="">Select Interaction (optional)</option>
-                        {customerInteractions.map((i) => (<option key={i.id} value={i.id}>
-                                {i.title || `(Unnamed)`}
-                            </option>))}
-                    </select>
+                        render={({field}) => (<FormItem>
+                            <FormLabel className="text-slate-300">Interaction</FormLabel>
+                            <FormControl>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    value={field.value}
+                                    disabled={!selectedCustomer}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Optional…"/>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {customerInteractions.map((i) => (<SelectItem key={i.id} value={i.id}>
+                                            {i.title}
+                                        </SelectItem>))}
+                                    </SelectContent>
+                                </Select>
+                            </FormControl>
+                            <FormMessage/>
+                        </FormItem>)}
+                    />
 
-                    <div className="flex justify-between mt-4">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="px-3 py-2 rounded bg-gray-400 hover:bg-gray-500"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                        >
-                            Save
-                        </button>
-                    </div>
+                    {/* Footer */}
+                    <DialogFooter className="flex justify-end space-x-2 pt-4">
+                        <DialogClose asChild>
+                            <Button variant="ghost">Cancel</Button>
+                        </DialogClose>
+                        <Button variant="outline" type="submit">Save Transaction</Button>
+                    </DialogFooter>
                 </form>
-            </div>
-        </div>);
+            </Form>
+        </DialogContent>
+    </Dialog>);
 }
