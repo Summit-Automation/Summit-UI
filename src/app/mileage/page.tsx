@@ -11,7 +11,7 @@ export default async function MileagePage() {
 
     return (
         <div className="p-6 space-y-6">
-            <h2 className="text-3xl font-bold">🚗 Mileage Tracker</h2>
+            <h2 className="text-3xl font-bold">Mileage Tracker</h2>
 
             {/* Summary - Full Width */}
             <div className="w-full">

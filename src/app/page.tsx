@@ -17,13 +17,25 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/comp
 import {Badge} from "@/components/ui/badge";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {
-    BarChart3, Calendar, DollarSign, LineChart, MessageSquare, PieChart, TrendingDown, TrendingUp, Users,
+    BarChart3, 
+    Calendar, 
+    DollarSign, 
+    LineChart, 
+    MessageSquare, 
+    PieChart, 
+    TrendingDown, 
+    TrendingUp, 
+    Users,
 } from "lucide-react";
 
 export default async function DashboardPage() {
-    const [customers, interactions, transactions] = await Promise.all([getCustomers(), getInteractions(), getTransactions(),]);
+    const [customers, interactions, transactions] = await Promise.all([
+        getCustomers(), 
+        getInteractions(), 
+        getTransactions(),
+    ]);
 
-    // Calculate some key metrics
+    // Calculate key metrics
     const totalCustomers = customers?.length || 0;
     const totalInteractions = interactions?.length || 0;
     const totalTransactions = transactions?.length || 0;
@@ -35,43 +47,75 @@ export default async function DashboardPage() {
     const followUpsDue = getFollowUpsDue(interactions);
     const overdueFollowUps = getOverdueFollowUps(interactions);
 
-    function GrowthIndicator({value}: { value: number }) {
+    // Calculate revenue metrics
+    const totalRevenue = transactions
+        ?.filter(t => t.type === 'income')
+        .reduce((sum, t) => sum + parseFloat(t.amount), 0) || 0;
+
+    const totalExpenses = transactions
+        ?.filter(t => t.type === 'expense')
+        .reduce((sum, t) => sum + parseFloat(t.amount), 0) || 0;
+
+    const netProfit = totalRevenue - totalExpenses;
+
+    function GrowthIndicator({value}: {value: number}) {
         const isPositive = value >= 0;
         const Icon = isPositive ? TrendingUp : TrendingDown;
         const colorClass = isPositive ? 'text-emerald-400' : 'text-red-400';
 
-        return (<div className="flex items-center space-x-2 text-xs">
-            <Icon className={`h-3 w-3 ${colorClass}`}/>
-            <span className={colorClass}>
-        {Math.abs(value)}% {isPositive ? 'up' : 'down'} from last month
-      </span>
-        </div>);
+        return (
+            <div className="flex items-center gap-2 text-sm">
+                <Icon className={`h-4 w-4 ${colorClass}`}/>
+                <span className={colorClass}>
+                    {isPositive ? '+' : ''}{Math.abs(value)}%
+                </span>
+            </div>
+        );
     }
 
-    function FollowUpIndicator({due, overdue}: { due: number; overdue: number }) {
-        const hasOverdue = overdue > 0;
-        return (<div className="flex items-center space-x-2 text-xs">
-            {hasOverdue ? (<Badge className="bg-red-500/20 text-red-400 border-red-500/20 hover:bg-red-500/30">
-                Urgent
-            </Badge>) : (
-                <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/30">
-                    All Clear
-                </Badge>)}
-            <span className={hasOverdue ? "text-red-400" : "text-emerald-400"}>
-        {overdue} overdue
-      </span>
-        </div>);
+    function MetricCard({ 
+        title, 
+        value, 
+        growth, 
+        icon: Icon,
+    }: {
+        title: string;
+        value: string | number;
+        growth?: number;
+        icon: any;
+    }) {
+        return (
+            <Card className="card-clean transition-smooth hover:shadow-lg">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-slate-400">
+                        {title}
+                    </CardTitle>
+                    <Icon className="h-5 w-5 text-slate-400" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold text-slate-50">{value}</div>
+                    {growth !== undefined && (
+                        <div className="mt-1">
+                            <GrowthIndicator value={growth} />
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
+        );
     }
 
-    return (<div className="min-h-screen bg-slate-950 text-foreground">
-        <div className="container mx-auto p-6 space-y-6">
-            {/* Header Section */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    return (
+        <div className="space-y-6">
+            {/* Clean Header */}
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">📊 Dashboard Overview</h1>
-                    <p className="text-slate-400">Real-time insights and analytics for your business</p>
+                    <h1 className="text-3xl font-bold text-slate-50">
+                        Business Dashboard
+                    </h1>
+                    <p className="text-slate-400 mt-1">
+                        Real-time insights and analytics for your business
+                    </p>
                 </div>
-
 
                 <DashboardControls
                     customers={customers}
@@ -80,105 +124,75 @@ export default async function DashboardPage() {
                 />
             </div>
 
-            {/* Key Metrics Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card
-                    className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm">
-                    <CardHeader className="flex flex-row items-center justify-between pb-3">
-                        <CardTitle className="text-sm font-medium text-slate-300">Total Customers</CardTitle>
-                        <div className="p-2 bg-slate-800/50 rounded-lg">
-                            <Users className="h-4 w-4 text-icon"/>
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-white mb-1">{totalCustomers}</div>
-                        <GrowthIndicator value={customerGrowth}/>
-                    </CardContent>
-                </Card>
+            {/* Clean Metrics Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <MetricCard
+                    title="Total Customers"
+                    value={totalCustomers.toLocaleString()}
+                    growth={customerGrowth}
+                    icon={Users}
+                />
 
-                <Card
-                    className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm">
-                    <CardHeader className="flex flex-row items-center justify-between pb-3">
-                        <CardTitle className="text-sm font-medium text-slate-300">Interactions</CardTitle>
-                        <div className="p-2 bg-slate-800/50 rounded-lg">
-                            <MessageSquare className="h-4 w-4 text-icon"/>
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-white mb-1">{totalInteractions}</div>
-                        <GrowthIndicator value={interactionGrowth}/>
-                    </CardContent>
-                </Card>
+                <MetricCard
+                    title="Total Revenue"
+                    value={`$${totalRevenue.toLocaleString()}`}
+                    growth={transactionGrowth}
+                    icon={DollarSign}
+                />
 
-                <Card
-                    className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm">
-                    <CardHeader className="flex flex-row items-center justify-between pb-3">
-                        <CardTitle className="text-sm font-medium text-slate-300">Transactions</CardTitle>
-                        <div className="p-2 bg-slate-800/50 rounded-lg">
-                            <DollarSign className="h-4 w-4 text-icon"/>
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-white mb-1">{totalTransactions}</div>
-                        <GrowthIndicator value={transactionGrowth}/>
-                    </CardContent>
-                </Card>
+                <MetricCard
+                    title="Net Profit"
+                    value={`$${netProfit.toLocaleString()}`}
+                    icon={TrendingUp}
+                />
 
-                <Card
-                    className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm">
-                    <CardHeader className="flex flex-row items-center justify-between pb-3">
-                        <CardTitle className="text-sm font-medium text-slate-300">Follow-ups Due</CardTitle>
-                        <div className="p-2 bg-slate-800/50 rounded-lg">
-                            <Calendar className="h-4 w-4 text-icon"/>
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-white mb-1">{followUpsDue}</div>
-                        <FollowUpIndicator
-                            due={followUpsDue}
-                            overdue={overdueFollowUps}
-                        />
-                    </CardContent>
-                </Card>
+                <MetricCard
+                    title="Interactions"
+                    value={totalInteractions.toLocaleString()}
+                    growth={interactionGrowth}
+                    icon={MessageSquare}
+                />
             </div>
 
-            {/* Main Charts Section */}
-            <Tabs defaultValue="overview" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-3 lg:w-fit bg-slate-900/50 border-slate-800 p-1">
-                    <TabsTrigger
-                        value="overview"
-                        className="data-[state=active]:bg-slate-800 data-[state=active]:text-sky-400 data-[state=active]:shadow-sm text-slate-400 hover:text-slate-300 transition-all duration-200"
-                    >
-                        Overview
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="customers"
-                        className="data-[state=active]:bg-slate-800 data-[state=active]:text-sky-400 data-[state=active]:shadow-sm text-slate-400 hover:text-slate-300 transition-all duration-200"
-                    >
-                        Customers
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="financial"
-                        className="data-[state=active]:bg-slate-800 data-[state=active]:text-sky-400 data-[state=active]:shadow-sm text-slate-400 hover:text-slate-300 transition-all duration-200"
-                    >
-                        Financial
-                    </TabsTrigger>
+            {/* Follow-ups Alert */}
+            {followUpsDue > 0 && (
+                <Card className="border-amber-500/20 bg-amber-500/5">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-amber-400">
+                            <Calendar className="h-5 w-5" />
+                            Follow-ups Required
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex items-center gap-2">
+                            <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/20">
+                                {followUpsDue} pending
+                            </Badge>
+                            {overdueFollowUps > 0 && (
+                                <Badge className="bg-red-500/10 text-red-400 border-red-500/20">
+                                    {overdueFollowUps} overdue
+                                </Badge>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
+            {/* Clean Analytics */}
+            <Tabs defaultValue="overview" className="space-y-4">
+                <TabsList className="grid w-full grid-cols-3 lg:w-fit">
+                    <TabsTrigger value="overview">Overview</TabsTrigger>
+                    <TabsTrigger value="customers">Customers</TabsTrigger>
+                    <TabsTrigger value="financial">Financial</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="overview" className="space-y-6">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {/* Customer Growth Chart */}
-                        <Card
-                            className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm">
-                            <CardHeader className="pb-4">
-                                <CardTitle className="flex items-center gap-2 text-white">
-                                    <div className="p-2 bg-slate-800/50 rounded-lg">
-                                        <LineChart className="h-5 w-5 text-icon"/>
-                                    </div>
-                                    Customer Growth
-                                </CardTitle>
-                                <CardDescription className="text-slate-400">
-                                    Track new customer acquisition over time
+                        <Card className="chart-clean">
+                            <CardHeader>
+                                <CardTitle className="chart-title">Customer Growth</CardTitle>
+                                <CardDescription className="chart-subtitle">
+                                    New customer acquisition over time
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
@@ -186,18 +200,11 @@ export default async function DashboardPage() {
                             </CardContent>
                         </Card>
 
-                        {/* Cash Flow Chart */}
-                        <Card
-                            className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm">
-                            <CardHeader className="pb-4">
-                                <CardTitle className="flex items-center gap-2 text-white">
-                                    <div className="p-2 bg-slate-800/50 rounded-lg">
-                                        <BarChart3 className="h-5 w-5 text-icon"/>
-                                    </div>
-                                    Cash Flow
-                                </CardTitle>
-                                <CardDescription className="text-slate-400">
-                                    Income vs expenses over time
+                        <Card className="chart-clean">
+                            <CardHeader>
+                                <CardTitle className="chart-title">Cash Flow</CardTitle>
+                                <CardDescription className="chart-subtitle">
+                                    Income vs expenses
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
@@ -206,18 +213,11 @@ export default async function DashboardPage() {
                         </Card>
                     </div>
 
-                    {/* Interactions Chart */}
-                    <Card
-                        className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm">
-                        <CardHeader className="pb-4">
-                            <CardTitle className="flex items-center gap-2 text-white">
-                                <div className="p-2 bg-slate-800/50 rounded-lg">
-                                    <BarChart3 className="h-5 w-5 text-icon"/>
-                                </div>
-                                Interaction Types
-                            </CardTitle>
-                            <CardDescription className="text-slate-400">
-                                Breakdown of customer interactions by type
+                    <Card className="chart-clean">
+                        <CardHeader>
+                            <CardTitle className="chart-title">Interaction Activity</CardTitle>
+                            <CardDescription className="chart-subtitle">
+                                Customer touchpoints by type
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -228,18 +228,11 @@ export default async function DashboardPage() {
 
                 <TabsContent value="customers" className="space-y-6">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {/* Customer Status Pie */}
-                        <Card
-                            className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm">
-                            <CardHeader className="pb-4">
-                                <CardTitle className="flex items-center gap-2 text-white">
-                                    <div className="p-2 bg-slate-800/50 rounded-lg">
-                                        <PieChart className="h-5 w-5 text-icon"/>
-                                    </div>
-                                    Customer Status
-                                </CardTitle>
-                                <CardDescription className="text-slate-400">
-                                    Current status distribution of customers
+                        <Card className="chart-clean">
+                            <CardHeader>
+                                <CardTitle className="chart-title">Customer Status</CardTitle>
+                                <CardDescription className="chart-subtitle">
+                                    Pipeline distribution
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
@@ -247,18 +240,11 @@ export default async function DashboardPage() {
                             </CardContent>
                         </Card>
 
-                        {/* Follow-up Status Pie */}
-                        <Card
-                            className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm">
-                            <CardHeader className="pb-4">
-                                <CardTitle className="flex items-center gap-2 text-white">
-                                    <div className="p-2 bg-slate-800/50 rounded-lg">
-                                        <Calendar className="h-5 w-5 text-icon"/>
-                                    </div>
-                                    Follow-up Status
-                                </CardTitle>
-                                <CardDescription className="text-slate-400">
-                                    Pending follow-ups and their priorities
+                        <Card className="chart-clean">
+                            <CardHeader>
+                                <CardTitle className="chart-title">Follow-ups</CardTitle>
+                                <CardDescription className="chart-subtitle">
+                                    Pending follow-up requirements
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
@@ -270,18 +256,11 @@ export default async function DashboardPage() {
 
                 <TabsContent value="financial" className="space-y-6">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {/* Expense Categories Pie */}
-                        <Card
-                            className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm">
-                            <CardHeader className="pb-4">
-                                <CardTitle className="flex items-center gap-2 text-white">
-                                    <div className="p-2 bg-slate-800/50 rounded-lg">
-                                        <PieChart className="h-5 w-5 text-icon"/>
-                                    </div>
-                                    Expense Categories
-                                </CardTitle>
-                                <CardDescription className="text-slate-400">
-                                    Breakdown of expenses by category
+                        <Card className="chart-clean">
+                            <CardHeader>
+                                <CardTitle className="chart-title">Expense Categories</CardTitle>
+                                <CardDescription className="chart-subtitle">
+                                    Spending breakdown
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
@@ -289,18 +268,11 @@ export default async function DashboardPage() {
                             </CardContent>
                         </Card>
 
-                        {/* Cash Flow Analysis */}
-                        <Card
-                            className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm">
-                            <CardHeader className="pb-4">
-                                <CardTitle className="flex items-center gap-2 text-white">
-                                    <div className="p-2 bg-slate-800/50 rounded-lg">
-                                        <BarChart3 className="h-5 w-5 text-icon"/>
-                                    </div>
-                                    Cash Flow Analysis
-                                </CardTitle>
-                                <CardDescription className="text-slate-400">
-                                    Detailed income vs expenses analysis
+                        <Card className="chart-clean">
+                            <CardHeader>
+                                <CardTitle className="chart-title">Financial Overview</CardTitle>
+                                <CardDescription className="chart-subtitle">
+                                    Comprehensive cash flow
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
@@ -310,9 +282,8 @@ export default async function DashboardPage() {
                     </div>
                 </TabsContent>
             </Tabs>
+
+            <FeedbackButton />
         </div>
-        
-        {/* Feedback Button - Fixed positioned, non-intrusive */}
-        <FeedbackButton />
-    </div>);
+    );
 }

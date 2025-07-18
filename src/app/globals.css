@@ -1,119 +1,415 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 
 /*--------------------------------------
-  Core dark-slate palette & tokens
+  Clean Professional Design System
 ---------------------------------------*/
 :root {
-    /* Brand neutrals */
-    --DEFAULT:         #0f172a; /* slate-900 */
-    --rich-black:      #0f172a;   /* for deepest backgrounds */
-    --oxford-blue:     #0c1528;   /* page background (formerly slate-900) */
-    --slate-charcoal:  #1e293b;   /* cards/panels (formerly slate-800) */
-    --slate-steel:     #334155;   /* borders, dividers & hover highlights */
-    --palatinate-blue: #1d3eff;   /* primary brand color */
-    --piction-blue:    #0EA5E9;
-    --mint-green:      #10b981;   /* success */
-    --imperial-red:    #e53e3e;   /* error */
-    --warn:            #facc15;   /* warning */
+    /* Simplified Color Palette */
+    --background:      #020617;   /* slate-950 - deep, professional */
+    --surface:         #0f172a;   /* slate-900 - cards, panels */
+    --surface-hover:   #1e293b;   /* slate-800 - hover states */
+    --border:          #334155;   /* slate-700 - clean borders */
+    --text-primary:    #f8fafc;   /* slate-50 - high contrast text */
+    --text-secondary:  #cbd5e1;   /* slate-300 - secondary text */
+    --text-muted:      #94a3b8;   /* slate-400 - muted text */
+    --accent:          #3b82f6;   /* blue-500 - primary accent */
+    --accent-hover:    #2563eb;   /* blue-600 - accent hover */
+    --success:         #10b981;   /* emerald-500 - success states */
+    --warning:         #f59e0b;   /* amber-500 - warnings */
+    --error:           #ef4444;   /* red-500 - errors */
 
-
-
-
-    /* Background layers */
-    --background:      var(--rich-black);
-    --card:            var(--slate-charcoal);
-    --popover:         var(--slate-charcoal);
-    --sidebar-bg:      var(--oxford-blue);
-    --highlight-bg:    var(--slate-steel);
-
-    /* Text & iconography */
-    --text-high:       #e2e8f0;   /* slate-100 */
-    --text-medium:     #94a3b8;   /* slate-400 */
-    --text-low:        #64748b;   /* slate-500 */
-    --foreground:      var(--text-high);
-    --muted:           var(--text-medium);
-    --border:          var(--slate-steel);
-    --ring:            #3b82f6;   /* sky-500 focus rings */
-    --icon:            #38bdf8;   /* sky-500 icons */
-
-    /* Interactive accents */
-    --primary:         var(--DEFAULT);
-    --primary-foreground: #ffffff;
-
-    --accent:          var(--mint-green);
-    --accent-foreground: #ffffff;
-
-    --destructive:     var(--imperial-red);
-    --destructive-foreground: #ffffff;
-
-
-    /* Typography */
-    --font-sans: 'Inter', 'Segoe UI', sans-serif;
-    --font-mono: 'Fira Code', monospace;
-
-    /* Radii & shadows */
-    --radius:    0.5rem;
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.3);
-    --shadow-lg: 0 10px 15px rgba(0,0,0,0.4);
-}
-
-
-/*--------------------------------------
-  Map to Tailwind CSS theme vars
----------------------------------------*/
-@theme inline {
-    --radius-sm:      calc(var(--radius) - 4px);
-    --radius-md:      calc(var(--radius) - 2px);
-    --radius-lg:      var(--radius);
-    --radius-xl:      calc(var(--radius) + 4px);
-
-    --color-background:           var(--background);
-    --color-foreground:           var(--foreground);
-    --color-card:                 var(--card);
-    --color-popover:              var(--popover);
-    --color-sidebar-bg:           var(--sidebar-bg);
-    --color-highlight-bg:         var(--highlight-bg);
-
-    --color-border:               var(--border);
-    --color-ring:                 var(--ring);
-    --color-icon:                 var(--icon);
-    --color-muted:                var(--muted);
-
-    --color-primary:              var(--primary);
-    --color-primary-foreground:   var(--primary-foreground);
-    --color-accent:               var(--accent);
-    --color-accent-foreground:    var(--accent-foreground);
-    --color-warn:                 var(--warn);
-    --color-destructive:          var(--destructive);
-    --color-destructive-foreground: var(--destructive-foreground);
+    /* Clean Spacing */
+    --radius: 0.5rem;
 }
 
 /*--------------------------------------
-  Base layer: apply tokens globally
+  Base Styles
 ---------------------------------------*/
 @layer base {
-    /* Border & focus rings */
     * {
-        @apply border-border outline-ring/50;
+        @apply border-slate-700;
     }
 
-    /* Base font, bg, text */
     body {
-        @apply font-sans bg-background text-foreground;
+        @apply bg-slate-950 text-slate-50 font-sans antialiased;
+        font-family: 'Inter', system-ui, sans-serif;
     }
 
-    /* Sonner toaster styling */
-    .toaster {
-        --normal-bg:     var(--popover);
-        --normal-text:   var(--foreground);
-        --normal-border: var(--border);
-
-        --success-bg:    var(--accent);
-        --success-text:  var(--accent-foreground);
-
-        --error-bg:      var(--destructive);
-        --error-text:    var(--destructive-foreground);
+    /* Clean Typography */
+    h1, h2, h3, h4, h5, h6 {
+        @apply text-slate-50 font-semibold tracking-tight;
     }
+
+    h1 { @apply text-3xl; }
+    h2 { @apply text-2xl; }
+    h3 { @apply text-xl; }
+    h4 { @apply text-lg; }
+}
+
+/*--------------------------------------
+  Professional Components
+---------------------------------------*/
+@layer components {
+    /* Clean Cards */
+    .card-clean {
+        @apply bg-slate-900 border border-slate-800 rounded-lg shadow-sm;
+    }
+
+    .card-clean:hover {
+        @apply border-slate-700 shadow-md;
+    }
+
+    /* Clean Buttons */
+    .btn-clean {
+        @apply px-4 py-2 rounded-lg font-medium transition-colors;
+    }
+
+    .btn-primary {
+        @apply bg-blue-600 text-white hover:bg-blue-700;
+    }
+
+    .btn-secondary {
+        @apply bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white;
+    }
+
+    /* Clean Navigation */
+    .nav-clean {
+        @apply bg-slate-900/95 border-r border-slate-800;
+    }
+
+    /* Clean Metrics */
+    .metric-clean {
+        @apply bg-slate-900 border border-slate-800 rounded-lg p-6;
+    }
+
+    .metric-value {
+        @apply text-2xl font-bold text-slate-50;
+    }
+
+    .metric-label {
+        @apply text-sm text-slate-400 uppercase tracking-wide;
+    }
+
+    /* Clean Tables */
+    .table-clean {
+        @apply bg-slate-900 border border-slate-800 rounded-lg overflow-hidden;
+    }
+
+    .table-header {
+        @apply bg-slate-800 text-slate-300 font-medium;
+    }
+
+    .table-row {
+        @apply border-b border-slate-800 hover:bg-slate-800/50;
+    }
+
+    /* Clean Forms */
+    .input-clean {
+        @apply bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-50;
+        @apply focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20;
+    }
+
+    /* Status Indicators */
+    .status-success {
+        @apply bg-emerald-100/10 text-emerald-400 border border-emerald-500/20;
+    }
+
+    .status-warning {
+        @apply bg-amber-100/10 text-amber-400 border border-amber-500/20;
+    }
+
+    .status-error {
+        @apply bg-red-100/10 text-red-400 border border-red-500/20;
+    }
+}
+
+/*--------------------------------------
+  Clean Animations (CSS only)
+---------------------------------------*/
+.transition-smooth {
+    transition: all 0.2s ease-in-out;
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/*--------------------------------------
+  Chart Enhancements
+---------------------------------------*/
+.chart-clean {
+    @apply bg-slate-900 border border-slate-800 rounded-lg p-6;
+}
+
+.chart-title {
+    @apply text-lg font-semibold text-slate-50 mb-2;
+}
+
+.chart-subtitle {
+    @apply text-sm text-slate-400 mb-4;
+}
+
+/*--------------------------------------
+  Responsive Design
+---------------------------------------*/
+@media (max-width: 768px) {
+    .card-clean {
+        @apply mx-4 rounded-lg;
+    }
+    
+    .metric-clean {
+        @apply p-4;
+    }
+}
+
+/*--------------------------------------
+  Select Dropdown Fixes
+---------------------------------------*/
+
+/* Fix Select Content visibility */
+[data-radix-select-content] {
+    background-color: rgb(15 23 42) !important; /* slate-900 */
+    border: 1px solid rgb(51 65 85) !important; /* slate-700 */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: none !important;
+}
+
+/* Fix Select Items */
+[data-radix-select-item] {
+    color: rgb(248 250 252) !important; /* slate-50 */
+    background-color: transparent !important;
+}
+
+[data-radix-select-item]:hover,
+[data-radix-select-item][data-highlighted] {
+    background-color: rgb(30 41 59) !important; /* slate-800 */
+    color: rgb(248 250 252) !important;
+}
+
+[data-radix-select-item][data-state="checked"] {
+    background-color: rgb(59 130 246) !important; /* blue-500 */
+    color: white !important;
+}
+
+/* Fix Select Trigger */
+[data-radix-select-trigger] {
+    background-color: rgb(15 23 42) !important; /* slate-900 */
+    border: 1px solid rgb(51 65 85) !important; /* slate-700 */
+    color: rgb(248 250 252) !important; /* slate-50 */
+}
+
+[data-radix-select-trigger]:focus {
+    border-color: rgb(59 130 246) !important; /* blue-500 */
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Fix Select Placeholder */
+[data-radix-select-trigger] [data-placeholder] {
+    color: rgb(148 163 184) !important; /* slate-400 */
+}
+
+/* Fix Dialog backdrop */
+[data-radix-dialog-content] {
+    background-color: rgb(15 23 42) !important; /* slate-900 */
+    border: 1px solid rgb(51 65 85) !important; /* slate-700 */
+}
+
+/*--------------------------------------
+  Cash Flow Chart Colors
+---------------------------------------*/
+
+/* Allow semantic colors for financial charts */
+.recharts-area[data-key="income"] {
+    fill: url(#incomeGradient) !important;
+    stroke: #10b981 !important; /* emerald-500 for income */
+}
+
+.recharts-area[data-key="expense"] {
+    fill: url(#expenseGradient) !important;
+    stroke: #ef4444 !important; /* red-500 for expenses */
+}
+
+/* Ensure gradients work properly */
+.recharts-surface defs linearGradient[id="incomeGradient"] stop {
+    stop-color: #10b981; /* emerald-500 */
+}
+
+.recharts-surface defs linearGradient[id="expenseGradient"] stop {
+    stop-color: #ef4444; /* red-500 */
+}
+
+/* Legend colors for cash flow */
+.recharts-legend-item-text[data-value="income"] {
+    color: #10b981 !important;
+}
+
+.recharts-legend-item-text[data-value="expense"] {
+    color: #ef4444 !important;
+}
+
+/* Tooltip colors */
+.recharts-tooltip-wrapper .recharts-tooltip-item[data-key="income"] {
+    color: #10b981 !important;
+}
+
+.recharts-tooltip-wrapper .recharts-tooltip-item[data-key="expense"] {
+    color: #ef4444 !important;
+}
+
+/*--------------------------------------
+  Chart Text Color Fixes
+---------------------------------------*/
+
+/* Fix all Recharts text colors */
+.recharts-cartesian-axis-tick-value,
+.recharts-polar-angle-axis-tick-value,
+.recharts-polar-radius-axis-tick-value {
+    fill: #94a3b8 !important; /* slate-400 - readable on dark */
+}
+
+/* Fix legend text */
+.recharts-legend-item-text,
+.recharts-default-legend .recharts-legend-item-text {
+    color: #cbd5e1 !important; /* slate-300 - lighter for better contrast */
+    fill: #cbd5e1 !important;
+}
+
+/* Fix tooltip background and text */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+    background-color: #1e293b !important; /* slate-800 */
+    border: 1px solid #475569 !important; /* slate-600 */
+    border-radius: 8px !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important;
+}
+
+.recharts-tooltip-wrapper .recharts-tooltip-label {
+    color: #f8fafc !important; /* slate-50 */
+    font-weight: 600 !important;
+    margin-bottom: 4px !important;
+}
+
+.recharts-tooltip-wrapper .recharts-tooltip-item {
+    color: #cbd5e1 !important; /* slate-300 */
+}
+
+.recharts-tooltip-wrapper .recharts-tooltip-item-list {
+    padding: 0 !important;
+}
+
+/* Fix pie chart labels */
+.recharts-pie-label-text {
+    fill: #f8fafc !important; /* slate-50 */
+    font-size: 12px !important;
+    font-weight: 500 !important;
+}
+
+/* Fix bar chart labels */
+.recharts-bar-rectangle {
+    cursor: pointer;
+}
+
+/* Fix area chart labels */
+.recharts-area-curve {
+    stroke-width: 2px;
+}
+
+/* Fix line chart points and lines */
+.recharts-line-curve {
+    stroke-width: 2px;
+}
+
+.recharts-line-dot {
+    stroke-width: 2px;
+}
+
+/* Custom tooltip content styling */
+.recharts-tooltip-cursor {
+    fill: rgba(148, 163, 184, 0.1) !important; /* slate-400 with opacity */
+}
+
+/* Fix axis lines */
+.recharts-cartesian-axis-line,
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+    stroke: #475569 !important; /* slate-600 */
+    stroke-dasharray: 3 3;
+}
+
+/* Specific fixes for cash flow chart */
+.recharts-area[data-key="income"] + .recharts-legend .recharts-legend-item-text {
+    color: #10b981 !important; /* emerald-500 */
+}
+
+.recharts-area[data-key="expense"] + .recharts-legend .recharts-legend-item-text {
+    color: #ef4444 !important; /* red-500 */
+}
+
+/* Fix reference lines if any */
+.recharts-reference-line-line {
+    stroke: #64748b !important; /* slate-500 */
+    stroke-dasharray: 5 5;
+}
+
+/* Ensure all SVG text is visible */
+.recharts-surface text {
+    fill: #94a3b8 !important; /* slate-400 */
+}
+
+/* Special handling for percentage labels */
+.recharts-text[text-anchor="middle"] {
+    fill: #f8fafc !important; /* slate-50 for center labels */
+    font-weight: 600 !important;
+}
+
+/* Fix any remaining black text */
+.recharts-wrapper svg text {
+    fill: #94a3b8 !important; /* slate-400 */
+}
+
+.recharts-wrapper svg .recharts-legend-item text {
+    fill: #cbd5e1 !important; /* slate-300 */
+}
+
+/*--------------------------------------
+  Customer Growth Chart Dots Fix
+---------------------------------------*/
+
+/* Fix line chart dots to be white/visible */
+.recharts-line-dot {
+    fill: #f8fafc !important; /* slate-50 - white dots */
+    stroke: #3b82f6 !important; /* blue-500 - blue border */
+    stroke-width: 2px !important;
+    r: 4 !important; /* slightly larger for better visibility */
+}
+
+/* Active/hover state for dots */
+.recharts-line-dot:hover,
+.recharts-active-dot {
+    fill: #ffffff !important; /* pure white */
+    stroke: #2563eb !important; /* blue-600 - darker blue border */
+    stroke-width: 3px !important;
+    r: 5 !important; /* larger on hover */
+}
+
+/* Ensure the line itself is visible */
+.recharts-line-curve {
+    stroke: #3b82f6 !important; /* blue-500 */
+    stroke-width: 2px !important;
+}
+
+/* Fix any other line chart elements */
+.recharts-line .recharts-curve {
+    stroke: #3b82f6 !important; /* blue-500 */
+}
+
+/* Make sure dots show on all line charts */
+.recharts-wrapper .recharts-line-dots .recharts-dot {
+    fill: #f8fafc !important; /* slate-50 */
+    stroke: #3b82f6 !important; /* blue-500 */
+    stroke-width: 2px !important;
 }

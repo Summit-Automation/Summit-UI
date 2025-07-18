@@ -12,7 +12,7 @@ export default async function CRMPage() {
 
     return (<div className="p-6 space-y-6">
             {/* Header */}
-            <h2 className="text-3xl font-bold mb-4">📇 Customer Relationship Manager</h2>
+            <h2 className="text-3xl font-bold mb-4">Customer Relationship Manager</h2>
 
             {/* Summary - Full Width */}
             <div className="w-full">
