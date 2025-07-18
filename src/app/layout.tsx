@@ -1,21 +1,35 @@
+import type { Metadata } from "next";
 import '@/app/globals.css'
 import Sidebar from '@/components/globalComponents/Sidebar'
+import { Inter } from "next/font/google";
 import React from 'react'
 
+const inter = Inter({ subsets: ['latin'] });
+
 export const metadata = {
-    title: 'Summit Automation', description: 'Contractor CRM and Bookkeeper',
+    title: 'Summit Automation Dashboard', 
+    description: 'AI Automated Tools',
 }
 
-export default function RootLayout({children}: { children: React.ReactNode }) {
-    return (<html lang="en">
-        <body className="bg-slate-950 text-slate-100 font-sans">
-        <Sidebar/>
-
-        {/* Main content with margin to account for sidebar width */}
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <head>
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+      </head>
+      <body className={`bg-slate-950 text-slate-100 font-sans ${inter.className}`}>
+        <Sidebar />
         <main className="ml-64 p-6 min-h-screen overflow-auto">
-            {children}
+          {children}
         </main>
-        </body>
-        </html>)
+      </body>
+    </html>
+  );
 }
-
