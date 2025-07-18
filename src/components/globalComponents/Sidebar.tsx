@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import OrganizationDisplay from '@/components/organizationComponents/OrganizationDisplay';
 import {
     LayoutDashboard,
     Users,
@@ -97,7 +98,7 @@ export default function Sidebar() {
         <aside className="fixed inset-y-0 left-0 w-64 bg-slate-900/95 border-r border-slate-800 flex flex-col z-50">
             {/* Clean Header */}
             <div className="p-6 border-b border-slate-800">
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center mb-4">
                     <Image
                         src="/logo.svg"
                         alt="Summit Automation"
@@ -105,6 +106,10 @@ export default function Sidebar() {
                         height={40}
                         priority
                     />
+                </div>
+                {/* Organization Display */}
+                <div className="mt-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
+                    <OrganizationDisplay />
                 </div>
             </div>
 
