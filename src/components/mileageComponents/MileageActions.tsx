@@ -18,30 +18,6 @@ export default function MileageActions() {
                 >
                     🤖 AI Mileage Tracker
                 </button>
-
-                <button
-                    className="bg-purple-700 text-white px-4 py-2 rounded shadow-sm hover:bg-purple-600"
-                    disabled
-                    title="Coming soon: Import mileage from GPS tracking apps"
-                >
-                    📱 Import GPS Data
-                </button>
-
-                <button
-                    className="bg-slate-700 text-white px-4 py-2 rounded shadow-sm hover:bg-slate-600"
-                    disabled
-                    title="Coming soon: Export mileage data for tax preparation"
-                >
-                    📤 Export for Taxes
-                </button>
-
-                <button
-                    className="bg-yellow-700 text-white px-4 py-2 rounded shadow-sm hover:bg-yellow-600"
-                    disabled
-                    title="Coming soon: Generate annual mileage report"
-                >
-                    📊 Tax Report
-                </button>
             </div>
         </fieldset>
     );

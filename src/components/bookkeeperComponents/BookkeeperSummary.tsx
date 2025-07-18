@@ -7,9 +7,9 @@ import { summarizeTransactions } from '@/utils/finance/summarizeTransactions';
 const cardStyles = `bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm`;
 const cardHeaders = `flex items-center justify-between pb-2`;
 const cardTitleStyles = `text-sm font-medium text-slate-300`;
-const iconStyles = `h-5 w-5 text-icon`;
+const iconStyles = `h-4 w-4 text-icon`;
 const iconContainerStyles = `p-2 bg-slate-800/50 rounded-lg`;
-const cardContentStyles = `text-3xl font-bold text-white`;
+const cardContentStyles = `text-xl font-bold text-white truncate`;
 
 interface MetricCardProps {
     title: string;
@@ -27,8 +27,8 @@ function MetricCard({ title, value, Icon, iconColorClass }: MetricCardProps) {
                     <Icon className={iconStyles.replace('text-icon', iconColorClass)} />
                 </div>
             </CardHeader>
-            <CardContent>
-                <div className={cardContentStyles}>{value}</div>
+            <CardContent className="pt-0">
+                <div className={cardContentStyles} title={value.toString()}>{value}</div>
             </CardContent>
         </Card>
     );
@@ -40,9 +40,20 @@ export default function BookkeeperSummary({ transactions }: { transactions: Tran
     }
 
     const { totalIncome, totalExpenses, netBalance } = summarizeTransactions(transactions);
-    const formattedIncome = `$${totalIncome.toFixed(2)}`;
-    const formattedExpenses = `$${totalExpenses.toFixed(2)}`;
-    const formattedNet = `$${netBalance.toFixed(2)}`;
+    
+    // Format currency with exact amounts for financial precision
+    const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(amount);
+    };
+
+    const formattedIncome = formatCurrency(totalIncome);
+    const formattedExpenses = formatCurrency(totalExpenses);
+    const formattedNet = formatCurrency(netBalance);
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
