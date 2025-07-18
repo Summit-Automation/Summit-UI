@@ -9,6 +9,7 @@ import {
     LayoutDashboard,
     Users,
     Calculator,
+    Car,
 } from 'lucide-react';
 
 const navItems = [
@@ -26,6 +27,11 @@ const navItems = [
         href: '/bookkeeper',
         label: 'Bookkeeper',
         icon: Calculator
+    },
+    {
+        href: '/mileage',
+        label: 'Mileage',
+        icon: Car
     },
 ];
 
