@@ -29,7 +29,7 @@ const navItems = [
     },
     {
         href: '/bookkeeper',
-        label: 'Accounting',
+        label: 'Accounting', 
         icon: Calculator,
     },
     {

@@ -32,6 +32,7 @@ export default function NewMileageEntryModal({
     onSuccess?: () => void;
 }) {
     const [open, setOpen] = React.useState(false);
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
 
     const form = useForm<FormValues>({
         defaultValues: {
@@ -48,14 +49,42 @@ export default function NewMileageEntryModal({
     });
 
     const onSubmit = async (values: FormValues) => {
-        const success = await createMileageEntry({
-            ...values,
-            miles: parseFloat(values.miles),
-            customer_id: values.customer_id || null,
-            customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
-        });
+        setIsSubmitting(true);
+        
+        try {
+            const success = await createMileageEntry({
+                ...values,
+                miles: parseFloat(values.miles),
+                customer_id: values.customer_id || null,
+                customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
+            });
 
-        if (success) {
+            if (success) {
+                form.reset({
+                    date: new Date().toISOString().split('T')[0],
+                    start_location: '',
+                    end_location: '',
+                    purpose: '',
+                    miles: '',
+                    is_business: true,
+                    customer_id: '',
+                    notes: '',
+                });
+                setOpen(false);
+                onSuccess?.();
+            } else {
+                form.setError('miles', { message: 'Failed to create mileage entry' });
+            }
+        } catch (error) {
+            form.setError('miles', { message: 'Failed to create mileage entry' });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    // Reset form when modal closes
+    React.useEffect(() => {
+        if (!open) {
             form.reset({
                 date: new Date().toISOString().split('T')[0],
                 start_location: '',
@@ -66,12 +95,9 @@ export default function NewMileageEntryModal({
                 customer_id: '',
                 notes: '',
             });
-            setOpen(false);
-            onSuccess?.();
-        } else {
-            form.setError('miles', { message: 'Failed to create mileage entry' });
+            setIsSubmitting(false);
         }
-    };
+    }, [open, form]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -80,26 +106,30 @@ export default function NewMileageEntryModal({
                     + Add Mileage
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-xl bg-primary/90 backdrop-blur-lg border border-border rounded-xl shadow-premium">
+            <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto bg-slate-900 border border-slate-700 rounded-xl shadow-2xl">
                 <DialogHeader>
                     <DialogTitle className="text-white">Add Mileage Entry</DialogTitle>
-                    <DialogDescription className="text-slate-300">
-                        Track your business and personal mileage. Only miles driven is required for tax purposes.
+                    <DialogDescription className="text-slate-400">
+                        Track your business and personal mileage with exact decimal precision for tax purposes.
                     </DialogDescription>
                 </DialogHeader>
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
                         {/* Date */}
                         <FormField
                             control={form.control}
                             name="date"
                             rules={{ required: "Date is required" }}
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="space-y-2">
                                     <FormLabel className="text-slate-300">Date *</FormLabel>
                                     <FormControl>
-                                        <Input {...field} type="date" />
+                                        <Input 
+                                            {...field} 
+                                            type="date" 
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -112,17 +142,21 @@ export default function NewMileageEntryModal({
                             name="purpose"
                             rules={{ required: "Purpose is required" }}
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="space-y-2">
                                     <FormLabel className="text-slate-300">Purpose *</FormLabel>
                                     <FormControl>
-                                        <Input {...field} placeholder="Client meeting, site visit, etc." />
+                                        <Input 
+                                            {...field} 
+                                            placeholder="Client meeting, site visit, etc." 
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
 
-                        {/* Miles - Primary Required Field */}
+                        {/* Miles - Primary Required Field with Smart Decimal Precision */}
                         <FormField
                             control={form.control}
                             name="miles"
@@ -138,18 +172,22 @@ export default function NewMileageEntryModal({
                                 }
                             }}
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="space-y-2">
                                     <FormLabel className="text-slate-300">Miles Driven *</FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
                                             type="number"
                                             step="0.1"
+                                            min="0.1"
                                             placeholder="0.0"
-                                            className="font-semibold"
+                                            className="font-mono font-semibold bg-slate-900 border-slate-700 text-slate-50"
                                         />
                                     </FormControl>
                                     <FormMessage />
+                                    <p className="text-xs text-slate-400 mt-1">
+                                        Enter mileage (e.g., 15 or 15.5)
+                                    </p>
                                 </FormItem>
                             )}
                         />
@@ -159,28 +197,38 @@ export default function NewMileageEntryModal({
                             control={form.control}
                             name="is_business"
                             render={({ field }) => (
-                                <FormItem className="flex items-center space-x-2">
-                                    <FormControl>
-                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                                    </FormControl>
-                                    <FormLabel className="text-slate-300">Business trip (eligible for tax deduction)</FormLabel>
+                                <FormItem className="space-y-3">
+                                    <div className="flex items-center space-x-2">
+                                        <FormControl>
+                                            <Checkbox 
+                                                checked={field.value} 
+                                                onCheckedChange={field.onChange}
+                                                className="border-slate-600"
+                                            />
+                                        </FormControl>
+                                        <FormLabel className="text-slate-300">Business trip (eligible for tax deduction at $0.67/mile)</FormLabel>
+                                    </div>
                                 </FormItem>
                             )}
                         />
 
                         {/* Optional Fields Section */}
-                        <div className="border-t border-slate-600 pt-4">
-                            <h4 className="text-sm font-medium text-slate-300 mb-3">Optional Details (for AI integration)</h4>
+                        <div className="border-t border-slate-600 pt-6 space-y-6">
+                            <h4 className="text-sm font-medium text-slate-300 mb-4">Optional Details</h4>
                             
                             {/* Start Location */}
                             <FormField
                                 control={form.control}
                                 name="start_location"
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem className="space-y-2">
                                         <FormLabel className="text-slate-300">From (Optional)</FormLabel>
                                         <FormControl>
-                                            <Input {...field} placeholder="Starting location" />
+                                            <Input 
+                                                {...field} 
+                                                placeholder="Starting location" 
+                                                className="bg-slate-900 border-slate-700 text-slate-50"
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -192,10 +240,14 @@ export default function NewMileageEntryModal({
                                 control={form.control}
                                 name="end_location"
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem className="space-y-2">
                                         <FormLabel className="text-slate-300">To (Optional)</FormLabel>
                                         <FormControl>
-                                            <Input {...field} placeholder="Destination" />
+                                            <Input 
+                                                {...field} 
+                                                placeholder="Destination" 
+                                                className="bg-slate-900 border-slate-700 text-slate-50"
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -207,16 +259,20 @@ export default function NewMileageEntryModal({
                                 control={form.control}
                                 name="customer_id"
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem className="space-y-2">
                                         <FormLabel className="text-slate-300">Customer (Optional)</FormLabel>
                                         <FormControl>
                                             <Select onValueChange={field.onChange} value={field.value}>
-                                                <SelectTrigger>
+                                                <SelectTrigger className="bg-slate-900 border-slate-700 text-slate-50">
                                                     <SelectValue placeholder="Select customer..." />
                                                 </SelectTrigger>
-                                                <SelectContent>
+                                                <SelectContent className="bg-slate-900 border-slate-700">
                                                     {customers.map((c) => (
-                                                        <SelectItem key={c.id} value={c.id}>
+                                                        <SelectItem 
+                                                            key={c.id} 
+                                                            value={c.id}
+                                                            className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800"
+                                                        >
                                                             {c.full_name}
                                                         </SelectItem>
                                                     ))}
@@ -233,10 +289,14 @@ export default function NewMileageEntryModal({
                                 control={form.control}
                                 name="notes"
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem className="space-y-2">
                                         <FormLabel className="text-slate-300">Notes (Optional)</FormLabel>
                                         <FormControl>
-                                            <Textarea {...field} placeholder="Additional details..." />
+                                            <Textarea 
+                                                {...field} 
+                                                placeholder="Additional details..." 
+                                                className="bg-slate-900 border-slate-700 text-slate-50"
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -244,11 +304,20 @@ export default function NewMileageEntryModal({
                             />
                         </div>
 
-                        <DialogFooter className="flex justify-end space-x-2 pt-4">
+                        <DialogFooter className="flex justify-end space-x-2 pt-6">
                             <DialogClose asChild>
-                                <Button variant="ghost">Cancel</Button>
+                                <Button variant="ghost" disabled={isSubmitting}>
+                                    Cancel
+                                </Button>
                             </DialogClose>
-                            <Button variant="outline" type="submit">Save Entry</Button>
+                            <Button 
+                                variant="outline" 
+                                type="submit" 
+                                disabled={isSubmitting}
+                                className="bg-emerald-600 text-white hover:bg-emerald-700"
+                            >
+                                {isSubmitting ? 'Saving...' : 'Save Entry'}
+                            </Button>
                         </DialogFooter>
                     </form>
                 </Form>

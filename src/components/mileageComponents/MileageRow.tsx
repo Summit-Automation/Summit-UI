@@ -39,6 +39,25 @@ export default function MileageRow({ mileageEntry }: { mileageEntry: MileageEntr
         }
     };
 
+    // Format miles - only show decimal if needed (5.0 becomes "5", 5.5 stays "5.5")
+    const formatMiles = (miles: number) => {
+        return miles % 1 === 0 ? miles.toFixed(0) : miles.toFixed(1);
+    };
+
+    // IRS standard mileage rate for 2025
+    const standardMileageRate = 0.67;
+    const potentialDeduction = mileageEntry.miles * standardMileageRate;
+
+    // Format currency with exact precision
+    const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(amount);
+    };
+
     return (
         <>
             <TableRow
@@ -57,8 +76,8 @@ export default function MileageRow({ mileageEntry }: { mileageEntry: MileageEntr
                 <TableCell className="max-w-xs truncate">
                     {mileageEntry.purpose}
                 </TableCell>
-                <TableCell className="text-right font-semibold">
-                    {mileageEntry.miles.toFixed(1)}
+                <TableCell className="text-right font-mono font-semibold">
+                    {formatMiles(mileageEntry.miles)}
                 </TableCell>
                 <TableCell className="text-center">
                     <Badge 
@@ -85,6 +104,38 @@ export default function MileageRow({ mileageEntry }: { mileageEntry: MileageEntr
                     <TableCell colSpan={8} className="p-0 bg-transparent">
                         <div className="m-4 bg-slate-700 bg-opacity-50 dark:bg-opacity-30 rounded-lg p-4">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                                {/* Exact Miles Display */}
+                                <div className="flex items-start space-x-2">
+                                    <MapPin className="h-5 w-5 text-slate-400" />
+                                    <div>
+                                        <div className="text-xs text-slate-400 uppercase">Exact Miles</div>
+                                        <div className="text-lg font-mono font-bold text-white">
+                                            {formatMiles(mileageEntry.miles)} miles
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Tax Deduction */}
+                                <div className="flex items-start space-x-2">
+                                    <CheckCircle className="h-5 w-5 text-slate-400" />
+                                    <div>
+                                        <div className="text-xs text-slate-400 uppercase">
+                                            Tax Deduction ({standardMileageRate}/mile)
+                                        </div>
+                                        <div className="text-lg font-mono font-bold text-white">
+                                            {isBusiness 
+                                                ? formatCurrency(potentialDeduction)
+                                                : 'Not deductible'
+                                            }
+                                        </div>
+                                        {isBusiness && (
+                                            <div className="text-xs text-slate-400 mt-1">
+                                                {formatMiles(mileageEntry.miles)} × ${standardMileageRate} = {formatCurrency(potentialDeduction)}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
                                 {/* Notes */}
                                 <div className="flex items-start space-x-2">
                                     <MapPin className="h-5 w-5 text-slate-400" />
@@ -96,30 +147,17 @@ export default function MileageRow({ mileageEntry }: { mileageEntry: MileageEntr
                                     </div>
                                 </div>
 
-                                {/* Tax Deduction */}
-                                <div className="flex items-start space-x-2">
-                                    <CheckCircle className="h-5 w-5 text-slate-400" />
-                                    <div>
-                                        <div className="text-xs text-slate-400 uppercase">
-                                            Potential Deduction
-                                        </div>
-                                        <div className="text-sm text-white">
-                                            {isBusiness 
-                                                ? `$${(mileageEntry.miles * 0.67).toFixed(2)}` 
-                                                : 'N/A'
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-
                                 {/* Locations (if specified) */}
                                 {(mileageEntry.start_location || mileageEntry.end_location) && (
-                                    <div className="sm:col-span-2">
-                                        <div className="text-xs text-slate-400 uppercase mb-1">Route Details</div>
-                                        <div className="text-sm text-white">
-                                            <span className="font-medium">From:</span> {mileageEntry.start_location || 'Not specified'}
-                                            <br />
-                                            <span className="font-medium">To:</span> {mileageEntry.end_location || 'Not specified'}
+                                    <div className="flex items-start space-x-2">
+                                        <MapPin className="h-5 w-5 text-slate-400" />
+                                        <div>
+                                            <div className="text-xs text-slate-400 uppercase">Route Details</div>
+                                            <div className="text-sm text-white">
+                                                <span className="font-medium">From:</span> {mileageEntry.start_location || 'Not specified'}
+                                                <br />
+                                                <span className="font-medium">To:</span> {mileageEntry.end_location || 'Not specified'}
+                                            </div>
                                         </div>
                                     </div>
                                 )}
@@ -143,7 +181,7 @@ export default function MileageRow({ mileageEntry }: { mileageEntry: MileageEntr
                                         <AlertDialogHeader>
                                             <AlertDialogTitle>Confirm deletion</AlertDialogTitle>
                                             <AlertDialogDescription>
-                                                Are you sure you want to permanently delete this mileage entry? 
+                                                Are you sure you want to permanently delete this mileage entry for {formatMiles(mileageEntry.miles)} miles? 
                                                 This action cannot be undone.
                                             </AlertDialogDescription>
                                         </AlertDialogHeader>

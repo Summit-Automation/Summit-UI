@@ -23,7 +23,7 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
                         <TableHead>From</TableHead>
                         <TableHead>To</TableHead>
                         <TableHead>Purpose</TableHead>
-                        <TableHead className="text-right">Miles</TableHead>
+                        <TableHead className="text-right">Miles (Exact)</TableHead>
                         <TableHead className="text-center">Type</TableHead>
                         <TableHead className="text-center">Customer</TableHead>
                         <TableHead />

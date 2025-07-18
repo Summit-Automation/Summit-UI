@@ -27,7 +27,7 @@ function MetricCard({ title, value, Icon, iconColorClass }: MetricCardProps) {
                 </div>
             </CardHeader>
             <CardContent className="pt-0">
-                <div className={cardContentStyles}>{value}</div>
+                <div className={cardContentStyles} title={value.toString()}>{value}</div>
             </CardContent>
         </Card>
     );
@@ -52,34 +52,38 @@ export default function MileageSummary({ mileageEntries }: { mileageEntries: Mil
     const standardMileageRate = 0.67;
     const potentialDeduction = businessMiles * standardMileageRate;
 
-    // Format large numbers for better display
-    const formatNumber = (num: number) => {
-        if (num >= 1000000) {
-            return `${(num / 1000000).toFixed(1)}M`;
-        } else if (num >= 1000) {
-            return `${(num / 1000).toFixed(1)}K`;
-        } else {
-            return num.toLocaleString();
-        }
+    // Format mileage - only show decimal if needed (5.0 becomes "5", 5.5 stays "5.5")
+    const formatMiles = (miles: number) => {
+        return miles % 1 === 0 ? miles.toFixed(0) : miles.toFixed(1);
+    };
+
+    // Format currency with exact amounts for financial precision
+    const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(amount);
     };
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <MetricCard
                 title="Total Miles"
-                value={formatNumber(totalMiles)}
+                value={`${formatMiles(totalMiles)} mi`}
                 Icon={Car}
                 iconColorClass="text-sky-400"
             />
             <MetricCard
                 title="Business Miles"
-                value={formatNumber(businessMiles)}
+                value={`${formatMiles(businessMiles)} mi`}
                 Icon={MapPin}
                 iconColorClass="text-green-400"
             />
             <MetricCard
                 title="Tax Deduction"
-                value={`$${potentialDeduction.toFixed(0)}`}
+                value={formatCurrency(potentialDeduction)}
                 Icon={DollarSign}
                 iconColorClass="text-yellow-400"
             />

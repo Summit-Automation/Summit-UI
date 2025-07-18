@@ -33,6 +33,7 @@ export default function UpdateMileageEntryModal({
 }) {
     const [open, setOpen] = React.useState(false);
     const [customers, setCustomers] = React.useState<Customer[]>([]);
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
 
     React.useEffect(() => {
         // Fetch customers for the dropdown
@@ -44,8 +45,8 @@ export default function UpdateMileageEntryModal({
     const form = useForm<FormValues>({
         defaultValues: {
             date: mileageEntry.date,
-            start_location: mileageEntry.start_location,
-            end_location: mileageEntry.end_location,
+            start_location: mileageEntry.start_location || '',
+            end_location: mileageEntry.end_location || '',
             purpose: mileageEntry.purpose,
             miles: mileageEntry.miles.toString(),
             is_business: mileageEntry.is_business,
@@ -56,21 +57,36 @@ export default function UpdateMileageEntryModal({
     });
 
     const onSubmit = async (values: FormValues) => {
-        const success = await updateMileageEntry({
-            id: mileageEntry.id,
-            ...values,
-            miles: parseFloat(values.miles),
-            customer_id: values.customer_id || null,
-            customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
-        });
+        setIsSubmitting(true);
+        
+        try {
+            const success = await updateMileageEntry({
+                id: mileageEntry.id,
+                ...values,
+                miles: parseFloat(values.miles),
+                customer_id: values.customer_id || null,
+                customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
+            });
 
-        if (success) {
-            setOpen(false);
-            onSuccess?.();
-        } else {
+            if (success) {
+                setOpen(false);
+                onSuccess?.();
+            } else {
+                form.setError('purpose', { message: 'Failed to update mileage entry' });
+            }
+        } catch (error) {
             form.setError('purpose', { message: 'Failed to update mileage entry' });
+        } finally {
+            setIsSubmitting(false);
         }
     };
+
+    // Reset form when modal closes
+    React.useEffect(() => {
+        if (!open) {
+            setIsSubmitting(false);
+        }
+    }, [open]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -80,10 +96,10 @@ export default function UpdateMileageEntryModal({
                     <span>Edit</span>
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-xl bg-primary/90 backdrop-blur-lg border border-border rounded-xl shadow-premium">
+            <DialogContent className="max-w-xl bg-slate-900 border border-slate-700 rounded-xl shadow-2xl">
                 <DialogHeader>
                     <DialogTitle className="text-white">Edit Mileage Entry</DialogTitle>
-                    <DialogDescription className="text-slate-300">
+                    <DialogDescription className="text-slate-400">
                         Update the mileage entry details.
                     </DialogDescription>
                 </DialogHeader>
@@ -98,37 +114,11 @@ export default function UpdateMileageEntryModal({
                                 <FormItem>
                                     <FormLabel className="text-slate-300">Date</FormLabel>
                                     <FormControl>
-                                        <Input {...field} type="date" />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Start Location */}
-                        <FormField
-                            control={form.control}
-                            name="start_location"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-slate-300">From</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} placeholder="Starting location" />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* End Location */}
-                        <FormField
-                            control={form.control}
-                            name="end_location"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-slate-300">To</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} placeholder="Destination" />
+                                        <Input 
+                                            {...field} 
+                                            type="date" 
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -143,7 +133,11 @@ export default function UpdateMileageEntryModal({
                                 <FormItem>
                                     <FormLabel className="text-slate-300">Purpose</FormLabel>
                                     <FormControl>
-                                        <Input {...field} placeholder="Client meeting, site visit, etc." />
+                                        <Input 
+                                            {...field} 
+                                            placeholder="Client meeting, site visit, etc." 
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -154,6 +148,17 @@ export default function UpdateMileageEntryModal({
                         <FormField
                             control={form.control}
                             name="miles"
+                            rules={{
+                                required: "Miles is required",
+                                pattern: {
+                                    value: /^[0-9]+\.?[0-9]*$/,
+                                    message: "Please enter a valid number"
+                                },
+                                min: {
+                                    value: 0.1,
+                                    message: "Miles must be greater than 0"
+                                }
+                            }}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-slate-300">Miles</FormLabel>
@@ -162,10 +167,15 @@ export default function UpdateMileageEntryModal({
                                             {...field}
                                             type="number"
                                             step="0.1"
+                                            min="0.1"
                                             placeholder="0.0"
+                                            className="bg-slate-900 border-slate-700 text-slate-50 font-mono font-semibold"
                                         />
                                     </FormControl>
                                     <FormMessage />
+                                    <p className="text-xs text-slate-400 mt-1">
+                                        Enter mileage (e.g., 15 or 15.5)
+                                    </p>
                                 </FormItem>
                             )}
                         />
@@ -177,9 +187,51 @@ export default function UpdateMileageEntryModal({
                             render={({ field }) => (
                                 <FormItem className="flex items-center space-x-2">
                                     <FormControl>
-                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                        <Checkbox 
+                                            checked={field.value} 
+                                            onCheckedChange={field.onChange}
+                                            className="border-slate-600"
+                                        />
                                     </FormControl>
-                                    <FormLabel className="text-slate-300">Business trip</FormLabel>
+                                    <FormLabel className="text-slate-300">Business trip (eligible for tax deduction at $0.67/mile)</FormLabel>
+                                </FormItem>
+                            )}
+                        />
+
+                        {/* Start Location */}
+                        <FormField
+                            control={form.control}
+                            name="start_location"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-slate-300">From (Optional)</FormLabel>
+                                    <FormControl>
+                                        <Input 
+                                            {...field} 
+                                            placeholder="Starting location" 
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        {/* End Location */}
+                        <FormField
+                            control={form.control}
+                            name="end_location"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-slate-300">To (Optional)</FormLabel>
+                                    <FormControl>
+                                        <Input 
+                                            {...field} 
+                                            placeholder="Destination" 
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -193,12 +245,16 @@ export default function UpdateMileageEntryModal({
                                     <FormLabel className="text-slate-300">Customer (Optional)</FormLabel>
                                     <FormControl>
                                         <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger>
+                                            <SelectTrigger className="bg-slate-900 border-slate-700 text-slate-50">
                                                 <SelectValue placeholder="Select customer..." />
                                             </SelectTrigger>
-                                            <SelectContent>
+                                            <SelectContent className="bg-slate-900 border-slate-700">
                                                 {customers.map((c) => (
-                                                    <SelectItem key={c.id} value={c.id}>
+                                                    <SelectItem 
+                                                        key={c.id} 
+                                                        value={c.id}
+                                                        className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800"
+                                                    >
                                                         {c.full_name}
                                                     </SelectItem>
                                                 ))}
@@ -218,7 +274,11 @@ export default function UpdateMileageEntryModal({
                                 <FormItem>
                                     <FormLabel className="text-slate-300">Notes (Optional)</FormLabel>
                                     <FormControl>
-                                        <Textarea {...field} placeholder="Additional details..." />
+                                        <Textarea 
+                                            {...field} 
+                                            placeholder="Additional details..." 
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -227,9 +287,18 @@ export default function UpdateMileageEntryModal({
 
                         <DialogFooter className="flex justify-end space-x-2 pt-4">
                             <DialogClose asChild>
-                                <Button variant="ghost">Cancel</Button>
+                                <Button variant="ghost" disabled={isSubmitting}>
+                                    Cancel
+                                </Button>
                             </DialogClose>
-                            <Button variant="outline" type="submit">Save Changes</Button>
+                            <Button 
+                                variant="outline" 
+                                type="submit" 
+                                disabled={isSubmitting}
+                                className="bg-blue-600 text-white hover:bg-blue-700"
+                            >
+                                {isSubmitting ? 'Updating...' : 'Save Changes'}
+                            </Button>
                         </DialogFooter>
                     </form>
                 </Form>
