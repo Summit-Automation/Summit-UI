@@ -15,8 +15,8 @@ export async function createMileageEntry(input: NewMileageEntryInput): Promise<b
             return false;
         }
 
-        // Call the correct RPC function in mileage schema
-        const { data, error } = await supabase.rpc('add_entry', {
+        // Call the proxy function in public schema
+        const { data, error } = await supabase.rpc('add_mileage_entry', {
             p_date: input.date,
             p_purpose: input.purpose,
             p_miles: input.miles,

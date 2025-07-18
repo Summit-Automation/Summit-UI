@@ -9,8 +9,8 @@ export async function updateMileageEntry(input: UpdateMileageEntryInput): Promis
     try {
         const supabase = await createClient();
 
-        // Call the correct RPC function in mileage schema
-        const { error } = await supabase.rpc('update_entry', {
+        // Call the proxy function in public schema
+        const { error } = await supabase.rpc('update_mileage_entry', {
             p_id: input.id,
             p_date: input.date,
             p_purpose: input.purpose,

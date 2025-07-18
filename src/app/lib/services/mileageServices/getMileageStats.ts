@@ -19,13 +19,14 @@ export async function getMileageStats(): Promise<MileageStats[]> {
     try {
         const supabase = await createClient();
 
+        // Use the proxy view
         const { data, error } = await supabase
-            .from('mileage.stats')
+            .from('mileage_stats')
             .select('*')
             .order('month', { ascending: false });
 
         if (error) {
-            console.warn('Supabase error fetching from \'mileage.stats\' view', error);
+            console.warn('Supabase error fetching from mileage_stats view', error);
             return [];
         }
 

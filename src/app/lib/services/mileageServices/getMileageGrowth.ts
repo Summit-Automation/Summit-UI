@@ -6,7 +6,8 @@ export async function getMileageGrowth(): Promise<number> {
     try {
         const supabase = await createClient();
 
-        const { data, error } = await supabase.rpc('mileage.get_growth');
+        // Call the proxy function
+        const { data, error } = await supabase.rpc('get_mileage_growth');
 
         if (error) {
             console.warn('Supabase error getting mileage growth:', error);

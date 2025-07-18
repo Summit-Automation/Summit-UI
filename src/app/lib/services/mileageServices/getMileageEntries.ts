@@ -7,19 +7,19 @@ export async function getMileageEntries(): Promise<MileageEntry[]> {
     try {
         const supabase = await createClient();
 
-        // Query the correct table in mileage schema
+        // Use the proxy view that references mileage.entries
         const { data, error } = await supabase
-            .from('entries')
+            .from('mileage_entries')
             .select('*')
             .order('date', { ascending: false });
 
         if (error) {
-            console.warn('Supabase error fetching from mileage.entries table', error);
+            console.warn('Supabase error fetching from mileage_entries table', error);
             return [];
         }
 
         if (!data || data.length === 0) {
-            console.warn('No valid data returned from mileage.entries table. Got:', data);
+            console.warn('No valid data returned from mileage_entries table. Got:', data);
             return [];
         }
 
