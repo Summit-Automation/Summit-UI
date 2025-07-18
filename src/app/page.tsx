@@ -1,5 +1,3 @@
-// app/dashboard/DashboardPage.tsx
-
 import {getCustomers} from "@/app/lib/services/crmServices/customer/getCustomers";
 import {getInteractions} from "@/app/lib/services/crmServices/interaction/getInteractions";
 import {getTransactions} from "@/app/lib/services/bookkeeperServices/getTransactions";
@@ -13,6 +11,7 @@ import ExpenseCategoryPie from "@/components/dashboardComponents/ExpenseCategory
 import CustomerGrowthLine from "@/components/dashboardComponents/CustomerGrowthLine";
 import CashFlowArea from "@/components/dashboardComponents/CashFlowArea";
 import InteractionTypeBar from "@/components/dashboardComponents/InteractionTypeBar";
+import FeedbackButton from "@/components/globalComponents/FeedbackButton";
 
 import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
@@ -312,5 +311,8 @@ export default async function DashboardPage() {
                 </TabsContent>
             </Tabs>
         </div>
+        
+        {/* Feedback Button - Fixed positioned, non-intrusive */}
+        <FeedbackButton />
     </div>);
 }
