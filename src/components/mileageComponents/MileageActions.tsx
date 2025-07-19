@@ -6,7 +6,7 @@ import CreateMileageEntryClientWrapper from '@/components/mileageComponents/mile
 import AIMileageTrackerModal from '@/components/mileageComponents/AIMileageTrackerModal';
 import { getCustomers } from '@/app/lib/services/crmServices/customer/getCustomers';
 import { Customer } from '@/types/customer';
-import { Sparkles, Brain } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 export default function MileageActions() {
     const router = useRouter();
