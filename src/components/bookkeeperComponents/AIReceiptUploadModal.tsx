@@ -218,7 +218,10 @@ export default function AIReceiptUploadModal({
                 description: values.description,
                 amount: receiptData.grossTotal.toString(),
                 customer_id: values.customer_id || null,
+                customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
                 interaction_id: null,
+                interaction_title: null,
+                interaction_outcome: null,
             });
 
             if (success) {
