@@ -217,12 +217,8 @@ export default function AIReceiptUploadModal({
                 category: values.category,
                 description: values.description,
                 amount: receiptData.grossTotal.toString(),
-                source: 'ai_agent',
                 customer_id: values.customer_id || null,
-                customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
                 interaction_id: null,
-                interaction_title: null,
-                interaction_outcome: null,
             });
 
             if (success) {
