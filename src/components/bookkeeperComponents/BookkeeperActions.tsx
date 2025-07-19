@@ -1,10 +1,25 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import CreateTransactionClientWrapper from '@/components/bookkeeperComponents/bookkeeperActions/CreateTransactionClientWrapper';
+import AIReceiptUploadModal from '@/components/bookkeeperComponents/AIReceiptUploadModal';
+import { getCustomers } from '@/app/lib/services/crmServices/customer/getCustomers';
+import { Customer } from '@/types/customer';
 import { Button } from '@/components/ui/button';
 import { Brain, Download, Upload, FileText, Sparkles } from 'lucide-react';
 
 export default function BookkeeperActions() {
+    const router = useRouter();
+    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        getCustomers()
+            .then(setCustomers)
+            .finally(() => setLoading(false));
+    }, []);
+
     return (
         <div className="space-y-4">
             <h3 className="text-lg font-semibold text-slate-200">Quick Actions</h3>
@@ -14,14 +29,14 @@ export default function BookkeeperActions() {
                 <CreateTransactionClientWrapper />
 
                 {/* AI Receipt Upload */}
-                <Button
-                    variant="outline"
-                    disabled
-                    className="bg-blue-600/10 border-blue-500/30 text-blue-400 hover:bg-blue-600/20 hover:border-blue-500/50 disabled:opacity-60 disabled:cursor-not-allowed h-10"
-                >
-                    <Brain className="h-4 w-4 mr-2" />
-                    AI Receipt Upload
-                </Button>
+                {loading ? (
+                    <div className="h-10 bg-slate-800 border border-slate-600 rounded-lg animate-pulse" />
+                ) : (
+                    <AIReceiptUploadModal
+                        customers={customers}
+                        onSuccess={() => router.refresh()}
+                    />
+                )}
 
                 {/* Import CSV */}
                 <Button
@@ -57,7 +72,7 @@ export default function BookkeeperActions() {
             {/* Coming Soon Note */}
             <div className="flex items-center gap-2 text-xs text-slate-500 mt-3">
                 <Sparkles className="h-3 w-3" />
-                <span>Advanced features coming soon with AI integration</span>
+                <span>AI-powered receipt scanning with automatic transaction creation</span>
             </div>
         </div>
     );
