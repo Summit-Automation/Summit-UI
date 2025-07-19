@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { MileageEntry } from '@/types/mileage';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { CheckCircle, ChevronDown, ChevronUp, MapPin, Trash2, User } from 'lucide-react';
+import { CheckCircle, ChevronDown, ChevronUp, MapPin, Trash2 } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,
