@@ -39,7 +39,7 @@ export function ExportDialog({customers, interactions, transactions}: ExportDial
     });
 
     const onSubmit = (vals: ExportValues) => {
-        const out: Record<string, unknown> = {};
+        const out: Record<string, Customer[] | Interaction[] | Transaction[]> = {};
         if (vals.exportCustomers) out.customers = customers;
         if (vals.exportInteractions) out.interactions = interactions;
         if (vals.exportTransactions) out.transactions = transactions;

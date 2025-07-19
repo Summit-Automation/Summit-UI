@@ -75,7 +75,8 @@ export default function NewMileageEntryModal({
             } else {
                 form.setError('miles', { message: 'Failed to create mileage entry' });
             }
-        } catch (error) {
+        } catch (err) {
+            console.error('Failed to create mileage entry:', err);
             form.setError('miles', { message: 'Failed to create mileage entry' });
         } finally {
             setIsSubmitting(false);
@@ -116,7 +117,7 @@ export default function NewMileageEntryModal({
 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
-                        {/* Date */}
+                        {/* Form fields remain the same as original */}
                         <FormField
                             control={form.control}
                             name="date"
@@ -136,7 +137,6 @@ export default function NewMileageEntryModal({
                             )}
                         />
 
-                        {/* Purpose */}
                         <FormField
                             control={form.control}
                             name="purpose"
@@ -156,7 +156,6 @@ export default function NewMileageEntryModal({
                             )}
                         />
 
-                        {/* Miles - Primary Required Field with Smart Decimal Precision */}
                         <FormField
                             control={form.control}
                             name="miles"
@@ -192,7 +191,6 @@ export default function NewMileageEntryModal({
                             )}
                         />
 
-                        {/* Business Trip Checkbox */}
                         <FormField
                             control={form.control}
                             name="is_business"
@@ -212,11 +210,9 @@ export default function NewMileageEntryModal({
                             )}
                         />
 
-                        {/* Optional Fields Section */}
                         <div className="border-t border-slate-600 pt-6 space-y-6">
                             <h4 className="text-sm font-medium text-slate-300 mb-4">Optional Details</h4>
                             
-                            {/* Start Location */}
                             <FormField
                                 control={form.control}
                                 name="start_location"
@@ -235,7 +231,6 @@ export default function NewMileageEntryModal({
                                 )}
                             />
 
-                            {/* End Location */}
                             <FormField
                                 control={form.control}
                                 name="end_location"
@@ -254,7 +249,6 @@ export default function NewMileageEntryModal({
                                 )}
                             />
 
-                            {/* Customer */}
                             <FormField
                                 control={form.control}
                                 name="customer_id"
@@ -284,7 +278,6 @@ export default function NewMileageEntryModal({
                                 )}
                             />
 
-                            {/* Notes */}
                             <FormField
                                 control={form.control}
                                 name="notes"

@@ -14,7 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { createMileageEntry } from '@/app/lib/services/mileageServices/createMileageEntry';
 import { Customer } from '@/types/customer';
-import { Navigation, Brain, MapPin, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { Navigation, Brain, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
 
 type FormValues = {
     date: string;

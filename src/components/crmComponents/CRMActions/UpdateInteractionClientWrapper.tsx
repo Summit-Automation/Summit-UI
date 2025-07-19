@@ -1,11 +1,9 @@
-// src/components/crmComponents/view/UpdateInteractionClientWrapper.tsx
 'use client';
 
 import React, {useEffect, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import UpdateInteractionModal from '@/components/crmComponents/UpdateInteractionModal';
 import {getCustomers} from '@/app/lib/services/crmServices/customer/getCustomers';
-import {getInteractions} from '@/app/lib/services/crmServices/interaction/getInteractions';
 import type {Customer} from '@/types/customer';
 import type {Interaction} from '@/types/interaction';
 import {Button} from '@/components/ui/button';
@@ -18,15 +16,13 @@ export default function UpdateInteractionClientWrapper({
 }) {
     const router = useRouter();
     const [customers, setCustomers] = useState<Customer[]>([]);
-    const [interactions, setInteractions] = useState<Interaction[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // fetch customers + interactions once, when mounted
+    // fetch customers once, when mounted
     useEffect(() => {
-        Promise.all([getCustomers(), getInteractions()])
-            .then(([custs, ints]) => {
+        getCustomers()
+            .then((custs) => {
                 setCustomers(custs);
-                setInteractions(ints);
             })
             .finally(() => setLoading(false));
     }, []);

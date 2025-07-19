@@ -11,8 +11,6 @@ import {Button} from '@/components/ui/button';
 
 export default function CreateTransactionClientWrapper() {
     const router = useRouter();
-    const [open, setOpen] = useState(false);
-
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [interactions, setInteractions] = useState<Interaction[]>([]);
     const [loading, setLoading] = useState(true);
@@ -38,7 +36,6 @@ export default function CreateTransactionClientWrapper() {
         interactions={interactions}
         onSuccess={() => {
             router.refresh();
-            setOpen(false);
         }}
     />);
 }

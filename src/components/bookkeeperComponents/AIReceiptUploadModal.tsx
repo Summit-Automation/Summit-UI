@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
+import Image from 'next/image';
 import {
     Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog';
@@ -193,9 +194,9 @@ export default function AIReceiptUploadModal({
             form.setValue('category', suggestedCategory);
             form.setValue('description', detailedDescription.trim());
             
-        } catch (error) {
-            console.error('Error processing receipt:', error);
-            const errorMessage = error instanceof Error ? error.message : 'Failed to process receipt';
+        } catch (err) {
+            console.error('Error processing receipt:', err);
+            const errorMessage = err instanceof Error ? err.message : 'Failed to process receipt';
             setError(errorMessage);
         } finally {
             setIsProcessing(false);
@@ -235,7 +236,8 @@ export default function AIReceiptUploadModal({
             } else {
                 form.setError('category', { message: 'Failed to create transaction' });
             }
-        } catch (error) {
+        } catch (err) {
+            console.error('Failed to create transaction:', err);
             form.setError('category', { message: 'Failed to create transaction' });
         } finally {
             setIsSubmitting(false);
@@ -365,9 +367,11 @@ export default function AIReceiptUploadModal({
                             
                             {previewUrl && (
                                 <div className="flex justify-center">
-                                    <img 
+                                    <Image 
                                         src={previewUrl} 
                                         alt="Receipt preview"
+                                        width={400}
+                                        height={300}
                                         className="max-w-full max-h-48 object-contain rounded border border-slate-600"
                                     />
                                 </div>
