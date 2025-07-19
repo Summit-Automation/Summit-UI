@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Building2 } from 'lucide-react';
 import { getCurrentUserOrganization } from '@/app/lib/services/organizationServices/getCurrentOrganization';
+import { createClient } from '@/utils/supabase/client';
 
 type Organization = {
     id: string;
@@ -16,20 +17,43 @@ export default function OrganizationDisplay() {
     const [organization, setOrganization] = useState<Organization | null>(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        loadOrganization();
-    }, []);
-
     const loadOrganization = async () => {
         try {
             const org = await getCurrentUserOrganization();
             setOrganization(org);
         } catch (error) {
             console.error('Failed to load organization:', error);
+            setOrganization(null);
         } finally {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        const supabase = createClient();
+
+        // Load initial organization
+        loadOrganization();
+
+        // Listen for auth state changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            async (event, session) => {
+                if (event === 'SIGNED_IN' && session?.user) {
+                    // User signed in - load organization
+                    loadOrganization();
+                } else if (event === 'SIGNED_OUT') {
+                    // User signed out - clear organization
+                    setOrganization(null);
+                    setLoading(false);
+                }
+            }
+        );
+
+        // Cleanup subscription on unmount
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, []);
 
     if (loading) {
         return (

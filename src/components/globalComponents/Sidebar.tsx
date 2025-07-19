@@ -53,8 +53,10 @@ export default function Sidebar() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const getUser = async () => {
-            const supabase = createClient();
+        const supabase = createClient();
+
+        // Get initial user
+        const getInitialUser = async () => {
             const { data: { user }, error } = await supabase.auth.getUser();
             
             if (user && !error) {
@@ -63,11 +65,37 @@ export default function Sidebar() {
                     full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
                     avatar_url: user.user_metadata?.avatar_url
                 });
+            } else {
+                setUser(null);
             }
             setLoading(false);
         };
 
-        getUser();
+        getInitialUser();
+
+        // Listen for auth state changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            async (event, session) => {
+                if (event === 'SIGNED_IN' && session?.user) {
+                    // User signed in
+                    setUser({
+                        email: session.user.email || '',
+                        full_name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
+                        avatar_url: session.user.user_metadata?.avatar_url
+                    });
+                    setLoading(false);
+                } else if (event === 'SIGNED_OUT') {
+                    // User signed out
+                    setUser(null);
+                    setLoading(false);
+                }
+            }
+        );
+
+        // Cleanup subscription on unmount
+        return () => {
+            subscription.unsubscribe();
+        };
     }, []);
 
     const handleSignOut = async () => {
