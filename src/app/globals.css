@@ -413,3 +413,438 @@
     stroke: #3b82f6 !important; /* blue-500 */
     stroke-width: 2px !important;
 }
+
+/* Add these styles to the end of your existing src/app/globals.css file */
+
+/*--------------------------------------
+  Mobile Responsiveness Enhancements
+---------------------------------------*/
+
+/* Hide scrollbars for mobile menus */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Mobile-friendly touch targets */
+@media (max-width: 768px) {
+    .touch-target {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Increase tap targets on mobile */
+    button, [role="button"], .btn-clean {
+        min-height: 44px;
+        padding: 12px 16px;
+    }
+    
+    /* Better mobile form inputs */
+    .input-clean {
+        padding: 12px 16px;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    /* Mobile-optimized cards */
+    .card-clean {
+        margin: 0 4px;
+        border-radius: 12px;
+    }
+    
+    .metric-clean {
+        padding: 16px;
+    }
+    
+    /* Mobile table improvements */
+    .table-clean {
+        font-size: 14px;
+    }
+    
+    .table-row {
+        min-height: 48px;
+    }
+    
+    /* Mobile navigation improvements */
+    .nav-clean {
+        padding: 8px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    /* Even smaller spacing on very small screens */
+    .card-clean {
+        margin: 0 2px;
+        padding: 12px;
+    }
+    
+    .metric-clean {
+        padding: 12px;
+    }
+    
+    /* Smaller text on tiny screens */
+    .metric-value {
+        font-size: 1.5rem;
+    }
+    
+    /* Stack items vertically on tiny screens */
+    .mobile-stack {
+        flex-direction: column !important;
+    }
+}
+
+/*--------------------------------------
+  Chart Responsiveness
+---------------------------------------*/
+
+/* Make charts more readable on mobile */
+@media (max-width: 768px) {
+    .recharts-wrapper {
+        font-size: 12px;
+    }
+    
+    .recharts-cartesian-axis-tick-value {
+        font-size: 10px !important;
+    }
+    
+    .recharts-legend-item-text {
+        font-size: 11px !important;
+    }
+    
+    .recharts-tooltip-wrapper .recharts-default-tooltip {
+        font-size: 12px;
+        padding: 8px;
+    }
+    
+    /* Hide some chart elements on very small screens */
+    .recharts-cartesian-grid {
+        display: none;
+    }
+}
+
+/* Add these styles to the end of your existing src/app/globals.css file */
+
+/*--------------------------------------
+  Mobile Responsiveness Enhancements
+---------------------------------------*/
+
+/* Hide scrollbars for mobile menus */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Mobile-friendly touch targets */
+@media (max-width: 768px) {
+    .touch-target {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Increase tap targets on mobile */
+    button, [role="button"], .btn-clean {
+        min-height: 44px;
+        padding: 12px 16px;
+    }
+    
+    /* Better mobile form inputs */
+    .input-clean {
+        padding: 12px 16px;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    /* Mobile-optimized cards */
+    .card-clean {
+        margin: 0 4px;
+        border-radius: 12px;
+    }
+    
+    .metric-clean {
+        padding: 16px;
+    }
+    
+    /* Mobile table improvements */
+    .table-clean {
+        font-size: 14px;
+    }
+    
+    .table-row {
+        min-height: 48px;
+    }
+    
+    /* Mobile navigation improvements */
+    .nav-clean {
+        padding: 8px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    /* Even smaller spacing on very small screens */
+    .card-clean {
+        margin: 0 2px;
+        padding: 12px;
+    }
+    
+    .metric-clean {
+        padding: 12px;
+    }
+    
+    /* Smaller text on tiny screens */
+    .metric-value {
+        font-size: 1.5rem;
+    }
+    
+    /* Stack items vertically on tiny screens */
+    .mobile-stack {
+        flex-direction: column !important;
+    }
+}
+
+/*--------------------------------------
+  Chart Responsiveness
+---------------------------------------*/
+
+/* Make charts more readable on mobile */
+@media (max-width: 768px) {
+    .recharts-wrapper {
+        font-size: 12px;
+    }
+    
+    .recharts-cartesian-axis-tick-value {
+        font-size: 10px !important;
+    }
+    
+    .recharts-legend-item-text {
+        font-size: 11px !important;
+    }
+    
+    .recharts-tooltip-wrapper .recharts-default-tooltip {
+        font-size: 12px;
+        padding: 8px;
+    }
+    
+    /* Hide some chart elements on very small screens */
+    .recharts-cartesian-grid {
+        display: none;
+    }
+}
+
+/*--------------------------------------
+  Mobile-Specific Component Styles
+---------------------------------------*/
+
+/* Mobile table wrapper */
+.mobile-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.mobile-table-wrapper::-webkit-scrollbar {
+    height: 4px;
+}
+
+.mobile-table-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.mobile-table-wrapper::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 2px;
+}
+
+/* Mobile-friendly modal positioning */
+@media (max-width: 768px) {
+    [data-radix-dialog-content] {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: calc(100vw - 32px) !important;
+        max-width: none !important;
+        max-height: calc(100vh - 64px) !important;
+        margin: 0 !important;
+    }
+}
+
+/* Mobile-friendly form layouts */
+.mobile-form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+@media (min-width: 640px) {
+    .mobile-form-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+}
+
+/*--------------------------------------
+  Mobile Performance Optimizations
+---------------------------------------*/
+
+/* Reduce animations on low-end devices */
+@media (prefers-reduced-motion: reduce) {
+    .transition-smooth,
+    .fade-in {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+    }
+    
+    /* Remove hover effects for reduced motion */
+    .card-clean:hover,
+    .metric-clean:hover {
+        box-shadow: none !important;
+        transform: none !important;
+    }
+}
+
+/* Optimize for touch devices */
+@media (hover: none) and (pointer: coarse) {
+    /* Touch device optimizations */
+    .card-clean:hover {
+        background-color: rgb(15 23 42); /* slate-900 */
+    }
+    
+    .metric-clean:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/*--------------------------------------
+  Mobile Safe Areas (for devices with notches)
+---------------------------------------*/
+
+/* Support for iPhone X+ safe areas */
+@supports (padding: max(0px)) {
+    .mobile-safe-top {
+        padding-top: max(16px, env(safe-area-inset-top));
+    }
+    
+    .mobile-safe-bottom {
+        padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+    
+    .mobile-safe-left {
+        padding-left: max(16px, env(safe-area-inset-left));
+    }
+    
+    .mobile-safe-right {
+        padding-right: max(16px, env(safe-area-inset-right));
+    }
+}
+
+/*--------------------------------------
+  Mobile Typography Improvements
+---------------------------------------*/
+
+/* Better mobile typography */
+@media (max-width: 768px) {
+    h1 { 
+        font-size: 1.875rem; /* 30px */
+        line-height: 1.2;
+    }
+    h2 { 
+        font-size: 1.5rem; /* 24px */
+        line-height: 1.25;
+    }
+    h3 { 
+        font-size: 1.25rem; /* 20px */
+        line-height: 1.3;
+    }
+    h4 { 
+        font-size: 1.125rem; /* 18px */
+        line-height: 1.35;
+    }
+    
+    /* Improve readability on small screens */
+    body {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+}
+
+/*--------------------------------------
+  Mobile Loading States
+---------------------------------------*/
+
+/* Mobile-optimized loading animations */
+.mobile-loading-skeleton {
+    background: linear-gradient(90deg, 
+        rgba(148, 163, 184, 0.1) 25%, 
+        rgba(148, 163, 184, 0.2) 50%, 
+        rgba(148, 163, 184, 0.1) 75%
+    );
+    background-size: 200% 100%;
+    animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/*--------------------------------------
+  Mobile Button Improvements
+---------------------------------------*/
+
+/* Ensure buttons are touch-friendly on mobile */
+@media (max-width: 768px) {
+    button {
+        min-height: 44px;
+        min-width: 44px;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Improve button spacing on mobile */
+    .flex.gap-2 {
+        gap: 0.75rem;
+    }
+    
+    .flex.gap-3 {
+        gap: 1rem;
+    }
+}
+
+/*--------------------------------------
+  Mobile Table Enhancements
+---------------------------------------*/
+
+/* Better mobile table experience */
+@media (max-width: 768px) {
+    .overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+        font-size: 0.875rem;
+    }
+    
+    th, td {
+        padding: 0.5rem;
+        white-space: nowrap;
+    }
+    
+    /* Hide less important columns on mobile */
+    .mobile-hide {
+        display: none;
+    }
+}
+
+@media (min-width: 640px) {
+    .mobile-hide {
+        display: table-cell;
+    }
+}
