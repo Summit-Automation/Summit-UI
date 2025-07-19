@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import {getTransactions} from '@/app/lib/services/bookkeeperServices/getTransactions';
 import BookkeeperSummary from '@/components/bookkeeperComponents/BookkeeperSummary';
 import BookkeeperActions from '@/components/bookkeeperComponents/BookkeeperActions';

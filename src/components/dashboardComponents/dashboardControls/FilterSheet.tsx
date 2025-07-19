@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from 'react';
 import {useRouter, useSearchParams} from 'next/navigation';
 import {
     Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger
@@ -21,12 +22,13 @@ const filterSchema = z.object({
 });
 type FilterValues = z.infer<typeof filterSchema>;
 
-export function FilterSheet() {
+function FilterSheetContent() {
     const router = useRouter();
     const params = useSearchParams();
 
     const form = useForm<FilterValues>({
-        resolver: zodResolver(filterSchema), defaultValues: {
+        resolver: zodResolver(filterSchema), 
+        defaultValues: {
             startDate: params.get('startDate') ?? '',
             endDate: params.get('endDate') ?? '',
             type: (params.get('type') as FilterValues['type']) ?? 'all',
@@ -42,7 +44,8 @@ export function FilterSheet() {
         toast.success('Filter applied');
     };
 
-    return (<Sheet>
+    return (
+        <Sheet>
             <SheetTrigger asChild>
                 <Button variant="outline" size="sm" className="border-slate-700 bg-slate-800/50 text-slate-300">
                     <Filter className="w-4 h-4 mr-2"/> Filter
@@ -55,25 +58,30 @@ export function FilterSheet() {
                         <FormField
                             control={form.control}
                             name="startDate"
-                            render={({field}) => (<FormItem>
+                            render={({field}) => (
+                                <FormItem>
                                     <FormLabel>Start Date</FormLabel>
                                     <FormControl><Input type="date" {...field} /></FormControl>
                                     <FormMessage/>
-                                </FormItem>)}
+                                </FormItem>
+                            )}
                         />
                         <FormField
                             control={form.control}
                             name="endDate"
-                            render={({field}) => (<FormItem>
+                            render={({field}) => (
+                                <FormItem>
                                     <FormLabel>End Date</FormLabel>
                                     <FormControl><Input type="date" {...field} /></FormControl>
                                     <FormMessage/>
-                                </FormItem>)}
+                                </FormItem>
+                            )}
                         />
                         <FormField
                             control={form.control}
                             name="type"
-                            render={({field}) => (<FormItem>
+                            render={({field}) => (
+                                <FormItem>
                                     <FormLabel>Interaction Type</FormLabel>
                                     <FormControl>
                                         <Select onValueChange={field.onChange} value={field.value}>
@@ -89,7 +97,8 @@ export function FilterSheet() {
                                         </Select>
                                     </FormControl>
                                     <FormMessage/>
-                                </FormItem>)}
+                                </FormItem>
+                            )}
                         />
 
                         <SheetFooter className="flex justify-end space-x-2">
@@ -99,5 +108,18 @@ export function FilterSheet() {
                     </form>
                 </Form>
             </SheetContent>
-        </Sheet>);
+        </Sheet>
+    );
+}
+
+export function FilterSheet() {
+    return (
+        <Suspense fallback={
+            <Button variant="outline" size="sm" className="border-slate-700 bg-slate-800/50 text-slate-300" disabled>
+                <Filter className="w-4 h-4 mr-2"/> Filter
+            </Button>
+        }>
+            <FilterSheetContent />
+        </Suspense>
+    );
 }

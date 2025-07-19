@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getMileageEntries } from '@/app/lib/services/mileageServices/getMileageEntries';
 import MileageSummary from '@/components/mileageComponents/MileageSummary';
 import MileageActions from '@/components/mileageComponents/MileageActions';
