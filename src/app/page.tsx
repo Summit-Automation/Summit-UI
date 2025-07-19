@@ -41,7 +41,7 @@ export default async function DashboardPage() {
     const transactionGrowth = calculateMonthlyGrowth(transactions, "timestamp");
 
     const followUpsDue = getFollowUpsDue(interactions);
-    const overdueFollowUps = getOverdueFollowUps(interactions);
+    const overdueFollowUps = getOverdueFollowUps();
 
     // Calculate revenue metrics
     const totalRevenue = transactions
