@@ -17,12 +17,9 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/comp
 import {Badge} from "@/components/ui/badge";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {
-    BarChart3, 
     Calendar, 
     DollarSign, 
-    LineChart, 
     MessageSquare, 
-    PieChart, 
     TrendingDown, 
     TrendingUp, 
     Users,
@@ -38,7 +35,6 @@ export default async function DashboardPage() {
     // Calculate key metrics
     const totalCustomers = customers?.length || 0;
     const totalInteractions = interactions?.length || 0;
-    const totalTransactions = transactions?.length || 0;
 
     const customerGrowth = calculateMonthlyGrowth(customers, "created_at");
     const interactionGrowth = calculateMonthlyGrowth(interactions, "created_at");
@@ -82,7 +78,7 @@ export default async function DashboardPage() {
         title: string;
         value: string | number;
         growth?: number;
-        icon: any;
+        icon: React.ComponentType<{ className?: string }>;
     }) {
         return (
             <Card className="card-clean transition-smooth hover:shadow-lg">
