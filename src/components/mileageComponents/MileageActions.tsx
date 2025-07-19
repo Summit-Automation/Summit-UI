@@ -1,10 +1,24 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import CreateMileageEntryClientWrapper from '@/components/mileageComponents/mileageActions/CreateMileageEntryClientWrapper';
-import { Button } from '@/components/ui/button';
-import { Brain, Navigation, Sparkles } from 'lucide-react';
+import AIMileageTrackerModal from '@/components/mileageComponents/AIMileageTrackerModal';
+import { getCustomers } from '@/app/lib/services/crmServices/customer/getCustomers';
+import { Customer } from '@/types/customer';
+import { Sparkles } from 'lucide-react';
 
 export default function MileageActions() {
+    const router = useRouter();
+    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        getCustomers()
+            .then(setCustomers)
+            .finally(() => setLoading(false));
+    }, []);
+
     return (
         <div className="space-y-4">
             <h3 className="text-lg font-semibold text-slate-200">Quick Actions</h3>
@@ -14,20 +28,20 @@ export default function MileageActions() {
                 <CreateMileageEntryClientWrapper />
 
                 {/* AI Mileage Tracker */}
-                <Button
-                    variant="outline"
-                    disabled
-                    className="bg-blue-600/10 border-blue-500/30 text-blue-400 hover:bg-blue-600/20 hover:border-blue-500/50 disabled:opacity-60 disabled:cursor-not-allowed h-10"
-                >
-                    <Navigation className="h-4 w-4 mr-2" />
-                    AI Mileage Tracker
-                </Button>
+                {loading ? (
+                    <div className="h-10 bg-slate-800 border border-slate-600 rounded-lg animate-pulse" />
+                ) : (
+                    <AIMileageTrackerModal
+                        customers={customers}
+                        onSuccess={() => router.refresh()}
+                    />
+                )}
             </div>
 
-            {/* Coming Soon Note */}
+            {/* AI Feature Note */}
             <div className="flex items-center gap-2 text-xs text-slate-500 mt-3">
                 <Sparkles className="h-3 w-3" />
-                <span>AI-powered tracking with Google Directions coming soon</span>
+                <span>AI-powered mileage calculation using Google Maps Directions API</span>
             </div>
         </div>
     );
