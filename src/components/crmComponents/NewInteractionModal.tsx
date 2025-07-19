@@ -50,6 +50,9 @@ export default function NewInteractionModal({
     customers: Customer[];
     onSuccess?: () => void;
 }) {
+    const [open, setOpen] = React.useState(false);
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
+
     const form = useForm<FormValues>({
         defaultValues: {
             customer_id: '',
@@ -63,29 +66,64 @@ export default function NewInteractionModal({
     });
 
     const onSubmit = async (values: FormValues) => {
-        const ok = await createInteraction(values);
-        if (ok) {
-            form.reset();
-            onSuccess?.();
-        } else {
+        setIsSubmitting(true);
+        
+        try {
+            const success = await createInteraction(values);
+            
+            if (success) {
+                // Reset form
+                form.reset({
+                    customer_id: '',
+                    type: 'call',
+                    title: '',
+                    notes: '',
+                    outcome: '',
+                    follow_up_required: false,
+                });
+                
+                // Close modal
+                setOpen(false);
+                
+                // Call success callback
+                onSuccess?.();
+            } else {
+                form.setError('title', { message: 'Failed to log interaction' });
+            }
+        } catch (error) {
             form.setError('title', { message: 'Failed to log interaction' });
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
+    // Reset form when modal closes
+    React.useEffect(() => {
+        if (!open) {
+            form.reset({
+                customer_id: '',
+                type: 'call',
+                title: '',
+                notes: '',
+                outcome: '',
+                follow_up_required: false,
+            });
+            setIsSubmitting(false);
+        }
+    }, [open, form]);
+
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                {/* same accent button as New Customer */}
                 <Button variant="outline" className="bg-accent text-accent-fg hover:bg-accent/90">
                     + New Interaction
                 </Button>
             </DialogTrigger>
 
-            {/* same primary modal background as New Customer */}
-            <DialogContent className="max-w-xl bg-primary/90 backdrop-blur-lg border border-border rounded-xl shadow-premium">
+            <DialogContent className="max-w-xl bg-slate-900 border border-slate-700 rounded-xl shadow-2xl">
                 <DialogHeader>
                     <DialogTitle className="text-white">Log New Interaction</DialogTitle>
-                    <DialogDescription className="text-slate-300">
+                    <DialogDescription className="text-slate-400">
                         Select a customer and fill in the details below.
                     </DialogDescription>
                 </DialogHeader>
@@ -96,19 +134,30 @@ export default function NewInteractionModal({
                         <FormField
                             control={form.control}
                             name="customer_id"
+                            rules={{ required: "Customer is required" }}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-slate-300">Customer</FormLabel>
+                                    <FormLabel className="text-slate-300">Customer *</FormLabel>
                                     <FormControl>
                                         <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger>
+                                            <SelectTrigger className="bg-slate-900 border-slate-700 text-slate-50">
                                                 <SelectValue placeholder="Select a customer…" />
                                             </SelectTrigger>
-                                            <SelectContent>
+                                            <SelectContent className="bg-slate-900 border-slate-700">
                                                 {customers.map((c) => (
-                                                    <SelectItem key={c.id} value={c.id}>
-                                                        {c.full_name}
-                                                        {c.business ? ` – ${c.business}` : ''}
+                                                    <SelectItem 
+                                                        key={c.id} 
+                                                        value={c.id}
+                                                        className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800"
+                                                    >
+                                                        <div className="flex flex-col">
+                                                            <span className="font-medium">{c.full_name}</span>
+                                                            {c.business && (
+                                                                <span className="text-xs text-slate-400">
+                                                                    {c.business}
+                                                                </span>
+                                                            )}
+                                                        </div>
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
@@ -128,15 +177,15 @@ export default function NewInteractionModal({
                                     <FormLabel className="text-slate-300">Type</FormLabel>
                                     <FormControl>
                                         <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger>
+                                            <SelectTrigger className="bg-slate-900 border-slate-700 text-slate-50">
                                                 <SelectValue placeholder="Select type…" />
                                             </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="call">Call</SelectItem>
-                                                <SelectItem value="email">Email</SelectItem>
-                                                <SelectItem value="meeting">Meeting</SelectItem>
-                                                <SelectItem value="site visit">Site Visit</SelectItem>
-                                                <SelectItem value="other">Other</SelectItem>
+                                            <SelectContent className="bg-slate-900 border-slate-700">
+                                                <SelectItem value="call" className="text-slate-50 hover:bg-slate-800">Call</SelectItem>
+                                                <SelectItem value="email" className="text-slate-50 hover:bg-slate-800">Email</SelectItem>
+                                                <SelectItem value="meeting" className="text-slate-50 hover:bg-slate-800">Meeting</SelectItem>
+                                                <SelectItem value="site visit" className="text-slate-50 hover:bg-slate-800">Site Visit</SelectItem>
+                                                <SelectItem value="other" className="text-slate-50 hover:bg-slate-800">Other</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
@@ -149,11 +198,16 @@ export default function NewInteractionModal({
                         <FormField
                             control={form.control}
                             name="title"
+                            rules={{ required: "Title is required" }}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-slate-300">Title</FormLabel>
+                                    <FormLabel className="text-slate-300">Title *</FormLabel>
                                     <FormControl>
-                                        <Input {...field} placeholder="Conversation title…" />
+                                        <Input 
+                                            {...field} 
+                                            placeholder="Conversation title…" 
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -168,7 +222,11 @@ export default function NewInteractionModal({
                                 <FormItem>
                                     <FormLabel className="text-slate-300">Notes</FormLabel>
                                     <FormControl>
-                                        <Textarea {...field} placeholder="Detailed notes…" />
+                                        <Textarea 
+                                            {...field} 
+                                            placeholder="Detailed notes…" 
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -183,7 +241,11 @@ export default function NewInteractionModal({
                                 <FormItem>
                                     <FormLabel className="text-slate-300">Outcome</FormLabel>
                                     <FormControl>
-                                        <Input {...field} placeholder="Result of the interaction…" />
+                                        <Input 
+                                            {...field} 
+                                            placeholder="Result of the interaction…" 
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -197,7 +259,11 @@ export default function NewInteractionModal({
                             render={({ field }) => (
                                 <FormItem className="flex items-center space-x-2">
                                     <FormControl>
-                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                        <Checkbox 
+                                            checked={field.value} 
+                                            onCheckedChange={field.onChange}
+                                            className="border-slate-600" 
+                                        />
                                     </FormControl>
                                     <FormLabel className="text-slate-300">Follow-up required</FormLabel>
                                 </FormItem>
@@ -206,10 +272,17 @@ export default function NewInteractionModal({
 
                         <DialogFooter className="flex justify-end space-x-2 pt-4">
                             <DialogClose asChild>
-                                <Button variant="ghost">Cancel</Button>
+                                <Button variant="ghost" disabled={isSubmitting}>
+                                    Cancel
+                                </Button>
                             </DialogClose>
-                            <Button variant="outline" type="submit">
-                                Save Interaction
+                            <Button 
+                                variant="outline" 
+                                type="submit" 
+                                disabled={isSubmitting}
+                                className="bg-blue-600 text-white hover:bg-blue-700"
+                            >
+                                {isSubmitting ? 'Saving...' : 'Save Interaction'}
                             </Button>
                         </DialogFooter>
                     </form>

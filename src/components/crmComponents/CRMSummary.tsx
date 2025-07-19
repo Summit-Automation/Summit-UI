@@ -9,9 +9,9 @@ import {Interaction} from '@/types/interaction';
 const cardStyles = `bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm`;
 const cardHeaders = `flex items-center justify-between pb-2`;
 const cardTitleStyles = `text-sm font-medium text-slate-300`;
-const iconStyles = `h-5 w-5 text-icon`;
+const iconStyles = `h-4 w-4 text-icon`;
 const iconContainerStyles = `p-2 bg-slate-800/50 rounded-lg`;
-const cardContentStyles = `text-3xl font-bold text-white`;
+const cardContentStyles = `text-2xl font-bold text-white`;
 
 interface CRMSummaryProps {
     customers: Customer[];
@@ -32,7 +32,7 @@ function MetricCard({title, value, Icon}: MetricCardProps) {
                     <Icon className={iconStyles.replace('text-icon', 'text-sky-400')}/>
                 </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-0">
                 <div className={cardContentStyles}>{value}</div>
             </CardContent>
         </Card>);

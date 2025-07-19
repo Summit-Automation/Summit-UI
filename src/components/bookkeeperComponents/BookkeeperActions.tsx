@@ -1,52 +1,79 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import CreateTransactionClientWrapper from '@/components/bookkeeperComponents/bookkeeperActions/CreateTransactionClientWrapper';
+import AIReceiptUploadModal from '@/components/bookkeeperComponents/AIReceiptUploadModal';
+import { getCustomers } from '@/app/lib/services/crmServices/customer/getCustomers';
+import { Customer } from '@/types/customer';
+import { Button } from '@/components/ui/button';
+import { Brain, Download, Upload, FileText, Sparkles } from 'lucide-react';
 
 export default function BookkeeperActions() {
+    const router = useRouter();
+    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        getCustomers()
+            .then(setCustomers)
+            .finally(() => setLoading(false));
+    }, []);
+
     return (
-        <fieldset className="mb-6">
-            <legend className="text-sm text-gray-500 font-semibold mb-2">
-                Actions (coming soon)
-            </legend>
-            <div className="flex flex-wrap gap-3">
-                <div className="flex flex-wrap gap-3 mb-4">
+        <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-slate-200">Quick Actions</h3>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {/* Add Transaction - Already working well */}
+                <CreateTransactionClientWrapper />
 
-                    <CreateTransactionClientWrapper/>
+                {/* AI Receipt Upload */}
+                {loading ? (
+                    <div className="h-10 bg-slate-800 border border-slate-600 rounded-lg animate-pulse" />
+                ) : (
+                    <AIReceiptUploadModal
+                        customers={customers}
+                        onSuccess={() => router.refresh()}
+                    />
+                )}
 
-                    <button
-                        className="bg-blue-800 text-white px-4 py-2 rounded shadow-sm hover:bg-blue-700"
-                        disabled
-                        title="Coming soon: Upload receipts using an AI agent (Flowise + OCR)"
-                    >
-                        🧠 AI Receipt Upload
-                    </button>
+                {/* Import CSV */}
+                <Button
+                    variant="outline"
+                    disabled
+                    className="bg-indigo-600/10 border-indigo-500/30 text-indigo-400 hover:bg-indigo-600/20 hover:border-indigo-500/50 disabled:opacity-60 disabled:cursor-not-allowed h-10"
+                >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Import CSV
+                </Button>
 
-                    <button
-                        className="bg-indigo-700 text-white px-4 py-2 rounded shadow-sm hover:bg-indigo-600"
-                        disabled
-                        title="Coming soon: Import transactions from CSV"
-                    >
-                        📥 Import CSV
-                    </button>
+                {/* Export */}
+                <Button
+                    variant="outline"
+                    disabled
+                    className="bg-slate-600/10 border-slate-500/30 text-slate-400 hover:bg-slate-600/20 hover:border-slate-500/50 disabled:opacity-60 disabled:cursor-not-allowed h-10"
+                >
+                    <Download className="h-4 w-4 mr-2" />
+                    Export Data
+                </Button>
 
-                    <button
-                        className="bg-slate-700 text-white px-4 py-2 rounded shadow-sm hover:bg-slate-600"
-                        disabled
-                        title="Coming soon: Export data to CSV or PDF"
-                    >
-                        📤 Export
-                    </button>
-
-                    <button
-                        className="bg-yellow-700 text-white px-4 py-2 rounded shadow-sm hover:bg-yellow-600"
-                        disabled
-                        title="Coming soon: Trigger AI agent summary of this ledger"
-                    >
-                        📝 AI Summary Report
-                    </button>
-
-                </div>
+                {/* AI Summary Report */}
+                <Button
+                    variant="outline"
+                    disabled
+                    className="bg-yellow-600/10 border-yellow-500/30 text-yellow-400 hover:bg-yellow-600/20 hover:border-yellow-500/50 disabled:opacity-60 disabled:cursor-not-allowed h-10 sm:col-span-2 lg:col-span-1"
+                >
+                    <FileText className="h-4 w-4 mr-2" />
+                    AI Summary Report
+                </Button>
             </div>
-        </fieldset>
+
+            {/* Coming Soon Note */}
+            <div className="flex items-center gap-2 text-xs text-slate-500 mt-3">
+                <Sparkles className="h-3 w-3" />
+                <span>AI-powered receipt scanning with automatic transaction creation</span>
+            </div>
+        </div>
     );
 }
