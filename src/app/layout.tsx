@@ -37,11 +37,14 @@ export default function RootLayout({
           // Auth pages get full screen - no sidebar, no margins
           <>{children}</>
         ) : (
-          // Regular pages get sidebar + main content
+          // Regular pages get responsive sidebar + main content
           <>
             <Sidebar />
-            <main className="ml-64 p-6 min-h-screen overflow-auto">
-              {children}
+            <main className="lg:ml-64 min-h-screen">
+              {/* Mobile: Add top padding for hamburger button + content padding */}
+              <div className="pt-16 lg:pt-6 px-4 sm:px-6 lg:px-6 pb-6">
+                {children}
+              </div>
             </main>
           </>
         )}
