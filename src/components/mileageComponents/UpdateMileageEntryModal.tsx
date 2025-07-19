@@ -74,14 +74,14 @@ export default function UpdateMileageEntryModal({
             } else {
                 form.setError('purpose', { message: 'Failed to update mileage entry' });
             }
-        } catch (error) {
+        } catch (err) {
+            console.error('Failed to update mileage entry:', err);
             form.setError('purpose', { message: 'Failed to update mileage entry' });
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    // Reset form when modal closes
     React.useEffect(() => {
         if (!open) {
             setIsSubmitting(false);

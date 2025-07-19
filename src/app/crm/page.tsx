@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import {getCustomers} from '@/app/lib/services/crmServices/customer/getCustomers';
 import {getInteractions} from '@/app/lib/services/crmServices/interaction/getInteractions';
 import CRMCustomerView from '@/components/crmComponents/view/CRMCustomerView';

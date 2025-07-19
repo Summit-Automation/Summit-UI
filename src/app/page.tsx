@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import {getCustomers} from "@/app/lib/services/crmServices/customer/getCustomers";
 import {getInteractions} from "@/app/lib/services/crmServices/interaction/getInteractions";
 import {getTransactions} from "@/app/lib/services/bookkeeperServices/getTransactions";
@@ -17,12 +19,9 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/comp
 import {Badge} from "@/components/ui/badge";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {
-    BarChart3, 
     Calendar, 
     DollarSign, 
-    LineChart, 
     MessageSquare, 
-    PieChart, 
     TrendingDown, 
     TrendingUp, 
     Users,
@@ -38,14 +37,13 @@ export default async function DashboardPage() {
     // Calculate key metrics
     const totalCustomers = customers?.length || 0;
     const totalInteractions = interactions?.length || 0;
-    const totalTransactions = transactions?.length || 0;
 
     const customerGrowth = calculateMonthlyGrowth(customers, "created_at");
     const interactionGrowth = calculateMonthlyGrowth(interactions, "created_at");
     const transactionGrowth = calculateMonthlyGrowth(transactions, "timestamp");
 
     const followUpsDue = getFollowUpsDue(interactions);
-    const overdueFollowUps = getOverdueFollowUps(interactions);
+    const overdueFollowUps = getOverdueFollowUps();
 
     // Calculate revenue metrics
     const totalRevenue = transactions
@@ -82,7 +80,7 @@ export default async function DashboardPage() {
         title: string;
         value: string | number;
         growth?: number;
-        icon: any;
+        icon: React.ComponentType<{ className?: string }>;
     }) {
         return (
             <Card className="card-clean transition-smooth hover:shadow-lg">

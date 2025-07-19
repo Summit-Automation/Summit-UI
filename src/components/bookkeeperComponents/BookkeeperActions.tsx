@@ -7,7 +7,7 @@ import AIReceiptUploadModal from '@/components/bookkeeperComponents/AIReceiptUpl
 import { getCustomers } from '@/app/lib/services/crmServices/customer/getCustomers';
 import { Customer } from '@/types/customer';
 import { Button } from '@/components/ui/button';
-import { Brain, Download, Upload, FileText, Sparkles } from 'lucide-react';
+import { Download, Upload, FileText, Sparkles } from 'lucide-react';
 
 export default function BookkeeperActions() {
     const router = useRouter();

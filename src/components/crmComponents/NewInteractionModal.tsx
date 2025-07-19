@@ -90,7 +90,8 @@ export default function NewInteractionModal({
             } else {
                 form.setError('title', { message: 'Failed to log interaction' });
             }
-        } catch (error) {
+        } catch (err) {
+            console.error('Failed to log interaction:', err);
             form.setError('title', { message: 'Failed to log interaction' });
         } finally {
             setIsSubmitting(false);

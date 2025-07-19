@@ -182,10 +182,12 @@ export default function Sidebar() {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3 min-w-0 flex-1">
                             {user?.avatar_url ? (
-                                <img 
+                                <Image 
                                     src={user.avatar_url} 
                                     alt="User avatar"
-                                    className="w-8 h-8 rounded-full"
+                                    width={32}
+                                    height={32}
+                                    className="rounded-full"
                                 />
                             ) : (
                                 <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">

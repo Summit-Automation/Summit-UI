@@ -14,7 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { createMileageEntry } from '@/app/lib/services/mileageServices/createMileageEntry';
 import { Customer } from '@/types/customer';
-import { Navigation, Brain, MapPin, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { Navigation, Brain, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
 
 type FormValues = {
     date: string;
@@ -126,14 +126,14 @@ export default function AIMileageTrackerModal({
 
             console.log('Parsed AI Response:', parsedResponse);
             setAiResponse(parsedResponse);
-        } catch (error) {
-            console.error('Error calculating mileage:', error);
+        } catch (err) {
+            console.error('Error calculating mileage:', err);
             setAiResponse({
                 miles: 0,
                 duration: '',
                 route: '',
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to calculate mileage',
+                error: err instanceof Error ? err.message : 'Failed to calculate mileage',
             });
         } finally {
             setIsCalculating(false);
@@ -173,7 +173,8 @@ export default function AIMileageTrackerModal({
             } else {
                 form.setError('purpose', { message: 'Failed to create mileage entry' });
             }
-        } catch (error) {
+        } catch (err) {
+            console.error('Failed to create mileage entry:', err);
             form.setError('purpose', { message: 'Failed to create mileage entry' });
         } finally {
             setIsSubmitting(false);

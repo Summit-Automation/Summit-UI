@@ -14,7 +14,6 @@ interface InteractionBucket {
     [type: string]: string | number;
 }
 
-
 function groupInteractions(interactions: Interaction[]): InteractionBucket[] {
     const buckets = new Map<string, InteractionBucket>();
 
@@ -43,10 +42,8 @@ function groupInteractions(interactions: Interaction[]): InteractionBucket[] {
         });
 }
 
-
 export default function InteractionTypeBar({interactions}: { interactions: Interaction[] }) {
     const data = groupInteractions(interactions);
-    const typesToShow = Object.keys(TYPE_COLORS);
 
     return (
         <div className="bg-transparent p-4 rounded-lg shadow-md">

@@ -1,7 +1,4 @@
-// utils/dashboardUtils.ts
-
 import { Interaction } from "@/types/interaction";
-import { Transaction } from "@/types/transaction";
 
 /**
  * Calculate percentage growth from previous to current.
@@ -51,9 +48,7 @@ export function calculateMonthlyGrowth<T>(
 /**
  * Count total follow-ups required (no follow-up date available).
  */
-export function getFollowUpsDue(
-    interactions: Interaction[]
-): number {
+export function getFollowUpsDue(interactions: Interaction[]): number {
     return interactions.filter(i => i.follow_up_required).length;
 }
 
@@ -62,8 +57,6 @@ export function getFollowUpsDue(
  * Overdue follow-ups cannot be determined without a date field.
  * Returns 0.
  */
-export function getOverdueFollowUps(
-    interactions: Interaction[]
-): number {
+export function getOverdueFollowUps(): number {
     return 0;
 }
