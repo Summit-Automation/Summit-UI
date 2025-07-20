@@ -5,7 +5,7 @@ import { Transaction } from '@/types/transaction';
 import { MobileTable } from '@/components/ui/mobile-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Pencil, Trash2, User, Clipboard, CheckCircle } from 'lucide-react';
+import { Trash2, User, Clipboard, CheckCircle } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,

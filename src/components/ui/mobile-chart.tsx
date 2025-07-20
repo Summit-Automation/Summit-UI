@@ -17,6 +17,29 @@ interface MobileChartProps {
   standalone?: boolean; // New prop to determine if this should wrap in a card
 }
 
+interface TooltipPayloadItem {
+    value: unknown;
+    dataKey: string;
+    color: string;
+}
+
+interface TooltipProps {
+    active?: boolean;
+    payload?: TooltipPayloadItem[];
+    label?: string;
+    formatter?: (value: unknown) => string;
+    labelFormatter?: (label: string) => string;
+}
+
+interface LegendPayloadItem {
+    value: string;
+    color: string;
+}
+
+interface LegendProps {
+    payload?: LegendPayloadItem[];
+}
+
 export function MobileChart({
   title,
   description,
@@ -130,7 +153,7 @@ export function MobileTooltip({
   label,
   formatter,
   labelFormatter 
-}: any) {
+}: TooltipProps) {
   if (!active || !payload || !payload.length) {
     return null;
   }
@@ -143,7 +166,7 @@ export function MobileTooltip({
         </p>
       )}
       <div className="space-y-1">
-        {payload.map((entry: any, index: number) => (
+        {payload.map((entry: TooltipPayloadItem, index: number) => (
           <div key={index} className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <div 
@@ -153,7 +176,7 @@ export function MobileTooltip({
               <span className="text-slate-400 text-xs">{entry.dataKey}:</span>
             </div>
             <span className="text-slate-100 text-xs font-medium">
-              {formatter ? formatter(entry.value) : entry.value}
+              {formatter ? formatter(entry.value) : String(entry.value)}
             </span>
           </div>
         ))}
@@ -163,12 +186,12 @@ export function MobileTooltip({
 }
 
 // Mobile-optimized legend
-export function MobileLegend({ payload }: any) {
+export function MobileLegend({ payload }: LegendProps) {
   if (!payload || !payload.length) return null;
 
   return (
     <div className="flex flex-wrap justify-center gap-3 mt-4 px-2">
-      {payload.map((entry: any, index: number) => (
+      {payload.map((entry: LegendPayloadItem, index: number) => (
         <div key={index} className="flex items-center gap-2">
           <div 
             className="w-3 h-3 rounded-full"

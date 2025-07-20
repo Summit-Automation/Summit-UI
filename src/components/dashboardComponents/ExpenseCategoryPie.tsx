@@ -2,7 +2,7 @@
 
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell } from 'recharts';
 import { Transaction } from '@/types/transaction';
-import { MobileChart, MobileTooltip } from '@/components/ui/mobile-chart';
+import { MobileChart } from '@/components/ui/mobile-chart';
 
 type CategoryBucket = { category: string; amount: number; color: string };
 
@@ -24,6 +24,15 @@ const CATEGORY_COLORS = [
     '#a855f7', // purple-500
     '#d946ef', // fuchsia-500
 ];
+
+interface TooltipProps {
+    active?: boolean;
+    payload?: Array<{
+        value: number;
+        payload: { color: string };
+    }>;
+    label?: string;
+}
 
 export default function ExpenseCategoryBar({ transactions }: { transactions: Transaction[] }) {
     const categoryTotals = transactions
@@ -59,7 +68,7 @@ export default function ExpenseCategoryBar({ transactions }: { transactions: Tra
             maximumFractionDigits: 1
         }).format(value);
 
-    const CustomTooltip = ({ active, payload, label }: any) => {
+    const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
         if (active && payload && payload.length) {
             return (
                 <div className="bg-slate-800 border border-slate-600 rounded-lg p-3 shadow-lg max-w-xs">

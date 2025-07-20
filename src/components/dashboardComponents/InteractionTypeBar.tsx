@@ -2,8 +2,7 @@
 
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell } from 'recharts';
 import { Interaction } from '@/types/interaction';
-import { format, parseISO } from 'date-fns';
-import { MobileChart, MobileTooltip, MobileLegend } from '@/components/ui/mobile-chart';
+import { MobileChart } from '@/components/ui/mobile-chart';
 
 // Modern color palette for interaction types
 const TYPE_COLORS: Record<string, string> = {
@@ -18,6 +17,15 @@ interface InteractionBucket {
     type: string;
     count: number;
     color: string;
+}
+
+interface TooltipProps {
+    active?: boolean;
+    payload?: Array<{
+        value: number;
+        payload: { color: string };
+    }>;
+    label?: string;
 }
 
 function groupInteractionsByType(interactions: Interaction[]): InteractionBucket[] {
@@ -40,7 +48,7 @@ function groupInteractionsByType(interactions: Interaction[]): InteractionBucket
 export default function InteractionTypeBar({ interactions }: { interactions: Interaction[] }) {
     const data = groupInteractionsByType(interactions);
 
-    const CustomTooltip = ({ active, payload, label }: any) => {
+    const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
         if (active && payload && payload.length) {
             return (
                 <div className="bg-slate-800 border border-slate-600 rounded-lg p-3 shadow-lg">

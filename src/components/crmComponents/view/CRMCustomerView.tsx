@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MobileTable } from '@/components/ui/mobile-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, Phone, Mail, Building, Pencil, Trash2, MessageSquare } from 'lucide-react';
+import { Calendar, Phone, Mail, Building, Trash2, MessageSquare } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -22,7 +22,6 @@ import { useRouter } from 'next/navigation';
 import type { Customer } from '@/types/customer';
 import type { Interaction } from '@/types/interaction';
 import { statusColor } from '@/lib/crmUtils';
-import { cn } from '@/lib/utils';
 
 interface Props {
     customers: Customer[];

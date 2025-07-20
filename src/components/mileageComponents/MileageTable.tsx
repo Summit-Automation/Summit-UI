@@ -5,7 +5,7 @@ import { MileageEntry } from '@/types/mileage';
 import { MobileTable } from '@/components/ui/mobile-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, Trash2, Car, DollarSign, Pencil } from 'lucide-react';
+import { MapPin, Trash2, Car, DollarSign } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,

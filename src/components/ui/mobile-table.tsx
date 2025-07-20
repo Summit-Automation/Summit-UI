@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 interface Column<T> {
   key: keyof T | string;
   label: string;
-  render?: (value: any, item: T) => React.ReactNode;
+  render?: (value: unknown, item: T) => React.ReactNode;
   hideOnMobile?: boolean;
   primary?: boolean; // Show prominently on mobile
 }
@@ -44,9 +44,9 @@ export function MobileTable<T>({
     setExpandedItems(newSet);
   };
 
-  const getValue = (item: T, column: Column<T>) => {
+  const getValue = (item: T, column: Column<T>): unknown => {
     if (typeof column.key === 'string' && column.key.includes('.')) {
-      return column.key.split('.').reduce((obj, key) => obj?.[key], item as any);
+      return column.key.split('.').reduce((obj, key) => obj?.[key], item as unknown);
     }
     return item[column.key as keyof T];
   };
