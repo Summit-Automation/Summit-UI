@@ -48,7 +48,9 @@ export default function CustomerStatusPie({
                     cy="45%"
                     outerRadius={typeof window !== 'undefined' && window.innerWidth < 768 ? mobileRadius : radius}
                     label={({ name, percent }) => 
-                        typeof window !== 'undefined' && window.innerWidth >= 768 ? `${name} ${(percent * 100).toFixed(0)}%` : ''
+                        typeof window !== 'undefined' && window.innerWidth >= 768 && percent 
+                            ? `${name} ${(percent * 100).toFixed(0)}%` 
+                            : ''
                     }
                     labelLine={false}
                     fontSize={12}
