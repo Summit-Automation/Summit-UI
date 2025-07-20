@@ -64,26 +64,26 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
             key: 'full_name',
             label: 'Name',
             primary: true,
-            render: (value: string) => (
-                <span className="font-semibold text-white">{value}</span>
+            render: (value: unknown) => (
+                <span className="font-semibold text-white">{value as string}</span>
             )
         },
         {
             key: 'status',
             label: 'Status',
             primary: true,
-            render: (value: string) => (
-                <Badge className={`${statusColor(value)} px-3 py-0.5 rounded-full text-xs`}>
-                    {value}
+            render: (value: unknown) => (
+                <Badge className={`${statusColor(value as string)} px-3 py-0.5 rounded-full text-xs`}>
+                    {value as string}
                 </Badge>
             )
         },
         {
             key: 'business',
             label: 'Business',
-            render: (value: string) => (
+            render: (value: unknown) => (
                 <span className="text-slate-200">
-                    {value || <span className="text-slate-500 italic">None</span>}
+                    {(value as string) || <span className="text-slate-500 italic">None</span>}
                 </span>
             )
         },
@@ -91,9 +91,9 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
             key: 'email',
             label: 'Email',
             hideOnMobile: true,
-            render: (value: string) => (
+            render: (value: unknown) => (
                 <span className="text-slate-200 truncate block max-w-xs">
-                    {value}
+                    {value as string}
                 </span>
             )
         },
@@ -101,18 +101,18 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
             key: 'phone',
             label: 'Phone',
             hideOnMobile: true,
-            render: (value: string) => (
-                <span className="text-slate-200">{value}</span>
+            render: (value: unknown) => (
+                <span className="text-slate-200">{value as string}</span>
             )
         },
         {
             key: 'created_at',
             label: 'Created',
             hideOnMobile: true,
-            render: (value: string) => (
+            render: (value: unknown) => (
                 <div className="flex items-center gap-1 text-sm text-slate-400">
                     <Calendar className="w-4 h-4" />
-                    {formatDate(value)}
+                    {formatDate(value as string)}
                 </div>
             )
         }

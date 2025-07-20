@@ -68,15 +68,15 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
             key: 'date',
             label: 'Date',
             primary: true,
-            render: (value: string) => formatDate(value)
+            render: (value: unknown) => formatDate(value as string)
         },
         {
             key: 'purpose',
             label: 'Purpose',
             primary: true,
-            render: (value: string) => (
+            render: (value: unknown) => (
                 <span className="font-medium truncate block max-w-[200px] md:max-w-none">
-                    {value}
+                    {value as string}
                 </span>
             )
         },
@@ -84,23 +84,23 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
             key: 'miles',
             label: 'Miles',
             primary: true,
-            render: (value: number) => (
+            render: (value: unknown) => (
                 <span className="font-mono font-semibold text-blue-400">
-                    {formatMiles(value)} mi
+                    {formatMiles(value as number)} mi
                 </span>
             )
         },
         {
             key: 'is_business',
             label: 'Type',
-            render: (value: boolean) => (
+            render: (value: unknown) => (
                 <Badge className={cn(
                     'capitalize text-xs',
-                    value 
+                    (value as boolean) 
                         ? 'bg-green-600 text-green-100' 
                         : 'bg-blue-600 text-blue-100'
                 )}>
-                    {value ? 'Business' : 'Personal'}
+                    {(value as boolean) ? 'Business' : 'Personal'}
                 </Badge>
             )
         },
@@ -108,9 +108,9 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
             key: 'start_location',
             label: 'From',
             hideOnMobile: true,
-            render: (value: string | null) => (
+            render: (value: unknown) => (
                 <span className="truncate block max-w-xs">
-                    {value || <span className="text-slate-500 italic">Not specified</span>}
+                    {(value as string | null) || <span className="text-slate-500 italic">Not specified</span>}
                 </span>
             )
         },
@@ -118,9 +118,9 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
             key: 'end_location',
             label: 'To',
             hideOnMobile: true,
-            render: (value: string | null) => (
+            render: (value: unknown) => (
                 <span className="truncate block max-w-xs">
-                    {value || <span className="text-slate-500 italic">Not specified</span>}
+                    {(value as string | null) || <span className="text-slate-500 italic">Not specified</span>}
                 </span>
             )
         },
@@ -128,7 +128,7 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
             key: 'customer_name',
             label: 'Customer',
             hideOnMobile: true,
-            render: (value: string | null) => value || 'N/A'
+            render: (value: unknown) => (value as string | null) || 'N/A'
         }
     ];
 

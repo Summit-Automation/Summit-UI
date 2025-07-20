@@ -51,15 +51,15 @@ export default function TransactionTable({ transactions }: { transactions: Trans
             key: 'timestamp',
             label: 'Date',
             primary: true,
-            render: (value: string) => new Date(value).toLocaleDateString()
+            render: (value: unknown) => new Date(value as string).toLocaleDateString()
         },
         {
             key: 'description',
             label: 'Description',
             primary: true,
-            render: (value: string) => (
+            render: (value: unknown) => (
                 <span className="font-medium truncate block max-w-[200px] md:max-w-none">
-                    {value}
+                    {value as string}
                 </span>
             )
         },
@@ -67,31 +67,31 @@ export default function TransactionTable({ transactions }: { transactions: Trans
             key: 'amount',
             label: 'Amount',
             primary: true,
-            render: (value: string, transaction: Transaction) => (
+            render: (value: unknown, transaction: Transaction) => (
                 <span className={cn(
                     "font-semibold",
                     transaction.type === 'income' ? 'text-green-400' : 'text-red-400'
                 )}>
-                    {formatCurrency(value)}
+                    {formatCurrency(value as string)}
                 </span>
             )
         },
         {
             key: 'category',
             label: 'Category',
-            render: (value: string) => value
+            render: (value: unknown) => value as string
         },
         {
             key: 'type',
             label: 'Type',
-            render: (value: string) => (
+            render: (value: unknown) => (
                 <Badge className={cn(
                     'capitalize text-xs',
-                    value === 'income' 
+                    (value as string) === 'income' 
                         ? 'bg-green-600 text-green-100' 
                         : 'bg-red-600 text-red-100'
                 )}>
-                    {value}
+                    {value as string}
                 </Badge>
             )
         },
@@ -99,8 +99,8 @@ export default function TransactionTable({ transactions }: { transactions: Trans
             key: 'source',
             label: 'Source',
             hideOnMobile: true,
-            render: (value: string) => (
-                <span className="capitalize text-xs">{value}</span>
+            render: (value: unknown) => (
+                <span className="capitalize text-xs">{value as string}</span>
             )
         }
     ];
