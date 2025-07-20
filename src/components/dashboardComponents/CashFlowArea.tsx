@@ -25,8 +25,8 @@ function groupCashFlow(transactions: Transaction[]): Bucket[] {
 export default function CashFlowArea({ transactions }: { transactions: Transaction[] }) {
     const data = groupCashFlow(transactions);
 
-    const formatCurrency = (value: number) => 
-        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+    const formatCurrency = (value: unknown) => 
+        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value as number);
 
     const formatDate = (date: string) => 
         new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
