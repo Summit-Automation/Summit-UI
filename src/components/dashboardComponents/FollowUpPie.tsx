@@ -38,7 +38,7 @@ export default function FollowUpPie({ interactions }: { interactions: Interactio
                     cy="45%"
                     outerRadius={typeof window !== 'undefined' && window.innerWidth < 768 ? 50 : 80}
                     label={({ name, percent }) => 
-                        typeof window !== 'undefined' && window.innerWidth >= 768 
+                        typeof window !== 'undefined' && window.innerWidth >= 768 && percent
                             ? `${name.split(' ')[0]} ${(percent * 100).toFixed(0)}%` 
                             : ''
                     }
