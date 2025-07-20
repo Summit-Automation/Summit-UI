@@ -1,10 +1,10 @@
 export const dynamic = 'force-dynamic';
 
-import {getCustomers} from "@/app/lib/services/crmServices/customer/getCustomers";
-import {getInteractions} from "@/app/lib/services/crmServices/interaction/getInteractions";
-import {getTransactions} from "@/app/lib/services/bookkeeperServices/getTransactions";
+import { getCustomers } from "@/app/lib/services/crmServices/customer/getCustomers";
+import { getInteractions } from "@/app/lib/services/crmServices/interaction/getInteractions";
+import { getTransactions } from "@/app/lib/services/bookkeeperServices/getTransactions";
 
-import {calculateMonthlyGrowth, getFollowUpsDue, getOverdueFollowUps,} from "@/utils/dashboard/dashboardUtils";
+import { calculateMonthlyGrowth, getFollowUpsDue, getOverdueFollowUps } from "@/utils/dashboard/dashboardUtils";
 
 import DashboardControls from "@/components/dashboardComponents/DashboardControls";
 import CustomerStatusPie from "@/components/dashboardComponents/CustomerStatusPie";
@@ -15,9 +15,9 @@ import CashFlowArea from "@/components/dashboardComponents/CashFlowArea";
 import InteractionTypeBar from "@/components/dashboardComponents/InteractionTypeBar";
 import FeedbackButton from "@/components/globalComponents/FeedbackButton";
 
-import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card";
-import {Badge} from "@/components/ui/badge";
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     Calendar, 
     DollarSign, 
@@ -58,14 +58,14 @@ export default async function DashboardPage() {
 
     const netProfit = totalRevenue - totalExpenses;
 
-    function GrowthIndicator({value}: {value: number}) {
+    function GrowthIndicator({ value }: { value: number }) {
         const isPositive = value >= 0;
         const Icon = isPositive ? TrendingUp : TrendingDown;
         const colorClass = isPositive ? 'text-emerald-400' : 'text-red-400';
 
         return (
-            <div className="flex items-center gap-1 text-xs sm:text-sm">
-                <Icon className={`h-3 w-3 sm:h-4 sm:w-4 ${colorClass}`}/>
+            <div className="flex items-center gap-1 text-xs">
+                <Icon className={`h-3 w-3 ${colorClass}`} />
                 <span className={colorClass}>
                     {isPositive ? '+' : ''}{Math.abs(value)}%
                 </span>
@@ -87,15 +87,15 @@ export default async function DashboardPage() {
         return (
             <Card className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl transition-all duration-300">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-xs sm:text-sm font-medium text-slate-400 truncate pr-2">
+                    <CardTitle className="text-xs font-medium text-slate-400 truncate pr-2">
                         {title}
                     </CardTitle>
-                    <div className="p-1.5 sm:p-2 bg-slate-800/50 rounded-lg flex-shrink-0">
+                    <div className="p-1.5 bg-slate-800/50 rounded-lg flex-shrink-0">
                         <Icon className="h-3 w-3 sm:h-4 sm:w-4 text-slate-400" />
                     </div>
                 </CardHeader>
                 <CardContent className="pt-0">
-                    <div className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-50 truncate" title={value.toString()}>
+                    <div className="text-lg sm:text-xl font-bold text-slate-50 truncate" title={value.toString()}>
                         {value}
                     </div>
                     {growth !== undefined && (
@@ -109,14 +109,14 @@ export default async function DashboardPage() {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
             {/* Mobile-optimized Header */}
-            <div className="flex flex-col gap-4">
+            <div className="space-y-3 sm:space-y-4">
                 <div>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-slate-50">
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-50">
                         Business Dashboard
                     </h1>
-                    <p className="text-sm sm:text-base text-slate-400 mt-1">
+                    <p className="text-sm text-slate-400 mt-1">
                         Real-time insights and analytics for your business
                     </p>
                 </div>
@@ -132,7 +132,7 @@ export default async function DashboardPage() {
             </div>
 
             {/* Mobile-responsive Metrics Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 <MetricCard
                     title="Total Customers"
                     value={totalCustomers.toLocaleString()}
@@ -165,8 +165,8 @@ export default async function DashboardPage() {
             {followUpsDue > 0 && (
                 <Card className="border-amber-500/20 bg-amber-500/5">
                     <CardHeader className="pb-3">
-                        <CardTitle className="flex items-center gap-2 text-amber-400 text-base sm:text-lg">
-                            <Calendar className="h-4 w-4 sm:h-5 sm:w-5" />
+                        <CardTitle className="flex items-center gap-2 text-amber-400 text-base">
+                            <Calendar className="h-4 w-4" />
                             Follow-ups Required
                         </CardTitle>
                     </CardHeader>
@@ -187,20 +187,26 @@ export default async function DashboardPage() {
 
             {/* Mobile-responsive Analytics Tabs */}
             <Tabs defaultValue="overview" className="space-y-4">
-                <TabsList className="grid w-full grid-cols-3 h-10 sm:h-auto sm:w-fit">
-                    <TabsTrigger value="overview" className="text-xs sm:text-sm">Overview</TabsTrigger>
-                    <TabsTrigger value="customers" className="text-xs sm:text-sm">Customers</TabsTrigger>
-                    <TabsTrigger value="financial" className="text-xs sm:text-sm">Financial</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-3 h-9 sm:h-10 sm:w-fit">
+                    <TabsTrigger value="overview" className="text-xs sm:text-sm px-2 sm:px-4">
+                        Overview
+                    </TabsTrigger>
+                    <TabsTrigger value="customers" className="text-xs sm:text-sm px-2 sm:px-4">
+                        Customers
+                    </TabsTrigger>
+                    <TabsTrigger value="financial" className="text-xs sm:text-sm px-2 sm:px-4">
+                        Financial
+                    </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="overview" className="space-y-6">
+                <TabsContent value="overview" className="space-y-4 sm:space-y-6">
                     {/* Mobile: Stack charts vertically, Desktop: 2 columns */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                         <Card className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 transition-all duration-300">
-                            <CardHeader className="pb-4">
+                            <CardHeader className="pb-3 sm:pb-4">
                                 <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg">
-                                    <div className="p-1.5 sm:p-2 bg-slate-800/50 rounded-lg">
-                                        <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
+                                    <div className="p-1.5 bg-slate-800/50 rounded-lg">
+                                        <TrendingUp className="h-4 w-4 text-blue-400" />
                                     </div>
                                     Customer Growth
                                 </CardTitle>
@@ -208,18 +214,18 @@ export default async function DashboardPage() {
                                     New customer acquisition over time
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent>
-                                <div className="h-64 sm:h-80">
-                                    <CustomerGrowthLine customers={customers}/>
+                            <CardContent className="p-3 sm:p-6">
+                                <div className="h-48 sm:h-64 lg:h-80">
+                                    <CustomerGrowthLine customers={customers} />
                                 </div>
                             </CardContent>
                         </Card>
 
                         <Card className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 transition-all duration-300">
-                            <CardHeader className="pb-4">
+                            <CardHeader className="pb-3 sm:pb-4">
                                 <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg">
-                                    <div className="p-1.5 sm:p-2 bg-slate-800/50 rounded-lg">
-                                        <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
+                                    <div className="p-1.5 bg-slate-800/50 rounded-lg">
+                                        <Activity className="h-4 w-4 text-green-400" />
                                     </div>
                                     Cash Flow
                                 </CardTitle>
@@ -227,9 +233,9 @@ export default async function DashboardPage() {
                                     Income vs expenses
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent>
-                                <div className="h-64 sm:h-80">
-                                    <CashFlowArea transactions={transactions}/>
+                            <CardContent className="p-3 sm:p-6">
+                                <div className="h-48 sm:h-64 lg:h-80">
+                                    <CashFlowArea transactions={transactions} />
                                 </div>
                             </CardContent>
                         </Card>
@@ -237,10 +243,10 @@ export default async function DashboardPage() {
 
                     {/* Full width chart on mobile and desktop */}
                     <Card className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 transition-all duration-300">
-                        <CardHeader className="pb-4">
+                        <CardHeader className="pb-3 sm:pb-4">
                             <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg">
-                                <div className="p-1.5 sm:p-2 bg-slate-800/50 rounded-lg">
-                                    <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
+                                <div className="p-1.5 bg-slate-800/50 rounded-lg">
+                                    <MessageSquare className="h-4 w-4 text-purple-400" />
                                 </div>
                                 Interaction Activity
                             </CardTitle>
@@ -248,21 +254,21 @@ export default async function DashboardPage() {
                                 Customer touchpoints by type
                             </CardDescription>
                         </CardHeader>
-                        <CardContent>
-                            <div className="h-64 sm:h-80">
-                                <InteractionTypeBar interactions={interactions}/>
+                        <CardContent className="p-3 sm:p-6">
+                            <div className="h-48 sm:h-64 lg:h-80">
+                                <InteractionTypeBar interactions={interactions} />
                             </div>
                         </CardContent>
                     </Card>
                 </TabsContent>
 
-                <TabsContent value="customers" className="space-y-6">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <TabsContent value="customers" className="space-y-4 sm:space-y-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                         <Card className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 transition-all duration-300">
-                            <CardHeader className="pb-4">
+                            <CardHeader className="pb-3 sm:pb-4">
                                 <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg">
-                                    <div className="p-1.5 sm:p-2 bg-slate-800/50 rounded-lg">
-                                        <PieChart className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
+                                    <div className="p-1.5 bg-slate-800/50 rounded-lg">
+                                        <PieChart className="h-4 w-4 text-blue-400" />
                                     </div>
                                     Customer Status
                                 </CardTitle>
@@ -270,18 +276,18 @@ export default async function DashboardPage() {
                                     Pipeline distribution
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent>
-                                <div className="h-64 sm:h-80">
-                                    <CustomerStatusPie customers={customers} size="lg"/>
+                            <CardContent className="p-3 sm:p-6">
+                                <div className="h-48 sm:h-64 lg:h-80">
+                                    <CustomerStatusPie customers={customers} size="lg" />
                                 </div>
                             </CardContent>
                         </Card>
 
                         <Card className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 transition-all duration-300">
-                            <CardHeader className="pb-4">
+                            <CardHeader className="pb-3 sm:pb-4">
                                 <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg">
-                                    <div className="p-1.5 sm:p-2 bg-slate-800/50 rounded-lg">
-                                        <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-amber-400" />
+                                    <div className="p-1.5 bg-slate-800/50 rounded-lg">
+                                        <Calendar className="h-4 w-4 text-amber-400" />
                                     </div>
                                     Follow-ups
                                 </CardTitle>
@@ -289,22 +295,22 @@ export default async function DashboardPage() {
                                     Pending follow-up requirements
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent>
-                                <div className="h-64 sm:h-80">
-                                    <FollowUpPie interactions={interactions}/>
+                            <CardContent className="p-3 sm:p-6">
+                                <div className="h-48 sm:h-64 lg:h-80">
+                                    <FollowUpPie interactions={interactions} />
                                 </div>
                             </CardContent>
                         </Card>
                     </div>
                 </TabsContent>
 
-                <TabsContent value="financial" className="space-y-6">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <TabsContent value="financial" className="space-y-4 sm:space-y-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                         <Card className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 transition-all duration-300">
-                            <CardHeader className="pb-4">
+                            <CardHeader className="pb-3 sm:pb-4">
                                 <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg">
-                                    <div className="p-1.5 sm:p-2 bg-slate-800/50 rounded-lg">
-                                        <PieChart className="h-4 w-4 sm:h-5 sm:w-5 text-red-400" />
+                                    <div className="p-1.5 bg-slate-800/50 rounded-lg">
+                                        <PieChart className="h-4 w-4 text-red-400" />
                                     </div>
                                     Expense Categories
                                 </CardTitle>
@@ -312,18 +318,18 @@ export default async function DashboardPage() {
                                     Spending breakdown
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent>
-                                <div className="h-64 sm:h-80">
-                                    <ExpenseCategoryPie transactions={transactions}/>
+                            <CardContent className="p-3 sm:p-6">
+                                <div className="h-48 sm:h-64 lg:h-80">
+                                    <ExpenseCategoryPie transactions={transactions} />
                                 </div>
                             </CardContent>
                         </Card>
 
                         <Card className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 transition-all duration-300">
-                            <CardHeader className="pb-4">
+                            <CardHeader className="pb-3 sm:pb-4">
                                 <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg">
-                                    <div className="p-1.5 sm:p-2 bg-slate-800/50 rounded-lg">
-                                        <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
+                                    <div className="p-1.5 bg-slate-800/50 rounded-lg">
+                                        <Activity className="h-4 w-4 text-green-400" />
                                     </div>
                                     Financial Overview
                                 </CardTitle>
@@ -331,9 +337,9 @@ export default async function DashboardPage() {
                                     Comprehensive cash flow
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent>
-                                <div className="h-64 sm:h-80">
-                                    <CashFlowArea transactions={transactions}/>
+                            <CardContent className="p-3 sm:p-6">
+                                <div className="h-48 sm:h-64 lg:h-80">
+                                    <CashFlowArea transactions={transactions} />
                                 </div>
                             </CardContent>
                         </Card>

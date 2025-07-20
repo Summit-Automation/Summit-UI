@@ -1,45 +1,58 @@
 'use client';
 
-import {Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip} from 'recharts';
-import {Interaction} from '@/types/interaction';
+import { Cell, Pie, PieChart } from 'recharts';
+import { Interaction } from '@/types/interaction';
+import { MobileChart, MobileTooltip, MobileLegend } from '@/components/ui/mobile-chart';
 
-const COLORS = ['#3b82f6', '#94a3b8']; // Blue for Yes, Gray for No
+const COLORS = ['#ef4444', '#10b981']; // Red for required, Green for no follow-up
 
-export default function FollowUpPie({interactions}: { interactions: Interaction[] }) {
-    const followUpCount = interactions.reduce((acc, curr) => {
-        if (curr.follow_up_required) acc[0].value++; else acc[1].value++;
-        return acc;
-    }, [{name: 'Requires Follow-Up', value: 0}, {name: 'No Follow-Up', value: 0},]);
+export default function FollowUpPie({ interactions }: { interactions: Interaction[] }) {
+    const followUpRequired = interactions.filter(i => i.follow_up_required).length;
+    const noFollowUp = interactions.length - followUpRequired;
 
-    return (<div className="bg-transparent p-4 rounded-lg shadow-md">
-        <ResponsiveContainer width="100%" height={350}>
-            <PieChart>
+    const data = [
+        { name: 'Requires Follow-Up', value: followUpRequired },
+        { name: 'No Follow-Up', value: noFollowUp }
+    ].filter(item => item.value > 0); // Only show segments with data
+
+    if (data.length === 0) {
+        return (
+            <div className="flex items-center justify-center h-48 text-slate-400">
+                No interaction data available
+            </div>
+        );
+    }
+
+    return (
+        <MobileChart
+            mobileHeight={200}
+            defaultHeight={280}
+            standalone={false}
+        >
+            <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                 <Pie
-                    data={followUpCount}
+                    data={data}
                     dataKey="value"
                     nameKey="name"
                     cx="50%"
-                    cy="50%"
-                    outerRadius={100}
-                    label={{ fill: 'var(--foreground)', fontSize: 14 }}
+                    cy="45%"
+                    outerRadius={typeof window !== 'undefined' && window.innerWidth < 768 ? 50 : 80}
+                    label={({ name, percent }) => 
+                        typeof window !== 'undefined' && window.innerWidth >= 768 && percent
+                            ? `${name.split(' ')[0]} ${(percent * 100).toFixed(0)}%` 
+                            : ''
+                    }
+                    labelLine={false}
+                    fontSize={12}
                 >
-                    {followUpCount.map((_, i) => (<Cell key={`cell-${i}`} fill={COLORS[i % COLORS.length]}/>))}
+                    {data.map((_, i) => (
+                        <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                    ))}
                 </Pie>
-                <Tooltip
-                    contentStyle={{
-                        backgroundColor: 'var(--popover)',
-                        borderColor: 'var(--border)',
-                        borderRadius: 'var(--radius)',
-                    }}
-                    itemStyle={{ color: 'var(--foreground)' }}
-                    labelStyle={{ color: 'var(--muted)' }}
-                    cursor={{ fill: 'rgba(255,255,255,0.1)' }}
-                />
-                <Legend
-                    wrapperStyle={{ color: 'var(--muted)', fontSize: 12 }}
-                    iconType="square"
-                />
+
+                <MobileTooltip />
+                <MobileLegend />
             </PieChart>
-        </ResponsiveContainer>
-    </div>);
+        </MobileChart>
+    );
 }
