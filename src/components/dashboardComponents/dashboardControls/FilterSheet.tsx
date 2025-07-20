@@ -47,12 +47,18 @@ function FilterSheetContent() {
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="outline" size="sm" className="border-slate-700 bg-slate-800/50 text-slate-300">
+                <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="bg-slate-900 border-slate-700 text-slate-50 hover:bg-slate-800 hover:border-slate-600 transition-all duration-200"
+                >
                     <Filter className="w-4 h-4 mr-2"/> Filter
                 </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px]">
-                <SheetHeader><SheetTitle>Filter Dashboard</SheetTitle></SheetHeader>
+            <SheetContent side="right" className="w-[300px] bg-slate-900 border-slate-700">
+                <SheetHeader>
+                    <SheetTitle className="text-white">Filter Dashboard</SheetTitle>
+                </SheetHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField
@@ -60,8 +66,14 @@ function FilterSheetContent() {
                             name="startDate"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Start Date</FormLabel>
-                                    <FormControl><Input type="date" {...field} /></FormControl>
+                                    <FormLabel className="text-slate-300">Start Date</FormLabel>
+                                    <FormControl>
+                                        <Input 
+                                            type="date" 
+                                            {...field} 
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
+                                    </FormControl>
                                     <FormMessage/>
                                 </FormItem>
                             )}
@@ -71,8 +83,14 @@ function FilterSheetContent() {
                             name="endDate"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>End Date</FormLabel>
-                                    <FormControl><Input type="date" {...field} /></FormControl>
+                                    <FormLabel className="text-slate-300">End Date</FormLabel>
+                                    <FormControl>
+                                        <Input 
+                                            type="date" 
+                                            {...field} 
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
+                                    </FormControl>
                                     <FormMessage/>
                                 </FormItem>
                             )}
@@ -82,17 +100,19 @@ function FilterSheetContent() {
                             name="type"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Interaction Type</FormLabel>
+                                    <FormLabel className="text-slate-300">Interaction Type</FormLabel>
                                     <FormControl>
                                         <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger><SelectValue placeholder="Select type"/></SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="all">All</SelectItem>
-                                                <SelectItem value="call">Call</SelectItem>
-                                                <SelectItem value="email">Email</SelectItem>
-                                                <SelectItem value="meeting">Meeting</SelectItem>
-                                                <SelectItem value="text">Text</SelectItem>
-                                                <SelectItem value="other">Other</SelectItem>
+                                            <SelectTrigger className="bg-slate-900 border-slate-700 text-slate-50">
+                                                <SelectValue placeholder="Select type"/>
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-slate-900 border-slate-700">
+                                                <SelectItem value="all" className="text-slate-50 hover:bg-slate-800">All</SelectItem>
+                                                <SelectItem value="call" className="text-slate-50 hover:bg-slate-800">Call</SelectItem>
+                                                <SelectItem value="email" className="text-slate-50 hover:bg-slate-800">Email</SelectItem>
+                                                <SelectItem value="meeting" className="text-slate-50 hover:bg-slate-800">Meeting</SelectItem>
+                                                <SelectItem value="text" className="text-slate-50 hover:bg-slate-800">Text</SelectItem>
+                                                <SelectItem value="other" className="text-slate-50 hover:bg-slate-800">Other</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
@@ -102,8 +122,18 @@ function FilterSheetContent() {
                         />
 
                         <SheetFooter className="flex justify-end space-x-2">
-                            <SheetClose asChild><Button variant="outline">Cancel</Button></SheetClose>
-                            <Button type="submit" variant="secondary">Apply</Button>
+                            <SheetClose asChild>
+                                <Button variant="outline" className="bg-slate-800 border-slate-600 text-slate-300 hover:bg-slate-700">
+                                    Cancel
+                                </Button>
+                            </SheetClose>
+                            <Button 
+                                type="submit" 
+                                variant="secondary"
+                                className="bg-blue-600 border-blue-600 text-white hover:bg-blue-700"
+                            >
+                                Apply
+                            </Button>
                         </SheetFooter>
                     </form>
                 </Form>
@@ -115,7 +145,12 @@ function FilterSheetContent() {
 export function FilterSheet() {
     return (
         <Suspense fallback={
-            <Button variant="outline" size="sm" className="border-slate-700 bg-slate-800/50 text-slate-300" disabled>
+            <Button 
+                variant="outline" 
+                size="sm" 
+                className="bg-slate-900 border-slate-700 text-slate-50" 
+                disabled
+            >
                 <Filter className="w-4 h-4 mr-2"/> Filter
             </Button>
         }>

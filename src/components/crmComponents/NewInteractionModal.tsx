@@ -116,7 +116,10 @@ export default function NewInteractionModal({
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="bg-accent text-accent-fg hover:bg-accent/90">
+                <Button 
+                    variant="outline" 
+                    className="w-full sm:w-auto bg-blue-600 border-blue-600 text-white hover:bg-blue-700 hover:border-blue-700 transition-all duration-200"
+                >
                     + New Interaction
                 </Button>
             </DialogTrigger>
@@ -281,7 +284,7 @@ export default function NewInteractionModal({
                                 variant="outline" 
                                 type="submit" 
                                 disabled={isSubmitting}
-                                className="bg-blue-600 text-white hover:bg-blue-700"
+                                className="bg-blue-600 border-blue-600 text-white hover:bg-blue-700 hover:border-blue-700"
                             >
                                 {isSubmitting ? 'Saving...' : 'Save Interaction'}
                             </Button>

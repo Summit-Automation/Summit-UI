@@ -4,7 +4,7 @@ import { Customer } from '@/types/customer';
 
 export default function CRMActions({ customers }: { customers: Customer[] }) {
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 crm-actions">
             <h3 className="text-base sm:text-lg font-semibold text-slate-200">Quick Actions</h3>
             
             <div className="flex flex-col sm:flex-row gap-3">

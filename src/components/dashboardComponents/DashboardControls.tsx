@@ -1,4 +1,3 @@
-// components/dashboard/DashboardControls.tsx
 "use client";
 
 import { Toaster } from '@/components/ui/sonner';
@@ -24,7 +23,7 @@ export default function DashboardControls({
     return (
         <>
             <Toaster position="bottom-right" closeButton />
-            <div className="flex gap-3">
+            <div className="flex gap-3 dashboard-controls">
                 <FilterSheet />
                 <ExportDialog
                     customers={customers}

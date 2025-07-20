@@ -12,13 +12,15 @@ export function RefreshButton() {
         toast.success('Dashboard refreshed 🚀');
     };
 
-    return (<Button
+    return (
+        <Button
             variant="outline"
             size="sm"
-            className="border-slate-700 bg-slate-800/50 text-slate-300"
+            className="bg-slate-900 border-slate-700 text-slate-50 hover:bg-slate-800 hover:border-slate-600 transition-all duration-200"
             onClick={handle}
         >
             <RefreshCw className="w-4 h-4 mr-2"/>
             Refresh
-        </Button>);
+        </Button>
+    );
 }

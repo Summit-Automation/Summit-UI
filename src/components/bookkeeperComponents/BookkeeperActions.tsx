@@ -21,7 +21,7 @@ export default function BookkeeperActions() {
     }, []);
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 bookkeeper-actions">
             <h3 className="text-base sm:text-lg font-semibold text-slate-200">Quick Actions</h3>
             
             {/* Mobile: 1 column, Tablet: 2 columns, Desktop: 4 columns */}
@@ -47,7 +47,7 @@ export default function BookkeeperActions() {
                 <Button
                     variant="outline"
                     disabled
-                    className="w-full bg-indigo-600/10 border-indigo-500/30 text-indigo-400 hover:bg-indigo-600/20 hover:border-indigo-500/50 disabled:opacity-60 disabled:cursor-not-allowed h-10"
+                    className="w-full bg-slate-900 border-slate-700 text-slate-400 hover:bg-slate-800 hover:border-slate-600 disabled:opacity-60 disabled:cursor-not-allowed h-10"
                 >
                     <Upload className="h-4 w-4 mr-2 flex-shrink-0" />
                     <span className="truncate">Import CSV</span>
@@ -57,7 +57,7 @@ export default function BookkeeperActions() {
                 <Button
                     variant="outline"
                     disabled
-                    className="w-full bg-slate-600/10 border-slate-500/30 text-slate-400 hover:bg-slate-600/20 hover:border-slate-500/50 disabled:opacity-60 disabled:cursor-not-allowed h-10"
+                    className="w-full bg-slate-900 border-slate-700 text-slate-400 hover:bg-slate-800 hover:border-slate-600 disabled:opacity-60 disabled:cursor-not-allowed h-10"
                 >
                     <Download className="h-4 w-4 mr-2 flex-shrink-0" />
                     <span className="truncate">Export Data</span>
@@ -70,7 +70,7 @@ export default function BookkeeperActions() {
                 <Button
                     variant="outline"
                     disabled
-                    className="w-full sm:w-auto bg-yellow-600/10 border-yellow-500/30 text-yellow-400 hover:bg-yellow-600/20 hover:border-yellow-500/50 disabled:opacity-60 disabled:cursor-not-allowed h-10"
+                    className="w-full sm:w-auto bg-slate-900 border-slate-700 text-slate-400 hover:bg-slate-800 hover:border-slate-600 disabled:opacity-60 disabled:cursor-not-allowed h-10"
                 >
                     <FileText className="h-4 w-4 mr-2" />
                     <span>AI Summary Report</span>
