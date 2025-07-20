@@ -58,12 +58,18 @@ export function ExportDialog({customers, interactions, transactions}: ExportDial
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="border-slate-700 bg-slate-800/50 text-slate-300">
+                <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="bg-slate-900 border-slate-700 text-slate-50 hover:bg-slate-800 hover:border-slate-600 transition-all duration-200"
+                >
                     <Download className="w-4 h-4 mr-2"/> Export
                 </Button>
             </DialogTrigger>
-            <DialogContent>
-                <DialogHeader><DialogTitle>Export Data</DialogTitle></DialogHeader>
+            <DialogContent className="bg-slate-900 border-slate-700 rounded-xl shadow-2xl">
+                <DialogHeader>
+                    <DialogTitle className="text-white">Export Data</DialogTitle>
+                </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         {(['Customers', 'Interactions', 'Transactions'] as const).map((label) => (
@@ -74,17 +80,33 @@ export function ExportDialog({customers, interactions, transactions}: ExportDial
                                 render={({field}) => (
                                     <FormItem className="flex items-center space-x-2">
                                         <FormControl>
-                                            <Checkbox checked={field.value} onCheckedChange={field.onChange}/>
+                                            <Checkbox 
+                                                checked={field.value} 
+                                                onCheckedChange={field.onChange}
+                                                className="border-slate-600"
+                                            />
                                         </FormControl>
-                                        <FormLabel>{label}</FormLabel>
+                                        <FormLabel className="text-slate-300">{label}</FormLabel>
                                     </FormItem>
                                 )}
                             />
                         ))}
 
                         <DialogFooter className="flex justify-end space-x-2">
-                            <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
-                            <Button type="submit">Export</Button>
+                            <DialogClose asChild>
+                                <Button 
+                                    variant="outline"
+                                    className="bg-slate-800 border-slate-600 text-slate-300 hover:bg-slate-700"
+                                >
+                                    Cancel
+                                </Button>
+                            </DialogClose>
+                            <Button 
+                                type="submit"
+                                className="bg-blue-600 border-blue-600 text-white hover:bg-blue-700"
+                            >
+                                Export
+                            </Button>
                         </DialogFooter>
                     </form>
                 </Form>
