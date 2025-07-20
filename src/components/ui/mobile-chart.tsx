@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 interface MobileChartProps {
   title?: string;
   description?: string;
-  children: React.ReactNode;
+  children: React.ReactElement;
   className?: string;
   allowFullscreen?: boolean;
   defaultHeight?: number;
