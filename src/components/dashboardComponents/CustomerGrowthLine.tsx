@@ -1,8 +1,9 @@
 'use client';
 
-import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from 'recharts';
-import {Customer} from '@/types/customer';
-import {format, parseISO} from 'date-fns';
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
+import { Customer } from '@/types/customer';
+import { format, parseISO } from 'date-fns';
+import { MobileChart, MobileTooltip } from '@/components/ui/mobile-chart';
 
 type Bucket = { date: string; count: number };
 
@@ -16,52 +17,59 @@ function groupByDay(customers: Customer[]): Bucket[] {
 
     return [...map.entries()]
         .sort(([a], [b]) => a.localeCompare(b))
-        .map(([date, count]) => ({date, count}));
+        .map(([date, count]) => ({ date, count }));
 }
 
-export default function CustomerGrowthLine({
-                                               customers,
-                                           }: {
-    customers: Customer[];
-}) {
+export default function CustomerGrowthLine({ customers }: { customers: Customer[] }) {
     const data = groupByDay(customers);
 
-    return (<div className="bg-transparent p-4 rounded-lg shadow-md">
-            <ResponsiveContainer width="100%" height={350}>
-                <LineChart data={data}>
-                    {/* grid & axes in muted slate */}
-                    <CartesianGrid stroke="var(--border)" strokeDasharray="3 3"/>
-                    <XAxis
-                        dataKey="date"
-                        stroke="var(--muted)"
-                        tick={{fill: 'var(--muted)', fontSize: 12}}
-                    />
-                    <YAxis
-                        stroke="var(--muted)"
-                        tick={{fill: 'var(--muted)', fontSize: 12}}
-                    />
+    const formatDate = (date: string) => 
+        new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
-                    {/* custom tooltip with popover/card colors */}
-                    <Tooltip
-                        contentStyle={{
-                            backgroundColor: 'var(--popover)',
-                            borderColor: 'var(--border)',
-                            borderRadius: 'var(--radius)',
-                        }}
-                        itemStyle={{color: 'var(--foreground)'}}
-                        labelStyle={{color: 'var(--muted)'}}
-                        cursor={{fill: 'rgba(255,255,255,0.1)'}}
-                    />
+    return (
+        <MobileChart
+            mobileHeight={200}
+            defaultHeight={350}
+            standalone={false}
+        >
+            <LineChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <CartesianGrid 
+                    stroke="#475569" 
+                    strokeDasharray="3 3" 
+                    horizontal={true}
+                    vertical={false}
+                />
+                
+                <XAxis
+                    dataKey="date"
+                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    tickFormatter={formatDate}
+                    axisLine={false}
+                    tickLine={false}
+                    interval="preserveStartEnd"
+                />
+                
+                <YAxis
+                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={40}
+                />
 
-                    {/* the line with accent stroke and matching dot */}
-                    <Line
-                        type="monotone"
-                        dataKey="count"
-                        stroke="var(--icon)"
-                        strokeWidth={2}
-                        dot={{r: 4, fill: 'var(--icon) ', stroke: 'var(--primary-foreground)', strokeWidth: 2}}
-                    />
-                </LineChart>
-            </ResponsiveContainer>
-        </div>);
+                <MobileTooltip
+                    labelFormatter={formatDate}
+                    formatter={(value: number) => [value, 'New Customers']}
+                />
+
+                <Line
+                    type="monotone"
+                    dataKey="count"
+                    stroke="#3b82f6"
+                    strokeWidth={2}
+                    dot={{ r: 4, fill: '#f8fafc', stroke: '#3b82f6', strokeWidth: 2 }}
+                    activeDot={{ r: 6, fill: '#ffffff', stroke: '#2563eb', strokeWidth: 3 }}
+                />
+            </LineChart>
+        </MobileChart>
+    );
 }

@@ -1,8 +1,9 @@
 'use client';
 
-import {Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis,} from 'recharts';
-import {Transaction} from '@/types/transaction';
-import {format, parseISO} from 'date-fns';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { Transaction } from '@/types/transaction';
+import { format, parseISO } from 'date-fns';
+import { MobileChart, MobileTooltip } from '@/components/ui/mobile-chart';
 
 type Bucket = { date: string; income: number; expense: number };
 
@@ -11,76 +12,89 @@ function groupCashFlow(transactions: Transaction[]): Bucket[] {
     for (const tx of transactions) {
         const date = format(parseISO(tx.timestamp), 'yyyy-MM-dd');
         const amount = parseFloat(tx.amount as unknown as string);
-        if (!map.has(date)) map.set(date, {income: 0, expense: 0});
+        if (!map.has(date)) map.set(date, { income: 0, expense: 0 });
         const entry = map.get(date)!;
         if (tx.type === 'income') entry.income += amount;
         if (tx.type === 'expense') entry.expense += amount;
     }
     return [...map.entries()]
         .sort(([a], [b]) => a.localeCompare(b))
-        .map(([date, {income, expense}]) => ({date, income, expense}));
+        .map(([date, { income, expense }]) => ({ date, income, expense }));
 }
 
-export default function CashFlowArea({transactions}: { transactions: Transaction[] }) {
+export default function CashFlowArea({ transactions }: { transactions: Transaction[] }) {
     const data = groupCashFlow(transactions);
 
-    return (<div className="bg-transparent p-4 rounded-lg shadow-md">
-            <ResponsiveContainer width="100%" height={350}>
-                <AreaChart data={data}>
-                    {/* define nice gradients */}
-                    <defs>
-                        <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="var(--accent)" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="var(--accent)" stopOpacity={0.2}/>
-                        </linearGradient>
-                        <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="var(--destructive)" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="var(--destructive)" stopOpacity={0.2}/>
-                        </linearGradient>
-                    </defs>
+    const formatCurrency = (value: number) => 
+        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
 
-                    {/* grid & axes in muted slate */}
-                    <CartesianGrid stroke="var(--border)" strokeDasharray="3 3"/>
-                    <XAxis
-                        dataKey="date"
-                        stroke="var(--muted)"
-                        tick={{fill: 'var(--muted)', fontSize: 12}}
-                    />
-                    <YAxis
-                        stroke="var(--muted)"
-                        tick={{fill: 'var(--muted)', fontSize: 12}}
-                    />
+    const formatDate = (date: string) => 
+        new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
-                    {/* custom tooltip with popover/card colors */}
-                    <Tooltip
-                        contentStyle={{
-                            backgroundColor: 'var(--popover)',
-                            borderColor: 'var(--border)',
-                            borderRadius: 'var(--radius)',
-                        }}
-                        itemStyle={{color: 'var(--foreground)'}}
-                        labelStyle={{color: 'var(--muted)'}}
-                        cursor={{fill: 'rgba(255,255,255,0.1)'}}
-                    />
+    return (
+        <MobileChart
+            mobileHeight={200}
+            defaultHeight={350}
+            standalone={false}
+        >
+            <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <defs>
+                    <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0.2} />
+                    </linearGradient>
+                    <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8} />
+                        <stop offset="95%" stopColor="#ef4444" stopOpacity={0.2} />
+                    </linearGradient>
+                </defs>
 
-                    {/* the filled areas with strokes matching accents */}
-                    <Area
-                        type="monotone"
-                        dataKey="income"
-                        stackId="1"
-                        stroke="var(--accent)"
-                        fill="url(#incomeGradient)"
-                        strokeWidth={2}
-                    />
-                    <Area
-                        type="monotone"
-                        dataKey="expense"
-                        stackId="1"
-                        stroke="var(--destructive)"
-                        fill="url(#expenseGradient)"
-                        strokeWidth={2}
-                    />
-                </AreaChart>
-            </ResponsiveContainer>
-        </div>);
+                <CartesianGrid 
+                    stroke="#475569" 
+                    strokeDasharray="3 3" 
+                    horizontal={true}
+                    vertical={false}
+                />
+                
+                <XAxis
+                    dataKey="date"
+                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    tickFormatter={formatDate}
+                    axisLine={false}
+                    tickLine={false}
+                    interval="preserveStartEnd"
+                />
+                
+                <YAxis
+                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    tickFormatter={(value) => `${value}`}
+                    axisLine={false}
+                    tickLine={false}
+                    width={50}
+                />
+
+                <MobileTooltip
+                    labelFormatter={formatDate}
+                    formatter={formatCurrency}
+                />
+
+                <Area
+                    type="monotone"
+                    dataKey="income"
+                    stackId="1"
+                    stroke="#10b981"
+                    fill="url(#incomeGradient)"
+                    strokeWidth={2}
+                />
+                <Area
+                    type="monotone"
+                    dataKey="expense"
+                    stackId="1"
+                    stroke="#ef4444"
+                    fill="url(#expenseGradient)"
+                    strokeWidth={2}
+                />
+            </AreaChart>
+        </MobileChart>
+    );
 }

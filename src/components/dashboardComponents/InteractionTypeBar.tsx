@@ -1,90 +1,110 @@
 'use client';
 
-import {Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis,} from 'recharts';
-import {Interaction} from '@/types/interaction';
-import {format, parseISO} from 'date-fns';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell } from 'recharts';
+import { Interaction } from '@/types/interaction';
+import { format, parseISO } from 'date-fns';
+import { MobileChart, MobileTooltip, MobileLegend } from '@/components/ui/mobile-chart';
 
-// Choose consistent colors for known types
+// Modern color palette for interaction types
 const TYPE_COLORS: Record<string, string> = {
-    call: '#3b82f6', email: '#10b981', meeting: '#f59e0b', text: '#a855f7', other: '#64748b',
+    call: '#3b82f6',     // blue-500
+    email: '#10b981',    // emerald-500  
+    meeting: '#f59e0b',  // amber-500
+    'site visit': '#a855f7', // purple-500
+    other: '#64748b',    // slate-500
 };
 
 interface InteractionBucket {
-    date: string;
-    [type: string]: string | number;
+    type: string;
+    count: number;
+    color: string;
 }
 
-function groupInteractions(interactions: Interaction[]): InteractionBucket[] {
-    const buckets = new Map<string, InteractionBucket>();
+function groupInteractionsByType(interactions: Interaction[]): InteractionBucket[] {
+    const typeCounts = new Map<string, number>();
 
     for (const interaction of interactions) {
-        const date = format(parseISO(interaction.created_at), 'yyyy-MM-dd');
         const type = interaction.type?.toLowerCase() || 'other';
-
-        if (!buckets.has(date)) {
-            // Initialize with a cast that satisfies the interface
-            buckets.set(date, {date} as InteractionBucket);
-        }
-
-        const entry = buckets.get(date)!;
-        entry[type] = ((entry[type] as number) || 0) + 1;
+        typeCounts.set(type, (typeCounts.get(type) || 0) + 1);
     }
 
-    const knownTypes = Object.keys(TYPE_COLORS);
-
-    return [...buckets.values()]
-        .sort((a, b) => a.date.localeCompare(b.date))
-        .map(entry => {
-            for (const type of knownTypes) {
-                if (!(type in entry)) entry[type] = 0;
-            }
-            return entry;
-        });
+    return [...typeCounts.entries()]
+        .map(([type, count]) => ({
+            type: type.charAt(0).toUpperCase() + type.slice(1),
+            count,
+            color: TYPE_COLORS[type.toLowerCase()] || TYPE_COLORS.other
+        }))
+        .sort((a, b) => b.count - a.count); // Sort by count descending
 }
 
-export default function InteractionTypeBar({interactions}: { interactions: Interaction[] }) {
-    const data = groupInteractions(interactions);
+export default function InteractionTypeBar({ interactions }: { interactions: Interaction[] }) {
+    const data = groupInteractionsByType(interactions);
+
+    const CustomTooltip = ({ active, payload, label }: any) => {
+        if (active && payload && payload.length) {
+            return (
+                <div className="bg-slate-800 border border-slate-600 rounded-lg p-3 shadow-lg">
+                    <p className="text-slate-300 text-sm font-medium mb-1">{label}</p>
+                    <div className="flex items-center gap-2">
+                        <div 
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: payload[0].payload.color }}
+                        />
+                        <span className="text-slate-100 text-sm font-medium">
+                            {payload[0].value} interaction{payload[0].value !== 1 ? 's' : ''}
+                        </span>
+                    </div>
+                </div>
+            );
+        }
+        return null;
+    };
 
     return (
-        <div className="bg-transparent p-4 rounded-lg shadow-md">
-            <ResponsiveContainer width="100%" height={350}>
-                <BarChart data={data}>
-                    {/* grid & axes in muted slate */}
-                    <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
-                    <XAxis
-                        dataKey="date"
-                        stroke="var(--muted)"
-                        tick={{ fill: 'var(--muted)', fontSize: 12 }}
-                    />
-                    <YAxis
-                        stroke="var(--muted)"
-                        tick={{ fill: 'var(--muted)', fontSize: 12 }}
-                    />
+        <MobileChart
+            mobileHeight={200}
+            defaultHeight={350}
+            standalone={false}
+        >
+            <BarChart 
+                data={data} 
+                margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+                barCategoryGap="20%"
+            >
+                <CartesianGrid 
+                    stroke="#475569" 
+                    strokeDasharray="3 3" 
+                    horizontal={true}
+                    vertical={false}
+                />
+                
+                <XAxis
+                    dataKey="type"
+                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    axisLine={false}
+                    tickLine={false}
+                />
+                
+                <YAxis
+                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={40}
+                />
 
-                    {/* custom tooltip with popover/card colors */}
-                    <Tooltip
-                        contentStyle={{
-                            backgroundColor: 'var(--popover)',
-                            borderColor: 'var(--border)',
-                            borderRadius: 'var(--radius)',
-                        }}
-                        itemStyle={{ color: 'var(--foreground)' }}
-                        labelStyle={{ color: 'var(--muted)' }}
-                        cursor={{ fill: 'rgba(255,255,255,0.1)' }}
-                    />
+                <CustomTooltip />
 
-                    {/* legend in muted text */}
-                    <Legend
-                        wrapperStyle={{ color: 'var(--muted)', fontSize: 12 }}
-                        iconType="square"
-                    />
-
-                    {/* one <Bar> per interaction type */}
-                    {Object.entries(TYPE_COLORS).map(([key, color]) => (
-                        <Bar key={key} dataKey={key} stackId="a" fill={color} />
+                <Bar 
+                    dataKey="count" 
+                    radius={[4, 4, 0, 0]}
+                    stroke="#1e293b"
+                    strokeWidth={1}
+                >
+                    {data.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
-                </BarChart>
-            </ResponsiveContainer>
-        </div>
+                </Bar>
+            </BarChart>
+        </MobileChart>
     );
 }
