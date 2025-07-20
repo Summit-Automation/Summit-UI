@@ -46,7 +46,7 @@ export function MobileTable<T>({
 
   const getValue = (item: T, column: Column<T>): unknown => {
     if (typeof column.key === 'string' && column.key.includes('.')) {
-      return column.key.split('.').reduce((obj, key) => obj?.[key], item as unknown);
+      return column.key.split('.').reduce((obj: any, key: string) => obj?.[key], item);
     }
     return item[column.key as keyof T];
   };
