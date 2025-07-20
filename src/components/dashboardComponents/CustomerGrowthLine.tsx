@@ -58,7 +58,7 @@ export default function CustomerGrowthLine({ customers }: { customers: Customer[
 
                 <MobileTooltip
                     labelFormatter={formatDate}
-                    formatter={(value: unknown) => [value as number, 'New Customers']}
+                    formatter={(value: unknown) => `${value as number} New Customers`}
                 />
 
                 <Line
