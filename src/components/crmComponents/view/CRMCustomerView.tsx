@@ -296,8 +296,8 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
     return (
         <Tabs defaultValue="table" className="space-y-4">
             <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="table">📱 Smart View</TabsTrigger>
-                <TabsTrigger value="cards">🗂️ Card View</TabsTrigger>
+                <TabsTrigger value="table">Table View</TabsTrigger>
+                <TabsTrigger value="cards">Card View</TabsTrigger>
             </TabsList>
 
             <TabsContent value="table">
