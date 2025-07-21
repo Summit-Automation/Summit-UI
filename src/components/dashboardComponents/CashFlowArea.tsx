@@ -66,7 +66,7 @@ export default function CashFlowArea({ transactions }: { transactions: Transacti
 
                 <ChartTooltip
                     labelFormatter={formatDate}
-                    formatter={formatCurrency}
+                    formatter={(value: unknown) => formatCurrency(value as number)}
                 />
 
                 <Area
