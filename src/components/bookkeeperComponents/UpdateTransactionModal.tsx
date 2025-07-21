@@ -88,8 +88,7 @@ export default function UpdateTransactionModal({
                 <Pencil className="h-4 w-4"/> <span>Edit</span>
             </Button>
         </DialogTrigger>
-        <DialogContent
-            className="max-w-xl bg-primary/90 backdrop-blur-lg border border-border rounded-xl shadow-premium">
+        <DialogContent className="max-w-xl bg-slate-900 border border-slate-700 rounded-xl shadow-2xl">
             <DialogHeader>
                 <DialogTitle className="text-white">Edit Transaction</DialogTitle>
                 <DialogDescription className="text-slate-300">
@@ -107,12 +106,12 @@ export default function UpdateTransactionModal({
                             <FormLabel className="text-slate-300">Type</FormLabel>
                             <FormControl>
                                 <Select onValueChange={field.onChange} value={field.value}>
-                                    <SelectTrigger>
+                                    <SelectTrigger className="bg-slate-900 border-slate-700 text-slate-50">
                                         <SelectValue placeholder="Select type…"/>
                                     </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="income">Income</SelectItem>
-                                        <SelectItem value="expense">Expense</SelectItem>
+                                    <SelectContent className="bg-slate-900 border-slate-700">
+                                        <SelectItem value="income" className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800">Income</SelectItem>
+                                        <SelectItem value="expense" className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800">Expense</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </FormControl>
@@ -127,7 +126,11 @@ export default function UpdateTransactionModal({
                         render={({field}) => (<FormItem>
                             <FormLabel className="text-slate-300">Category</FormLabel>
                             <FormControl>
-                                <Input {...field} placeholder="e.g. Consulting"/>
+                                <Input 
+                                    {...field} 
+                                    placeholder="e.g. Consulting"
+                                    className="bg-slate-900 border-slate-700 text-slate-50"
+                                />
                             </FormControl>
                             <FormMessage/>
                         </FormItem>)}
@@ -140,7 +143,11 @@ export default function UpdateTransactionModal({
                         render={({field}) => (<FormItem>
                             <FormLabel className="text-slate-300">Description</FormLabel>
                             <FormControl>
-                                <Textarea {...field} placeholder="Details…"/>
+                                <Textarea 
+                                    {...field} 
+                                    placeholder="Details…"
+                                    className="bg-slate-900 border-slate-700 text-slate-50"
+                                />
                             </FormControl>
                             <FormMessage/>
                         </FormItem>)}
@@ -158,6 +165,7 @@ export default function UpdateTransactionModal({
                                     type="number"
                                     step="0.01"
                                     placeholder="0.00"
+                                    className="bg-slate-900 border-slate-700 text-slate-50"
                                 />
                             </FormControl>
                             <FormMessage/>
@@ -172,11 +180,15 @@ export default function UpdateTransactionModal({
                             <FormLabel className="text-slate-300">Customer</FormLabel>
                             <FormControl>
                                 <Select onValueChange={field.onChange} value={field.value}>
-                                    <SelectTrigger>
+                                    <SelectTrigger className="bg-slate-900 border-slate-700 text-slate-50">
                                         <SelectValue placeholder="Optional…"/>
                                     </SelectTrigger>
-                                    <SelectContent>
-                                        {customers.map((c) => (<SelectItem key={c.id} value={c.id}>
+                                    <SelectContent className="bg-slate-900 border-slate-700">
+                                        {customers.map((c) => (<SelectItem 
+                                            key={c.id} 
+                                            value={c.id}
+                                            className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800"
+                                        >
                                             {c.full_name}
                                         </SelectItem>))}
                                     </SelectContent>
@@ -198,11 +210,15 @@ export default function UpdateTransactionModal({
                                     value={field.value}
                                     disabled={!selectedCustomer}
                                 >
-                                    <SelectTrigger>
+                                    <SelectTrigger className="bg-slate-900 border-slate-700 text-slate-50">
                                         <SelectValue placeholder="Optional…"/>
                                     </SelectTrigger>
-                                    <SelectContent>
-                                        {customerInteractions.map((i) => (<SelectItem key={i.id} value={i.id}>
+                                    <SelectContent className="bg-slate-900 border-slate-700">
+                                        {customerInteractions.map((i) => (<SelectItem 
+                                            key={i.id} 
+                                            value={i.id}
+                                            className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800"
+                                        >
                                             {i.title}
                                         </SelectItem>))}
                                     </SelectContent>
@@ -216,7 +232,13 @@ export default function UpdateTransactionModal({
                         <DialogClose asChild>
                             <Button variant="ghost">Cancel</Button>
                         </DialogClose>
-                        <Button variant="outline" type="submit">Save Changes</Button>
+                        <Button 
+                            variant="outline" 
+                            type="submit"
+                            className="bg-blue-600 border-blue-600 text-white hover:bg-blue-700 hover:border-blue-700"
+                        >
+                            Save Changes
+                        </Button>
                     </DialogFooter>
                 </form>
             </Form>
