@@ -2,7 +2,7 @@
 
 import { Cell, Pie, PieChart } from 'recharts';
 import { Customer } from '@/types/customer';
-import { MobileChart, MobileTooltip, MobileLegend } from '@/components/ui/mobile-chart';
+import { BaseChart, ChartTooltip, ChartLegend } from '@/components/ui/base-chart';
 
 const COLORS = [
     '#0ea5e9', '#facc15', '#a855f7', '#f97316', 
@@ -34,10 +34,9 @@ export default function CustomerStatusPie({
     const mobileRadius = 50;
 
     return (
-        <MobileChart
+        <BaseChart
             mobileHeight={200}
-            defaultHeight={size === 'lg' ? 320 : 280}
-            standalone={false}
+            height={size === 'lg' ? 320 : 280}
         >
             <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                 <Pie
@@ -60,9 +59,9 @@ export default function CustomerStatusPie({
                     ))}
                 </Pie>
 
-                <MobileTooltip />
-                <MobileLegend />
+                <ChartTooltip />
+                <ChartLegend />
             </PieChart>
-        </MobileChart>
+        </BaseChart>
     );
 }

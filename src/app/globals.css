@@ -1,1513 +1,220 @@
 @import "tailwindcss";
 
-/*--------------------------------------
-  Clean Professional Design System
----------------------------------------*/
+/* Core Variables - Simplified */
 :root {
-    /* Simplified Color Palette */
-    --background:      #020617;   /* slate-950 - deep, professional */
-    --surface:         #0f172a;   /* slate-900 - cards, panels */
-    --surface-hover:   #1e293b;   /* slate-800 - hover states */
-    --border:          #334155;   /* slate-700 - clean borders */
-    --text-primary:    #f8fafc;   /* slate-50 - high contrast text */
-    --text-secondary:  #cbd5e1;   /* slate-300 - secondary text */
-    --text-muted:      #94a3b8;   /* slate-400 - muted text */
-    --accent:          #3b82f6;   /* blue-500 - primary accent */
-    --accent-hover:    #2563eb;   /* blue-600 - accent hover */
-    --success:         #10b981;   /* emerald-500 - success states */
-    --warning:         #f59e0b;   /* amber-500 - warnings */
-    --error:           #ef4444;   /* red-500 - errors */
-
-    /* Clean Spacing */
+    --background: #020617;
+    --surface: #0f172a;
+    --surface-hover: #1e293b;
+    --border: #334155;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
     --radius: 0.5rem;
 }
 
-/*--------------------------------------
-  Base Styles
----------------------------------------*/
+/* Base Styles */
 @layer base {
-    * {
-        @apply border-slate-700;
-    }
-
-    body {
-        @apply bg-slate-950 text-slate-50 font-sans antialiased;
-        font-family: 'Inter', system-ui, sans-serif;
-    }
-
-    /* Clean Typography */
-    h1, h2, h3, h4, h5, h6 {
-        @apply text-slate-50 font-semibold tracking-tight;
-    }
-
+    * { @apply border-slate-700; }
+    body { @apply bg-slate-950 text-slate-50 font-sans antialiased; }
+    h1, h2, h3, h4, h5, h6 { @apply text-slate-50 font-semibold tracking-tight; }
     h1 { @apply text-3xl; }
     h2 { @apply text-2xl; }
     h3 { @apply text-xl; }
     h4 { @apply text-lg; }
 }
 
-/*--------------------------------------
-  Professional Components
----------------------------------------*/
+/* Component Styles - Consolidated */
 @layer components {
-    /* Clean Cards */
-    .card-clean {
-        @apply bg-slate-900 border border-slate-800 rounded-lg shadow-sm;
-    }
-
-    .card-clean:hover {
-        @apply border-slate-700 shadow-md;
-    }
-
-    /* Clean Buttons */
-    .btn-clean {
-        @apply px-4 py-2 rounded-lg font-medium transition-colors;
-    }
-
-    .btn-primary {
-        @apply bg-blue-600 text-white hover:bg-blue-700;
-    }
-
-    .btn-secondary {
-        @apply bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white;
-    }
-
-    /* Clean Navigation */
-    .nav-clean {
-        @apply bg-slate-900/95 border-r border-slate-800;
-    }
-
-    /* Clean Metrics */
-    .metric-clean {
-        @apply bg-slate-900 border border-slate-800 rounded-lg p-6;
-    }
-
-    .metric-value {
-        @apply text-2xl font-bold text-slate-50;
-    }
-
-    .metric-label {
-        @apply text-sm text-slate-400 uppercase tracking-wide;
-    }
-
-    /* Clean Tables */
-    .table-clean {
-        @apply bg-slate-900 border border-slate-800 rounded-lg overflow-hidden;
-    }
-
-    .table-header {
-        @apply bg-slate-800 text-slate-300 font-medium;
-    }
-
-    .table-row {
-        @apply border-b border-slate-800 hover:bg-slate-800/50;
-    }
-
-    /* Clean Forms */
-    .input-clean {
-        @apply bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-50;
-        @apply focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20;
-    }
-
-    /* Status Indicators */
-    .status-success {
-        @apply bg-emerald-100/10 text-emerald-400 border border-emerald-500/20;
-    }
-
-    .status-warning {
-        @apply bg-amber-100/10 text-amber-400 border border-amber-500/20;
-    }
-
-    .status-error {
-        @apply bg-red-100/10 text-red-400 border border-red-500/20;
-    }
+    .card-clean { @apply bg-slate-900 border border-slate-800 rounded-lg shadow-sm hover:border-slate-700 hover:shadow-md; }
+    .btn-clean { @apply px-4 py-2 rounded-lg font-medium transition-colors; }
+    .btn-primary { @apply bg-blue-600 text-white hover:bg-blue-700; }
+    .btn-secondary { @apply bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white; }
+    .nav-clean { @apply bg-slate-900/95 border-r border-slate-800; }
+    .metric-clean { @apply bg-slate-900 border border-slate-800 rounded-lg p-6; }
+    .metric-value { @apply text-2xl font-bold text-slate-50; }
+    .metric-label { @apply text-sm text-slate-400 uppercase tracking-wide; }
+    .table-clean { @apply bg-slate-900 border border-slate-800 rounded-lg overflow-hidden; }
+    .table-header { @apply bg-slate-800 text-slate-300 font-medium; }
+    .table-row { @apply border-b border-slate-800 hover:bg-slate-800/50; }
+    .input-clean { @apply bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20; }
+    .status-success { @apply bg-emerald-100/10 text-emerald-400 border border-emerald-500/20; }
+    .status-warning { @apply bg-amber-100/10 text-amber-400 border border-amber-500/20; }
+    .status-error { @apply bg-red-100/10 text-red-400 border border-red-500/20; }
 }
 
-/*--------------------------------------
-  Clean Animations (CSS only)
----------------------------------------*/
-.transition-smooth {
-    transition: all 0.2s ease-in-out;
-}
-
-.fade-in {
-    animation: fadeIn 0.3s ease-out;
-}
-
+/* Animations */
+.transition-smooth { transition: all 0.2s ease-in-out; }
+.fade-in { animation: fadeIn 0.3s ease-out; }
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/*--------------------------------------
-  Chart Enhancements
----------------------------------------*/
-.chart-clean {
-    @apply bg-slate-900 border border-slate-800 rounded-lg p-6;
+/* Radix UI Component Fixes - Consolidated */
+[data-radix-select-content], [data-radix-dialog-content] {
+    background-color: rgb(15 23 42) !important;
+    border: 1px solid rgb(51 65 85) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4) !important;
 }
 
-.chart-title {
-    @apply text-lg font-semibold text-slate-50 mb-2;
-}
-
-.chart-subtitle {
-    @apply text-sm text-slate-400 mb-4;
-}
-
-/*--------------------------------------
-  ENHANCED SELECT DROPDOWN FIXES
----------------------------------------*/
-
-/* Fix Select Content visibility - make it more solid */
-[data-radix-select-content] {
-    background-color: rgb(15 23 42) !important; /* slate-900 - more solid */
-    border: 1px solid rgb(51 65 85) !important; /* slate-700 */
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2) !important;
-    backdrop-filter: none !important;
-    opacity: 1 !important;
-}
-
-/* Fix Select Items - ensure they're visible */
-[data-radix-select-item] {
-    color: rgb(248 250 252) !important; /* slate-50 */
+[data-radix-select-item], [data-radix-select-item]:hover, [data-radix-select-item][data-highlighted] {
+    color: rgb(248 250 252) !important;
     background-color: transparent !important;
     padding: 0.5rem 0.75rem !important;
 }
 
-[data-radix-select-item]:hover,
-[data-radix-select-item][data-highlighted] {
-    background-color: rgb(30 41 59) !important; /* slate-800 */
-    color: rgb(248 250 252) !important;
+[data-radix-select-item]:hover, [data-radix-select-item][data-highlighted] {
+    background-color: rgb(30 41 59) !important;
 }
 
 [data-radix-select-item][data-state="checked"] {
-    background-color: rgb(59 130 246) !important; /* blue-500 */
+    background-color: rgb(59 130 246) !important;
     color: white !important;
 }
 
-/* Fix Select Trigger - make it consistent with other buttons */
-[data-radix-select-trigger] {
-    background-color: rgb(15 23 42) !important; /* slate-900 */
-    border: 1px solid rgb(51 65 85) !important; /* slate-700 */
-    color: rgb(248 250 252) !important; /* slate-50 */
-    min-height: 2.5rem !important; /* 40px */
+[data-radix-select-trigger], [data-radix-dialog-overlay] {
+    background-color: rgb(15 23 42) !important;
+    border: 1px solid rgb(51 65 85) !important;
+    color: rgb(248 250 252) !important;
 }
 
-[data-radix-select-trigger]:hover {
-    background-color: rgb(30 41 59) !important; /* slate-800 */
-    border-color: rgb(71 85 105) !important; /* slate-600 */
+[data-radix-select-trigger]:hover, [data-radix-select-trigger]:focus {
+    background-color: rgb(30 41 59) !important;
+    border-color: rgb(71 85 105) !important;
 }
 
-[data-radix-select-trigger]:focus {
-    border-color: rgb(59 130 246) !important; /* blue-500 */
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
-}
-
-/* Fix Select Placeholder */
-[data-radix-select-trigger] [data-placeholder] {
-    color: rgb(148 163 184) !important; /* slate-400 */
-}
-
-/*--------------------------------------
-  ENHANCED DIALOG/MODAL FIXES
----------------------------------------*/
-
-/* Fix Dialog backdrop - make it more solid */
 [data-radix-dialog-overlay] {
     background-color: rgba(0, 0, 0, 0.75) !important;
     backdrop-filter: blur(8px) !important;
 }
 
-/* Fix Dialog content - make it more solid */
-[data-radix-dialog-content] {
-    background-color: rgb(15 23 42) !important; /* slate-900 */
-    border: 1px solid rgb(51 65 85) !important; /* slate-700 */
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important;
-}
-
-/* Fix specific modal classes that might be overriding */
-.bg-primary\/90 {
-    background-color: rgb(15 23 42) !important; /* Override any transparency */
-}
-
-.bg-slate-900 {
+/* Button Consistency */
+.btn-outline, button[class*="outline"] {
     background-color: rgb(15 23 42) !important;
+    border: 1px solid rgb(51 65 85) !important;
+    color: rgb(248 250 252) !important;
+    min-height: 2.5rem !important;
 }
 
-/*--------------------------------------
-  BUTTON CONSISTENCY FIXES
----------------------------------------*/
-
-/* Ensure all outline buttons have consistent styling */
-.btn-outline,
-button[class*="outline"] {
-    background-color: rgb(15 23 42) !important; /* slate-900 */
-    border: 1px solid rgb(51 65 85) !important; /* slate-700 */
-    color: rgb(248 250 252) !important; /* slate-50 */
-    min-height: 2.5rem !important; /* 40px for consistent sizing */
+.btn-outline:hover, button[class*="outline"]:hover {
+    background-color: rgb(30 41 59) !important;
+    border-color: rgb(71 85 105) !important;
 }
 
-.btn-outline:hover,
-button[class*="outline"]:hover {
-    background-color: rgb(30 41 59) !important; /* slate-800 */
-    border-color: rgb(71 85 105) !important; /* slate-600 */
+/* Input Consistency */
+input[class*="bg-slate-"], textarea[class*="bg-slate-"], select[class*="bg-slate-"] {
+    background-color: rgb(15 23 42) !important;
+    border: 1px solid rgb(51 65 85) !important;
     color: rgb(248 250 252) !important;
 }
 
-/* Specific button color overrides */
-.bg-emerald-600 {
-    background-color: rgb(5 150 105) !important; /* emerald-600 */
-    border-color: rgb(5 150 105) !important;
-}
-
-.bg-emerald-600:hover {
-    background-color: rgb(4 120 87) !important; /* emerald-700 */
-    border-color: rgb(4 120 87) !important;
-}
-
-.bg-accent {
-    background-color: rgb(59 130 246) !important; /* blue-500 */
+input[class*="bg-slate-"]:focus, textarea[class*="bg-slate-"]:focus, select[class*="bg-slate-"]:focus {
     border-color: rgb(59 130 246) !important;
-}
-
-.bg-accent:hover {
-    background-color: rgb(37 99 235) !important; /* blue-600 */
-    border-color: rgb(37 99 235) !important;
-}
-
-/*--------------------------------------
-  INPUT FIELD CONSISTENCY
----------------------------------------*/
-
-/* Make all input fields consistent */
-input[class*="bg-slate-"],
-textarea[class*="bg-slate-"],
-select[class*="bg-slate-"] {
-    background-color: rgb(15 23 42) !important; /* slate-900 */
-    border: 1px solid rgb(51 65 85) !important; /* slate-700 */
-    color: rgb(248 250 252) !important; /* slate-50 */
-}
-
-input[class*="bg-slate-"]:focus,
-textarea[class*="bg-slate-"]:focus,
-select[class*="bg-slate-"]:focus {
-    border-color: rgb(59 130 246) !important; /* blue-500 */
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
 }
 
-/*--------------------------------------
-  CARD AND CONTAINER FIXES
----------------------------------------*/
-
-/* Ensure cards have proper opacity */
-.bg-slate-900\/50 {
-    background-color: rgba(15, 23, 42, 0.95) !important; /* Less transparent */
-}
-
-.bg-slate-900\/90 {
-    background-color: rgba(15, 23, 42, 0.98) !important; /* Almost opaque */
-}
-
-/* Fix any backdrop-blur that might be causing issues */
-.backdrop-blur-lg {
-    backdrop-filter: blur(16px) !important;
-}
-
-.backdrop-blur-sm {
-    backdrop-filter: blur(4px) !important;
-}
-
-/*--------------------------------------
-  SPECIFIC COMPONENT OVERRIDES
----------------------------------------*/
-
-/* Fix the CRM Actions buttons specifically */
-.crm-actions button[variant="outline"] {
+/* Checkbox Styling */
+[data-radix-checkbox-root], button[role="checkbox"] {
+    width: 1rem !important;
+    height: 1rem !important;
     background-color: rgb(15 23 42) !important;
     border: 1px solid rgb(51 65 85) !important;
-    color: rgb(248 250 252) !important;
+    border-radius: 4px !important;
 }
 
-/* Fix Dashboard Control buttons */
-.dashboard-controls button {
-    background-color: rgb(15 23 42) !important;
-    border: 1px solid rgb(51 65 85) !important;
-    color: rgb(248 250 252) !important;
+[data-radix-checkbox-root]:hover, button[role="checkbox"]:hover {
+    border-color: rgb(71 85 105) !important;
+    background-color: rgb(30 41 59) !important;
 }
 
-/* Fix Bookkeeper Actions buttons */
-.bookkeeper-actions button[variant="outline"] {
-    background-color: rgb(15 23 42) !important;
-    border: 1px solid rgb(51 65 85) !important;
-    color: rgb(248 250 252) !important;
+[data-radix-checkbox-root][data-state="checked"], button[role="checkbox"][data-state="checked"] {
+    background-color: rgb(59 130 246) !important;
+    border-color: rgb(59 130 246) !important;
+    color: white !important;
 }
 
-/*--------------------------------------
-  Cash Flow Chart Colors
----------------------------------------*/
-
-/* Allow semantic colors for financial charts */
-.recharts-area[data-key="income"] {
-    fill: url(#incomeGradient) !important;
-    stroke: #10b981 !important; /* emerald-500 for income */
+/* Chart Text Colors */
+.recharts-cartesian-axis-tick-value, .recharts-legend-item-text {
+    fill: #94a3b8 !important;
+    color: #cbd5e1 !important;
 }
 
-.recharts-area[data-key="expense"] {
-    fill: url(#expenseGradient) !important;
-    stroke: #ef4444 !important; /* red-500 for expenses */
-}
-
-/* Ensure gradients work properly */
-.recharts-surface defs linearGradient[id="incomeGradient"] stop {
-    stop-color: #10b981; /* emerald-500 */
-}
-
-.recharts-surface defs linearGradient[id="expenseGradient"] stop {
-    stop-color: #ef4444; /* red-500 */
-}
-
-/* Legend colors for cash flow */
-.recharts-legend-item-text[data-value="income"] {
-    color: #10b981 !important;
-}
-
-.recharts-legend-item-text[data-value="expense"] {
-    color: #ef4444 !important;
-}
-
-/* Tooltip colors */
-.recharts-tooltip-wrapper .recharts-tooltip-item[data-key="income"] {
-    color: #10b981 !important;
-}
-
-.recharts-tooltip-wrapper .recharts-tooltip-item[data-key="expense"] {
-    color: #ef4444 !important;
-}
-
-/*--------------------------------------
-  Chart Text Color Fixes
----------------------------------------*/
-
-/* Fix all Recharts text colors */
-.recharts-cartesian-axis-tick-value,
-.recharts-polar-angle-axis-tick-value,
-.recharts-polar-radius-axis-tick-value {
-    fill: #94a3b8 !important; /* slate-400 - readable on dark */
-}
-
-/* Fix legend text */
-.recharts-legend-item-text,
-.recharts-default-legend .recharts-legend-item-text {
-    color: #cbd5e1 !important; /* slate-300 - lighter for better contrast */
-    fill: #cbd5e1 !important;
-}
-
-/* Fix tooltip background and text */
 .recharts-tooltip-wrapper .recharts-default-tooltip {
-    background-color: #1e293b !important; /* slate-800 */
-    border: 1px solid #475569 !important; /* slate-600 */
+    background-color: #1e293b !important;
+    border: 1px solid #475569 !important;
     border-radius: 8px !important;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important;
-}
-
-.recharts-tooltip-wrapper .recharts-tooltip-label {
-    color: #f8fafc !important; /* slate-50 */
-    font-weight: 600 !important;
-    margin-bottom: 4px !important;
-}
-
-.recharts-tooltip-wrapper .recharts-tooltip-item {
-    color: #cbd5e1 !important; /* slate-300 */
-}
-
-.recharts-tooltip-wrapper .recharts-tooltip-item-list {
-    padding: 0 !important;
-}
-
-/* Fix pie chart labels */
-.recharts-pie-label-text {
-    fill: #f8fafc !important; /* slate-50 */
-    font-size: 12px !important;
-    font-weight: 500 !important;
-}
-
-/* Fix bar chart labels */
-.recharts-bar-rectangle {
-    cursor: pointer;
-}
-
-/* Fix area chart labels */
-.recharts-area-curve {
-    stroke-width: 2px;
-}
-
-/* Fix line chart points and lines */
-.recharts-line-curve {
-    stroke-width: 2px;
 }
 
 .recharts-line-dot {
-    stroke-width: 2px;
-}
-
-/* Custom tooltip content styling */
-.recharts-tooltip-cursor {
-    fill: rgba(148, 163, 184, 0.1) !important; /* slate-400 with opacity */
-}
-
-/* Fix axis lines */
-.recharts-cartesian-axis-line,
-.recharts-cartesian-grid-horizontal line,
-.recharts-cartesian-grid-vertical line {
-    stroke: #475569 !important; /* slate-600 */
-    stroke-dasharray: 3 3;
-}
-
-/* Specific fixes for cash flow chart */
-.recharts-area[data-key="income"] + .recharts-legend .recharts-legend-item-text {
-    color: #10b981 !important; /* emerald-500 */
-}
-
-.recharts-area[data-key="expense"] + .recharts-legend .recharts-legend-item-text {
-    color: #ef4444 !important; /* red-500 */
-}
-
-/* Fix reference lines if any */
-.recharts-reference-line-line {
-    stroke: #64748b !important; /* slate-500 */
-    stroke-dasharray: 5 5;
-}
-
-/* Ensure all SVG text is visible */
-.recharts-surface text {
-    fill: #94a3b8 !important; /* slate-400 */
-}
-
-/* Special handling for percentage labels */
-.recharts-text[text-anchor="middle"] {
-    fill: #f8fafc !important; /* slate-50 for center labels */
-    font-weight: 600 !important;
-}
-
-/* Fix any remaining black text */
-.recharts-wrapper svg text {
-    fill: #94a3b8 !important; /* slate-400 */
-}
-
-.recharts-wrapper svg .recharts-legend-item text {
-    fill: #cbd5e1 !important; /* slate-300 */
-}
-
-/*--------------------------------------
-  Customer Growth Chart Dots Fix
----------------------------------------*/
-
-/* Fix line chart dots to be white/visible */
-.recharts-line-dot {
-    fill: #f8fafc !important; /* slate-50 - white dots */
-    stroke: #3b82f6 !important; /* blue-500 - blue border */
+    fill: #f8fafc !important;
+    stroke: #3b82f6 !important;
     stroke-width: 2px !important;
-    r: 4 !important; /* slightly larger for better visibility */
+    r: 4 !important;
 }
 
-/* Active/hover state for dots */
-.recharts-line-dot:hover,
-.recharts-active-dot {
-    fill: #ffffff !important; /* pure white */
-    stroke: #2563eb !important; /* blue-600 - darker blue border */
+.recharts-line-dot:hover, .recharts-active-dot {
+    fill: #ffffff !important;
+    stroke: #2563eb !important;
     stroke-width: 3px !important;
-    r: 5 !important; /* larger on hover */
+    r: 5 !important;
 }
 
-/* Ensure the line itself is visible */
-.recharts-line-curve {
-    stroke: #3b82f6 !important; /* blue-500 */
-    stroke-width: 2px !important;
-}
-
-/* Fix any other line chart elements */
-.recharts-line .recharts-curve {
-    stroke: #3b82f6 !important; /* blue-500 */
-}
-
-/* Make sure dots show on all line charts */
-.recharts-wrapper .recharts-line-dots .recharts-dot {
-    fill: #f8fafc !important; /* slate-50 */
-    stroke: #3b82f6 !important; /* blue-500 */
-    stroke-width: 2px !important;
-}
-
-/*--------------------------------------
-  MOBILE-SPECIFIC FIXES
----------------------------------------*/
-
+/* Mobile Optimizations */
 @media (max-width: 768px) {
-    /* Ensure mobile modals are solid */
+    .mobile-optimized { padding: 0.5rem; font-size: 0.875rem; }
+    .touch-target, button { min-height: 44px; min-width: 44px; }
+    .mobile-card { margin: 0 0.5rem; border-radius: 12px; }
+    .mobile-form-grid { grid-template-columns: 1fr; gap: 1rem; }
+    
     [data-radix-dialog-content] {
-        background-color: rgb(15 23 42) !important;
-        border: 1px solid rgb(51 65 85) !important;
-        margin: 1rem !important;
-        max-height: calc(100vh - 2rem) !important;
-    }
-    
-    /* Ensure mobile select dropdowns are solid */
-    [data-radix-select-content] {
-        background-color: rgb(15 23 42) !important;
-        border: 1px solid rgb(51 65 85) !important;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important;
-    }
-}
-
-/*--------------------------------------
-  CHECKBOX STYLING FIXES
----------------------------------------*/
-
-/* Fix checkbox styling to match dark theme */
-[data-radix-checkbox-root] {
-    width: 1rem !important;
-    height: 1rem !important;
-    background-color: rgb(15 23 42) !important; /* slate-900 */
-    border: 1px solid rgb(51 65 85) !important; /* slate-700 */
-    border-radius: 4px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transition: all 0.2s ease !important;
-}
-
-[data-radix-checkbox-root]:hover {
-    border-color: rgb(71 85 105) !important; /* slate-600 */
-    background-color: rgb(30 41 59) !important; /* slate-800 */
-}
-
-[data-radix-checkbox-root]:focus {
-    border-color: rgb(59 130 246) !important; /* blue-500 */
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
-}
-
-[data-radix-checkbox-root][data-state="checked"] {
-    background-color: rgb(59 130 246) !important; /* blue-500 */
-    border-color: rgb(59 130 246) !important; /* blue-500 */
-}
-
-[data-radix-checkbox-root][data-state="checked"]:hover {
-    background-color: rgb(37 99 235) !important; /* blue-600 */
-    border-color: rgb(37 99 235) !important; /* blue-600 */
-}
-
-/* Fix checkbox indicator (checkmark) */
-[data-radix-checkbox-indicator] {
-    color: white !important;
-    width: 0.75rem !important;
-    height: 0.75rem !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-[data-radix-checkbox-indicator] svg {
-    width: 0.75rem !important;
-    height: 0.75rem !important;
-    stroke-width: 2.5px !important;
-}
-
-/* Additional checkbox class fixes */
-button[role="checkbox"] {
-    width: 1rem !important;
-    height: 1rem !important;
-    background-color: rgb(15 23 42) !important; /* slate-900 */
-    border: 1px solid rgb(51 65 85) !important; /* slate-700 */
-    border-radius: 4px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transition: all 0.2s ease !important;
-}
-
-button[role="checkbox"]:hover {
-    border-color: rgb(71 85 105) !important; /* slate-600 */
-    background-color: rgb(30 41 59) !important; /* slate-800 */
-}
-
-button[role="checkbox"][data-state="checked"] {
-    background-color: rgb(59 130 246) !important; /* blue-500 */
-    border-color: rgb(59 130 246) !important; /* blue-500 */
-    color: white !important;
-}
-
-button[role="checkbox"][data-state="checked"]:hover {
-    background-color: rgb(37 99 235) !important; /* blue-600 */
-    border-color: rgb(37 99 235) !important; /* blue-600 */
-}
-
-/* Fix any checkbox inputs that might be styled differently */
-input[type="checkbox"] {
-    width: 1rem !important;
-    height: 1rem !important;
-    accent-color: rgb(59 130 246) !important; /* blue-500 */
-    background-color: rgb(15 23 42) !important; /* slate-900 */
-    border: 1px solid rgb(51 65 85) !important; /* slate-700 */
-    border-radius: 4px !important;
-}
-
-input[type="checkbox"]:checked {
-    background-color: rgb(59 130 246) !important; /* blue-500 */
-    border-color: rgb(59 130 246) !important; /* blue-500 */
-}
-
-/* Ensure checkbox labels are properly styled */
-label[for*="checkbox"] {
-    color: rgb(203 213 225) !important; /* slate-300 */
-    font-size: 0.875rem !important;
-    font-weight: 500 !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 0.5rem !important;
-}
-
-/* Fix checkbox containers in forms */
-.checkbox-container {
-    display: flex !important;
-    align-items: center !important;
-    gap: 0.5rem !important;
-    margin: 0.5rem 0 !important;
-}
-
-/* Specific fixes for export dialog checkboxes */
-[data-radix-dialog-content] [data-radix-checkbox-root] {
-    width: 1rem !important;
-    height: 1rem !important;
-    background-color: rgb(15 23 42) !important;
-    border: 1px solid rgb(51 65 85) !important;
-    border-radius: 4px !important;
-}
-
-[data-radix-dialog-content] [data-radix-checkbox-root][data-state="checked"] {
-    background-color: rgb(59 130 246) !important;
-    border-color: rgb(59 130 246) !important;
-}
-
-/* Specific fixes for interaction modal checkboxes */
-form [data-radix-checkbox-root] {
-    width: 1rem !important;
-    height: 1rem !important;
-    background-color: rgb(15 23 42) !important;
-    border: 1px solid rgb(51 65 85) !important;
-    border-radius: 4px !important;
-}
-
-form [data-radix-checkbox-root][data-state="checked"] {
-    background-color: rgb(59 130 246) !important;
-    border-color: rgb(59 130 246) !important;
-}
-
-/*--------------------------------------
-  ADDITIONAL RADIX UI COMPONENT FIXES
----------------------------------------*/
-
-/* Fix any other Radix components that might be transparent */
-[data-radix-popper-content-wrapper] {
-    z-index: 9999 !important;
-}
-
-[data-radix-portal] {
-    z-index: 9999 !important;
-}
-
-/* Ensure proper z-index layering */
-[data-radix-dialog-overlay] {
-    z-index: 9998 !important;
-}
-
-[data-radix-dialog-content] {
-    z-index: 9999 !important;
-}
-
-[data-radix-select-content] {
-    z-index: 10000 !important;
-}
-
-/*--------------------------------------
-  Enhanced Mobile Table Optimizations
----------------------------------------*/
-
-/* Better horizontal scrolling for remaining legacy tables */
-.table-scroll-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
-}
-
-.table-scroll-container::-webkit-scrollbar {
-    height: 6px;
-}
-
-.table-scroll-container::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.table-scroll-container::-webkit-scrollbar-thumb {
-    background-color: rgba(148, 163, 184, 0.3);
-    border-radius: 3px;
-}
-
-.table-scroll-container::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(148, 163, 184, 0.5);
-}
-
-/* Mobile table cell improvements */
-@media (max-width: 768px) {
-    .mobile-table-cell {
-        min-width: 120px;
-        padding: 8px 12px;
-        font-size: 14px;
-        white-space: nowrap;
-    }
-    
-    .mobile-table-cell.primary {
-        min-width: 140px;
-        font-weight: 600;
-    }
-    
-    .mobile-table-cell.secondary {
-        min-width: 100px;
-        color: rgb(148 163 184);
-        font-size: 13px;
-    }
-}
-
-/*--------------------------------------
-  Enhanced Chart Mobile Responsiveness
----------------------------------------*/
-
-/* Chart container mobile optimizations */
-@media (max-width: 768px) {
-    .chart-container {
-        margin: 0 -0.5rem; /* Extend to edges on mobile */
-        border-radius: 8px;
-    }
-    
-    /* Smaller chart margins on mobile */
-    .recharts-wrapper {
-        font-size: 11px;
-    }
-    
-    /* Reduce chart text size on mobile */
-    .recharts-cartesian-axis-tick-value {
-        font-size: 10px !important;
-    }
-    
-    .recharts-legend-item-text {
-        font-size: 11px !important;
-    }
-    
-    .recharts-tooltip-wrapper .recharts-default-tooltip {
-        font-size: 12px;
-        padding: 8px;
-        max-width: 200px;
-    }
-    
-    /* Hide some chart elements on very small screens */
-    @media (max-width: 480px) {
-        .recharts-cartesian-grid {
-            display: none !important;
-        }
-        
-        .recharts-legend {
-            font-size: 10px !important;
-        }
-        
-        /* Simplify tooltips on small screens */
-        .recharts-tooltip-wrapper {
-            font-size: 11px !important;
-        }
-        
-        .recharts-tooltip-wrapper .recharts-default-tooltip {
-            max-width: 180px;
-            padding: 6px;
-        }
-    }
-}
-
-/* Chart fullscreen mode improvements */
-.chart-fullscreen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9999;
-    background: rgba(2, 6, 23, 0.98);
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-}
-
-.chart-fullscreen .chart-content {
-    width: 100%;
-    height: 90vh;
-    max-width: 1200px;
-    background: rgb(15, 23, 42);
-    border: 1px solid rgb(51, 65, 85);
-    border-radius: 12px;
-    padding: 1rem;
-}
-
-/*--------------------------------------
-  Mobile Card Optimizations
----------------------------------------*/
-
-/* Enhanced mobile card styles */
-@media (max-width: 768px) {
-    .mobile-card {
-        margin: 0 0.5rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-    
-    .mobile-card-header {
-        padding: 1rem 1rem 0.5rem 1rem;
-    }
-    
-    .mobile-card-content {
-        padding: 0.5rem 1rem 1rem 1rem;
-    }
-    
-    .mobile-card-actions {
-        padding: 0.75rem 1rem;
-        border-top: 1px solid rgb(51, 65, 85);
-        background: rgba(15, 23, 42, 0.5);
-    }
-}
-
-/*--------------------------------------
-  Mobile Navigation Enhancements
----------------------------------------*/
-
-/* Better mobile menu animations */
-.mobile-menu-enter {
-    transform: translateX(-100%);
-    opacity: 0;
-}
-
-.mobile-menu-enter-active {
-    transform: translateX(0);
-    opacity: 1;
-    transition: transform 300ms ease-out, opacity 300ms ease-out;
-}
-
-.mobile-menu-exit {
-    transform: translateX(0);
-    opacity: 1;
-}
-
-.mobile-menu-exit-active {
-    transform: translateX(-100%);
-    opacity: 0;
-    transition: transform 300ms ease-in, opacity 300ms ease-in;
-}
-
-/* Mobile-specific sidebar improvements */
-@media (max-width: 1024px) {
-    .sidebar-mobile {
-        width: 280px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    }
-    
-    .sidebar-overlay {
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(4px);
-    }
-}
-
-/*--------------------------------------
-  Mobile Dashboard Grid Improvements
----------------------------------------*/
-
-/* Better metric card scaling */
-@media (max-width: 768px) {
-    .metric-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 0.75rem;
-    }
-    
-    .metric-card-mobile {
-        min-height: 100px;
-        padding: 0.75rem;
-    }
-    
-    .metric-value-mobile {
-        font-size: 1.25rem;
-        line-height: 1.2;
-    }
-    
-    .metric-label-mobile {
-        font-size: 0.75rem;
-        line-height: 1;
-    }
-}
-
-@media (max-width: 480px) {
-    .metric-grid {
-        gap: 0.5rem;
-    }
-    
-    .metric-card-mobile {
-        min-height: 80px;
-        padding: 0.5rem;
-    }
-    
-    .metric-value-mobile {
-        font-size: 1rem;
-    }
-    
-    .metric-label-mobile {
-        font-size: 0.625rem;
-    }
-}
-
-/*--------------------------------------
-  Mobile Modal and Dialog Improvements
----------------------------------------*/
-
-/* Better mobile modal positioning */
-@media (max-width: 768px) {
-    [data-radix-dialog-content] {
-        position: fixed !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
         width: calc(100vw - 2rem) !important;
         max-width: none !important;
         max-height: calc(100vh - 4rem) !important;
         margin: 0 !important;
-        border-radius: 12px !important;
     }
     
-    /* Mobile-friendly form layouts in modals */
-    .modal-form-mobile {
-        padding: 1rem;
-    }
-    
-    .modal-form-mobile .form-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .modal-form-mobile .form-actions {
-        flex-direction: column-reverse;
-        gap: 0.5rem;
-    }
-    
-    .modal-form-mobile .form-actions button {
-        width: 100%;
+    .mobile-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 }
 
-/*--------------------------------------
-  Mobile Loading States
----------------------------------------*/
+/* Chart Specific Optimizations */
+.chart-clean { @apply bg-slate-900 border border-slate-800 rounded-lg p-6; }
+.chart-title { @apply text-lg font-semibold text-slate-50 mb-2; }
+.chart-subtitle { @apply text-sm text-slate-400 mb-4; }
 
-/* Enhanced mobile loading animations */
+/* Cash Flow Chart Colors */
+.recharts-area[data-key="income"] { fill: url(#incomeGradient) !important; stroke: #10b981 !important; }
+.recharts-area[data-key="expense"] { fill: url(#expenseGradient) !important; stroke: #ef4444 !important; }
+
+/* Scrollbar Styling */
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
+/* Loading States */
 .mobile-skeleton {
-    background: linear-gradient(90deg, 
-        rgba(15, 23, 42, 0.8) 25%, 
-        rgba(30, 41, 59, 0.8) 50%, 
-        rgba(15, 23, 42, 0.8) 75%
-    );
+    background: linear-gradient(90deg, rgba(15, 23, 42, 0.8) 25%, rgba(30, 41, 59, 0.8) 50%, rgba(15, 23, 42, 0.8) 75%);
     background-size: 200% 100%;
-    animation: mobile-shimmer 1.8s infinite;
+    animation: shimmer 1.8s infinite;
     border-radius: 6px;
 }
 
-@keyframes mobile-shimmer {
+@keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
 }
 
-.mobile-skeleton-text {
-    height: 1rem;
-    margin-bottom: 0.5rem;
-}
-
-.mobile-skeleton-text:last-child {
-    width: 60%;
-    margin-bottom: 0;
-}
-
-.mobile-skeleton-avatar {
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-}
-
-.mobile-skeleton-button {
-    height: 2.25rem;
-    width: 100px;
-    border-radius: 6px;
-}
-
-/*--------------------------------------
-  Mobile Accessibility Improvements
----------------------------------------*/
-
-/* Better focus states for mobile */
+/* Utility Classes */
+.mobile-only { display: none; }
 @media (max-width: 768px) {
-    .mobile-focus:focus {
-        outline: 2px solid rgb(59, 130, 246);
-        outline-offset: 2px;
-    }
-    
-    /* Larger touch targets */
-    .mobile-touch-target {
-        min-height: 44px;
-        min-width: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    /* Better contrast for mobile */
-    .mobile-text-contrast {
-        color: rgb(248, 250, 252);
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    }
+    .mobile-only { display: block; }
+    .mobile-hidden { display: none; }
+    .mobile-flex { display: flex; }
+    .mobile-grid { display: grid; }
 }
-
-/*--------------------------------------
-  Mobile Performance Optimizations
----------------------------------------*/
-
-/* Reduce animations on lower-end devices */
-@media (prefers-reduced-motion: reduce) {
-    .mobile-performance-mode * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-}
-
-/* GPU acceleration for smoother mobile performance */
-.mobile-gpu-accelerated {
-    transform: translateZ(0);
-    will-change: transform;
-    backface-visibility: hidden;
-    perspective: 1000px;
-}
-
-/* Optimize for mobile scrolling */
-.mobile-scroll-optimized {
-    -webkit-overflow-scrolling: touch;
-    overflow-scrolling: touch;
-    scroll-behavior: smooth;
-}
-
-/*--------------------------------------
-  Mobile-Specific Utility Classes
----------------------------------------*/
-
-/* Mobile-only visibility classes */
-.mobile-only {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .mobile-only {
-        display: block;
-    }
-    
-    .mobile-hidden {
-        display: none;
-    }
-    
-    .mobile-flex {
-        display: flex;
-    }
-    
-    .mobile-grid {
-        display: grid;
-    }
-}
-
-/* Mobile spacing utilities */
-@media (max-width: 768px) {
-    .mobile-p-0 { padding: 0; }
-    .mobile-p-2 { padding: 0.5rem; }
-    .mobile-p-4 { padding: 1rem; }
-    .mobile-m-0 { margin: 0; }
-    .mobile-m-2 { margin: 0.5rem; }
-    .mobile-m-4 { margin: 1rem; }
-    .mobile-gap-2 { gap: 0.5rem; }
-    .mobile-gap-4 { gap: 1rem; }
-}
-
-/*--------------------------------------
-  Original Mobile Responsiveness (Enhanced)
----------------------------------------*/
-
-/* Hide scrollbars for mobile menus */
-.scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;
-}
-
-/* Mobile-friendly touch targets */
-@media (max-width: 768px) {
-    .touch-target {
-        min-height: 44px;
-        min-width: 44px;
-    }
-    
-    /* Increase tap targets on mobile */
-    button, [role="button"], .btn-clean {
-        min-height: 44px;
-        padding: 12px 16px;
-    }
-    
-    /* Better mobile form inputs */
-    .input-clean {
-        padding: 12px 16px;
-        font-size: 16px; /* Prevents zoom on iOS */
-    }
-    
-    /* Mobile-optimized cards */
-    .card-clean {
-        margin: 0 4px;
-        border-radius: 12px;
-    }
-    
-    .metric-clean {
-        padding: 16px;
-    }
-    
-    /* Mobile table improvements */
-    .table-clean {
-        font-size: 14px;
-    }
-    
-    .table-row {
-        min-height: 48px;
-    }
-    
-    /* Mobile navigation improvements */
-    .nav-clean {
-        padding: 8px;
-    }
-}
-
-/* Extra small screens */
-@media (max-width: 480px) {
-    /* Even smaller spacing on very small screens */
-    .card-clean {
-        margin: 0 2px;
-        padding: 12px;
-    }
-    
-    .metric-clean {
-        padding: 12px;
-    }
-    
-    /* Smaller text on tiny screens */
-    .metric-value {
-        font-size: 1.5rem;
-    }
-    
-    /* Stack items vertically on tiny screens */
-    .mobile-stack {
-        flex-direction: column !important;
-    }
-}
-
-/*--------------------------------------
-  Mobile Table Enhancements
----------------------------------------*/
-
-/* Better mobile table experience */
-@media (max-width: 768px) {
-    .overflow-x-auto {
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    table {
-        font-size: 0.875rem;
-    }
-    
-    th, td {
-        padding: 0.5rem;
-        white-space: nowrap;
-    }
-    
-    /* Hide less important columns on mobile */
-    .mobile-hide {
-        display: none;
-    }
-}
-
-@media (min-width: 640px) {
-    .mobile-hide {
-        display: table-cell;
-    }
-}
-
-/* Mobile table wrapper */
-.mobile-table-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
-}
-
-.mobile-table-wrapper::-webkit-scrollbar {
-    height: 4px;
-}
-
-.mobile-table-wrapper::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.mobile-table-wrapper::-webkit-scrollbar-thumb {
-    background-color: rgba(156, 163, 175, 0.5);
-    border-radius: 2px;
-}
-
-/* Mobile-friendly form layouts */
-.mobile-form-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-}
-
-@media (min-width: 640px) {
-    .mobile-form-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-    }
-}
-
-/*--------------------------------------
-  Mobile Safe Areas (for devices with notches)
----------------------------------------*/
-
-/* Support for iPhone X+ safe areas */
-@supports (padding: max(0px)) {
-    .mobile-safe-top {
-        padding-top: max(16px, env(safe-area-inset-top));
-    }
-    
-    .mobile-safe-bottom {
-        padding-bottom: max(16px, env(safe-area-inset-bottom));
-    }
-    
-    .mobile-safe-left {
-        padding-left: max(16px, env(safe-area-inset-left));
-    }
-    
-    .mobile-safe-right {
-        padding-right: max(16px, env(safe-area-inset-right));
-    }
-}
-
-/*--------------------------------------
-  Mobile Typography Improvements
----------------------------------------*/
-
-/* Better mobile typography */
-@media (max-width: 768px) {
-    h1 { 
-        font-size: 1.875rem; /* 30px */
-        line-height: 1.2;
-    }
-    h2 { 
-        font-size: 1.5rem; /* 24px */
-        line-height: 1.25;
-    }
-    h3 { 
-        font-size: 1.25rem; /* 20px */
-        line-height: 1.3;
-    }
-    h4 { 
-        font-size: 1.125rem; /* 18px */
-        line-height: 1.35;
-    }
-    
-    /* Improve readability on small screens */
-    body {
-        font-size: 14px;
-        line-height: 1.5;
-    }
-}
-
-/*--------------------------------------
-  Mobile Button Improvements
----------------------------------------*/
-
-/* Ensure buttons are touch-friendly on mobile */
-@media (max-width: 768px) {
-    button {
-        min-height: 44px;
-        min-width: 44px;
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
-    }
-    
-    /* Improve button spacing on mobile */
-    .flex.gap-2 {
-        gap: 0.75rem;
-    }
-    
-    .flex.gap-3 {
-        gap: 1rem;
-    }
-}
-
-/*--------------------------------------
-  Enhanced Mobile Component Styles
----------------------------------------*/
-
-/* Mobile-optimized action buttons */
-@media (max-width: 768px) {
-    .mobile-action-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        width: 100%;
-    }
-    
-    .mobile-action-buttons button {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .mobile-action-buttons .button-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-}
-
-/* Mobile-friendly metric cards */
-@media (max-width: 768px) {
-    .mobile-metric-card {
-        background: rgba(15, 23, 42, 0.8);
-        border: 1px solid rgb(51, 65, 85);
-        border-radius: 12px;
-        padding: 1rem;
-        backdrop-filter: blur(8px);
-    }
-    
-    .mobile-metric-card .metric-icon {
-        width: 2rem;
-        height: 2rem;
-        padding: 0.5rem;
-        background: rgba(30, 41, 59, 0.8);
-        border-radius: 8px;
-    }
-    
-    .mobile-metric-card .metric-value {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: rgb(248, 250, 252);
-        line-height: 1.2;
-    }
-    
-    .mobile-metric-card .metric-label {
-        font-size: 0.75rem;
-        color: rgb(148, 163, 184);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        font-weight: 500;
-    }
-}
-
-/* Mobile navigation improvements */
-@media (max-width: 768px) {
-    .mobile-nav-item {
-        padding: 0.75rem 1rem;
-        border-radius: 8px;
-        transition: all 0.2s ease;
-        min-height: 48px;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-    
-    .mobile-nav-item.active {
-        background: rgb(59, 130, 246);
-        color: white;
-        font-weight: 600;
-    }
-    
-    .mobile-nav-item:not(.active) {
-        color: rgb(203, 213, 225);
-    }
-    
-    .mobile-nav-item:not(.active):hover {
-        background: rgba(30, 41, 59, 0.8);
-        color: white;
-    }
-}
-
-/*--------------------------------------
-  Mobile Chart Container Improvements
----------------------------------------*/
-
-/* Better chart responsiveness */
-@media (max-width: 768px) {
-    .mobile-chart-container {
-        margin: 0 -1rem;
-        padding: 1rem;
-        background: rgba(15, 23, 42, 0.9);
-        border-radius: 12px;
-        border: 1px solid rgb(51, 65, 85);
-    }
-    
-    .mobile-chart-header {
-        margin-bottom: 1rem;
-        padding-bottom: 0.75rem;
-        border-bottom: 1px solid rgb(51, 65, 85);
-    }
-    
-    .mobile-chart-title {
-        font-size: 1rem;
-        font-weight: 600;
-        color: rgb(248, 250, 252);
-        margin-bottom: 0.25rem;
-    }
-    
-    .mobile-chart-description {
-        font-size: 0.875rem;
-        color: rgb(148, 163, 184);
-    }
-    
-    .mobile-chart-content {
-        position: relative;
-        height: 200px;
-    }
-    
-    .mobile-chart-fullscreen-btn {
-        position: absolute;
-        top: 0.5rem;
-        right: 0.5rem;
-        background: rgba(30, 41, 59, 0.8);
-        border: 1px solid rgb(51, 65, 85);
-        border-radius: 6px;
-        padding: 0.5rem;
-        color: rgb(148, 163, 184);
-        transition: all 0.2s ease;
-        z-index: 10;
-    }
-    
-    .mobile-chart-fullscreen-btn:hover {
-        background: rgba(30, 41, 59, 1);
-        color: rgb(248, 250, 252);
-    }
-}
-
