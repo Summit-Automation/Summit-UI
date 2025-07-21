@@ -1,35 +1,29 @@
 import { MileageEntry } from '@/types/mileage';
+import { calculateGrowth } from '@/utils/shared';
 
-/**
- * Calculate total business and personal miles from mileage entries
- */
+const STANDARD_MILEAGE_RATE = 0.67; // IRS rate for 2025
+
 export function summarizeMileage(entries: MileageEntry[]) {
-    const businessMiles = entries
-        .filter(entry => entry.is_business)
-        .reduce((sum, entry) => sum + entry.miles, 0);
+    let businessMiles = 0;
+    let personalMiles = 0;
 
-    const personalMiles = entries
-        .filter(entry => !entry.is_business)
-        .reduce((sum, entry) => sum + entry.miles, 0);
-
-    const totalMiles = businessMiles + personalMiles;
-    
-    // IRS standard mileage rate for 2025 (estimated)
-    const standardMileageRate = 0.67;
-    const potentialDeduction = businessMiles * standardMileageRate;
+    for (const entry of entries) {
+        if (entry.is_business) {
+            businessMiles += entry.miles;
+        } else {
+            personalMiles += entry.miles;
+        }
+    }
 
     return {
         businessMiles,
         personalMiles,
-        totalMiles,
-        potentialDeduction,
-        standardMileageRate,
+        totalMiles: businessMiles + personalMiles,
+        potentialDeduction: businessMiles * STANDARD_MILEAGE_RATE,
+        standardMileageRate: STANDARD_MILEAGE_RATE,
     };
 }
 
-/**
- * Calculate monthly growth for mileage entries
- */
 export function calculateMileageGrowth(entries: MileageEntry[]): number {
     const now = new Date();
     const currentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -37,10 +31,7 @@ export function calculateMileageGrowth(entries: MileageEntry[]): number {
     const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
 
     const currentMonthMiles = entries
-        .filter(entry => {
-            const entryDate = new Date(entry.date);
-            return entryDate >= currentMonth;
-        })
+        .filter(entry => new Date(entry.date) >= currentMonth)
         .reduce((sum, entry) => sum + entry.miles, 0);
 
     const lastMonthMiles = entries
@@ -50,16 +41,9 @@ export function calculateMileageGrowth(entries: MileageEntry[]): number {
         })
         .reduce((sum, entry) => sum + entry.miles, 0);
 
-    if (lastMonthMiles === 0) {
-        return currentMonthMiles > 0 ? 100 : 0;
-    }
-
-    return Number((((currentMonthMiles - lastMonthMiles) / lastMonthMiles) * 100).toFixed(1));
+    return calculateGrowth(currentMonthMiles, lastMonthMiles);
 }
 
-/**
- * Get mileage entries for a specific month
- */
 export function getMileageForMonth(entries: MileageEntry[], year: number, month: number): MileageEntry[] {
     return entries.filter(entry => {
         const entryDate = new Date(entry.date);
@@ -67,9 +51,6 @@ export function getMileageForMonth(entries: MileageEntry[], year: number, month:
     });
 }
 
-/**
- * Calculate average miles per business trip
- */
 export function getAverageBusinessTripMiles(entries: MileageEntry[]): number {
     const businessTrips = entries.filter(entry => entry.is_business);
     if (businessTrips.length === 0) return 0;
@@ -78,9 +59,6 @@ export function getAverageBusinessTripMiles(entries: MileageEntry[]): number {
     return Number((totalMiles / businessTrips.length).toFixed(1));
 }
 
-/**
- * Get top customers by miles driven
- */
 export function getTopCustomersByMiles(entries: MileageEntry[], limit: number = 5) {
     const customerMiles = new Map<string, { name: string; miles: number; trips: number }>();
 

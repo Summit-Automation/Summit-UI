@@ -3,7 +3,8 @@
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
 import { Customer } from '@/types/customer';
 import { format, parseISO } from 'date-fns';
-import { MobileChart, MobileTooltip } from '@/components/ui/mobile-chart';
+import { BaseChart, ChartTooltip } from '@/components/ui/base-chart';
+import { formatDate } from '@/utils/shared';
 
 type Bucket = { date: string; count: number };
 
@@ -23,15 +24,8 @@ function groupByDay(customers: Customer[]): Bucket[] {
 export default function CustomerGrowthLine({ customers }: { customers: Customer[] }) {
     const data = groupByDay(customers);
 
-    const formatDate = (date: string) => 
-        new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-
     return (
-        <MobileChart
-            mobileHeight={200}
-            defaultHeight={350}
-            standalone={false}
-        >
+        <BaseChart mobileHeight={200} height={350}>
             <LineChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <CartesianGrid 
                     stroke="#475569" 
@@ -56,7 +50,7 @@ export default function CustomerGrowthLine({ customers }: { customers: Customer[
                     width={40}
                 />
 
-                <MobileTooltip
+                <ChartTooltip
                     labelFormatter={formatDate}
                     formatter={(value: unknown) => `${value as number} New Customers`}
                 />
@@ -70,6 +64,6 @@ export default function CustomerGrowthLine({ customers }: { customers: Customer[
                     activeDot={{ r: 6, fill: '#ffffff', stroke: '#2563eb', strokeWidth: 3 }}
                 />
             </LineChart>
-        </MobileChart>
+        </BaseChart>
     );
 }

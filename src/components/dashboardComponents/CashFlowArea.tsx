@@ -3,7 +3,8 @@
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { Transaction } from '@/types/transaction';
 import { format, parseISO } from 'date-fns';
-import { MobileChart, MobileTooltip } from '@/components/ui/mobile-chart';
+import { BaseChart, ChartTooltip } from '@/components/ui/base-chart';
+import { formatCurrency, formatDate } from '@/utils/shared';
 
 type Bucket = { date: string; income: number; expense: number };
 
@@ -25,18 +26,8 @@ function groupCashFlow(transactions: Transaction[]): Bucket[] {
 export default function CashFlowArea({ transactions }: { transactions: Transaction[] }) {
     const data = groupCashFlow(transactions);
 
-    const formatCurrency = (value: unknown) => 
-        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value as number);
-
-    const formatDate = (date: string) => 
-        new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-
     return (
-        <MobileChart
-            mobileHeight={200}
-            defaultHeight={350}
-            standalone={false}
-        >
+        <BaseChart mobileHeight={200} height={350}>
             <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <defs>
                     <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
@@ -73,7 +64,7 @@ export default function CashFlowArea({ transactions }: { transactions: Transacti
                     width={50}
                 />
 
-                <MobileTooltip
+                <ChartTooltip
                     labelFormatter={formatDate}
                     formatter={formatCurrency}
                 />
@@ -95,6 +86,6 @@ export default function CashFlowArea({ transactions }: { transactions: Transacti
                     strokeWidth={2}
                 />
             </AreaChart>
-        </MobileChart>
+        </BaseChart>
     );
 }

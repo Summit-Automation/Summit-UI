@@ -1,19 +1,21 @@
 import { Transaction } from '@/types/transaction';
 
 export function summarizeTransactions(transactions: Transaction[]) {
-    const income = transactions
-        .filter(t => t.type === 'income')
-        .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    let totalIncome = 0;
+    let totalExpenses = 0;
 
-    const expenses = transactions
-        .filter(t => t.type === 'expense')
-        .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-
-    const net = income - expenses;
+    for (const transaction of transactions) {
+        const amount = parseFloat(transaction.amount);
+        if (transaction.type === 'income') {
+            totalIncome += amount;
+        } else {
+            totalExpenses += amount;
+        }
+    }
 
     return {
-        totalIncome: income,
-        totalExpenses: expenses,
-        netBalance: net,
+        totalIncome,
+        totalExpenses,
+        netBalance: totalIncome - totalExpenses,
     };
 }

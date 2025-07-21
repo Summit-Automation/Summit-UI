@@ -51,11 +51,10 @@ export default function UpdateCustomerModal({
                 </Button>
             </DialogTrigger>
 
-            <DialogContent
-                className="max-w-lg bg-primary/90 backdrop-blur-lg border border-border rounded-xl shadow-premium">
+            <DialogContent className="max-w-lg bg-slate-900 border border-slate-700 rounded-xl shadow-2xl">
                 <DialogHeader>
                     <DialogTitle className="text-white">Edit Customer</DialogTitle>
-                    <DialogDescription className="text-slate-300">
+                    <DialogDescription className="text-slate-400">
                         Update the fields below.
                     </DialogDescription>
                 </DialogHeader>
@@ -69,7 +68,11 @@ export default function UpdateCustomerModal({
                             render={({field}) => (<FormItem>
                                     <FormLabel className="text-slate-300">Full Name</FormLabel>
                                     <FormControl>
-                                        <Input {...field} placeholder="Jane Doe"/>
+                                        <Input 
+                                            {...field} 
+                                            placeholder="Jane Doe"
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
                                     </FormControl>
                                     <FormMessage/>
                                 </FormItem>)}
@@ -82,7 +85,12 @@ export default function UpdateCustomerModal({
                             render={({field}) => (<FormItem>
                                     <FormLabel className="text-slate-300">Email</FormLabel>
                                     <FormControl>
-                                        <Input {...field} type="email" placeholder="jane@example.com"/>
+                                        <Input 
+                                            {...field} 
+                                            type="email" 
+                                            placeholder="jane@example.com"
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
                                     </FormControl>
                                     <FormMessage/>
                                 </FormItem>)}
@@ -95,7 +103,12 @@ export default function UpdateCustomerModal({
                             render={({field}) => (<FormItem>
                                     <FormLabel className="text-slate-300">Phone</FormLabel>
                                     <FormControl>
-                                        <Input {...field} type="tel" placeholder="+1 (555) 123-4567"/>
+                                        <Input 
+                                            {...field} 
+                                            type="tel" 
+                                            placeholder="+1 (555) 123-4567"
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
                                     </FormControl>
                                     <FormMessage/>
                                 </FormItem>)}
@@ -108,7 +121,11 @@ export default function UpdateCustomerModal({
                             render={({field}) => (<FormItem>
                                     <FormLabel className="text-slate-300">Business</FormLabel>
                                     <FormControl>
-                                        <Input {...field} placeholder="Acme Corp"/>
+                                        <Input 
+                                            {...field} 
+                                            placeholder="Acme Corp"
+                                            className="bg-slate-900 border-slate-700 text-slate-50"
+                                        />
                                     </FormControl>
                                     <FormMessage/>
                                 </FormItem>)}
@@ -122,16 +139,16 @@ export default function UpdateCustomerModal({
                                     <FormLabel className="text-slate-300">Status</FormLabel>
                                     <FormControl>
                                         <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger>
+                                            <SelectTrigger className="bg-slate-900 border-slate-700 text-slate-50">
                                                 <SelectValue placeholder="Select status…"/>
                                             </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="lead">Lead</SelectItem>
-                                                <SelectItem value="prospect">Prospect</SelectItem>
-                                                <SelectItem value="contacted">Contacted</SelectItem>
-                                                <SelectItem value="qualified">Qualified</SelectItem>
-                                                <SelectItem value="proposal">Proposal</SelectItem>
-                                                <SelectItem value="closed">Closed</SelectItem>
+                                            <SelectContent className="bg-slate-900 border-slate-700">
+                                                <SelectItem value="lead" className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800">Lead</SelectItem>
+                                                <SelectItem value="prospect" className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800">Prospect</SelectItem>
+                                                <SelectItem value="contacted" className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800">Contacted</SelectItem>
+                                                <SelectItem value="qualified" className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800">Qualified</SelectItem>
+                                                <SelectItem value="proposal" className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800">Proposal</SelectItem>
+                                                <SelectItem value="closed" className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800">Closed</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
@@ -143,7 +160,11 @@ export default function UpdateCustomerModal({
                             <DialogClose asChild>
                                 <Button variant="ghost">Cancel</Button>
                             </DialogClose>
-                            <Button variant="outline" type="submit">
+                            <Button 
+                                variant="outline" 
+                                type="submit"
+                                className="bg-blue-600 border-blue-600 text-white hover:bg-blue-700 hover:border-blue-700"
+                            >
                                 Save Changes
                             </Button>
                         </DialogFooter>
