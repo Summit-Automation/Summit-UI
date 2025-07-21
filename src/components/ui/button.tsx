@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background relative overflow-hidden touch-manipulation",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background relative overflow-hidden touch-manipulation btn-feedback btn-ripple",
   {
     variants: {
       variant: {
@@ -21,7 +21,7 @@ const buttonVariants = cva(
         link: 
           "text-brand-primary underline-offset-4 hover:underline active:scale-95",
         gradient:
-          "bg-gradient-primary text-white shadow-lg hover:shadow-xl active:scale-95 hover:-translate-y-0.5 before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/0 before:via-white/10 before:to-white/0 before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-500",
+          "bg-gradient-primary text-white shadow-lg hover:shadow-xl active:scale-95 hover:-translate-y-0.5 before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/0 before:via-white/10 before:to-white/0 before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-500 btn-pulse",
         success:
           "bg-green-600 text-white shadow-md hover:bg-green-700 hover:shadow-lg active:scale-95 hover:-translate-y-0.5",
         warning:
@@ -54,6 +54,7 @@ export interface ButtonProps
   icon?: React.ReactNode
   iconPosition?: "left" | "right"
   fullWidth?: boolean
+  haptic?: boolean // For potential future haptic feedback
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -68,22 +69,45 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     children,
     disabled,
     fullWidth = false,
+    haptic = false,
+    onClick,
     ...props 
   }, ref) => {
     const Comp = asChild ? Slot : "button"
     
     const isDisabled = disabled || loading
 
+    const handleClick = React.useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+      // Add subtle haptic feedback on supported devices
+      if (haptic && 'vibrate' in navigator) {
+        navigator.vibrate(10); // Very short vibration
+      }
+      
+      // Add visual feedback class temporarily
+      const target = e.currentTarget;
+      target.classList.add('feedback-success');
+      setTimeout(() => {
+        target.classList.remove('feedback-success');
+      }, 600);
+      
+      onClick?.(e);
+    }, [onClick, haptic]);
+
+    // Add btn-pulse for primary and gradient variants
+    const shouldPulse = variant === 'gradient' || variant === 'default';
+
     return (
       <Comp
         className={cn(
           buttonVariants({ variant, size, className }),
           fullWidth && "w-full",
+          shouldPulse && "btn-pulse",
           // Mobile-specific optimizations
           "touch-manipulation select-none"
         )}
         ref={ref}
         disabled={isDisabled}
+        onClick={handleClick}
         {...props}
       >
         {loading && (
@@ -94,11 +118,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         
         <span className={cn("flex items-center gap-2", loading && "invisible")}>
           {icon && iconPosition === "left" && (
-            <span className="flex-shrink-0">{icon}</span>
+            <span className="flex-shrink-0 icon-interactive">{icon}</span>
           )}
           {children}
           {icon && iconPosition === "right" && (
-            <span className="flex-shrink-0">{icon}</span>
+            <span className="flex-shrink-0 icon-interactive">{icon}</span>
           )}
         </span>
       </Comp>
@@ -109,7 +133,7 @@ Button.displayName = "Button"
 
 // Specialized button components for common use cases
 const PrimaryButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (props, ref) => <Button ref={ref} variant="gradient" {...props} />
+  (props, ref) => <Button ref={ref} variant="gradient" haptic {...props} />
 )
 PrimaryButton.displayName = "PrimaryButton"
 

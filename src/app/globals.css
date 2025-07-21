@@ -28,7 +28,7 @@
     h4 { @apply text-lg; }
 }
 
-/* Component Styles - Consolidated */
+/* Component Styles - Consolidated with Feedback */
 @layer components {
     .card-clean { @apply bg-slate-900 border border-slate-800 rounded-lg shadow-sm hover:border-slate-700 hover:shadow-md; }
     .btn-clean { @apply px-4 py-2 rounded-lg font-medium transition-colors; }
@@ -45,6 +45,129 @@
     .status-success { @apply bg-emerald-100/10 text-emerald-400 border border-emerald-500/20; }
     .status-warning { @apply bg-amber-100/10 text-amber-400 border border-amber-500/20; }
     .status-error { @apply bg-red-100/10 text-red-400 border border-red-500/20; }
+
+    /* Button Feedback System */
+    .btn-feedback {
+        position: relative;
+        transform: translateZ(0);
+        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform, box-shadow;
+    }
+
+    .btn-feedback:active {
+        transform: translateY(1px) scale(0.98);
+        transition-duration: 0.05s;
+    }
+
+    .btn-feedback:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Ripple effect for tactile feedback */
+    .btn-ripple {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-ripple::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+        pointer-events: none;
+    }
+
+    .btn-ripple:active::before {
+        width: 300px;
+        height: 300px;
+        transition: width 0s, height 0s;
+    }
+
+    /* Gentle pulse for primary actions */
+    .btn-pulse:hover:not(:disabled) {
+        animation: gentle-pulse 1.5s infinite;
+    }
+
+    @keyframes gentle-pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+        50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
+    }
+
+    /* Card interaction feedback */
+    .card-interactive {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-interactive:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-interactive:active {
+        transform: translateY(0px);
+        transition-duration: 0.1s;
+    }
+
+    /* Table row feedback */
+    .table-row-interactive {
+        transition: all 0.15s ease;
+    }
+
+    .table-row-interactive:hover {
+        transform: translateX(2px);
+        background-color: rgba(71, 85, 105, 0.1);
+    }
+
+    .table-row-interactive:active {
+        transform: translateX(0px);
+        transition-duration: 0.05s;
+    }
+
+    /* Form input feedback */
+    .input-feedback {
+        transition: all 0.2s ease;
+    }
+
+    .input-feedback:focus {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    }
+
+    /* Success/Error feedback */
+    .feedback-success {
+        animation: success-bounce 0.6s ease-out;
+    }
+
+    .feedback-error {
+        animation: error-shake 0.5s ease-out;
+    }
+
+    @keyframes success-bounce {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    @keyframes error-shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-4px); }
+        75% { transform: translateX(4px); }
+    }
+
+    /* Icon interactions */
+    .icon-interactive {
+        transition: transform 0.2s ease;
+    }
+
+    .icon-interactive:hover {
+        transform: rotate(5deg) scale(1.1);
+    }
 }
 
 /* Animations */
@@ -166,6 +289,20 @@ input[class*="bg-slate-"]:focus, textarea[class*="bg-slate-"]:focus, select[clas
 
 /* Mobile Optimizations */
 @media (max-width: 768px) {
+    .btn-feedback:active {
+        transform: translateY(0.5px) scale(0.99);
+    }
+    
+    .btn-feedback:hover:not(:disabled) {
+        transform: none; /* Disable hover effects on mobile */
+        box-shadow: none;
+    }
+    
+    .card-interactive:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
     .mobile-optimized { padding: 0.5rem; font-size: 0.875rem; }
     .touch-target, button { min-height: 44px; min-width: 44px; }
     .mobile-card { margin: 0 0.5rem; border-radius: 12px; }
@@ -208,6 +345,24 @@ input[class*="bg-slate-"]:focus, textarea[class*="bg-slate-"]:focus, select[clas
 @keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .btn-feedback,
+    .card-interactive,
+    .input-feedback {
+        transition: none;
+        animation: none;
+    }
+    
+    .btn-feedback:active {
+        transform: scale(0.98);
+    }
+    
+    .btn-pulse:hover:not(:disabled) {
+        animation: none;
+    }
 }
 
 /* Utility Classes */
