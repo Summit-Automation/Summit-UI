@@ -2,8 +2,6 @@
 
 import * as React from 'react';
 import { ResponsiveContainer } from 'recharts';
-import { Button } from '@/components/ui/button';
-import { Maximize2, Minimize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MobileChartProps {
@@ -11,7 +9,6 @@ interface MobileChartProps {
   description?: string;
   children: React.ReactElement;
   className?: string;
-  allowFullscreen?: boolean;
   defaultHeight?: number;
   mobileHeight?: number;
   standalone?: boolean; // New prop to determine if this should wrap in a card
@@ -45,12 +42,10 @@ export function MobileChart({
   description,
   children,
   className,
-  allowFullscreen = true,
   defaultHeight = 350,
   mobileHeight = 250,
   standalone = false
 }: MobileChartProps) {
-  const [isFullscreen, setIsFullscreen] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
@@ -63,63 +58,16 @@ export function MobileChart({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  React.useEffect(() => {
-    if (isFullscreen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isFullscreen]);
-
   const height = isMobile ? mobileHeight : defaultHeight;
 
   const chartContent = (
-    <div className="relative">
-      {allowFullscreen && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setIsFullscreen(!isFullscreen)}
-          className="absolute top-2 right-2 z-10 bg-slate-800/50 hover:bg-slate-700/50"
-        >
-          {isFullscreen ? (
-            <Minimize2 className="h-4 w-4" />
-          ) : (
-            <Maximize2 className="h-4 w-4" />
-          )}
-        </Button>
-      )}
-      
-      <ResponsiveContainer 
-        width="100%" 
-        height={isFullscreen ? '80vh' : height}
-      >
-        {children}
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer 
+      width="100%" 
+      height={height}
+    >
+      {children}
+    </ResponsiveContainer>
   );
-
-  if (isFullscreen) {
-    return (
-      <div className="fixed inset-0 bg-slate-900/95 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-6xl max-h-full bg-slate-900 border border-slate-700 rounded-lg p-6">
-          {title && (
-            <div className="mb-4">
-              <h3 className="text-white text-lg font-semibold">{title}</h3>
-              {description && (
-                <p className="text-slate-400 text-sm">{description}</p>
-              )}
-            </div>
-          )}
-          {chartContent}
-        </div>
-      </div>
-    );
-  }
 
   // If standalone is false, just return the chart content without wrapping
   if (!standalone) {
