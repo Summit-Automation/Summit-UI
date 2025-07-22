@@ -58,9 +58,9 @@ export default function TransactionTable({ transactions }: { transactions: Trans
             label: 'Description',
             primary: true,
             render: (value: unknown) => (
-                <span className="font-medium truncate block max-w-[200px] md:max-w-none">
-                    {value as string}
-                </span>
+                <div className="font-medium max-w-[200px] md:max-w-[300px]" title={value as string}>
+                    <span className="truncate block md:inline">{value as string}</span>
+                </div>
             )
         },
         {
@@ -69,7 +69,7 @@ export default function TransactionTable({ transactions }: { transactions: Trans
             primary: true,
             render: (value: unknown, transaction: Transaction) => (
                 <span className={cn(
-                    "font-semibold",
+                    "font-semibold whitespace-nowrap",
                     transaction.type === 'income' ? 'text-green-400' : 'text-red-400'
                 )}>
                     {formatCurrency(value as string)}
@@ -79,14 +79,18 @@ export default function TransactionTable({ transactions }: { transactions: Trans
         {
             key: 'category',
             label: 'Category',
-            render: (value: unknown) => value as string
+            render: (value: unknown) => (
+                <div className="max-w-[150px]" title={value as string}>
+                    <span className="truncate block">{value as string}</span>
+                </div>
+            )
         },
         {
             key: 'type',
             label: 'Type',
             render: (value: unknown) => (
                 <Badge className={cn(
-                    'capitalize text-xs',
+                    'capitalize text-xs whitespace-nowrap',
                     (value as string) === 'income' 
                         ? 'bg-green-600 text-green-100' 
                         : 'bg-red-600 text-red-100'
@@ -100,7 +104,7 @@ export default function TransactionTable({ transactions }: { transactions: Trans
             label: 'Source',
             hideOnMobile: true,
             render: (value: unknown) => (
-                <span className="capitalize text-xs">{value as string}</span>
+                <span className="capitalize text-xs whitespace-nowrap">{value as string}</span>
             )
         }
     ];
@@ -111,10 +115,10 @@ export default function TransactionTable({ transactions }: { transactions: Trans
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Customer */}
                 <div className="flex items-start space-x-2">
-                    <User className="h-4 w-4 text-slate-400 mt-0.5" />
-                    <div>
+                    <User className="h-4 w-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                    <div className="min-w-0 flex-1">
                         <div className="text-xs text-slate-400 uppercase">Customer</div>
-                        <div className="text-sm text-white">
+                        <div className="text-sm text-white break-words">
                             {transaction.customer_name || 'N/A'}
                         </div>
                     </div>
@@ -122,10 +126,10 @@ export default function TransactionTable({ transactions }: { transactions: Trans
 
                 {/* Interaction */}
                 <div className="flex items-start space-x-2">
-                    <Clipboard className="h-4 w-4 text-slate-400 mt-0.5" />
-                    <div>
+                    <Clipboard className="h-4 w-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                    <div className="min-w-0 flex-1">
                         <div className="text-xs text-slate-400 uppercase">Interaction</div>
-                        <div className="text-sm text-white">
+                        <div className="text-sm text-white break-words">
                             {transaction.interaction_title || 'N/A'}
                         </div>
                     </div>
@@ -133,13 +137,21 @@ export default function TransactionTable({ transactions }: { transactions: Trans
 
                 {/* Outcome */}
                 <div className="flex items-start space-x-2">
-                    <CheckCircle className="h-4 w-4 text-slate-400 mt-0.5" />
-                    <div>
+                    <CheckCircle className="h-4 w-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                    <div className="min-w-0 flex-1">
                         <div className="text-xs text-slate-400 uppercase">Outcome</div>
-                        <div className="text-sm text-white">
+                        <div className="text-sm text-white break-words">
                             {transaction.interaction_outcome || 'None recorded'}
                         </div>
                     </div>
+                </div>
+            </div>
+
+            {/* Full Description */}
+            <div className="border-t border-slate-700 pt-4">
+                <div className="text-xs text-slate-400 uppercase mb-2">Full Description</div>
+                <div className="text-sm text-white p-3 bg-slate-800/30 rounded-lg break-words whitespace-pre-wrap">
+                    {transaction.description}
                 </div>
             </div>
 

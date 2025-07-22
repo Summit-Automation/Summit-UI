@@ -128,14 +128,20 @@ export function MobileTable<T>({
                                 {/* Primary info */}
                                 <div className="space-y-2">
                                     {primaryColumns.map((column, index) => (
-                                        <div key={index} className="flex justify-between items-start">
-                                            <span className="text-sm font-medium text-slate-300">{column.label}:</span>
-                                            <span className="text-sm text-slate-100 text-right ml-2 flex-1">
+                                        <div key={index} className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 sm:gap-2">
+                                            <span className="text-sm font-medium text-slate-300 flex-shrink-0">
+                                                {column.label}:
+                                            </span>
+                                            <div className="text-sm text-slate-100 min-w-0 flex-1 break-words">
                                                 {column.render 
                                                     ? column.render(getValue(item, column), item)
-                                                    : String(getValue(item, column) || '')
+                                                    : (
+                                                        <span className="break-words">
+                                                            {String(getValue(item, column) || '')}
+                                                        </span>
+                                                    )
                                                 }
-                                            </span>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -156,14 +162,20 @@ export function MobileTable<T>({
                                         {isExpanded && (
                                             <div className="mt-3 pt-3 border-t border-slate-700 space-y-2">
                                                 {secondaryColumns.map((column, index) => (
-                                                    <div key={index} className="flex justify-between items-start">
-                                                        <span className="text-xs font-medium text-slate-400">{column.label}:</span>
-                                                        <span className="text-xs text-slate-200 text-right ml-2 flex-1">
+                                                    <div key={index} className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 sm:gap-2">
+                                                        <span className="text-xs font-medium text-slate-400 flex-shrink-0">
+                                                            {column.label}:
+                                                        </span>
+                                                        <div className="text-xs text-slate-200 min-w-0 flex-1 break-words">
                                                             {column.render 
                                                                 ? column.render(getValue(item, column), item)
-                                                                : String(getValue(item, column) || '')
+                                                                : (
+                                                                    <span className="break-words">
+                                                                        {String(getValue(item, column) || '')}
+                                                                    </span>
+                                                                )
                                                             }
-                                                        </span>
+                                                        </div>
                                                     </div>
                                                 ))}
                                                 {renderExpanded && (
