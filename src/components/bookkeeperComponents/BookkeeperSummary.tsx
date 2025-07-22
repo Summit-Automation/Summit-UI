@@ -57,27 +57,10 @@ function MetricCard({ title, value, Icon, iconColorClass, trend, subtitle }: Met
 }
 
 export default function BookkeeperSummary({ transactions }: { transactions: Transaction[] }) {
-    if (!transactions || transactions.length === 0) {
-        return (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {[1, 2, 3].map((index) => (
-                    <Card key={index} className="metric-enhanced">
-                        <CardContent className="p-6">
-                            <div className="space-y-3">
-                                <div className="flex justify-between items-center">
-                                    <div className="h-4 w-20 loading-enhanced"></div>
-                                    <div className="w-8 h-8 loading-enhanced rounded-lg"></div>
-                                </div>
-                                <div className="h-8 w-16 loading-enhanced"></div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-        );
-    }
-
-    const { totalIncome, totalExpenses, netBalance } = summarizeTransactions(transactions);
+    // Calculate metrics with proper fallbacks for empty data
+    const { totalIncome, totalExpenses, netBalance } = !transactions || transactions.length === 0 
+        ? { totalIncome: 0, totalExpenses: 0, netBalance: 0 }
+        : summarizeTransactions(transactions);
     
     // Format currency with exact amounts for financial precision
     const formatCurrency = (amount: number) => {
