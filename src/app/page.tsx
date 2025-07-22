@@ -189,7 +189,7 @@ export default async function DashboardPage() {
 
             {/* Mobile-responsive Analytics Tabs */}
             <Tabs defaultValue="overview" className="space-y-4 data-appear">
-                <TabsList className="grid w-full grid-cols-3 h-9 sm:h-10 sm:w-fit bg-slate-900/50 border border-slate-800">
+                <TabsList className="grid w-full grid-cols-3 h-9 sm:h-10 sm:w-fit bg-slate-900/50">
                     <TabsTrigger value="overview" className="text-xs sm:text-sm px-2 sm:px-4">
                         Overview
                     </TabsTrigger>

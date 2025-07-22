@@ -46,7 +46,7 @@ export default async function MileagePage() {
             <MileageActions />
 
             {/* Mileage Table */}
-            <Card className="card-enhanced custom-scrollbar overflow-x-auto">
+            <Card className="card-enhanced">
                 <CardHeader>
                     <CardTitle className="text-gradient">All Mileage Entries</CardTitle>
                     <CardDescription className="text-slate-400">

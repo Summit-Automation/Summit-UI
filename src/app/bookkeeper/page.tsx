@@ -46,7 +46,7 @@ export default async function BookkeeperPage() {
             <BookkeeperActions/>
 
             {/* Transactions Table */}
-            <Card className="card-enhanced custom-scrollbar overflow-x-auto">
+            <Card className="card-enhanced">
                 <CardHeader>
                     <CardTitle className="text-gradient">All Transactions</CardTitle>
                     <CardDescription className="text-slate-400">
