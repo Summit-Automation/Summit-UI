@@ -75,9 +75,9 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
             label: 'Purpose',
             primary: true,
             render: (value: unknown) => (
-                <span className="font-medium truncate block max-w-[200px] md:max-w-none">
-                    {value as string}
-                </span>
+                <div className="font-medium max-w-[200px] md:max-w-[300px]" title={value as string}>
+                    <span className="truncate block md:inline">{value as string}</span>
+                </div>
             )
         },
         {
@@ -85,7 +85,7 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
             label: 'Miles',
             primary: true,
             render: (value: unknown) => (
-                <span className="font-mono font-semibold text-blue-400">
+                <span className="font-mono font-semibold text-blue-400 whitespace-nowrap">
                     {formatMiles(value as number)} mi
                 </span>
             )
@@ -95,7 +95,7 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
             label: 'Type',
             render: (value: unknown) => (
                 <Badge className={cn(
-                    'capitalize text-xs',
+                    'capitalize text-xs whitespace-nowrap',
                     (value as boolean) 
                         ? 'bg-green-600 text-green-100' 
                         : 'bg-blue-600 text-blue-100'
@@ -109,9 +109,11 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
             label: 'From',
             hideOnMobile: true,
             render: (value: unknown) => (
-                <span className="truncate block max-w-xs">
-                    {(value as string | null) || <span className="text-slate-500 italic">Not specified</span>}
-                </span>
+                <div className="max-w-[150px]" title={(value as string | null) || 'Not specified'}>
+                    <span className="truncate block">
+                        {(value as string | null) || <span className="text-slate-500 italic">Not specified</span>}
+                    </span>
+                </div>
             )
         },
         {
@@ -119,16 +121,22 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
             label: 'To',
             hideOnMobile: true,
             render: (value: unknown) => (
-                <span className="truncate block max-w-xs">
-                    {(value as string | null) || <span className="text-slate-500 italic">Not specified</span>}
-                </span>
+                <div className="max-w-[150px]" title={(value as string | null) || 'Not specified'}>
+                    <span className="truncate block">
+                        {(value as string | null) || <span className="text-slate-500 italic">Not specified</span>}
+                    </span>
+                </div>
             )
         },
         {
             key: 'customer_name',
             label: 'Customer',
             hideOnMobile: true,
-            render: (value: unknown) => (value as string | null) || 'N/A'
+            render: (value: unknown) => (
+                <div className="max-w-[120px]" title={(value as string | null) || 'N/A'}>
+                    <span className="truncate block">{(value as string | null) || 'N/A'}</span>
+                </div>
+            )
         }
     ];
 
@@ -141,8 +149,8 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Exact Miles Display */}
                     <div className="flex items-start space-x-2">
-                        <Car className="h-4 w-4 text-slate-400 mt-0.5" />
-                        <div>
+                        <Car className="h-4 w-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                        <div className="min-w-0 flex-1">
                             <div className="text-xs text-slate-400 uppercase">Exact Distance</div>
                             <div className="text-lg font-mono font-bold text-white">
                                 {formatMiles(mileageEntry.miles)} miles
@@ -152,8 +160,8 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
 
                     {/* Tax Deduction */}
                     <div className="flex items-start space-x-2">
-                        <DollarSign className="h-4 w-4 text-slate-400 mt-0.5" />
-                        <div>
+                        <DollarSign className="h-4 w-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                        <div className="min-w-0 flex-1">
                             <div className="text-xs text-slate-400 uppercase">
                                 Tax Deduction (${standardMileageRate}/mile)
                             </div>
@@ -172,6 +180,14 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
                     </div>
                 </div>
 
+                {/* Purpose - Full Text */}
+                <div className="border-t border-slate-700 pt-4">
+                    <div className="text-xs text-slate-400 uppercase mb-2">Full Purpose</div>
+                    <div className="text-sm text-white p-3 bg-slate-800/30 rounded-lg break-words">
+                        {mileageEntry.purpose}
+                    </div>
+                </div>
+
                 {/* Route Details */}
                 {(mileageEntry.start_location || mileageEntry.end_location) && (
                     <div className="border-t border-slate-700 pt-4">
@@ -183,13 +199,13 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                             <div>
                                 <div className="text-xs text-slate-400 uppercase mb-1">From</div>
-                                <div className="text-slate-200">
+                                <div className="text-slate-200 break-words p-2 bg-slate-800/20 rounded">
                                     {mileageEntry.start_location || 'Not specified'}
                                 </div>
                             </div>
                             <div>
                                 <div className="text-xs text-slate-400 uppercase mb-1">To</div>
-                                <div className="text-slate-200">
+                                <div className="text-slate-200 break-words p-2 bg-slate-800/20 rounded">
                                     {mileageEntry.end_location || 'Not specified'}
                                 </div>
                             </div>
@@ -201,13 +217,13 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
                 <div className="border-t border-slate-700 pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <div className="text-xs text-slate-400 uppercase mb-1">Customer</div>
-                        <div className="text-sm text-slate-200">
+                        <div className="text-sm text-slate-200 break-words">
                             {mileageEntry.customer_name || 'No customer assigned'}
                         </div>
                     </div>
                     <div>
                         <div className="text-xs text-slate-400 uppercase mb-1">Notes</div>
-                        <div className="text-sm text-slate-200">
+                        <div className="text-sm text-slate-200 break-words">
                             {mileageEntry.notes || 'No additional notes'}
                         </div>
                     </div>
