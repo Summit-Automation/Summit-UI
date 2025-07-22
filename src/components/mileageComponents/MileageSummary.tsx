@@ -56,34 +56,18 @@ function MetricCard({ title, value, Icon, iconColorClass, subtitle, trend }: Met
 }
 
 export default function MileageSummary({ mileageEntries }: { mileageEntries: MileageEntry[] }) {
-    if (!mileageEntries || mileageEntries.length === 0) {
-        return (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {[1, 2, 3].map((index) => (
-                    <Card key={index} className="metric-enhanced">
-                        <CardContent className="p-6">
-                            <div className="space-y-3">
-                                <div className="flex justify-between items-center">
-                                    <div className="h-4 w-20 loading-enhanced"></div>
-                                    <div className="w-8 h-8 loading-enhanced rounded-lg"></div>
-                                </div>
-                                <div className="h-8 w-16 loading-enhanced"></div>
-                                <div className="h-3 w-24 loading-enhanced"></div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-        );
-    }
+    // Calculate metrics with proper fallbacks for empty data
+    const businessMiles = !mileageEntries || mileageEntries.length === 0 
+        ? 0 
+        : mileageEntries
+            .filter(entry => entry.is_business)
+            .reduce((sum, entry) => sum + entry.miles, 0);
 
-    const businessMiles = mileageEntries
-        .filter(entry => entry.is_business)
-        .reduce((sum, entry) => sum + entry.miles, 0);
-
-    const personalMiles = mileageEntries
-        .filter(entry => !entry.is_business)
-        .reduce((sum, entry) => sum + entry.miles, 0);
+    const personalMiles = !mileageEntries || mileageEntries.length === 0 
+        ? 0 
+        : mileageEntries
+            .filter(entry => !entry.is_business)
+            .reduce((sum, entry) => sum + entry.miles, 0);
 
     const totalMiles = businessMiles + personalMiles;
     
@@ -92,7 +76,9 @@ export default function MileageSummary({ mileageEntries }: { mileageEntries: Mil
     const potentialDeduction = businessMiles * standardMileageRate;
 
     // Calculate additional metrics
-    const businessTrips = mileageEntries.filter(entry => entry.is_business).length;
+    const businessTrips = !mileageEntries || mileageEntries.length === 0 
+        ? 0 
+        : mileageEntries.filter(entry => entry.is_business).length;
     const avgBusinessTripMiles = businessTrips > 0 ? businessMiles / businessTrips : 0;
     const businessPercentage = totalMiles > 0 ? (businessMiles / totalMiles) * 100 : 0;
 
