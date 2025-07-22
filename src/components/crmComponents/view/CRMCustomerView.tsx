@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MobileTable } from '@/components/ui/mobile-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, Phone, Mail, Building, Trash2, MessageSquare } from 'lucide-react';
+import { Calendar, Phone, Mail, Building, Trash2, MessageSquare, AlertCircle } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -59,6 +59,12 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
         });
     };
 
+    // Check if customer has any interactions requiring follow-up
+    const hasFollowUpRequired = (customerId: string) => {
+        const customerInteractions = interactionsById.get(customerId) ?? [];
+        return customerInteractions.some(interaction => interaction.follow_up_required);
+    };
+
     const columns = [
         {
             key: 'full_name',
@@ -77,6 +83,22 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                     {value as string}
                 </Badge>
             )
+        },
+        {
+            key: 'follow_up_required',
+            label: 'Follow-up',
+            primary: true,
+            render: (_: unknown, customer: Customer) => {
+                const needsFollowUp = hasFollowUpRequired(customer.id);
+                return needsFollowUp ? (
+                    <Badge className="bg-red-500/10 text-red-400 border-red-500/20 px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1 w-fit">
+                        <AlertCircle className="h-3 w-3" />
+                        Follow-up Needed
+                    </Badge>
+                ) : (
+                    <span className="text-slate-500 text-xs">—</span>
+                );
+            }
         },
         {
             key: 'business',
@@ -120,9 +142,20 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
 
     const renderCustomerExpanded = (customer: Customer) => {
         const customerInteractions = interactionsById.get(customer.id) ?? [];
+        const needsFollowUp = hasFollowUpRequired(customer.id);
         
         return (
             <div className="space-y-4">
+                {/* Follow-up Status Alert */}
+                {needsFollowUp && (
+                    <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 flex items-center gap-2">
+                        <AlertCircle className="h-4 w-4 text-red-400 flex-shrink-0" />
+                        <span className="text-sm text-red-400 font-medium">
+                            This customer has interactions requiring follow-up
+                        </span>
+                    </div>
+                )}
+
                 {/* Contact Details */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="flex items-center gap-2">
@@ -181,8 +214,16 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                                             {formatDate(interaction.created_at)}
                                         </span>
                                     </div>
-                                    <div className="text-xs text-slate-400 mt-1">
-                                        {interaction.type} • {interaction.outcome || 'No outcome'}
+                                    <div className="flex items-center justify-between mt-1">
+                                        <div className="text-xs text-slate-400">
+                                            {interaction.type} • {interaction.outcome || 'No outcome'}
+                                        </div>
+                                        {interaction.follow_up_required && (
+                                            <Badge className="bg-red-500/10 text-red-400 border-red-500/20 px-1.5 py-0.5 rounded text-xs flex items-center gap-1">
+                                                <AlertCircle className="h-2.5 w-2.5" />
+                                                Follow-up
+                                            </Badge>
+                                        )}
                                     </div>
                                 </div>
                             ))}
