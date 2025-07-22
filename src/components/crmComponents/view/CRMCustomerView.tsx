@@ -1,11 +1,12 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MobileTable } from '@/components/ui/mobile-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, Phone, Mail, Building, Trash2, MessageSquare, AlertCircle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Calendar, Phone, Mail, Building, Trash2, MessageSquare, AlertCircle, Search, X } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -30,6 +31,7 @@ interface Props {
 
 export default function CRMCustomerView({ customers, interactions }: Props) {
     const router = useRouter();
+    const [searchTerm, setSearchTerm] = useState('');
     
     // Build a lookup map once
     const interactionsById = useMemo(() => {
@@ -41,6 +43,19 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
         });
         return map;
     }, [interactions]);
+
+    // Filter customers based on search term
+    const filteredCustomers = useMemo(() => {
+        if (!searchTerm.trim()) return customers;
+        
+        const term = searchTerm.toLowerCase();
+        return customers.filter(customer => 
+            customer.full_name.toLowerCase().includes(term) ||
+            customer.email.toLowerCase().includes(term) ||
+            customer.phone.includes(term) ||
+            (customer.business?.toLowerCase().includes(term))
+        );
+    }, [customers, searchTerm]);
 
     const deleteCustomerHandler = async (id: string) => {
         try {
@@ -290,9 +305,23 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
     };
 
     // Legacy card view component for comparison
-    const CardView = () => (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {customers.map(customer => {
+    const CardView = () => {
+        if (filteredCustomers.length === 0) {
+            return (
+                <div className="text-center py-8 text-slate-400 card-enhanced p-8 rounded-lg">
+                    <div className="text-lg font-medium mb-2">
+                        {searchTerm ? "No customers match your search" : "No customers found"}
+                    </div>
+                    <div className="text-sm text-slate-500">
+                        {searchTerm ? "Try adjusting your search terms" : "Start by adding some customers to see them here"}
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredCustomers.map(customer => {
                 const customerInteractions = interactionsById.get(customer.id) ?? [];
                 
                 return (
@@ -323,37 +352,75 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                                 </div>
                             </div>
                             
-                            <div className="text-xs text-slate-500">
-                                {customerInteractions.length} interactions • 
-                                Created {formatDate(customer.created_at)}
+                            <div className="flex items-center justify-between">
+                                <div className="text-xs text-slate-500">
+                                    {customerInteractions.length} interactions • 
+                                    Created {formatDate(customer.created_at)}
+                                </div>
+                                {hasFollowUpRequired(customer.id) && (
+                                    <Badge className="bg-red-500/10 text-red-400 border-red-500/20 px-1.5 py-0.5 rounded text-xs flex items-center gap-1">
+                                        <AlertCircle className="h-2.5 w-2.5" />
+                                        Follow-up
+                                    </Badge>
+                                )}
                             </div>
                         </div>
                     </div>
                 );
             })}
-        </div>
-    );
+            </div>
+        );
+    };
 
     return (
-        <Tabs defaultValue="table" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="table">Table View</TabsTrigger>
-                <TabsTrigger value="cards">Card View</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="table">
-                <MobileTable
-                    data={customers}
-                    columns={columns}
-                    renderExpanded={renderCustomerExpanded}
-                    keyExtractor={(customer) => customer.id}
-                    emptyMessage="No customers found"
+        <div className="space-y-4">
+            {/* Search Bar */}
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400 icon-interactive" />
+                <Input
+                    type="text"
+                    placeholder="Search customers by name, email, phone, or business..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="input-enhanced focus-enhanced pl-10 pr-10 h-12 rounded-lg transition-all duration-200"
                 />
-            </TabsContent>
+                {searchTerm && (
+                    <button
+                        onClick={() => setSearchTerm('')}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-300 transition-colors duration-200 btn-feedback p-1 rounded icon-interactive"
+                    >
+                        <X className="h-4 w-4" />
+                    </button>
+                )}
+            </div>
 
-            <TabsContent value="cards">
-                <CardView />
-            </TabsContent>
-        </Tabs>
+            {/* Results Count */}
+            {searchTerm && (
+                <div className="text-sm text-slate-400">
+                    {filteredCustomers.length} of {customers.length} customers {filteredCustomers.length === 1 ? 'matches' : 'match'} your search
+                </div>
+            )}
+
+            <Tabs defaultValue="table" className="space-y-4">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="table">Table View</TabsTrigger>
+                    <TabsTrigger value="cards">Card View</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="table">
+                    <MobileTable
+                        data={filteredCustomers}
+                        columns={columns}
+                        renderExpanded={renderCustomerExpanded}
+                        keyExtractor={(customer) => customer.id}
+                        emptyMessage={searchTerm ? "No customers match your search" : "No customers found"}
+                    />
+                </TabsContent>
+
+                <TabsContent value="cards">
+                    <CardView />
+                </TabsContent>
+            </Tabs>
+        </div>
     );
 }
