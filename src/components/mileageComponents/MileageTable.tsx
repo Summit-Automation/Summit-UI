@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { MileageEntry } from '@/types/mileage';
 import { MobileTable } from '@/components/ui/mobile-table';
 import { Badge } from '@/components/ui/badge';
@@ -24,8 +24,11 @@ import { cn } from '@/lib/utils';
 export default function MileageTable({ mileageEntries }: { mileageEntries: MileageEntry[] }) {
     const router = useRouter();
     
-    const sortedEntries = [...mileageEntries].sort((a, b) => 
-        new Date(b.date).getTime() - new Date(a.date).getTime()
+    const sortedEntries = useMemo(() => 
+        [...mileageEntries].sort((a, b) => 
+            new Date(b.date).getTime() - new Date(a.date).getTime()
+        ), 
+        [mileageEntries]
     );
 
     const deleteMileageEntryHandler = async (id: string) => {

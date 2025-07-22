@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell } from 'recharts';
 import { Interaction } from '@/types/interaction';
 import { MobileChart } from '@/components/ui/mobile-chart';
@@ -46,7 +47,7 @@ function groupInteractionsByType(interactions: Interaction[]): InteractionBucket
 }
 
 export default function InteractionTypeBar({ interactions }: { interactions: Interaction[] }) {
-    const data = groupInteractionsByType(interactions);
+    const data = useMemo(() => groupInteractionsByType(interactions), [interactions]);
 
     const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
         if (active && payload && payload.length) {
