@@ -16,13 +16,21 @@ export default function LoginPage() {
     const [resetEmail, setResetEmail] = useState('');
     const [resetLoading, setResetLoading] = useState(false);
     const [resetMessage, setResetMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+    const [loginError, setLoginError] = useState<string | null>(null);
 
     const handleSubmit = async (formData: FormData) => {
         setIsLoading(true);
+        setLoginError(null); // Clear previous errors
+        
         try {
-            await login(formData);
+            const result = await login(formData);
+            if (result?.error) {
+                setLoginError(result.error);
+            }
+            // If no error, the login action will redirect automatically
         } catch (error) {
             console.error('Auth error:', error);
+            setLoginError('An unexpected error occurred. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -95,6 +103,14 @@ export default function LoginPage() {
 
                     <CardContent className="px-6 sm:px-8 pb-8">
                         <form action={handleSubmit} className="space-y-5">
+                            {/* Login Error Message */}
+                            {loginError && (
+                                <div className="p-3 rounded-lg flex items-center gap-2 text-sm bg-red-500/10 border border-red-500/20 text-red-400">
+                                    <AlertCircle className="h-4 w-4 icon-interactive flex-shrink-0" />
+                                    {loginError}
+                                </div>
+                            )}
+
                             {/* Email Field */}
                             <div className="space-y-2">
                                 <Label htmlFor="login-email" className="text-slate-300 text-sm font-medium">
@@ -109,6 +125,7 @@ export default function LoginPage() {
                                         placeholder="you@company.com"
                                         required
                                         className="input-enhanced focus-enhanced pl-10 h-12 rounded-lg transition-all duration-200"
+                                        onChange={() => loginError && setLoginError(null)}
                                     />
                                 </div>
                             </div>
@@ -127,6 +144,7 @@ export default function LoginPage() {
                                         placeholder="Enter your password"
                                         required
                                         className="input-enhanced focus-enhanced pl-10 pr-12 h-12 rounded-lg transition-all duration-200"
+                                        onChange={() => loginError && setLoginError(null)}
                                     />
                                     <button
                                         type="button"
