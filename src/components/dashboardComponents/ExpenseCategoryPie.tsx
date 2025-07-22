@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell } from 'recharts';
 import { Transaction } from '@/types/transaction';
 import { MobileChart } from '@/components/ui/mobile-chart';
@@ -35,22 +36,24 @@ interface TooltipProps {
 }
 
 export default function ExpenseCategoryBar({ transactions }: { transactions: Transaction[] }) {
-    const categoryTotals = transactions
-        .filter((tx) => tx.type === 'expense')
-        .reduce((acc, tx) => {
-            const category = tx.category || 'Uncategorized';
-            acc[category] = (acc[category] || 0) + parseFloat(tx.amount as unknown as string);
-            return acc;
-        }, {} as Record<string, number>);
+    const data: CategoryBucket[] = useMemo(() => {
+        const categoryTotals = transactions
+            .filter((tx) => tx.type === 'expense')
+            .reduce((acc, tx) => {
+                const category = tx.category || 'Uncategorized';
+                acc[category] = (acc[category] || 0) + parseFloat(tx.amount as unknown as string);
+                return acc;
+            }, {} as Record<string, number>);
 
-    const data: CategoryBucket[] = Object.entries(categoryTotals)
-        .map(([category, amount], index) => ({ 
-            category: category.length > 15 ? category.substring(0, 15) + '...' : category, 
-            amount,
-            color: CATEGORY_COLORS[index % CATEGORY_COLORS.length]
-        }))
-        .sort((a, b) => b.amount - a.amount)
-        .slice(0, 8); // Limit to top 8 categories for better mobile display
+        return Object.entries(categoryTotals)
+            .map(([category, amount], index) => ({ 
+                category: category.length > 15 ? category.substring(0, 15) + '...' : category, 
+                amount,
+                color: CATEGORY_COLORS[index % CATEGORY_COLORS.length]
+            }))
+            .sort((a, b) => b.amount - a.amount)
+            .slice(0, 8); // Limit to top 8 categories for better mobile display
+    }, [transactions]);
 
     if (data.length === 0) {
         return (

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Transaction } from '@/types/transaction';
 import { MobileTable } from '@/components/ui/mobile-table';
 import { Badge } from '@/components/ui/badge';
@@ -24,8 +24,11 @@ import { cn } from '@/lib/utils';
 export default function TransactionTable({ transactions }: { transactions: Transaction[] }) {
     const router = useRouter();
     
-    const sortedTransactions = [...transactions].sort((a, b) => 
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    const sortedTransactions = useMemo(() => 
+        [...transactions].sort((a, b) => 
+            new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        ), 
+        [transactions]
     );
 
     const deleteTransactionHandler = async (id: string) => {
