@@ -7,7 +7,6 @@ import AIReceiptUploadModal from '@/components/bookkeeperComponents/AIReceiptUpl
 import { getCustomers } from '@/app/lib/services/crmServices/customer/getCustomers';
 import { getTransactions } from '@/app/lib/services/bookkeeperServices/getTransactions';
 import { Customer } from '@/types/customer';
-import { Transaction } from '@/types/transaction';
 import { Button } from '@/components/ui/button';
 import { Download, Upload, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
@@ -31,7 +30,7 @@ function parseCSV(text: string): Array<Record<string, string>> {
 }
 
 // Simple CSV generator function
-function generateCSV(data: Array<Record<string, any>>): string {
+function generateCSV(data: Array<Record<string, string | number>>): string {
     if (data.length === 0) return '';
     
     const headers = Object.keys(data[0]);
