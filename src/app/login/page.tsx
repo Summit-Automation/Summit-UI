@@ -39,7 +39,7 @@ export default function LoginPage() {
             {/* Main Content */}
             <div className="flex-1 flex items-center justify-center p-4 py-8 relative z-10">
                 {/* Login Card */}
-                <Card className="w-full max-w-md relative z-10 bg-slate-900/80 border-slate-700/50 backdrop-blur-xl shadow-2xl card-interactive">
+                <Card className="w-full max-w-md relative z-10 modal-enhanced card-enhanced data-appear">
                     <CardHeader className="space-y-6 text-center px-6 sm:px-8 pt-8 pb-6">
                         {/* Logo */}
                         <div className="flex justify-center mb-2">
@@ -52,14 +52,14 @@ export default function LoginPage() {
                                     priority
                                     className="max-w-full h-auto drop-shadow-lg"
                                 />
-                                {/* Subtle glow effect behind logo */}
-                                <div className="absolute inset-0 -z-10 bg-blue-500/20 blur-xl rounded-full transform scale-150" />
+                                {/* Enhanced glow effect behind logo */}
+                                <div className="absolute inset-0 -z-10 bg-blue-500/30 blur-xl rounded-full transform scale-150 opacity-60" />
                             </div>
                         </div>
 
                         {/* Title & Description */}
                         <div className="space-y-3">
-                            <CardTitle className="text-xl sm:text-2xl font-bold text-white">
+                            <CardTitle className="text-xl sm:text-2xl font-bold text-gradient">
                                 Welcome Back
                             </CardTitle>
                             <CardDescription className="text-slate-400 text-sm leading-relaxed">
@@ -76,14 +76,14 @@ export default function LoginPage() {
                                     Email Address
                                 </Label>
                                 <div className="relative group">
-                                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-blue-400 transition-colors duration-200 pointer-events-none z-10" />
+                                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-blue-400 transition-colors duration-200 pointer-events-none z-10 icon-interactive" />
                                     <Input
                                         id="login-email"
                                         name="email"
                                         type="email"
                                         placeholder="you@company.com"
                                         required
-                                        className="pl-10 bg-slate-800/50 border-slate-600 text-slate-100 placeholder:text-slate-500 focus:border-blue-500 focus:ring-blue-500/20 input-feedback h-12 rounded-lg transition-all duration-200"
+                                        className="input-enhanced focus-enhanced pl-10 h-12 rounded-lg transition-all duration-200"
                                     />
                                 </div>
                             </div>
@@ -94,19 +94,19 @@ export default function LoginPage() {
                                     Password
                                 </Label>
                                 <div className="relative group">
-                                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-blue-400 transition-colors duration-200 pointer-events-none z-10" />
+                                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-blue-400 transition-colors duration-200 pointer-events-none z-10 icon-interactive" />
                                     <Input
                                         id="login-password"
                                         name="password"
                                         type={showPassword ? "text" : "password"}
                                         placeholder="Enter your password"
                                         required
-                                        className="pl-10 pr-12 bg-slate-800/50 border-slate-600 text-slate-100 placeholder:text-slate-500 focus:border-blue-500 focus:ring-blue-500/20 input-feedback h-12 rounded-lg transition-all duration-200"
+                                        className="input-enhanced focus-enhanced pl-10 pr-12 h-12 rounded-lg transition-all duration-200"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-300 transition-colors duration-200 btn-feedback p-1 rounded z-10"
+                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-300 transition-colors duration-200 btn-feedback p-1 rounded z-10 icon-interactive"
                                         tabIndex={-1}
                                     >
                                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -119,7 +119,7 @@ export default function LoginPage() {
                                 <Button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl transition-all duration-200 h-12 rounded-lg font-semibold btn-feedback btn-pulse"
+                                    className="button-enhanced w-full h-12 rounded-lg font-semibold btn-feedback btn-pulse"
                                     haptic
                                 >
                                     {isLoading ? (
@@ -130,7 +130,7 @@ export default function LoginPage() {
                                     ) : (
                                         <div className="flex items-center gap-2">
                                             <span>Sign In</span>
-                                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 icon-interactive" />
                                         </div>
                                     )}
                                 </Button>

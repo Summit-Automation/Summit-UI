@@ -11,44 +11,52 @@ import CashFlowArea from "@/components/dashboardComponents/CashFlowArea";
 export default async function BookkeeperPage() {
     const transactions = await getTransactions();
 
-    return (<div className="p-6 space-y-6">
-        <h2 className="text-3xl font-bold">Accounting Dashboard</h2>
+    return (
+        <div className="p-6 space-y-6">
+            {/* Enhanced Header */}
+            <div className="data-appear">
+                <h2 className="text-3xl font-bold text-gradient">Accounting Dashboard</h2>
+                <p className="text-slate-400 mt-2">Manage your business finances with precision and insight</p>
+            </div>
 
-        {/* Summary - Full Width */}
-        <div className="w-full">
-            <BookkeeperSummary transactions={transactions}/>
+            {/* Summary - Full Width */}
+            <div className="w-full">
+                <BookkeeperSummary transactions={transactions}/>
+            </div>
+
+            {/* Chart - Full Width */}
+            <Card className="chart-container-enhanced card-enhanced">
+                <CardHeader className="pb-4">
+                    <CardTitle className="flex items-center gap-2 text-gradient">
+                        <div className="p-2 bg-slate-800/50 rounded-lg transition-all duration-300 hover:scale-110">
+                            <Activity className="h-5 w-5 text-green-400 icon-interactive"/>
+                        </div>
+                        Cash Flow Analysis
+                    </CardTitle>
+                    <CardDescription className="text-slate-400">
+                        Detailed income vs expenses analysis with trend indicators
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="custom-scrollbar">
+                    <CashFlowArea transactions={transactions}/>
+                </CardContent>
+            </Card>
+
+            {/* Actions */}
+            <BookkeeperActions/>
+
+            {/* Transactions Table */}
+            <Card className="card-enhanced custom-scrollbar overflow-x-auto">
+                <CardHeader>
+                    <CardTitle className="text-gradient">All Transactions</CardTitle>
+                    <CardDescription className="text-slate-400">
+                        Complete record of all financial transactions
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <TransactionTable transactions={transactions}/>
+                </CardContent>
+            </Card>
         </div>
-
-        {/* Chart - Full Width */}
-        <Card
-            className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm">
-            <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2 text-white">
-                    <div className="p-2 bg-slate-800/50 rounded-lg">
-                        <Activity className="h-5 w-5 text-icon"/>
-                    </div>
-                    Cash Flow Analysis
-                </CardTitle>
-                <CardDescription className="text-slate-400">
-                    Detailed income vs expenses analysis
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <CashFlowArea transactions={transactions}/>
-            </CardContent>
-        </Card>
-
-        {/* Actions */}
-        <BookkeeperActions/>
-
-        {/* Transactions Table */}
-        <Card className="overflow-x-auto bg-slate-900/50 backdrop-blur-sm">
-            <CardHeader>
-                <CardTitle>All Transactions</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <TransactionTable transactions={transactions}/>
-            </CardContent>
-        </Card>
-    </div>);
+    );
 }

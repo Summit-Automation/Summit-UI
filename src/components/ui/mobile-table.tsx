@@ -55,14 +55,19 @@ export function MobileTable<T>({
     }, []);
 
     if (data.length === 0) {
-        return <div className="text-center py-8 text-slate-400">{emptyMessage}</div>;
+        return (
+            <div className="text-center py-8 text-slate-400 card-enhanced p-8 rounded-lg">
+                <div className="text-lg font-medium mb-2">{emptyMessage}</div>
+                <div className="text-sm text-slate-500">Start by adding some data to see it here.</div>
+            </div>
+        );
     }
 
     return (
         <div className={cn("w-full", className)}>
             {/* Desktop Table */}
-            <div className="hidden md:block overflow-x-auto">
-                <table className="w-full">
+            <div className="hidden md:block overflow-x-auto custom-scrollbar">
+                <table className="table-enhanced w-full">
                     <thead>
                         <tr className="border-b border-slate-700">
                             {columns.map((column, index) => (
@@ -81,7 +86,7 @@ export function MobileTable<T>({
                             return (
                                 <React.Fragment key={key}>
                                     <tr 
-                                        className="border-b border-slate-800 hover:bg-slate-900/50 transition-colors cursor-pointer"
+                                        className="table-row-interactive border-b border-slate-800 hover:bg-slate-900/50 transition-colors cursor-pointer data-appear"
                                         onClick={renderExpanded ? () => toggleExpanded(key) : undefined}
                                     >
                                         {columns.map((column, colIndex) => (
@@ -94,14 +99,16 @@ export function MobileTable<T>({
                                         ))}
                                         {renderExpanded && (
                                             <td className="py-3 px-4">
-                                                {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                                                <div className="icon-interactive">
+                                                    {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                                                </div>
                                             </td>
                                         )}
                                     </tr>
                                     {isExpanded && renderExpanded && (
                                         <tr>
                                             <td colSpan={columns.length + 1} className="p-0">
-                                                <div className="bg-slate-900/30 p-4 border-b border-slate-800">
+                                                <div className="bg-slate-900/30 p-4 border-b border-slate-800 data-appear">
                                                     {renderExpanded(item)}
                                                 </div>
                                             </td>
@@ -123,7 +130,7 @@ export function MobileTable<T>({
                     const secondaryColumns = columns.filter(col => !col.primary && !col.hideOnMobile);
 
                     return (
-                        <Card key={key} className="bg-slate-900/50 border-slate-800">
+                        <Card key={key} className="card-enhanced data-appear">
                             <CardContent className="p-4">
                                 {/* Primary info */}
                                 <div className="space-y-2">
@@ -153,14 +160,16 @@ export function MobileTable<T>({
                                             variant="ghost"
                                             size="sm"
                                             onClick={() => toggleExpanded(key)}
-                                            className="w-full mt-3 text-xs text-slate-400"
+                                            className="w-full mt-3 text-xs text-slate-400 btn-feedback hover:bg-slate-800"
                                         >
                                             {isExpanded ? 'Show Less' : 'Show More'}
-                                            {isExpanded ? <ChevronUp className="h-3 w-3 ml-1" /> : <ChevronDown className="h-3 w-3 ml-1" />}
+                                            <div className="icon-interactive ml-1">
+                                                {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                                            </div>
                                         </Button>
 
                                         {isExpanded && (
-                                            <div className="mt-3 pt-3 border-t border-slate-700 space-y-2">
+                                            <div className="mt-3 pt-3 border-t border-slate-700 space-y-2 data-appear">
                                                 {secondaryColumns.map((column, index) => (
                                                     <div key={index} className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 sm:gap-2">
                                                         <span className="text-xs font-medium text-slate-400 flex-shrink-0">

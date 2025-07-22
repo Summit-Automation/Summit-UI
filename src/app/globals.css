@@ -46,6 +46,292 @@
     .status-warning { @apply bg-amber-100/10 text-amber-400 border border-amber-500/20; }
     .status-error { @apply bg-red-100/10 text-red-400 border border-red-500/20; }
 
+    /* Enhanced Visual Improvements */
+    
+    /* 1. Enhanced Card Interactions with Subtle Animations */
+    .card-enhanced {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-enhanced::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .card-enhanced:hover::before {
+        left: 100%;
+    }
+
+    .card-enhanced:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    /* 2. Improved Metric Cards with Data Visualization */
+    .metric-enhanced {
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(51, 65, 85, 0.8);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .metric-enhanced::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .metric-enhanced:hover::after {
+        opacity: 1;
+    }
+
+    /* 3. Enhanced Status Badges with Glow Effects */
+    .status-badge-enhanced {
+        position: relative;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .status-badge-enhanced.status-success {
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .status-badge-enhanced.status-warning {
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+    }
+
+    .status-badge-enhanced.status-error {
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+    }
+
+    .status-badge-enhanced.status-info {
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+
+    /* 4. Improved Data Table Styling */
+    .table-enhanced {
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .table-enhanced th {
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.8) 100%);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.75rem;
+        padding: 1rem;
+        border-bottom: 2px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .table-enhanced tr {
+        transition: all 0.2s ease;
+    }
+
+    .table-enhanced tr:hover {
+        background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+        transform: scale(1.01);
+    }
+
+    .table-enhanced td {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+    }
+
+    /* 5. Enhanced Sidebar with Better Visual Hierarchy */
+    .sidebar-enhanced {
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+        backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(51, 65, 85, 0.6);
+    }
+
+    .sidebar-nav-item {
+        position: relative;
+        margin: 0.25rem 0;
+        border-radius: 8px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sidebar-nav-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+        border-radius: 0 2px 2px 0;
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar-nav-item.active::before,
+    .sidebar-nav-item:hover::before {
+        transform: scaleY(1);
+    }
+
+    /* 6. Enhanced Charts with Better Styling */
+    .chart-container-enhanced {
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
+        border: 1px solid rgba(51, 65, 85, 0.6);
+        border-radius: 16px;
+        padding: 1.5rem;
+        backdrop-filter: blur(20px);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .chart-container-enhanced::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), transparent);
+    }
+
+    /* 7. Improved Form Inputs with Better Focus States */
+    .input-enhanced {
+        background: rgba(15, 23, 42, 0.8);
+        border: 2px solid rgba(51, 65, 85, 0.6);
+        border-radius: 8px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+    }
+
+    .input-enhanced:focus {
+        border-color: rgba(59, 130, 246, 0.8);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        background: rgba(30, 41, 59, 0.8);
+        transform: translateY(-1px);
+    }
+
+    /* 8. Enhanced Button Styles */
+    .button-enhanced {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        border: none;
+        border-radius: 8px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .button-enhanced::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .button-enhanced:hover::before {
+        left: 100%;
+    }
+
+    .button-enhanced:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+    }
+
+    /* 9. Enhanced Loading States */
+    .loading-enhanced {
+        background: linear-gradient(90deg, rgba(51, 65, 85, 0.8) 25%, rgba(71, 85, 105, 0.8) 50%, rgba(51, 65, 85, 0.8) 75%);
+        background-size: 200% 100%;
+        animation: loading-shimmer 2s infinite;
+        border-radius: 8px;
+    }
+
+    @keyframes loading-shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    /* 10. Enhanced Modal Styling */
+    .modal-enhanced {
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(51, 65, 85, 0.6);
+        border-radius: 16px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    /* 11. Subtle Data Animations */
+    .data-appear {
+        animation: data-fade-in 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes data-fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* 12. Enhanced Scrollbars */
+    .custom-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(71, 85, 105, 0.8) transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, rgba(71, 85, 105, 0.8), rgba(51, 65, 85, 0.6));
+        border-radius: 3px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, rgba(71, 85, 105, 1), rgba(51, 65, 85, 0.8));
+    }
+
+    /* 13. Enhanced Typography with Better Hierarchy */
+    .text-gradient {
+        background: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .text-accent-gradient {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
     /* Button Feedback System */
     .btn-feedback {
         position: relative;
@@ -168,6 +454,32 @@
     .icon-interactive:hover {
         transform: rotate(5deg) scale(1.1);
     }
+
+    /* Focus Indicators for Better Accessibility */
+    .focus-enhanced:focus {
+        outline: 2px solid #3b82f6;
+        outline-offset: 2px;
+    }
+
+    /* Enhanced Drop Shadows */
+    .shadow-enhanced {
+        box-shadow: 
+            0 1px 3px rgba(0, 0, 0, 0.12),
+            0 1px 2px rgba(0, 0, 0, 0.24);
+    }
+
+    .shadow-enhanced-lg {
+        box-shadow: 
+            0 10px 15px -3px rgba(0, 0, 0, 0.3),
+            0 4px 6px -2px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Enhanced Glass Effect */
+    .glass-enhanced {
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
 }
 
 /* Animations */
@@ -176,6 +488,71 @@
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+    .btn-feedback:active {
+        transform: translateY(0.5px) scale(0.99);
+    }
+    
+    .btn-feedback:hover:not(:disabled) {
+        transform: none; /* Disable hover effects on mobile */
+        box-shadow: none;
+    }
+    
+    .card-interactive:hover,
+    .card-enhanced:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .table-enhanced tr:hover {
+        transform: none; /* Disable transform on mobile */
+    }
+    
+    .mobile-optimized { padding: 0.5rem; font-size: 0.875rem; }
+    .touch-target, button { min-height: 44px; min-width: 44px; }
+    .mobile-card { margin: 0 0.5rem; border-radius: 12px; }
+    .mobile-form-grid { grid-template-columns: 1fr; gap: 1rem; }
+    
+    [data-radix-dialog-content] {
+        width: calc(100vw - 2rem) !important;
+        max-width: none !important;
+        max-height: calc(100vh - 4rem) !important;
+        margin: 0 !important;
+    }
+    
+    .mobile-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+    .card-enhanced,
+    .metric-enhanced,
+    .button-enhanced,
+    .sidebar-nav-item,
+    .input-enhanced,
+    .btn-feedback,
+    .card-interactive,
+    .input-feedback {
+        transition: none;
+        animation: none;
+    }
+    
+    .card-enhanced:hover,
+    .button-enhanced:hover,
+    .input-enhanced:focus,
+    .btn-feedback:active {
+        transform: none;
+    }
+    
+    .btn-pulse:hover:not(:disabled) {
+        animation: none;
+    }
 }
 
 /* Radix UI Component Fixes - Consolidated */
@@ -287,40 +664,6 @@ input[class*="bg-slate-"]:focus, textarea[class*="bg-slate-"]:focus, select[clas
     r: 5 !important;
 }
 
-/* Mobile Optimizations */
-@media (max-width: 768px) {
-    .btn-feedback:active {
-        transform: translateY(0.5px) scale(0.99);
-    }
-    
-    .btn-feedback:hover:not(:disabled) {
-        transform: none; /* Disable hover effects on mobile */
-        box-shadow: none;
-    }
-    
-    .card-interactive:hover {
-        transform: none;
-        box-shadow: none;
-    }
-    
-    .mobile-optimized { padding: 0.5rem; font-size: 0.875rem; }
-    .touch-target, button { min-height: 44px; min-width: 44px; }
-    .mobile-card { margin: 0 0.5rem; border-radius: 12px; }
-    .mobile-form-grid { grid-template-columns: 1fr; gap: 1rem; }
-    
-    [data-radix-dialog-content] {
-        width: calc(100vw - 2rem) !important;
-        max-width: none !important;
-        max-height: calc(100vh - 4rem) !important;
-        margin: 0 !important;
-    }
-    
-    .mobile-table-wrapper {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-}
-
 /* Chart Specific Optimizations */
 .chart-clean { @apply bg-slate-900 border border-slate-800 rounded-lg p-6; }
 .chart-title { @apply text-lg font-semibold text-slate-50 mb-2; }
@@ -345,24 +688,6 @@ input[class*="bg-slate-"]:focus, textarea[class*="bg-slate-"]:focus, select[clas
 @keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
-}
-
-/* Reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    .btn-feedback,
-    .card-interactive,
-    .input-feedback {
-        transition: none;
-        animation: none;
-    }
-    
-    .btn-feedback:active {
-        transform: scale(0.98);
-    }
-    
-    .btn-pulse:hover:not(:disabled) {
-        animation: none;
-    }
 }
 
 /* Utility Classes */

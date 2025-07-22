@@ -159,7 +159,7 @@ export default function Sidebar() {
             <button
                 id="hamburger-button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="fixed top-4 left-4 z-[60] lg:hidden bg-slate-900/95 backdrop-blur-sm border border-slate-700 p-2 rounded-lg shadow-lg transition-colors hover:bg-slate-800"
+                className="fixed top-4 left-4 z-[60] lg:hidden bg-slate-900/95 backdrop-blur-sm border border-slate-700 p-2 rounded-lg shadow-lg transition-colors hover:bg-slate-800 btn-feedback"
                 aria-label="Toggle navigation menu"
             >
                 {isOpen ? (
@@ -178,7 +178,7 @@ export default function Sidebar() {
             <aside
                 id="mobile-sidebar"
                 className={cn(
-                    "fixed inset-y-0 left-0 z-50 w-64 bg-slate-900/95 backdrop-blur-sm border-r border-slate-800 flex flex-col transition-transform duration-300 ease-in-out",
+                    "fixed inset-y-0 left-0 z-50 w-64 sidebar-enhanced flex flex-col transition-transform duration-300 ease-in-out custom-scrollbar",
                     // Desktop: always visible
                     "lg:translate-x-0",
                     // Mobile: slide in/out
@@ -191,24 +191,28 @@ export default function Sidebar() {
                     <div className="lg:hidden h-8" />
                     
                     <div className="flex items-center justify-center mb-4">
-                        <Image
-                            src="/logo.svg"
-                            alt="Summit Automation"
-                            width={175}
-                            height={40}
-                            priority
-                            className="max-w-full h-auto"
-                        />
+                        <div className="relative">
+                            <Image
+                                src="/logo.svg"
+                                alt="Summit Automation"
+                                width={175}
+                                height={40}
+                                priority
+                                className="max-w-full h-auto drop-shadow-lg"
+                            />
+                            {/* Subtle glow effect behind logo */}
+                            <div className="absolute inset-0 -z-10 bg-blue-500/20 blur-xl rounded-full transform scale-150 opacity-50" />
+                        </div>
                     </div>
                     
                     {/* Organization Display */}
-                    <div className="mt-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
+                    <div className="mt-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700 card-enhanced">
                         <OrganizationDisplay />
                     </div>
                 </div>
 
                 {/* Navigation */}
-                <nav className="flex-1 p-4 overflow-y-auto">
+                <nav className="flex-1 p-4 overflow-y-auto custom-scrollbar">
                     <div className="space-y-1">
                         {navItems.map(({ href, label, icon: Icon }) => {
                             const isActive = pathname === href;
@@ -217,13 +221,13 @@ export default function Sidebar() {
                                 <Link key={href} href={href}>
                                     <div
                                         className={cn(
-                                            "flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors",
+                                            "sidebar-nav-item flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all duration-300",
                                             isActive 
-                                                ? "bg-blue-600 text-white shadow-sm" 
+                                                ? "active bg-blue-600 text-white shadow-lg shadow-blue-600/30" 
                                                 : "text-slate-300 hover:text-white hover:bg-slate-800"
                                         )}
                                     >
-                                        <Icon className="h-5 w-5 flex-shrink-0" />
+                                        <Icon className="h-5 w-5 flex-shrink-0 icon-interactive" />
                                         <span className="truncate">{label}</span>
                                     </div>
                                 </Link>
@@ -237,10 +241,10 @@ export default function Sidebar() {
                     {loading ? (
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3 min-w-0 flex-1">
-                                <div className="w-8 h-8 bg-slate-700 rounded-full animate-pulse flex-shrink-0"></div>
+                                <div className="w-8 h-8 loading-enhanced rounded-full flex-shrink-0"></div>
                                 <div className="min-w-0 flex-1">
-                                    <div className="h-4 w-16 bg-slate-700 rounded animate-pulse"></div>
-                                    <div className="h-3 w-12 bg-slate-700 rounded animate-pulse mt-1"></div>
+                                    <div className="h-4 w-16 loading-enhanced rounded mb-1"></div>
+                                    <div className="h-3 w-12 loading-enhanced rounded"></div>
                                 </div>
                             </div>
                         </div>
@@ -248,22 +252,25 @@ export default function Sidebar() {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3 min-w-0 flex-1">
                                 {user?.avatar_url ? (
-                                    <Image 
-                                        src={user.avatar_url} 
-                                        alt="User avatar"
-                                        width={32}
-                                        height={32}
-                                        className="rounded-full flex-shrink-0"
-                                    />
+                                    <div className="relative">
+                                        <Image 
+                                            src={user.avatar_url} 
+                                            alt="User avatar"
+                                            width={32}
+                                            height={32}
+                                            className="rounded-full flex-shrink-0 ring-2 ring-blue-500/30"
+                                        />
+                                        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500/20 to-transparent"></div>
+                                    </div>
                                 ) : (
-                                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center flex-shrink-0 ring-2 ring-blue-500/30 shadow-lg">
                                         <span className="text-white text-sm font-medium">
                                             {user ? getUserInitials(getDisplayName()) : 'U'}
                                         </span>
                                     </div>
                                 )}
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-sm font-medium text-white truncate" title={getDisplayName()}>
+                                    <p className="text-sm font-medium text-white truncate text-gradient" title={getDisplayName()}>
                                         {getDisplayName()}
                                     </p>
                                     <p className="text-xs text-slate-400 truncate" title={user?.email}>
@@ -274,17 +281,21 @@ export default function Sidebar() {
                             <Button 
                                 variant="ghost" 
                                 size="sm" 
-                                className="text-slate-400 hover:text-white flex-shrink-0 ml-2"
+                                className="text-slate-400 hover:text-white flex-shrink-0 ml-2 btn-feedback hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
                                 onClick={handleSignOut}
                                 title="Sign out"
                             >
-                                <LogOut className="h-4 w-4" />
+                                <LogOut className="h-4 w-4 icon-interactive" />
                             </Button>
                         </div>
                     )}
                     
                     <div className="mt-4 text-center text-xs text-slate-500">
-                        © 2025 Summit Automation
+                        <div className="flex items-center justify-center gap-1">
+                            <div className="w-1 h-1 bg-blue-500/50 rounded-full animate-pulse"></div>
+                            © 2025 Summit Automation
+                            <div className="w-1 h-1 bg-blue-500/50 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+                        </div>
                     </div>
                 </div>
             </aside>
