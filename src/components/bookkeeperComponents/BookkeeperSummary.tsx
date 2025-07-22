@@ -3,32 +3,54 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { PiggyBank, DollarSign, CreditCard } from 'lucide-react';
 import { Transaction } from '@/types/transaction';
 import { summarizeTransactions } from '@/utils/finance/summarizeTransactions';
+import { cn } from '@/lib/utils';
 
-const cardStyles = `bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm`;
+const cardStyles = `metric-enhanced card-enhanced data-appear`;
 const cardHeaders = `flex items-center justify-between pb-2`;
-const cardTitleStyles = `text-sm font-medium text-slate-300`;
-const iconStyles = `h-4 w-4 text-icon`;
-const iconContainerStyles = `p-2 bg-slate-800/50 rounded-lg`;
-const cardContentStyles = `text-xl font-bold text-white truncate`;
+const cardTitleStyles = `text-sm font-medium text-slate-300 uppercase tracking-wide`;
+const iconStyles = `h-4 w-4`;
+const iconContainerStyles = `p-2 bg-slate-800/50 rounded-lg transition-all duration-300 group-hover:scale-110`;
+const cardContentStyles = `pt-0`;
 
 interface MetricCardProps {
     title: string;
     value: number | string;
     Icon: React.ComponentType<{ className?: string }>;
     iconColorClass: string;
+    trend?: number;
+    subtitle?: string;
 }
 
-function MetricCard({ title, value, Icon, iconColorClass }: MetricCardProps) {
+function MetricCard({ title, value, Icon, iconColorClass, trend, subtitle }: MetricCardProps) {
+    const isPositive = trend !== undefined ? trend >= 0 : undefined;
+    
     return (
         <Card className={cardStyles}>
             <CardHeader className={cardHeaders}>
                 <CardTitle className={cardTitleStyles}>{title}</CardTitle>
                 <div className={iconContainerStyles}>
-                    <Icon className={iconStyles.replace('text-icon', iconColorClass)} />
+                    <Icon className={cn(iconStyles, iconColorClass, "icon-interactive")} />
                 </div>
             </CardHeader>
-            <CardContent className="pt-0">
-                <div className={cardContentStyles} title={value.toString()}>{value}</div>
+            <CardContent className={cardContentStyles}>
+                <div className="flex items-end gap-2">
+                    <div className="text-xl font-bold text-gradient truncate" title={value.toString()}>
+                        {value}
+                    </div>
+                    {trend !== undefined && (
+                        <div className={cn(
+                            "text-xs px-2 py-1 rounded-full mb-0.5",
+                            isPositive 
+                                ? "text-green-400 bg-green-400/10 status-badge-enhanced status-success" 
+                                : "text-red-400 bg-red-400/10 status-badge-enhanced status-error"
+                        )}>
+                            {isPositive ? '+' : ''}{trend}%
+                        </div>
+                    )}
+                </div>
+                {subtitle && (
+                    <p className="text-xs text-slate-400 mt-1">{subtitle}</p>
+                )}
             </CardContent>
         </Card>
     );
@@ -36,7 +58,23 @@ function MetricCard({ title, value, Icon, iconColorClass }: MetricCardProps) {
 
 export default function BookkeeperSummary({ transactions }: { transactions: Transaction[] }) {
     if (!transactions || transactions.length === 0) {
-        return <p className="text-gray-500 italic mt-4">No transactions recorded yet.</p>;
+        return (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {[1, 2, 3].map((index) => (
+                    <Card key={index} className="metric-enhanced">
+                        <CardContent className="p-6">
+                            <div className="space-y-3">
+                                <div className="flex justify-between items-center">
+                                    <div className="h-4 w-20 loading-enhanced"></div>
+                                    <div className="w-8 h-8 loading-enhanced rounded-lg"></div>
+                                </div>
+                                <div className="h-8 w-16 loading-enhanced"></div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+        );
     }
 
     const { totalIncome, totalExpenses, netBalance } = summarizeTransactions(transactions);
@@ -55,6 +93,9 @@ export default function BookkeeperSummary({ transactions }: { transactions: Tran
     const formattedExpenses = formatCurrency(totalExpenses);
     const formattedNet = formatCurrency(netBalance);
 
+    // Calculate trend (placeholder - you could add actual trend calculation)
+    const profitMargin = totalIncome > 0 ? ((netBalance / totalIncome) * 100) : 0;
+
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <MetricCard
@@ -62,18 +103,21 @@ export default function BookkeeperSummary({ transactions }: { transactions: Tran
                 value={formattedNet}
                 Icon={PiggyBank}
                 iconColorClass={netBalance >= 0 ? 'text-green-400' : 'text-red-400'}
+                subtitle={`${profitMargin.toFixed(1)}% profit margin`}
             />
             <MetricCard
                 title="Total Income"
                 value={formattedIncome}
                 Icon={DollarSign}
                 iconColorClass="text-green-400"
+                subtitle="Revenue generated"
             />
             <MetricCard
                 title="Total Expenses"
                 value={formattedExpenses}
                 Icon={CreditCard}
                 iconColorClass="text-red-400"
+                subtitle="Operating costs"
             />
         </div>
     );

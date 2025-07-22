@@ -13,7 +13,11 @@ export default async function MileagePage() {
 
     return (
         <div className="p-6 space-y-6">
-            <h2 className="text-3xl font-bold">Mileage Tracker</h2>
+            {/* Enhanced Header */}
+            <div className="data-appear">
+                <h2 className="text-3xl font-bold text-gradient">Mileage Tracker</h2>
+                <p className="text-slate-400 mt-2">Track business miles for accurate tax deductions</p>
+            </div>
 
             {/* Summary - Full Width */}
             <div className="w-full">
@@ -21,19 +25,19 @@ export default async function MileagePage() {
             </div>
 
             {/* Chart - Full Width */}
-            <Card className="bg-slate-900/50 border-slate-800 hover:bg-slate-900/70 hover:shadow-xl hover:shadow-slate-900/50 transition-all duration-300 backdrop-blur-sm">
+            <Card className="chart-container-enhanced card-enhanced">
                 <CardHeader className="pb-4">
-                    <CardTitle className="flex items-center gap-2 text-white">
-                        <div className="p-2 bg-slate-800/50 rounded-lg">
-                            <Activity className="h-5 w-5 text-icon" />
+                    <CardTitle className="flex items-center gap-2 text-gradient">
+                        <div className="p-2 bg-slate-800/50 rounded-lg transition-all duration-300 hover:scale-110">
+                            <Activity className="h-5 w-5 text-blue-400 icon-interactive" />
                         </div>
                         Monthly Mileage Trends
                     </CardTitle>
                     <CardDescription className="text-slate-400">
-                        Business miles tracked over time
+                        Business vs personal miles tracked over time
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="custom-scrollbar">
                     <MileageChart mileageEntries={mileageEntries} />
                 </CardContent>
             </Card>
@@ -42,9 +46,12 @@ export default async function MileagePage() {
             <MileageActions />
 
             {/* Mileage Table */}
-            <Card className="overflow-x-auto bg-slate-900/50 backdrop-blur-sm">
+            <Card className="card-enhanced custom-scrollbar overflow-x-auto">
                 <CardHeader>
-                    <CardTitle>All Mileage Entries</CardTitle>
+                    <CardTitle className="text-gradient">All Mileage Entries</CardTitle>
+                    <CardDescription className="text-slate-400">
+                        Complete record of all tracked mileage with tax implications
+                    </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <MileageTable mileageEntries={mileageEntries} />
