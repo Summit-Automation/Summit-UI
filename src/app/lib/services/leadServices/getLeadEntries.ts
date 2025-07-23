@@ -1,23 +1,12 @@
 'use server';
 
-import { createClient } from '@/utils/supabase/server';
 import { Lead } from '@/types/leadgen';
+import { getAuthenticatedUser } from '../shared/authUtils';
 
 export async function getLeadEntries(): Promise<Lead[]> {
   try {
-    const supabase = await createClient();
-    
-    // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return [];
-    }
-
-    // Get organization ID from user metadata
-    const organizationId = user.user_metadata?.organization_id;
-    if (!organizationId) {
-      return [];
-    }
+    // Use shared authentication utility to reduce redundant calls
+    const { supabase, organizationId } = await getAuthenticatedUser();
 
     const { data: leads, error } = await supabase
       .from('leads')

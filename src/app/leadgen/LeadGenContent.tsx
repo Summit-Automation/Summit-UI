@@ -1,20 +1,31 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useMemo, lazy, Suspense } from "react";
 import LeadSummary from "@/components/leadgenComponents/LeadSummary";
 import LeadActions from "@/components/leadgenComponents/LeadActions";
 import LeadTable from "@/components/leadgenComponents/LeadTable";
-import NewLeadModal from "@/components/leadgenComponents/NewLeadModal";
-import AILeadGenerationModal from "@/components/leadgenComponents/AILeadGenerationModal";
-import EditLeadModal from "@/components/leadgenComponents/EditLeadModal";
 import { getLeadEntries } from "@/app/lib/services/leadServices/getLeadEntries";
 import { getLeadStats } from "@/app/lib/services/leadServices/getLeadStats";
 import { deleteLeadEntry } from "@/app/lib/services/leadServices/deleteLeadEntry";
 import { convertLeadToCustomer } from "@/app/lib/services/leadServices/convertLeadToCustomer";
 import { exportLeads } from "@/app/lib/services/leadServices/exportLeads";
 import { filterLeads } from "@/app/lib/services/leadServices/filterLeads";
-import FilterLeadsModal, { LeadFilters } from "@/components/leadgenComponents/FilterLeadsModal";
+import { LeadFilters } from "@/components/leadgenComponents/FilterLeadsModal";
 import { Lead, LeadStats } from "@/types/leadgen";
+
+// Lazy load modals to reduce initial bundle size
+const NewLeadModal = lazy(() => import("@/components/leadgenComponents/NewLeadModal"));
+const AILeadGenerationModal = lazy(() => import("@/components/leadgenComponents/AILeadGenerationModal"));
+const EditLeadModal = lazy(() => import("@/components/leadgenComponents/EditLeadModal"));
+const FilterLeadsModal = lazy(() => import("@/components/leadgenComponents/FilterLeadsModal"));
+
+// Simple cache to reduce redundant API calls
+const dataCache = {
+  leads: null as Lead[] | null,
+  stats: null as LeadStats | null,
+  lastFetch: 0,
+  cacheTime: 30000 // 30 seconds cache
+};
 
 export default function LeadGenContent() {
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -36,19 +47,45 @@ export default function LeadGenContent() {
   const [allLeads, setAllLeads] = useState<Lead[]>([]);
   const [isFiltered, setIsFiltered] = useState(false);
 
-  // Define refreshData first
-  const refreshData = React.useCallback(async () => {
+  // Memoize filter status to prevent unnecessary callback recreations
+  const hasActiveFilters = useMemo(() => 
+    isFiltered && Object.keys(currentFilters).length > 0, 
+    [isFiltered, currentFilters]
+  );
+
+  // Define refreshData with caching optimization
+  const refreshData = React.useCallback(async (forceRefresh = false) => {
     try {
-      const [leadsData, statsData] = await Promise.all([
-        getLeadEntries(),
-        getLeadStats()
-      ]);
+      const now = Date.now();
+      const shouldUseCache = !forceRefresh && 
+        dataCache.leads && 
+        dataCache.stats && 
+        (now - dataCache.lastFetch) < dataCache.cacheTime;
+
+      let leadsData: Lead[], statsData: LeadStats;
+
+      if (shouldUseCache) {
+        // Use cached data
+        leadsData = dataCache.leads!;
+        statsData = dataCache.stats!;
+      } else {
+        // Fetch fresh data
+        [leadsData, statsData] = await Promise.all([
+          getLeadEntries(),
+          getLeadStats()
+        ]);
+        
+        // Update cache
+        dataCache.leads = leadsData;
+        dataCache.stats = statsData;
+        dataCache.lastFetch = now;
+      }
       
       setAllLeads(leadsData);
       setStats(statsData);
       
       // Reapply filters if currently filtered
-      if (isFiltered && Object.keys(currentFilters).length > 0) {
+      if (hasActiveFilters) {
         const filteredLeads = await filterLeads(currentFilters);
         setLeads(filteredLeads);
       } else {
@@ -57,7 +94,7 @@ export default function LeadGenContent() {
     } catch (error) {
       console.error('Error refreshing lead data:', error);
     }
-  }, [isFiltered, currentFilters]);
+  }, [hasActiveFilters, currentFilters]);
 
   // Load data on component mount
   React.useEffect(() => {
@@ -111,8 +148,8 @@ export default function LeadGenContent() {
       try {
         const success = await deleteLeadEntry(leadId);
         if (success) {
-          // Refresh data immediately
-          refreshData();
+          // Force refresh after data modification
+          refreshData(true);
           // Also trigger the custom event
           window.dispatchEvent(new CustomEvent('leadDataRefresh'));
         }
@@ -129,8 +166,8 @@ export default function LeadGenContent() {
         const result = await convertLeadToCustomer(leadId);
         if (result.success) {
           alert(`Lead successfully converted to customer! Customer ID: ${result.customerId}`);
-          // Refresh data immediately
-          refreshData();
+          // Force refresh after data modification
+          refreshData(true);
           // Also trigger the custom event
           window.dispatchEvent(new CustomEvent('leadDataRefresh'));
         } else {
@@ -199,14 +236,14 @@ export default function LeadGenContent() {
 
   const handleModalClose = () => {
     setIsNewLeadModalOpen(false);
-    refreshData();
+    refreshData(true); // Force refresh after new lead creation
   };
 
   const handleAIModalClose = () => {
     setIsAIModalOpen(false);
     // Add a small delay to ensure any background operations complete
     setTimeout(() => {
-      refreshData();
+      refreshData(true); // Force refresh after AI generation
     }, 500);
   };
 
@@ -238,28 +275,45 @@ export default function LeadGenContent() {
         onConvertToCustomer={handleConvertToCustomer}
       />
 
-      <NewLeadModal
-        isOpen={isNewLeadModalOpen}
-        onClose={handleModalClose}
-      />
+      {/* Only render modals when they're open to improve performance */}
+      {isNewLeadModalOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <NewLeadModal
+            isOpen={isNewLeadModalOpen}
+            onClose={handleModalClose}
+          />
+        </Suspense>
+      )}
 
-      <AILeadGenerationModal
-        isOpen={isAIModalOpen}
-        onClose={handleAIModalClose}
-      />
+      {isAIModalOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <AILeadGenerationModal
+            isOpen={isAIModalOpen}
+            onClose={handleAIModalClose}
+          />
+        </Suspense>
+      )}
 
-      <EditLeadModal
-        isOpen={isEditModalOpen}
-        onClose={handleEditModalClose}
-        lead={editingLead}
-      />
+      {isEditModalOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <EditLeadModal
+            isOpen={isEditModalOpen}
+            onClose={handleEditModalClose}
+            lead={editingLead}
+          />
+        </Suspense>
+      )}
 
-      <FilterLeadsModal
-        isOpen={isFilterModalOpen}
-        onClose={() => setIsFilterModalOpen(false)}
-        onApplyFilters={handleApplyFilters}
-        currentFilters={currentFilters}
-      />
+      {isFilterModalOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <FilterLeadsModal
+            isOpen={isFilterModalOpen}
+            onClose={() => setIsFilterModalOpen(false)}
+            onApplyFilters={handleApplyFilters}
+            currentFilters={currentFilters}
+          />
+        </Suspense>
+      )}
     </>
   );
 }

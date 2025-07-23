@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -44,6 +44,14 @@ const aiGenerationSchema = z.object({
 
 type AIGenerationFormData = z.infer<typeof aiGenerationSchema>;
 
+// Move form defaults outside component to prevent recreation
+const formDefaults: AIGenerationFormData = {
+  profession: "",
+  target_location: "",
+  search_radius: "25",
+  industry_focus: "",
+};
+
 interface AILeadGenerationModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -57,7 +65,7 @@ interface GenerationStatus {
   leadsQualified?: number;
 }
 
-export default function AILeadGenerationModal({ isOpen, onClose }: AILeadGenerationModalProps) {
+function AILeadGenerationModal({ isOpen, onClose }: AILeadGenerationModalProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [cooldownInfo, setCooldownInfo] = useState<{ canGenerate: boolean; timeUntilNext?: number; lastGeneration?: string } | null>(null);
   const [status, setStatus] = useState<GenerationStatus>({
@@ -68,12 +76,7 @@ export default function AILeadGenerationModal({ isOpen, onClose }: AILeadGenerat
 
   const form = useForm<AIGenerationFormData>({
     resolver: zodResolver(aiGenerationSchema),
-    defaultValues: {
-      profession: "",
-      target_location: "",
-      search_radius: "25",
-      industry_focus: "",
-    },
+    defaultValues: formDefaults,
   });
 
   // Check cooldown when modal opens
@@ -87,7 +90,7 @@ export default function AILeadGenerationModal({ isOpen, onClose }: AILeadGenerat
     }
   }, [isOpen]);
 
-  const generateLeadsWithAI = async (data: AIGenerationFormData) => {
+  const generateLeadsWithAI = useCallback(async (data: AIGenerationFormData) => {
     // Construct the prompt for the AI agent
     const prompt = `Generate 3 high-quality small business leads based on the following criteria:
 
@@ -292,9 +295,9 @@ Return the results in the structured JSON format as specified in your system pro
         message: 'Failed to generate leads. Please try again.',
       });
     }
-  };
+  }, []); // No dependencies needed as useState setters are stable
 
-  const onSubmit = async (data: AIGenerationFormData) => {
+  const onSubmit = useCallback(async (data: AIGenerationFormData) => {
     // Check cooldown one more time before generating
     const cooldown = await checkAIGenerationCooldown();
     if (!cooldown.canGenerate) {
@@ -309,9 +312,9 @@ Return the results in the structured JSON format as specified in your system pro
     setIsGenerating(true);
     await generateLeadsWithAI(data);
     setIsGenerating(false);
-  };
+  }, [generateLeadsWithAI]); // Only need generateLeadsWithAI as dependency
 
-  const formatTimeRemaining = (timeMs: number) => {
+  const formatTimeRemaining = useCallback((timeMs: number) => {
     const hours = Math.floor(timeMs / (1000 * 60 * 60));
     const minutes = Math.floor((timeMs % (1000 * 60 * 60)) / (1000 * 60));
     
@@ -319,9 +322,9 @@ Return the results in the structured JSON format as specified in your system pro
       return `${hours}h ${minutes}m`;
     }
     return `${minutes}m`;
-  };
+  }, []); // No dependencies as this is a pure function
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (!isGenerating || status.stage === 'completed' || status.stage === 'error') {
       form.reset();
       setStatus({
@@ -332,9 +335,9 @@ Return the results in the structured JSON format as specified in your system pro
       setIsGenerating(false);
       onClose();
     }
-  };
+  }, [isGenerating, status.stage, form, onClose]); // Dependencies for useCallback
 
-  const getStatusIcon = () => {
+  const getStatusIcon = useMemo(() => {
     switch (status.stage) {
       case 'processing':
         return <Loader2 className="h-5 w-5 animate-spin text-blue-500" />;
@@ -345,7 +348,7 @@ Return the results in the structured JSON format as specified in your system pro
       default:
         return <Bot className="h-5 w-5 text-purple-500" />;
     }
-  };
+  }, [status.stage]); // Dependencies for useMemo
 
 
   return (
@@ -364,7 +367,7 @@ Return the results in the structured JSON format as specified in your system pro
         {status.stage !== 'idle' && (
           <div className="bg-slate-50 p-4 rounded-lg border space-y-3">
             <div className="flex items-center gap-3">
-              {getStatusIcon()}
+              {getStatusIcon}
               <span className="font-medium">{status.message}</span>
             </div>
             
@@ -526,7 +529,7 @@ Return the results in the structured JSON format as specified in your system pro
               </Button>
               <Button
                 type="submit"
-                disabled={isGenerating && status.stage !== 'error' || (cooldownInfo && !cooldownInfo.canGenerate)}
+                disabled={(isGenerating && status.stage !== 'error') || (cooldownInfo?.canGenerate === false)}
                 className="bg-purple-600 border-purple-600 text-white hover:bg-purple-700 hover:border-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isGenerating ? (
@@ -548,3 +551,9 @@ Return the results in the structured JSON format as specified in your system pro
     </Dialog>
   );
 }
+
+// Memoize the component to prevent unnecessary re-renders
+export default React.memo(AILeadGenerationModal, (prevProps, nextProps) => {
+  // Only re-render if isOpen state or onClose callback changes
+  return prevProps.isOpen === nextProps.isOpen && prevProps.onClose === nextProps.onClose;
+});

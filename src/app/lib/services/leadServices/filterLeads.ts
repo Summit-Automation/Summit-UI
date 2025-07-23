@@ -1,26 +1,15 @@
 'use server';
 
-import { createClient } from '@/utils/supabase/server';
 import { Lead } from '@/types/leadgen';
 import { LeadFilters } from '@/components/leadgenComponents/FilterLeadsModal';
+import { getAuthenticatedUser } from '../shared/authUtils';
 
 export async function filterLeads(filters: LeadFilters): Promise<Lead[]> {
   try {
-    const supabase = await createClient();
-    
-    // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      throw new Error('User not authenticated');
-    }
+    // Use shared authentication utility to reduce redundant calls
+    const { supabase, organizationId } = await getAuthenticatedUser();
 
-    // Get organization ID from user metadata
-    const organizationId = user.user_metadata?.organization_id;
-    if (!organizationId) {
-      throw new Error('User organization not found in metadata');
-    }
-
-    // Start with base query
+    // Start with base query - ensure organization_id index exists for optimal performance
     let query = supabase
       .from('leads')
       .select('*')
@@ -86,10 +75,14 @@ export async function filterLeads(filters: LeadFilters): Promise<Lead[]> {
       query = query.lt('created_at', endDate.toISOString().split('T')[0]);
     }
 
-    // Apply search term to multiple fields
+    // Apply search term to multiple fields with optimized query
     if (filters.search_term) {
-      const searchTerm = `%${filters.search_term}%`;
-      query = query.or(`first_name.ilike.${searchTerm},last_name.ilike.${searchTerm},email.ilike.${searchTerm},company.ilike.${searchTerm},phone.ilike.${searchTerm}`);
+      const searchTerm = filters.search_term.trim();
+      if (searchTerm.length > 0) {
+        const likePattern = `%${searchTerm}%`;
+        // Use indexed fields first for better performance
+        query = query.or(`email.ilike.${likePattern},first_name.ilike.${likePattern},last_name.ilike.${likePattern},company.ilike.${likePattern},phone.ilike.${likePattern}`);
+      }
     }
 
     // Order by creation date (newest first)

@@ -32,7 +32,7 @@ interface LeadTableProps {
   onConvertToCustomer?: (leadId: string) => void;
 }
 
-function MobileLeadCard({ lead, onEdit, onDelete, onConvertToCustomer }: { 
+const MobileLeadCard = React.memo(function MobileLeadCard({ lead, onEdit, onDelete, onConvertToCustomer }: { 
   lead: Lead; 
   onEdit?: (lead: Lead) => void; 
   onDelete?: (leadId: string) => void; 
@@ -162,9 +162,9 @@ function MobileLeadCard({ lead, onEdit, onDelete, onConvertToCustomer }: {
       </CardContent>
     </Card>
   );
-}
+});
 
-export default function LeadTable({ leads, onEdit, onDelete, onConvertToCustomer }: LeadTableProps) {
+function LeadTable({ leads, onEdit, onDelete, onConvertToCustomer }: LeadTableProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   // Check if we should show mobile view
@@ -353,3 +353,15 @@ export default function LeadTable({ leads, onEdit, onDelete, onConvertToCustomer
     </Card>
   );
 }
+
+// Memoize the component to prevent unnecessary re-renders
+export default React.memo(LeadTable, (prevProps, nextProps) => {
+  // Only re-render if leads array or callback functions have actually changed
+  return (
+    prevProps.leads.length === nextProps.leads.length &&
+    prevProps.leads.every((lead, index) => lead.id === nextProps.leads[index]?.id) &&
+    prevProps.onEdit === nextProps.onEdit &&
+    prevProps.onDelete === nextProps.onDelete &&
+    prevProps.onConvertToCustomer === nextProps.onConvertToCustomer
+  );
+});

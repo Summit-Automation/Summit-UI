@@ -1,5 +1,6 @@
 'use client';
 
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Bot, Download, Filter, RefreshCw } from "lucide-react";
 
@@ -11,7 +12,7 @@ interface LeadActionsProps {
   onFilter?: () => void;
 }
 
-export default function LeadActions({ 
+function LeadActions({ 
   onNewLead, 
   onAIGenerate, 
   onRefresh,
@@ -79,3 +80,6 @@ export default function LeadActions({
     </div>
   );
 }
+
+// Memoize to prevent unnecessary re-renders when callback functions haven't changed
+export default React.memo(LeadActions);

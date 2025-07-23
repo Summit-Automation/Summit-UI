@@ -1,5 +1,6 @@
 'use client';
 
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LeadStats } from "@/types/leadgen";
 import { Users, Target, TrendingUp, Star } from "lucide-react";
@@ -8,7 +9,7 @@ interface LeadSummaryProps {
   stats: LeadStats;
 }
 
-export default function LeadSummary({ stats }: LeadSummaryProps) {
+function LeadSummary({ stats }: LeadSummaryProps) {
   const summaryCards = [
     {
       title: "Total Leads",
@@ -66,3 +67,18 @@ export default function LeadSummary({ stats }: LeadSummaryProps) {
     </div>
   );
 }
+
+// Memoize to prevent unnecessary re-renders when stats haven't changed
+export default React.memo(LeadSummary, (prevProps, nextProps) => {
+  const prevStats = prevProps.stats;
+  const nextStats = nextProps.stats;
+  
+  return (
+    prevStats.total_leads === nextStats.total_leads &&
+    prevStats.qualified_leads === nextStats.qualified_leads &&
+    prevStats.manual_leads === nextStats.manual_leads &&
+    prevStats.ai_generated_leads === nextStats.ai_generated_leads &&
+    prevStats.average_score === nextStats.average_score &&
+    prevStats.conversion_rate === nextStats.conversion_rate
+  );
+});
