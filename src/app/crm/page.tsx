@@ -25,8 +25,8 @@ export default async function CRMPage() {
                 <CRMSummary customers={customers} interactions={interactions}/>
             </div>
 
-            {/* Chart - Full Width */}
-            <Card className="chart-container-enhanced card-enhanced">
+            {/* Chart - Responsive Width */}
+            <Card className="chart-container-enhanced card-enhanced w-full md:max-w-2xl md:mx-auto">
                 <CardHeader className="pb-4">
                     <CardTitle className="flex items-center gap-2 text-gradient">
                         <div className="p-2 bg-slate-800/50 rounded-lg transition-all duration-300 hover:scale-110">
