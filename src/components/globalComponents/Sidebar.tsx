@@ -14,6 +14,7 @@ import {
     Users,
     Calculator,
     Car,
+    UserPlus,
     LogOut,
     Menu,
     X,
@@ -39,6 +40,11 @@ const navItems = [
         href: '/mileage',
         label: 'Mileage',
         icon: Car,
+    },
+    {
+        href: '/leadgen',
+        label: 'Lead Generation',
+        icon: UserPlus,
     },
 ];
 
