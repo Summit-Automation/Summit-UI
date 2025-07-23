@@ -368,7 +368,7 @@ Return the results in the structured JSON format as specified in your system pro
           <div className="bg-slate-50 p-4 rounded-lg border space-y-3">
             <div className="flex items-center gap-3">
               {getStatusIcon}
-              <span className="font-medium">{status.message}</span>
+              <span className="font-medium text-slate-800">{status.message}</span>
             </div>
             
             <Progress 
@@ -380,11 +380,11 @@ Return the results in the structured JSON format as specified in your system pro
               <div className="grid grid-cols-2 gap-4 mt-4">
                 <div className="bg-white p-3 rounded border text-center">
                   <div className="text-2xl font-bold text-blue-600">{status.leadsGenerated}</div>
-                  <div className="text-sm text-muted-foreground">Leads Generated</div>
+                  <div className="text-sm text-slate-600">Leads Generated</div>
                 </div>
                 <div className="bg-white p-3 rounded border text-center">
                   <div className="text-2xl font-bold text-green-600">{status.leadsQualified}</div>
-                  <div className="text-sm text-muted-foreground">High-Quality Leads</div>
+                  <div className="text-sm text-slate-600">High-Quality Leads</div>
                 </div>
               </div>
             )}

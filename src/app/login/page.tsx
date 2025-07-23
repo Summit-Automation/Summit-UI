@@ -26,12 +26,19 @@ export default function LoginPage() {
             const result = await login(formData);
             if (result?.error) {
                 setLoginError(result.error);
+                setIsLoading(false); // Only stop loading if there's an error to show
             }
-            // If no error, the login action will redirect automatically
+            // If no error, the login action will redirect automatically (don't stop loading)
         } catch (error) {
+            // Check if this is a Next.js redirect error (which is expected on successful login)
+            if (error && typeof error === 'object' && 'digest' in error && 
+                typeof error.digest === 'string' && error.digest.includes('NEXT_REDIRECT')) {
+                // This is a successful redirect, don't show error or stop loading
+                return;
+            }
+            
             console.error('Auth error:', error);
             setLoginError('An unexpected error occurred. Please try again.');
-        } finally {
             setIsLoading(false);
         }
     };
