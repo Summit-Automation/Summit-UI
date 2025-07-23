@@ -8,6 +8,7 @@ import CRMActions from "@/components/crmComponents/CRMActions";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {PieChart} from "lucide-react";
 import CustomerStatusPie from "@/components/dashboardComponents/CustomerStatusPie";
+import FollowUpPie from "@/components/dashboardComponents/FollowUpPie";
 
 export default async function CRMPage() {
     const [customers, interactions] = await Promise.all([getCustomers(), getInteractions(),]);
@@ -25,23 +26,44 @@ export default async function CRMPage() {
                 <CRMSummary customers={customers} interactions={interactions}/>
             </div>
 
-            {/* Chart - Responsive Width */}
-            <Card className="chart-container-enhanced card-enhanced w-full md:max-w-2xl md:mx-auto">
-                <CardHeader className="pb-4">
-                    <CardTitle className="flex items-center gap-2 text-gradient">
-                        <div className="p-2 bg-slate-800/50 rounded-lg transition-all duration-300 hover:scale-110">
-                            <PieChart className="h-5 w-5 text-blue-400 icon-interactive"/>
-                        </div>
-                        Customer Status Distribution
-                    </CardTitle>
-                    <CardDescription className="text-slate-400">
-                        Current status distribution of customers in your pipeline
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="custom-scrollbar">
-                    <CustomerStatusPie customers={customers} size="md"/>
-                </CardContent>
-            </Card>
+            {/* Charts Grid - Responsive Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Customer Status Distribution */}
+                <Card className="chart-container-enhanced card-enhanced">
+                    <CardHeader className="pb-4">
+                        <CardTitle className="flex items-center gap-2 text-gradient">
+                            <div className="p-2 bg-slate-800/50 rounded-lg transition-all duration-300 hover:scale-110">
+                                <PieChart className="h-5 w-5 text-blue-400 icon-interactive"/>
+                            </div>
+                            Customer Status Distribution
+                        </CardTitle>
+                        <CardDescription className="text-slate-400">
+                            Current status distribution of customers in your pipeline
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="custom-scrollbar">
+                        <CustomerStatusPie customers={customers} size="md"/>
+                    </CardContent>
+                </Card>
+
+                {/* Follow-Up Requirements */}
+                <Card className="chart-container-enhanced card-enhanced">
+                    <CardHeader className="pb-4">
+                        <CardTitle className="flex items-center gap-2 text-gradient">
+                            <div className="p-2 bg-slate-800/50 rounded-lg transition-all duration-300 hover:scale-110">
+                                <PieChart className="h-5 w-5 text-orange-400 icon-interactive"/>
+                            </div>
+                            Follow-Up Requirements
+                        </CardTitle>
+                        <CardDescription className="text-slate-400">
+                            Track interactions that need follow-up attention
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="custom-scrollbar">
+                        <FollowUpPie interactions={interactions} size="md"/>
+                    </CardContent>
+                </Card>
+            </div>
 
             {/* Actions */}
             <CRMActions customers={customers}/>
