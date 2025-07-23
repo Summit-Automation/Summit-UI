@@ -61,7 +61,7 @@ export default async function CRMPage() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="custom-scrollbar">
-                            <FollowUpPie interactions={interactions} size="md"/>
+                            <FollowUpPie interactions={interactions}/>
                         </CardContent>
                     </Card>
                 </div>
@@ -140,7 +140,7 @@ export default async function CRMPage() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="custom-scrollbar">
-                                <FollowUpPie interactions={interactions} size="md"/>
+                                <FollowUpPie interactions={interactions}/>
                             </CardContent>
                         </Card>
                     </TabsContent>
