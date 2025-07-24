@@ -1,16 +1,19 @@
 export const dynamic = 'force-dynamic';
 
 import {getTransactions} from '@/app/lib/services/bookkeeperServices/getTransactions';
+import {getRecurringPayments} from '@/app/lib/services/bookkeeperServices/getRecurringPayments';
 import BookkeeperSummary from '@/components/bookkeeperComponents/BookkeeperSummary';
 import BookkeeperActions from '@/components/bookkeeperComponents/BookkeeperActions';
 import TransactionTable from '@/components/bookkeeperComponents/TransactionTable';
+import RecurringPaymentsTable from '@/components/bookkeeperComponents/RecurringPaymentsTable';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
-import {Activity, BarChart3, DollarSign} from 'lucide-react';
+import {Activity, BarChart3, DollarSign, RefreshCw} from 'lucide-react';
 import CashFlowArea from "@/components/dashboardComponents/CashFlowArea";
 
 export default async function BookkeeperPage() {
     const transactions = await getTransactions();
+    const recurringPayments = await getRecurringPayments();
 
     return (
         <div className="p-6 space-y-6">
@@ -48,6 +51,24 @@ export default async function BookkeeperPage() {
                 {/* Actions - Desktop */}
                 <BookkeeperActions/>
 
+                {/* Recurring Payments - Desktop */}
+                <Card className="card-enhanced">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-gradient">
+                            <div className="p-2 bg-slate-800/50 rounded-lg transition-all duration-300 hover:scale-110">
+                                <RefreshCw className="h-5 w-5 text-blue-400 icon-interactive"/>
+                            </div>
+                            Recurring Payments
+                        </CardTitle>
+                        <CardDescription className="text-slate-400">
+                            Manage your scheduled recurring income and expenses
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <RecurringPaymentsTable recurringPayments={recurringPayments}/>
+                    </CardContent>
+                </Card>
+
                 {/* Table - Desktop */}
                 <Card className="card-enhanced">
                     <CardHeader>
@@ -65,10 +86,14 @@ export default async function BookkeeperPage() {
             {/* Mobile: Tabbed Layout */}
             <div className="lg:hidden">
                 <Tabs defaultValue="transactions" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
+                    <TabsList className="grid w-full grid-cols-3">
                         <TabsTrigger value="transactions" className="flex items-center gap-2">
                             <DollarSign className="h-4 w-4" />
-                            <span className="hidden sm:inline">Data</span>
+                            <span className="hidden sm:inline">Transactions</span>
+                        </TabsTrigger>
+                        <TabsTrigger value="recurring" className="flex items-center gap-2">
+                            <RefreshCw className="h-4 w-4" />
+                            <span className="hidden sm:inline">Recurring</span>
                         </TabsTrigger>
                         <TabsTrigger value="analytics" className="flex items-center gap-2">
                             <BarChart3 className="h-4 w-4" />
@@ -88,6 +113,23 @@ export default async function BookkeeperPage() {
                             </CardHeader>
                             <CardContent>
                                 <TransactionTable transactions={transactions}/>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                    <TabsContent value="recurring" className="mt-4 space-y-4">
+                        <Card className="card-enhanced">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2 text-gradient">
+                                    <RefreshCw className="h-5 w-5 text-blue-400 icon-interactive"/>
+                                    Recurring Payments
+                                </CardTitle>
+                                <CardDescription className="text-slate-400">
+                                    Manage your scheduled recurring income and expenses
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <RecurringPaymentsTable recurringPayments={recurringPayments}/>
                             </CardContent>
                         </Card>
                     </TabsContent>
