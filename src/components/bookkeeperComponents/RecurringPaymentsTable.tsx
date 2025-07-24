@@ -3,11 +3,10 @@
 import * as React from 'react';
 import {RecurringPayment} from '@/types/recurringPayment';
 import {Button} from '@/components/ui/button';
-import {updateRecurringPayment} from '@/app/lib/services/bookkeeperServices/updateRecurringPayment';
 import {deleteRecurringPayment} from '@/app/lib/services/bookkeeperServices/deleteRecurringPayment';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {Badge} from '@/components/ui/badge';
-import {Switch} from '@/components/ui/switch';
+import EditRecurringPaymentClientWrapper from './EditRecurringPaymentClientWrapper';
 
 export default function RecurringPaymentsTable({
     recurringPayments,
@@ -18,33 +17,27 @@ export default function RecurringPaymentsTable({
 }) {
     const [loadingStates, setLoadingStates] = React.useState<Record<string, boolean>>({});
 
-    const handleToggleActive = async (payment: RecurringPayment) => {
-        setLoadingStates(prev => ({...prev, [payment.id]: true}));
-        
-        const result = await updateRecurringPayment({
-            id: payment.id,
-            is_active: !payment.is_active,
-        });
-
-        if (result.success) {
-            onUpdate?.();
-        }
-        
-        setLoadingStates(prev => ({...prev, [payment.id]: false}));
-    };
 
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this recurring payment?')) return;
         
         setLoadingStates(prev => ({...prev, [id]: true}));
         
-        const result = await deleteRecurringPayment(id);
-        
-        if (result.success) {
-            onUpdate?.();
+        try {
+            const result = await deleteRecurringPayment(id);
+            
+            if (result.success) {
+                onUpdate?.();
+            } else {
+                console.error('Delete failed:', result.error);
+                alert('Failed to delete recurring payment. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error deleting recurring payment:', error);
+            alert('Failed to delete recurring payment. Please try again.');
+        } finally {
+            setLoadingStates(prev => ({...prev, [id]: false}));
         }
-        
-        setLoadingStates(prev => ({...prev, [id]: false}));
     };
 
     const formatDate = (dateString: string) => {
@@ -70,10 +63,6 @@ export default function RecurringPaymentsTable({
     };
 
     const getStatusBadge = (payment: RecurringPayment) => {
-        if (!payment.is_active) {
-            return <Badge variant="secondary">Inactive</Badge>;
-        }
-        
         const nextPayment = new Date(payment.next_payment_date);
         const now = new Date();
         
@@ -110,76 +99,64 @@ export default function RecurringPaymentsTable({
                             </div>
                         </CardHeader>
                         
-                        <CardContent className="space-y-3">
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                                <div>
-                                    <p className="text-slate-400">Type</p>
-                                    <p className="text-white capitalize">{payment.type}</p>
+                        <CardContent className="space-y-4">
+                            {/* Main Info Row */}
+                            <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                            payment.type === 'income' 
+                                                ? 'bg-green-900/50 text-green-300 border border-green-700' 
+                                                : 'bg-red-900/50 text-red-300 border border-red-700'
+                                        }`}>
+                                            {payment.type === 'income' ? 'Income' : 'Expense'}
+                                        </span>
+                                        <span className="text-slate-400 text-sm">{payment.category}</span>
+                                    </div>
+                                    
+                                    <div className="text-slate-300 text-sm mb-3">
+                                        {payment.customer_name && (
+                                            <span className="text-blue-400">Customer: {payment.customer_name} • </span>
+                                        )}
+                                        <span>{getFrequencyLabel(payment.frequency)}</span>
+                                    </div>
                                 </div>
                                 
-                                <div>
-                                    <p className="text-slate-400">Amount</p>
-                                    <p className={`font-medium ${
+                                <div className="text-right">
+                                    <div className={`text-xl font-bold ${
                                         payment.type === 'income' ? 'text-green-400' : 'text-red-400'
                                     }`}>
                                         {payment.type === 'income' ? '+' : '-'}{formatAmount(payment.amount)}
-                                    </p>
-                                </div>
-                                
-                                <div>
-                                    <p className="text-slate-400">Frequency</p>
-                                    <p className="text-white">{getFrequencyLabel(payment.frequency)}</p>
-                                </div>
-                                
-                                <div>
-                                    <p className="text-slate-400">Next Payment</p>
-                                    <p className="text-white">{formatDate(payment.next_payment_date)}</p>
-                                </div>
-                            </div>
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                <div>
-                                    <p className="text-slate-400">Category</p>
-                                    <p className="text-white">{payment.category}</p>
-                                </div>
-                                
-                                <div>
-                                    <p className="text-slate-400">Payments Processed</p>
-                                    <p className="text-white">
-                                        {payment.payments_processed}
-                                        {payment.payment_limit && ` / ${payment.payment_limit}`}
-                                    </p>
-                                </div>
-                                
-                                {payment.customer_name && (
-                                    <div>
-                                        <p className="text-slate-400">Customer</p>
-                                        <p className="text-white">{payment.customer_name}</p>
                                     </div>
-                                )}
+                                    <div className="text-slate-400 text-sm">
+                                        Next: {formatDate(payment.next_payment_date)}
+                                    </div>
+                                </div>
                             </div>
-                            
-                            <div className="flex items-center justify-between pt-3 border-t border-slate-700">
-                                <div className="flex items-center space-x-2">
-                                    <Switch
-                                        checked={payment.is_active}
-                                        onCheckedChange={() => handleToggleActive(payment)}
-                                        disabled={loadingStates[payment.id]}
-                                    />
-                                    <span className="text-sm text-slate-300">
-                                        {payment.is_active ? 'Active' : 'Inactive'}
-                                    </span>
+
+                            {/* Progress and Actions */}
+                            <div className="flex items-center justify-between text-sm">
+                                <div className="text-slate-400">
+                                    Processed: <span className="text-white">{payment.payments_processed}</span>
+                                    {payment.payment_limit && <span className="text-slate-500"> / {payment.payment_limit}</span>}
                                 </div>
                                 
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => handleDelete(payment.id)}
-                                    disabled={loadingStates[payment.id]}
-                                    className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
-                                >
-                                    Delete
-                                </Button>
+                                <div className="flex items-center gap-2">
+                                    <EditRecurringPaymentClientWrapper
+                                        payment={payment}
+                                        onSuccess={onUpdate}
+                                    />
+                                    
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => handleDelete(payment.id)}
+                                        disabled={loadingStates[payment.id]}
+                                        className="text-red-400 hover:text-red-300 hover:bg-red-400/10 px-3 py-1"
+                                    >
+                                        Delete
+                                    </Button>
+                                </div>
                             </div>
                         </CardContent>
                     </Card>

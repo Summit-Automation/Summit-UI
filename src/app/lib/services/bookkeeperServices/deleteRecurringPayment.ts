@@ -15,7 +15,7 @@ export async function deleteRecurringPayment(
         }
 
         const { error } = await supabase
-            .rpc('delete_recurring_payment', { payment_id: id });
+            .rpc('delete_recurring_payment', { p_payment_id: id });
 
         if (error) {
             console.error('Error deleting recurring payment:', error);

@@ -5,7 +5,7 @@ import {getRecurringPayments} from '@/app/lib/services/bookkeeperServices/getRec
 import BookkeeperSummary from '@/components/bookkeeperComponents/BookkeeperSummary';
 import BookkeeperActions from '@/components/bookkeeperComponents/BookkeeperActions';
 import TransactionTable from '@/components/bookkeeperComponents/TransactionTable';
-import RecurringPaymentsTable from '@/components/bookkeeperComponents/RecurringPaymentsTable';
+import RecurringPaymentsClientWrapper from '@/components/bookkeeperComponents/RecurringPaymentsClientWrapper';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
 import {Activity, BarChart3, DollarSign, RefreshCw} from 'lucide-react';
@@ -65,7 +65,7 @@ export default async function BookkeeperPage() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <RecurringPaymentsTable recurringPayments={recurringPayments}/>
+                        <RecurringPaymentsClientWrapper initialData={recurringPayments}/>
                     </CardContent>
                 </Card>
 
@@ -129,7 +129,7 @@ export default async function BookkeeperPage() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <RecurringPaymentsTable recurringPayments={recurringPayments}/>
+                                <RecurringPaymentsClientWrapper initialData={recurringPayments}/>
                             </CardContent>
                         </Card>
                     </TabsContent>
