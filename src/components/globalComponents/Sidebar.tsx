@@ -15,6 +15,7 @@ import {
     Calculator,
     Car,
     UserPlus,
+    Package,
     LogOut,
     Menu,
     X,
@@ -42,8 +43,13 @@ const navItems = [
         icon: Car,
     },
     {
+        href: '/inventory',
+        label: 'Inventory (WIP)',
+        icon: Package,
+    },
+    {
         href: '/leadgen',
-        label: 'Lead Generation',
+        label: 'Lead Generation (WIP)',
         icon: UserPlus,
     },
 ];
