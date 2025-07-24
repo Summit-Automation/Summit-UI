@@ -38,7 +38,7 @@ export default function AddItemModal({ isOpen, onClose, onSubmit }: AddItemModal
         auto_reorder_enabled: false,
     });
 
-    const handleInputChange = (field: keyof CreateInventoryItemRequest, value: string | number | boolean) => {
+    const handleInputChange = (field: keyof CreateInventoryItemRequest, value: string | number | boolean | undefined) => {
         setFormData(prev => ({
             ...prev,
             [field]: value

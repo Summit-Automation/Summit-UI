@@ -65,7 +65,7 @@ export default function EditItemModal({ isOpen, onClose, onSubmit, item }: EditI
         }
     }, [item]);
 
-    const handleInputChange = (field: keyof UpdateInventoryItemRequest, value: string | number | boolean) => {
+    const handleInputChange = (field: keyof UpdateInventoryItemRequest, value: string | number | boolean | undefined) => {
         setFormData(prev => ({
             ...prev,
             [field]: value
