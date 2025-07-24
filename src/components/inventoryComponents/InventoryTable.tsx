@@ -21,22 +21,8 @@ import {
     TrendingDown
 } from 'lucide-react';
 import EditItemModal from './EditItemModal';
-import { UpdateInventoryItemRequest } from '@/types/inventory';
+import { UpdateInventoryItemRequest, InventoryItem } from '@/types/inventory';
 import { editInventoryItem, deleteInventoryItemAction } from '@/app/inventory/actions';
-
-interface InventoryItem {
-    id: string;
-    name: string;
-    sku?: string;
-    category: string;
-    current_quantity: number;
-    minimum_threshold: number;
-    unit_cost: number;
-    unit_price: number;
-    status: string;
-    location?: string;
-    supplier?: string;
-}
 
 interface InventoryTableProps {
     items: InventoryItem[];
