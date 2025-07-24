@@ -50,7 +50,7 @@ export function exportInventoryToCSV(items: InventoryItem[], options?: Partial<E
     // Create CSV rows
     const rows = items.map(item => {
         return fields.map(field => {
-            let value = (item as Record<string, unknown>)[field];
+            let value = (item as unknown as Record<string, unknown>)[field];
             
             // Handle special formatting
             if (field === 'created_at' && value) {
