@@ -54,7 +54,7 @@ export function exportInventoryToCSV(items: InventoryItem[], options?: Partial<E
             
             // Handle special formatting
             if (field === 'created_at' && value) {
-                value = new Date(value).toLocaleDateString();
+                value = new Date(value as string).toLocaleDateString();
             }
             
             // Escape CSV values
