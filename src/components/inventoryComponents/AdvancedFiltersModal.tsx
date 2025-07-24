@@ -26,7 +26,7 @@ export default function AdvancedFiltersModal({
 }: AdvancedFiltersModalProps) {
     const [filters, setFilters] = useState<InventoryFilters>(currentFilters);
 
-    const handleFilterChange = (field: keyof InventoryFilters, value: string | boolean) => {
+    const handleFilterChange = (field: keyof InventoryFilters, value: string | boolean | undefined) => {
         setFilters(prev => ({
             ...prev,
             [field]: value
