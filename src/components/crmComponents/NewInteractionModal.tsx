@@ -155,7 +155,7 @@ export default function NewInteractionModal({
                                                         className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800"
                                                     >
                                                         <div className="flex flex-col">
-                                                            <span className="font-medium">{c.full_name}</span>
+                                                            <span className="font-medium">{c.full_name || 'Not Specified'}</span>
                                                             {c.business && (
                                                                 <span className="text-xs text-slate-400">
                                                                     {c.business}

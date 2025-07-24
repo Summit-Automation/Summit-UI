@@ -55,7 +55,7 @@ export default function CustomerRow({
                     ) : (
                         <ChevronDown size={20} className="text-slate-500" />
                     )}
-                    <span className="text-white font-semibold">{customer.full_name}</span>
+                    <span className="text-white font-semibold">{customer.full_name || 'Not Specified'}</span>
                 </TableCell>
 
                 {/* Business */}
@@ -117,7 +117,7 @@ export default function CustomerRow({
                                 <AlertDialogHeader>
                                     <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                        Are you sure you want to delete <strong>{customer.full_name}</strong>? This action cannot be undone.
+                                        Are you sure you want to delete <strong>{customer.full_name || 'Not Specified'}</strong>? This action cannot be undone.
                                     </AlertDialogDescription>
                                     <div className="flex justify-end space-x-2 mt-4">
                                         <AlertDialogCancel asChild>
@@ -140,7 +140,7 @@ export default function CustomerRow({
 
             {/* Expanded interactions */}
             {open && (
-                <InteractionList fullName={customer.full_name} interactions={interactions} variant="table" />
+                <InteractionList fullName={customer.full_name || 'Not Specified'} interactions={interactions} variant="table" />
             )}
         </>
     );

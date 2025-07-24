@@ -10,6 +10,7 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from '@
 import {Input} from '@/components/ui/input';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
 import {createCustomer} from '@/app/lib/services/crmServices/customer/createCustomer';
+import {formatPhoneNumber} from '@/lib/phoneUtils';
 
 type FormValues = {
     full_name: string;
@@ -96,10 +97,15 @@ export default function NewCustomerModal({onSuccess}: { onSuccess?: () => void }
                                     <FormLabel className="text-slate-300">Phone</FormLabel>
                                     <FormControl>
                                         <Input 
-                                            {...field} 
+                                            {...field}
                                             type="tel" 
-                                            placeholder="+1 (555) 123-4567"
+                                            placeholder="111-222-3333"
+                                            maxLength={12}
                                             className="bg-slate-900 border-slate-700 text-slate-50"
+                                            onChange={(e) => {
+                                                const formatted = formatPhoneNumber(e.target.value);
+                                                field.onChange(formatted);
+                                            }}
                                         />
                                     </FormControl>
                                     <FormMessage/>
