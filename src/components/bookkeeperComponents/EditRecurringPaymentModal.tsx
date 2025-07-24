@@ -75,11 +75,11 @@ export default function EditRecurringPaymentModal({
             description: string;
             amount: string;
             frequency: RecurringFrequency;
-            start_date: string | null;
-            end_date: string | null;
-            customer_id: string | null;
-            interaction_id: string | null;
-            payment_limit: number | null;
+            start_date?: string;
+            end_date?: string | null;
+            customer_id?: string | null;
+            interaction_id?: string | null;
+            payment_limit?: number | null;
             day_of_month?: number;
             day_of_week?: number;
         } = {
@@ -88,12 +88,20 @@ export default function EditRecurringPaymentModal({
             description: values.description,
             amount: values.amount,
             frequency: values.frequency,
-            start_date: values.start_date ? new Date(values.start_date).toISOString() : null,
-            end_date: values.end_date ? new Date(values.end_date).toISOString() : null,
             customer_id: values.customer_id || null,
             interaction_id: values.interaction_id || null,
             payment_limit: values.payment_limit > 0 ? values.payment_limit : null,
         };
+
+        // Only include start_date if it's provided
+        if (values.start_date) {
+            updateData.start_date = new Date(values.start_date).toISOString();
+        }
+
+        // Only include end_date if it's provided
+        if (values.end_date) {
+            updateData.end_date = new Date(values.end_date).toISOString();
+        }
 
         // Add day-specific fields based on frequency
         if (frequency === 'monthly' || frequency === 'quarterly' || frequency === 'yearly') {
