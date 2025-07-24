@@ -1,11 +1,11 @@
-'use server';
+'use client';
 
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@/utils/supabase/client';
 import { RecurringPayment } from '@/types/recurringPayment';
 
 export async function getRecurringPayments(): Promise<RecurringPayment[]> {
     try {
-        const supabase = await createClient();
+        const supabase = createClient();
 
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {

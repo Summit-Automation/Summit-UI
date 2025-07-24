@@ -15,6 +15,14 @@ export async function createRecurringPayment(
             return { success: false, error: 'User not authenticated' };
         }
 
+        // If start date is today or in the past, create the first transaction immediately
+        const startDate = new Date(data.start_date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        startDate.setHours(0, 0, 0, 0);
+        
+        const shouldCreateImmediateTransaction = startDate <= today;
+
         // Calculate next payment date based on frequency and start date
         const nextPaymentDate = calculateNextPaymentDate(
             data.start_date,
@@ -23,31 +31,56 @@ export async function createRecurringPayment(
             data.day_of_week
         );
 
-        const recurringPaymentData = {
-            type: data.type,
-            category: data.category,
-            description: data.description,
-            amount: data.amount,
-            frequency: data.frequency,
-            start_date: data.start_date,
-            end_date: data.end_date || null,
-            day_of_month: data.day_of_month || null,
-            day_of_week: data.day_of_week || null,
-            is_active: true,
-            created_by: user.id,
-            customer_id: data.customer_id || null,
-            interaction_id: data.interaction_id || null,
-            next_payment_date: nextPaymentDate,
-            payments_processed: 0,
-            payment_limit: data.payment_limit || null,
-        };
-
         const { data: result, error } = await supabase
-            .rpc('create_recurring_payment', recurringPaymentData);
+            .rpc('create_recurring_payment', {
+                p_type: data.type,
+                p_category: data.category,
+                p_description: data.description,
+                p_amount: data.amount, // Send as string, let SQL handle conversion
+                p_frequency: data.frequency,
+                p_start_date: data.start_date,
+                p_end_date: data.end_date || null,
+                p_day_of_month: data.day_of_month || null,
+                p_day_of_week: data.day_of_week || null,
+                p_created_by: user.id,
+                p_customer_id: data.customer_id || null,
+                p_interaction_id: data.interaction_id || null,
+                p_next_payment_date: nextPaymentDate,
+                p_payment_limit: data.payment_limit || null,
+                p_payments_processed: shouldCreateImmediateTransaction ? 1 : 0, // Set initial count
+            });
 
         if (error) {
             console.error('Error creating recurring payment:', error);
             return { success: false, error: error.message };
+        }
+
+        // If we should create an immediate transaction (start date is today or past)
+        if (shouldCreateImmediateTransaction) {
+            try {
+                // Import the createTransaction function
+                const { createTransaction } = await import('./createTransaction');
+                
+                // Create the first transaction immediately
+                const transactionResult = await createTransaction({
+                    type: data.type,
+                    category: data.category,
+                    description: data.description + ' (Recurring)',
+                    amount: data.amount,
+                    customer_id: data.customer_id || null,
+                    interaction_id: data.interaction_id || null,
+                    customer_name: null, // Will be populated by createTransaction
+                    interaction_title: null, // Will be populated by createTransaction
+                    interaction_outcome: null, // Will be populated by createTransaction
+                });
+
+                if (transactionResult) {
+                    console.log('Created immediate transaction for recurring payment with processed count:', result.payments_processed);
+                }
+            } catch (transactionError) {
+                console.error('Error creating immediate transaction:', transactionError);
+                // Don't fail the whole operation, just log the error
+            }
         }
 
         revalidatePath('/bookkeeper');

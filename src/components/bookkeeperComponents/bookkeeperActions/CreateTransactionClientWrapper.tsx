@@ -36,6 +36,8 @@ export default function CreateTransactionClientWrapper() {
         interactions={interactions}
         onSuccess={() => {
             router.refresh();
+            // Trigger custom event for recurring payments refresh
+            window.dispatchEvent(new CustomEvent('recurringPaymentsUpdate'));
         }}
     />);
 }
