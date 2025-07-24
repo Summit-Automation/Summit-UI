@@ -11,6 +11,7 @@ import {Input} from '@/components/ui/input';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
 import type {Customer} from '@/types/customer';
 import {updateCustomer} from '@/app/lib/services/crmServices/customer/updateCustomer';
+import {formatPhoneNumber} from '@/lib/phoneUtils';
 import {Pencil} from 'lucide-react';
 
 type FormValues = Omit<Customer, 'id' | 'created_at' | 'updated_at'>;
@@ -104,10 +105,15 @@ export default function UpdateCustomerModal({
                                     <FormLabel className="text-slate-300">Phone</FormLabel>
                                     <FormControl>
                                         <Input 
-                                            {...field} 
+                                            {...field}
                                             type="tel" 
-                                            placeholder="+1 (555) 123-4567"
+                                            placeholder="111-222-3333"
+                                            maxLength={12}
                                             className="bg-slate-900 border-slate-700 text-slate-50"
+                                            onChange={(e) => {
+                                                const formatted = formatPhoneNumber(e.target.value);
+                                                field.onChange(formatted);
+                                            }}
                                         />
                                     </FormControl>
                                     <FormMessage/>

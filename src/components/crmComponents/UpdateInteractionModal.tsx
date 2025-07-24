@@ -102,7 +102,7 @@ export default function UpdateInteractionModal({
                                     </SelectTrigger>
                                     <SelectContent>
                                         {customers.map((c) => (<SelectItem key={c.id} value={c.id}>
-                                            {c.full_name}
+                                            {c.full_name || 'Not Specified'}
                                         </SelectItem>))}
                                     </SelectContent>
                                 </Select>

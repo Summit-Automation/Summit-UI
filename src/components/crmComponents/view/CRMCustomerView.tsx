@@ -50,7 +50,7 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
         
         const term = searchTerm.toLowerCase();
         return customers.filter(customer => 
-            customer.full_name.toLowerCase().includes(term) ||
+            (customer.full_name || 'Not Specified').toLowerCase().includes(term) ||
             customer.email.toLowerCase().includes(term) ||
             customer.phone.includes(term) ||
             (customer.business?.toLowerCase().includes(term))
@@ -86,7 +86,9 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
             label: 'Name',
             primary: true,
             render: (value: unknown) => (
-                <span className="font-semibold text-white">{value as string}</span>
+                <span className="font-semibold text-white">
+                    {(value as string) || 'Not Specified'}
+                </span>
             )
         },
         {
@@ -277,7 +279,7 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                             <AlertDialogHeader>
                                 <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    Are you sure you want to delete <strong>{customer.full_name}</strong>? 
+                                    Are you sure you want to delete <strong>{customer.full_name || 'Not Specified'}</strong>? 
                                     This action cannot be undone and will also remove all associated interactions.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
@@ -331,7 +333,7 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                     >
                         <div className="space-y-3">
                             <div className="flex items-center justify-between">
-                                <h3 className="font-semibold text-white">{customer.full_name}</h3>
+                                <h3 className="font-semibold text-white">{customer.full_name || 'Not Specified'}</h3>
                                 <Badge className={`${statusColor(customer.status)} px-2 py-1 text-xs`}>
                                     {customer.status}
                                 </Badge>

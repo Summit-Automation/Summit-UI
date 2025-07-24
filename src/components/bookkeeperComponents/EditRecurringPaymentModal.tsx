@@ -243,7 +243,7 @@ export default function EditRecurringPaymentModal({
                                                             value={c.id}
                                                             className="text-slate-50 hover:bg-slate-800"
                                                         >
-                                                            {c.full_name}
+                                                            {c.full_name || 'Not Specified'}
                                                         </SelectItem>
                                                     ))}
                                                 </SelectContent>

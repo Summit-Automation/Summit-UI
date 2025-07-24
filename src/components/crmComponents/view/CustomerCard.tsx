@@ -23,7 +23,7 @@ export default function CustomerCard({
             <div className="flex items-center gap-3">
                 <Users className="w-6 h-6 text-slate-300"/>
                 <CardTitle className="text-lg font-semibold text-white">
-                    {customer.full_name}
+                    {customer.full_name || 'Not Specified'}
                 </CardTitle>
             </div>
             <Button variant="ghost" size="icon" onClick={() => setOpen((o) => !o)}>
@@ -70,7 +70,7 @@ export default function CustomerCard({
 
             {open && (<div className="mt-4">
                 <InteractionList
-                    fullName={customer.full_name}
+                    fullName={customer.full_name || 'Not Specified'}
                     interactions={interactions}
                     variant="card"
                 />
