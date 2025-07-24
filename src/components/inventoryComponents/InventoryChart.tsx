@@ -77,7 +77,7 @@ export default function InventoryChart({ items }: InventoryChartProps) {
         };
     }, [items]);
 
-    const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) => {
+    const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string; dataKey?: string }>; label?: string }) => {
         if (active && payload && payload.length) {
             return (
                 <div className="bg-slate-800 border border-slate-700 rounded-lg p-3 shadow-lg">
@@ -95,7 +95,7 @@ export default function InventoryChart({ items }: InventoryChartProps) {
         return null;
     };
 
-    const CustomPieTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }> }) => {
+    const CustomPieTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string; payload: { fill: string } }> }) => {
         if (active && payload && payload.length) {
             const data = payload[0];
             return (
