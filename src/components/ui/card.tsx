@@ -7,13 +7,13 @@ const cardVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-surface border-border-primary shadow-lg hover:shadow-xl hover:border-border-secondary",
-        elevated: "bg-surface-elevated border-border-secondary shadow-xl hover:shadow-2xl",
-        glass: "glass border-glass-border shadow-glass hover:glass-strong",
-        metric: "bg-gradient-surface border-border-primary shadow-lg hover:shadow-xl hover:scale-105 hover:-translate-y-1",
-        interactive: "bg-surface border-border-primary shadow-md hover:shadow-lg hover:border-brand-primary cursor-pointer",
-        outline: "bg-transparent border-border-primary hover:bg-surface-elevated hover:border-border-secondary",
-        premium: "bg-gradient-surface border-brand-primary/20 shadow-premium hover:shadow-glow",
+        default: "bg-slate-900 border-slate-800 shadow-lg hover:shadow-xl hover:border-slate-700 card-interactive",
+        elevated: "bg-slate-800 border-slate-700 shadow-xl hover:shadow-2xl card-interactive",
+        glass: "glass hover:glass-strong card-interactive",
+        metric: "bg-gradient-to-br from-slate-900/80 to-slate-800/60 border-slate-800 shadow-lg hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 backdrop-blur-sm card-interactive",
+        interactive: "bg-slate-900 border-slate-800 shadow-md hover:shadow-lg hover:border-blue-600/50 cursor-pointer card-interactive",
+        outline: "bg-transparent border-slate-800 hover:bg-slate-900/50 hover:border-slate-700 card-interactive",
+        premium: "bg-gradient-to-br from-slate-900/90 to-slate-800/70 border-blue-600/20 shadow-xl hover:shadow-glow backdrop-blur-sm card-interactive",
       },
       size: {
         sm: "p-4",
