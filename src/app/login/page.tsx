@@ -202,17 +202,19 @@ export default function LoginPage() {
             </div>
 
             {/* Enhanced Footer */}
-            <div className="relative z-10 p-6 text-center">
-                <div className="flex items-center justify-center space-x-4 mb-2">
-                    <div className="w-12 h-px bg-slate-600"></div>
-                    <p className="text-xs text-slate-500 font-medium">
-                        © 2025 Summit Automation
+            <div className="relative z-10 p-6">
+                <div className="flex flex-col items-center justify-center space-y-2">
+                    <div className="flex items-center justify-center space-x-4">
+                        <div className="w-12 h-px bg-slate-600"></div>
+                        <p className="text-xs text-slate-500 font-medium">
+                            © 2025 Summit Automation
+                        </p>
+                        <div className="w-12 h-px bg-slate-600"></div>
+                    </div>
+                    <p className="text-xs text-slate-600 text-center w-full">
+                        Powering business automation with AI
                     </p>
-                    <div className="w-12 h-px bg-slate-600"></div>
                 </div>
-                <p className="text-xs text-slate-600">
-                    Powering business automation with AI
-                </p>
             </div>
 
             {/* Floating particles for ambiance */}

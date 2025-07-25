@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, memo } from 'react';
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
 import { Customer } from '@/types/customer';
 import { format, parseISO } from 'date-fns';
@@ -22,7 +22,7 @@ function groupByDay(customers: Customer[]): Bucket[] {
         .map(([date, count]) => ({ date, count }));
 }
 
-export default function CustomerGrowthLine({ customers }: { customers: Customer[] }) {
+const CustomerGrowthLine = memo(function CustomerGrowthLine({ customers }: { customers: Customer[] }) {
     const data = useMemo(() => groupByDay(customers), [customers]);
 
     return (
@@ -67,4 +67,6 @@ export default function CustomerGrowthLine({ customers }: { customers: Customer[
             </LineChart>
         </BaseChart>
     );
-}
+});
+
+export default CustomerGrowthLine;
