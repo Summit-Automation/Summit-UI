@@ -24,9 +24,18 @@ function groupCashFlow(transactions: Transaction[]): Bucket[] {
         .map(([date, { income, expense }]) => ({ date, income, expense }));
 }
 
+
+
 const CashFlowArea = memo(function CashFlowArea({ transactions }: { transactions: Transaction[] }) {
     const data = useMemo(() => groupCashFlow(transactions), [transactions]);
 
+    if (data.length === 0) {
+        return (
+            <div className="flex items-center justify-center h-48 text-slate-400">
+                No cash flow data available
+            </div>
+        );
+    }
     return (
         <BaseChart mobileHeight={200} height={350}>
             <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
