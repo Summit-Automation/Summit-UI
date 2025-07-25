@@ -9,9 +9,6 @@ import {
     CartesianGrid,
     Tooltip,
     ResponsiveContainer,
-    PieChart,
-    Pie,
-    Cell,
 } from 'recharts';
 
 interface InventoryItem {
@@ -28,14 +25,6 @@ interface InventoryChartProps {
     items: InventoryItem[];
 }
 
-const COLORS = [
-    '#3B82F6', // Blue
-    '#10B981', // Green
-    '#F59E0B', // Yellow
-    '#EF4444', // Red
-    '#8B5CF6', // Purple
-    '#F97316', // Orange
-];
 
 export default function InventoryChart({ items }: InventoryChartProps) {
     const chartData = useMemo(() => {
@@ -101,21 +90,6 @@ export default function InventoryChart({ items }: InventoryChartProps) {
         return null;
     };
 
-    const CustomPieTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string; payload: { fill: string } }> }) => {
-        if (active && payload && payload.length) {
-            const data = payload[0];
-            return (
-                <div className="bg-slate-800 border border-slate-700 rounded-lg p-3 shadow-lg">
-                    <p className="text-slate-200 font-medium">{data.name}</p>
-                    <p className="text-slate-300">
-                        <span style={{ color: data.payload.fill }}>Items: </span>
-                        {data.value}
-                    </p>
-                </div>
-            );
-        }
-        return null;
-    };
 
     if (items.length === 0) {
         return (
