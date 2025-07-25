@@ -84,39 +84,33 @@ export default function InventoryTable({ items, onItemsChange }: InventoryTableP
         try {
             const result = await deleteInventoryItemAction(item.id);
             if (result.success) {
-                alert(`"${item.name}" has been deleted successfully.`);
                 onItemsChange?.();
             } else {
-                alert(result.error || 'Failed to delete item. Please try again.');
+                console.error('Delete failed:', result.error);
             }
         } catch (error) {
             console.error('Error deleting item:', error);
-            alert('Error deleting item. Please try again.');
         }
     };
 
-    const handleStockAdjustment = (item: InventoryItem) => {
-        alert(`Stock adjustment for "${item.name}" coming soon!`);
-    };
 
     const handleQRCode = (item: InventoryItem) => {
-        alert(`QR code generation for "${item.name}" will be available in a future update!`);
+        // QR code generation functionality would go here
+        console.log(`QR code requested for: ${item.name}`);
     };
 
     const handleEditSubmit = async (itemData: UpdateInventoryItemRequest) => {
         try {
             const result = await editInventoryItem(itemData);
             if (result.success) {
-                alert('Item updated successfully!');
                 onItemsChange?.();
                 setShowEditModal(false);
                 setEditingItem(null);
             } else {
-                alert(result.error || 'Failed to update item. Please try again.');
+                console.error('Update failed:', result.error);
             }
         } catch (error) {
             console.error('Error updating item:', error);
-            alert('Error updating item. Please try again.');
         }
     };
 
@@ -162,6 +156,7 @@ export default function InventoryTable({ items, onItemsChange }: InventoryTableP
                         >
                             Stock
                         </TableHead>
+                        <TableHead className="text-slate-300">Units</TableHead>
                         <TableHead className="text-slate-300">Status</TableHead>
                         <TableHead 
                             className="text-slate-300 cursor-pointer hover:text-blue-400 transition-colors text-right"
@@ -218,6 +213,11 @@ export default function InventoryTable({ items, onItemsChange }: InventoryTableP
                                         {item.current_quantity}
                                     </span>
                                 </TableCell>
+                                <TableCell className="text-slate-300">
+                                    <Badge variant="secondary" className="bg-slate-700/50 text-slate-300 border-slate-600">
+                                        {item.unit_of_measurement}
+                                    </Badge>
+                                </TableCell>
                                 <TableCell>
                                     <Badge variant={stockStatus.color} className="flex items-center gap-1 w-fit">
                                         <StatusIcon className="h-3 w-3" />
@@ -243,15 +243,6 @@ export default function InventoryTable({ items, onItemsChange }: InventoryTableP
                                             title="Edit Item"
                                         >
                                             <Edit className="h-3 w-3" />
-                                        </Button>
-                                        <Button 
-                                            variant="ghost" 
-                                            size="sm"
-                                            onClick={() => handleStockAdjustment(item)}
-                                            className="h-8 w-8 p-0 text-slate-400 hover:text-green-400 hover:bg-green-500/10"
-                                            title="Adjust Stock"
-                                        >
-                                            <Package className="h-3 w-3" />
                                         </Button>
                                         <Button 
                                             variant="ghost" 
