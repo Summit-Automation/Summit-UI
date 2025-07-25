@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, memo } from 'react';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { Transaction } from '@/types/transaction';
 import { format, parseISO } from 'date-fns';
@@ -24,7 +24,7 @@ function groupCashFlow(transactions: Transaction[]): Bucket[] {
         .map(([date, { income, expense }]) => ({ date, income, expense }));
 }
 
-export default function CashFlowArea({ transactions }: { transactions: Transaction[] }) {
+const CashFlowArea = memo(function CashFlowArea({ transactions }: { transactions: Transaction[] }) {
     const data = useMemo(() => groupCashFlow(transactions), [transactions]);
 
     return (
@@ -89,4 +89,6 @@ export default function CashFlowArea({ transactions }: { transactions: Transacti
             </AreaChart>
         </BaseChart>
     );
-}
+});
+
+export default CashFlowArea;
