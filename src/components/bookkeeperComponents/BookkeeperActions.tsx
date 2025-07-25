@@ -200,6 +200,7 @@ export default function BookkeeperActions() {
         event.target.value = '';
     };
 
+
     return (
         <div className="space-y-4 bookkeeper-actions">
             <h3 className="text-base sm:text-lg font-semibold text-slate-200">Quick Actions</h3>
