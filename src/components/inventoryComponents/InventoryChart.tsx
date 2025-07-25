@@ -61,19 +61,30 @@ export default function InventoryChart({ items }: InventoryChartProps) {
         // Value by category
         const valueByCategory = items.reduce((acc, item) => {
             const value = item.current_quantity * item.unit_cost;
+            console.log(`Item: ${item.name}, Quantity: ${item.current_quantity}, Unit Cost: ${item.unit_cost}, Total: ${value}`);
             acc[item.category] = (acc[item.category] || 0) + value;
             return acc;
         }, {} as Record<string, number>);
 
-        const valueChartData = Object.entries(valueByCategory).map(([category, value]) => ({
-            name: category,
-            value: Math.round(value * 100) / 100,
-        }));
+        console.log('Value by category:', valueByCategory);
+
+        const valueChartData = Object.entries(valueByCategory)
+            .map(([category, value]) => ({
+                name: category,
+                value: value,
+            }))
+            .sort((a, b) => b.value - a.value); // Sort by value descending
+
+        console.log('Chart data:', valueChartData);
+
+        const maxValue = Math.max(...valueChartData.map(item => item.value));
+
 
         return {
             categoryDistribution: categoryChartData,
             stockLevels: stockLevelsData,
             valueByCategory: valueChartData,
+            maxValue,
         };
     }, [items]);
 
@@ -85,8 +96,8 @@ export default function InventoryChart({ items }: InventoryChartProps) {
                     {payload.map((entry, index: number) => (
                         <p key={index} className="text-slate-300">
                             <span style={{ color: entry.color }}>{entry.name}: </span>
-                            {entry.value}
-                            {entry.dataKey === 'value' && entry.name !== 'Count' ? ` units` : ''}
+                            {entry.dataKey === 'value' ? `$${entry.value.toFixed(2)}` : entry.value}
+                            {entry.dataKey !== 'value' && (entry.name === 'Current Stock' || entry.name === 'Minimum Threshold') ? ' units' : ''}
                         </p>
                     ))}
                 </div>
@@ -156,60 +167,96 @@ export default function InventoryChart({ items }: InventoryChartProps) {
                 </ResponsiveContainer>
             </div>
 
-            {/* Category Distribution Pie Chart */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
-                    <h3 className="text-lg font-semibold text-slate-200 mb-4">Items by Category</h3>
-                    <ResponsiveContainer width="100%" height={250}>
-                        <PieChart>
-                            <Pie
-                                data={chartData.categoryDistribution}
-                                cx="50%"
-                                cy="50%"
-                                labelLine={false}
-                                outerRadius={80}
-                                fill="#8884d8"
-                                dataKey="value"
-                                label={({ name, percent }) => `${name} ${percent ? (percent * 100).toFixed(0) : 0}%`}
+            {/* Value by Category Chart */}
+            <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
+                <h3 className="text-xl font-semibold text-slate-200 mb-6 text-center">
+                    <div className="flex items-center justify-center gap-2">
+                        <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
+                        Inventory Value by Category
+                    </div>
+                </h3>
+                <div className="flex justify-center">
+                    <div className="w-full max-w-4xl">
+                        <ResponsiveContainer width="100%" height={400}>
+                            <BarChart 
+                                data={chartData.valueByCategory} 
+                                margin={{ left: 20, right: 20, top: 20, bottom: 60 }}
+                                barCategoryGap="20%"
                             >
-                                {chartData.categoryDistribution.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                            </Pie>
-                            <Tooltip content={<CustomPieTooltip />} />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </div>
-
-                <div>
-                    <h3 className="text-lg font-semibold text-slate-200 mb-4">Value by Category</h3>
-                    <ResponsiveContainer width="100%" height={250}>
-                        <BarChart data={chartData.valueByCategory} layout="horizontal">
-                            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                            <XAxis 
-                                type="number" 
-                                stroke="#9CA3AF"
-                                fontSize={12}
-                                tickFormatter={(value) => `$${value}`}
-                            />
-                            <YAxis 
-                                type="category" 
-                                dataKey="name" 
-                                stroke="#9CA3AF"
-                                fontSize={12}
-                                width={100}
-                            />
-                            <Tooltip 
-                                content={<CustomTooltip />}
-                                formatter={(value: number) => [`$${value.toFixed(2)}`, 'Value']}
-                            />
-                            <Bar 
-                                dataKey="value" 
-                                fill="#10B981"
-                                radius={[0, 2, 2, 0]}
-                            />
-                        </BarChart>
-                    </ResponsiveContainer>
+                                <defs>
+                                    <linearGradient id="valueGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="#10B981" stopOpacity={0.9}/>
+                                        <stop offset="100%" stopColor="#059669" stopOpacity={0.7}/>
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="2 2" stroke="#374151" opacity={0.3} />
+                                <XAxis 
+                                    dataKey="name" 
+                                    stroke="#D1D5DB"
+                                    fontSize={12}
+                                    fontWeight={500}
+                                    angle={-45}
+                                    textAnchor="end"
+                                    height={60}
+                                    axisLine={{ stroke: '#4B5563' }}
+                                    tickLine={{ stroke: '#4B5563' }}
+                                />
+                                <YAxis 
+                                    stroke="#D1D5DB"
+                                    fontSize={12}
+                                    fontWeight={500}
+                                    domain={[0, 'dataMax']}
+                                    tickFormatter={(value) => {
+                                        if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
+                                        if (value >= 1000) return `$${(value / 1000).toFixed(1)}K`;
+                                        return `$${value.toFixed(2)}`;
+                                    }}
+                                    axisLine={{ stroke: '#4B5563' }}
+                                    tickLine={{ stroke: '#4B5563' }}
+                                />
+                                <Tooltip 
+                                    content={({ active, payload, label }) => {
+                                        if (active && payload && payload.length) {
+                                            const data = payload[0];
+                                            return (
+                                                <div style={{
+                                                    backgroundColor: '#111827',
+                                                    border: '1px solid #374151',
+                                                    borderRadius: '12px',
+                                                    color: '#F9FAFB',
+                                                    boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.5)',
+                                                    fontSize: '13px',
+                                                    padding: '12px'
+                                                }}>
+                                                    <p style={{ 
+                                                        color: '#F9FAFB', 
+                                                        fontWeight: 600,
+                                                        fontSize: '14px',
+                                                        margin: '0 0 4px 0'
+                                                    }}>
+                                                        {label}
+                                                    </p>
+                                                    <p style={{ margin: 0 }}>
+                                                        <span style={{ color: '#10B981' }}>Total Value: </span>
+                                                        ${data.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    </p>
+                                                </div>
+                                            );
+                                        }
+                                        return null;
+                                    }}
+                                    cursor={{ fill: 'rgba(16, 185, 129, 0.1)' }}
+                                />
+                                <Bar 
+                                    dataKey="value" 
+                                    fill="url(#valueGradient)"
+                                    stroke="#059669"
+                                    strokeWidth={1}
+                                    radius={[4, 4, 0, 0]}
+                                />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
                 </div>
             </div>
         </div>
