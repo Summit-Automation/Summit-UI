@@ -61,12 +61,9 @@ export default function InventoryChart({ items }: InventoryChartProps) {
         // Value by category
         const valueByCategory = items.reduce((acc, item) => {
             const value = item.current_quantity * item.unit_cost;
-            console.log(`Item: ${item.name}, Quantity: ${item.current_quantity}, Unit Cost: ${item.unit_cost}, Total: ${value}`);
             acc[item.category] = (acc[item.category] || 0) + value;
             return acc;
         }, {} as Record<string, number>);
-
-        console.log('Value by category:', valueByCategory);
 
         const valueChartData = Object.entries(valueByCategory)
             .map(([category, value]) => ({
@@ -74,8 +71,6 @@ export default function InventoryChart({ items }: InventoryChartProps) {
                 value: value,
             }))
             .sort((a, b) => b.value - a.value); // Sort by value descending
-
-        console.log('Chart data:', valueChartData);
 
         const maxValue = Math.max(...valueChartData.map(item => item.value));
 
