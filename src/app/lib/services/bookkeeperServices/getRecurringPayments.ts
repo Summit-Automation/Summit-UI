@@ -1,24 +1,19 @@
 'use server';
 
-import { createClient } from '@/utils/supabase/server';
+import { getAuthenticatedUser } from '../shared/authUtils';
 import { RecurringPayment } from '@/types/recurringPayment';
 
 export async function getRecurringPayments(): Promise<RecurringPayment[]> {
     try {
-        const supabase = await createClient();
-
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
-            throw new Error('User not authenticated');
-        }
+        const { supabase, organizationId } = await getAuthenticatedUser();
 
         const { data, error } = await supabase
             .from('recurring_payments')
             .select('*')
+            .eq('organization_id', organizationId)
             .order('created_at', { ascending: false });
 
         if (error) {
-            // If table doesn't exist yet, return empty array instead of throwing
             if (error.code === '42P01') {
                 console.warn('Recurring payments table not found - please run database-setup.sql');
                 return [];
@@ -30,6 +25,6 @@ export async function getRecurringPayments(): Promise<RecurringPayment[]> {
         return data || [];
     } catch (error) {
         console.error('Error in getRecurringPayments:', error);
-        return [];
+        throw error;
     }
 }

@@ -1,23 +1,26 @@
-// app/lib/services/bookkeeperServices/updateTransaction.ts
 'use server';
 
-import {createClient} from '@/utils/supabase/server';
-import {Transaction} from "@/types/transaction";
+import { getAuthenticatedUser } from '../shared/authUtils';
+import { Transaction } from "@/types/transaction";
 
 type UpdateTransactionInput = Omit<Transaction, 'source' | 'timestamp' | 'uploaded_by'>;
 
-
-/**
- * Updates an existing transaction in the database.
- * This function calls a Supabase RPC function to perform the update.
- * @param input the transaction data to update, excluding fields that are not modifiable.
- * @return {Promise<boolean>} returns true if the update was successful, false otherwise.
- */
 export async function updateTransaction(input: UpdateTransactionInput): Promise<boolean> {
     try {
-        const supabase = await createClient();
+        const { supabase, organizationId } = await getAuthenticatedUser();
 
-        const {error} = await supabase.rpc('update_transaction', {
+        const { data: existingTransaction } = await supabase
+            .from('transactions')
+            .select('organization_id')
+            .eq('id', input.id)
+            .single();
+
+        if (!existingTransaction || existingTransaction.organization_id !== organizationId) {
+            console.error('Transaction not found or access denied');
+            return false;
+        }
+
+        const { error } = await supabase.rpc('update_transaction', {
             p_id: input.id,
             p_type: input.type,
             p_category: input.category,

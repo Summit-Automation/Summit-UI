@@ -1,22 +1,15 @@
 'use server';
 
-import {createClient} from '@/utils/supabase/server';
+import { getAuthenticatedUser } from '../shared/authUtils';
+import { Transaction } from "@/types/transaction";
 
-import {Transaction} from "@/types/transaction";
-
-type NewTransactionInput = Omit<Transaction, 'id' | 'source' | 'timestamp' | 'uploaded_by'>;
+type NewTransactionInput = Omit<Transaction, 'id' | 'source' | 'timestamp' | 'uploaded_by' | 'organization_id'>;
 
 export async function createTransaction(input: NewTransactionInput): Promise<boolean> {
     try {
-        const supabase = await createClient();
+        const { supabase } = await getAuthenticatedUser();
 
-        const {data: {user}, error: userError} = await supabase.auth.getUser();
-        if (userError || !user) {
-            console.error('Failed to get user:', userError);
-            return false;
-        }
-
-        const {error} = await supabase.rpc('add_transaction', {
+        const { error } = await supabase.rpc('add_transaction', {
             type: input.type,
             category: input.category,
             description: input.description,

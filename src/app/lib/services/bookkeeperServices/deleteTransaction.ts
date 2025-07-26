@@ -1,19 +1,23 @@
-// app/lib/services/bookkeeperServices/deleteTransaction.ts
 'use server';
 
-import {createClient} from '@/utils/supabase/server';
+import { getAuthenticatedUser } from '../shared/authUtils';
 
-/**
- * Deletes a transaction by its ID.
- * This function calls a Supabase RPC function to perform the deletion.
- * @param id the ID of the transaction to delete.
- * @return {Promise<boolean>} returns true if the deletion was successful, false otherwise.
- */
 export async function deleteTransaction(id: string): Promise<boolean> {
     try {
-        const supabase = await createClient();
+        const { supabase, organizationId } = await getAuthenticatedUser();
 
-        const {error} = await supabase.rpc('delete_transaction', {p_id: id});
+        const { data: existingTransaction } = await supabase
+            .from('transactions')
+            .select('organization_id')
+            .eq('id', id)
+            .single();
+
+        if (!existingTransaction || existingTransaction.organization_id !== organizationId) {
+            console.error('Transaction not found or access denied');
+            return false;
+        }
+
+        const { error } = await supabase.rpc('delete_transaction', { p_id: id });
         if (error) {
             console.error('Error deleting transaction:', error);
             return false;

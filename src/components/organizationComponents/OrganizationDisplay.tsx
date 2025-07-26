@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Building2 } from 'lucide-react';
-import { getCurrentUserOrganization } from '@/app/lib/services/organizationServices/getCurrentOrganization';
+import { getCurrentUserOrganizationClient } from '@/app/lib/services/organizationServices/getCurrentOrganizationClient';
 import { createClient } from '@/utils/supabase/client';
 
 type Organization = {
@@ -19,7 +19,7 @@ export default function OrganizationDisplay() {
 
     const loadOrganization = async () => {
         try {
-            const org = await getCurrentUserOrganization();
+            const org = await getCurrentUserOrganizationClient();
             setOrganization(org);
         } catch (error) {
             console.error('Failed to load organization:', error);

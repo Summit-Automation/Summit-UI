@@ -1,31 +1,26 @@
 'use server';
 
 import { MileageEntry } from '@/types/mileage';
-import { createClient } from '@/utils/supabase/server';
+import { getAuthenticatedUser } from '../shared/authUtils';
 
 export async function getMileageEntries(): Promise<MileageEntry[]> {
     try {
-        const supabase = await createClient();
+        const { supabase, organizationId } = await getAuthenticatedUser();
 
-        // Use the proxy view that references mileage.entries
         const { data, error } = await supabase
             .from('mileage_entries')
             .select('*')
+            .eq('organization_id', organizationId)
             .order('date', { ascending: false });
 
         if (error) {
-            console.warn('Supabase error fetching from mileage_entries table', error);
-            return [];
-        }
-
-        if (!data || data.length === 0) {
-            console.warn('No valid data returned from mileage_entries table. Got:', data);
-            return [];
+            console.error('Error fetching mileage entries:', error);
+            throw new Error('Failed to fetch mileage entries');
         }
 
         return data || [];
     } catch (error) {
         console.error('Error in getMileageEntries:', error);
-        return [];
+        throw error;
     }
 }

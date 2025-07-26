@@ -1,36 +1,26 @@
-// app/crm/getCustomers.ts
-'use server'
+'use server';
 
-import {Customer} from '@/types/customer';
-import {createClient} from '@/utils/supabase/server';
+import { Customer } from '@/types/customer';
+import { getAuthenticatedUser } from '../../shared/authUtils';
 
-/**
- * Fetches all customers from the 'customers' table in Supabase.
- * @returns {Promise<Customer[]>} A promise that resolves to an array of customers.
- */
 export async function getCustomers(): Promise<Customer[]> {
     try {
-        const supabase = await createClient();
+        const { supabase, organizationId } = await getAuthenticatedUser();
 
-        const {data, error} = await supabase
+        const { data, error } = await supabase
             .from('customers')
             .select('*')
-            .order('created_at', {ascending: false});
+            .eq('organization_id', organizationId)
+            .order('created_at', { ascending: false });
 
         if (error) {
-            console.warn(
-                'Supabase error fetching from \'customers\' table', error);
-            return [];
-        }
-
-        if (!data || data.length === 0) {
-            console.warn('No valid data returned from \'customers\' table. Got:', data);
-            return [];
+            console.error('Error fetching customers:', error);
+            throw new Error('Failed to fetch customers');
         }
 
         return data || [];
     } catch (error) {
         console.error('Error in getCustomers:', error);
-        return [];
+        throw error;
     }
 }
