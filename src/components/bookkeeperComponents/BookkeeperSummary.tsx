@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { PiggyBank, DollarSign, CreditCard } from 'lucide-react';
 import { Transaction } from '@/types/transaction';
@@ -56,11 +56,14 @@ function MetricCard({ title, value, Icon, iconColorClass, trend, subtitle }: Met
     );
 }
 
-export default function BookkeeperSummary({ transactions }: { transactions: Transaction[] }) {
-    // Calculate metrics with proper fallbacks for empty data
-    const { totalIncome, totalExpenses, netBalance } = !transactions || transactions.length === 0 
-        ? { totalIncome: 0, totalExpenses: 0, netBalance: 0 }
-        : summarizeTransactions(transactions);
+const BookkeeperSummary = React.memo(function BookkeeperSummary({ transactions }: { transactions: Transaction[] }) {
+    // Calculate metrics with proper fallbacks for empty data and memoize
+    const { totalIncome, totalExpenses, netBalance } = useMemo(() => 
+        !transactions || transactions.length === 0 
+            ? { totalIncome: 0, totalExpenses: 0, netBalance: 0 }
+            : summarizeTransactions(transactions),
+        [transactions]
+    );
     
     // Format currency with exact amounts for financial precision
     const formatCurrency = (amount: number) => {
@@ -104,4 +107,6 @@ export default function BookkeeperSummary({ transactions }: { transactions: Tran
             />
         </div>
     );
-}
+});
+
+export default BookkeeperSummary;

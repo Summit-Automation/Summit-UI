@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useMemo } from 'react';
 import { Cell, Pie, PieChart } from 'recharts';
 import { Customer } from '@/types/customer';
 import { BaseChart, ChartTooltip, ChartLegend } from '@/components/ui/base-chart';
@@ -20,15 +21,18 @@ export default function CustomerStatusPie({
     customers,
     size = 'md',
 }: CustomerStatusPieProps) {
-    const data: StatusCount[] = Object.entries(
-        customers.reduce((acc, curr) => {
-            acc[curr.status] = (acc[curr.status] || 0) + 1;
-            return acc;
-        }, {} as Record<string, number>)
-    ).map(([status, count]) => ({
-        name: status.charAt(0).toUpperCase() + status.slice(1),
-        value: count,
-    }));
+    const data: StatusCount[] = useMemo(() => 
+        Object.entries(
+            customers.reduce((acc, curr) => {
+                acc[curr.status] = (acc[curr.status] || 0) + 1;
+                return acc;
+            }, {} as Record<string, number>)
+        ).map(([status, count]) => ({
+            name: status.charAt(0).toUpperCase() + status.slice(1),
+            value: count,
+        })),
+        [customers]
+    );
 
     if (data.length === 0) {
         return (
