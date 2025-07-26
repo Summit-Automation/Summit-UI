@@ -1,14 +1,14 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import { useState, useCallback } from 'react';
 import EditRecurringPaymentModal from './EditRecurringPaymentModal';
-import {getCustomers} from '@/app/lib/services/crmServices/customer/getCustomers';
-import {getInteractions} from '@/app/lib/services/crmServices/interaction/getInteractions';
-import {Customer} from '@/types/customer';
-import {Interaction} from '@/types/interaction';
-import {RecurringPayment} from '@/types/recurringPayment';
-import {Button} from '@/components/ui/button';
-import {Edit} from 'lucide-react';
+import { getCustomers } from '@/app/lib/services/crmServices/customer/getCustomers';
+import { getInteractions } from '@/app/lib/services/crmServices/interaction/getInteractions';
+import { Customer } from '@/types/customer';
+import { Interaction } from '@/types/interaction';
+import { RecurringPayment } from '@/types/recurringPayment';
+import { Button } from '@/components/ui/button';
+import { Edit } from 'lucide-react';
 
 export default function EditRecurringPaymentClientWrapper({
     payment,
@@ -19,29 +19,40 @@ export default function EditRecurringPaymentClientWrapper({
 }) {
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [interactions, setInteractions] = useState<Interaction[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [dataLoaded, setDataLoaded] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        // fetch customers + interactions once on mount
-        Promise.all([getCustomers(), getInteractions()])
-            .then(([custs, ints]) => {
-                setCustomers(custs);
-                setInteractions(ints);
-            })
-            .finally(() => setLoading(false));
-    }, []);
+    const loadData = useCallback(async () => {
+        if (dataLoaded || isLoading) return;
+        
+        setIsLoading(true);
+        try {
+            const [custs, ints] = await Promise.all([getCustomers(), getInteractions()]);
+            setCustomers(custs);
+            setInteractions(ints);
+            setDataLoaded(true);
+        } catch (error) {
+            console.error('Failed to load data:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [dataLoaded, isLoading]);
 
-    if (loading) {
-        return (
-            <Button 
-                variant="ghost" 
-                size="sm" 
-                disabled
-                className="text-slate-400 px-3 py-1"
-            >
-                <Edit className="h-4 w-4" />
-            </Button>
-        );
+    const triggerButton = (
+        <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={loadData}
+            disabled={isLoading}
+            className={isLoading ? "text-slate-400 px-3 py-1" : "text-blue-400 hover:text-blue-300 hover:bg-blue-400/10 px-3 py-1"}
+        >
+            <Edit className="h-4 w-4 mr-1" />
+            {isLoading ? '' : 'Edit'}
+        </Button>
+    );
+
+    if (!dataLoaded) {
+        return triggerButton;
     }
 
     return (
@@ -51,14 +62,7 @@ export default function EditRecurringPaymentClientWrapper({
             interactions={interactions}
             onSuccess={onSuccess}
         >
-            <Button 
-                variant="ghost" 
-                size="sm"
-                className="text-blue-400 hover:text-blue-300 hover:bg-blue-400/10 px-3 py-1"
-            >
-                <Edit className="h-4 w-4 mr-1" />
-                Edit
-            </Button>
+            {triggerButton}
         </EditRecurringPaymentModal>
     );
 }

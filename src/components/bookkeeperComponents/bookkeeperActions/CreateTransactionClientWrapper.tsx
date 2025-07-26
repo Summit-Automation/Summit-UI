@@ -1,43 +1,61 @@
 'use client';
 
-import {useEffect, useState} from 'react';
-import {useRouter} from 'next/navigation';
+import { useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import NewTransactionModal from '@/components/bookkeeperComponents/NewTransactionModal';
-import {getCustomers} from '@/app/lib/services/crmServices/customer/getCustomers';
-import {getInteractions} from '@/app/lib/services/crmServices/interaction/getInteractions';
-import {Customer} from '@/types/customer';
-import {Interaction} from '@/types/interaction';
-import {Button} from '@/components/ui/button';
+import { getCustomers } from '@/app/lib/services/crmServices/customer/getCustomers';
+import { getInteractions } from '@/app/lib/services/crmServices/interaction/getInteractions';
+import { Customer } from '@/types/customer';
+import { Interaction } from '@/types/interaction';
+import { Button } from '@/components/ui/button';
 
 export default function CreateTransactionClientWrapper() {
     const router = useRouter();
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [interactions, setInteractions] = useState<Interaction[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [dataLoaded, setDataLoaded] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        // fetch customers + interactions once on mount
-        Promise.all([getCustomers(), getInteractions()])
-            .then(([custs, ints]) => {
-                setCustomers(custs);
-                setInteractions(ints);
-            })
-            .finally(() => setLoading(false));
-    }, []);
+    const loadData = useCallback(async () => {
+        if (dataLoaded || isLoading) return;
+        
+        setIsLoading(true);
+        try {
+            const [custs, ints] = await Promise.all([getCustomers(), getInteractions()]);
+            setCustomers(custs);
+            setInteractions(ints);
+            setDataLoaded(true);
+        } catch (error) {
+            console.error('Failed to load data:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [dataLoaded, isLoading]);
 
-    if (loading) {
-        return (<Button variant="outline" disabled>
-            Loading…
-        </Button>);
+    const triggerButton = (
+        <Button 
+            variant="outline" 
+            onClick={loadData}
+            disabled={isLoading}
+            className="w-full bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800 hover:border-slate-600 transition-all duration-200 h-10"
+        >
+            {isLoading ? 'Loading...' : 'Add Transaction'}
+        </Button>
+    );
+
+    if (!dataLoaded) {
+        return triggerButton;
     }
 
-    return (<NewTransactionModal
-        customers={customers}
-        interactions={interactions}
-        onSuccess={() => {
-            router.refresh();
-            // Trigger custom event for recurring payments refresh
-            window.dispatchEvent(new CustomEvent('recurringPaymentsUpdate'));
-        }}
-    />);
+    return (
+        <NewTransactionModal
+            customers={customers}
+            interactions={interactions}
+            triggerContent={triggerButton}
+            onSuccess={() => {
+                router.refresh();
+                window.dispatchEvent(new CustomEvent('recurringPaymentsUpdate'));
+            }}
+        />
+    );
 }
