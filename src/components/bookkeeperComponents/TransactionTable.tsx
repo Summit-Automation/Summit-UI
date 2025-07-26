@@ -21,7 +21,7 @@ import { deleteTransaction } from '@/app/lib/services/bookkeeperServices/deleteT
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
-export default function TransactionTable({ transactions }: { transactions: Transaction[] }) {
+const TransactionTable = React.memo(function TransactionTable({ transactions }: { transactions: Transaction[] }) {
     const router = useRouter();
     
     const sortedTransactions = useMemo(() => 
@@ -222,4 +222,6 @@ export default function TransactionTable({ transactions }: { transactions: Trans
             emptyMessage="No transactions found"
         />
     );
-}
+});
+
+export default TransactionTable;
