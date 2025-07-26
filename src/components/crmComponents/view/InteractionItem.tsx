@@ -104,30 +104,30 @@ export default function InteractionItem({interaction, variant}: InteractionItemP
                                 <Trash2 className="w-4 h-4"/>
                             </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent>
+                        <AlertDialogContent className="bg-slate-900 border-slate-700">
                             <AlertDialogHeader>
-                                <AlertDialogTitle>Delete Interaction?</AlertDialogTitle>
-                                <AlertDialogDescription>
+                                <AlertDialogTitle className="text-white">Delete Interaction?</AlertDialogTitle>
+                                <AlertDialogDescription className="text-slate-300">
                                     This cannot be undone.
                                 </AlertDialogDescription>
-                                <div className="flex justify-end space-x-2 mt-4">
-                                    <AlertDialogCancel asChild>
-                                        <Button variant="outline" size="sm">Cancel</Button>
-                                    </AlertDialogCancel>
-                                    <AlertDialogAction asChild>
-                                        <Button
-                                            variant="destructive"
-                                            size="sm"
-                                            onClick={async () => {
-                                                await deleteInteraction(interaction.id);
-                                                router.refresh();
-                                            }}
-                                        >
-                                            Delete
-                                        </Button>
-                                    </AlertDialogAction>
-                                </div>
                             </AlertDialogHeader>
+                            <div className="flex justify-end space-x-2 pt-4">
+                                <AlertDialogCancel asChild>
+                                    <Button variant="outline" size="sm" className="border-slate-600 text-slate-300 hover:bg-slate-800">Cancel</Button>
+                                </AlertDialogCancel>
+                                <AlertDialogAction asChild>
+                                    <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={async () => {
+                                            await deleteInteraction(interaction.id);
+                                            router.refresh();
+                                        }}
+                                    >
+                                        Delete
+                                    </Button>
+                                </AlertDialogAction>
+                            </div>
                         </AlertDialogContent>
                     </AlertDialog>
                 </div>

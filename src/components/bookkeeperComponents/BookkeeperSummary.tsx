@@ -9,7 +9,7 @@ const cardStyles = `metric-enhanced card-enhanced data-appear`;
 const cardHeaders = `flex items-center justify-between pb-2`;
 const cardTitleStyles = `text-sm font-medium text-slate-300 uppercase tracking-wide`;
 const iconStyles = `h-4 w-4`;
-const iconContainerStyles = `p-2 bg-slate-800/50 rounded-lg transition-all duration-300 group-hover:scale-110`;
+const iconContainerStyles = `p-2 bg-slate-800 rounded-lg transition-all duration-300 group-hover:scale-110`;
 const cardContentStyles = `pt-0`;
 
 interface MetricCardProps {
@@ -41,8 +41,8 @@ function MetricCard({ title, value, Icon, iconColorClass, trend, subtitle }: Met
                         <div className={cn(
                             "text-xs px-2 py-1 rounded-full mb-0.5",
                             isPositive 
-                                ? "text-green-400 bg-green-400/10 status-badge-enhanced status-success" 
-                                : "text-red-400 bg-red-400/10 status-badge-enhanced status-error"
+                                ? "text-green-400 bg-green-900 status-badge-enhanced status-success" 
+                                : "text-red-400 bg-red-900 status-badge-enhanced status-error"
                         )}>
                             {isPositive ? '+' : ''}{trend}%
                         </div>

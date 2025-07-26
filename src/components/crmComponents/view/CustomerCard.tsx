@@ -18,7 +18,7 @@ export default function CustomerCard({
     const [open, setOpen] = useState(false);
 
     return (<Card
-        className="bg-slate-900/50 border border-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200">
+        className="bg-slate-900 border border-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200">
         <CardHeader className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
                 <Users className="w-6 h-6 text-slate-300"/>
