@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@/utils/supabase/server';
+import { getAuthenticatedUser } from '@/app/lib/services/shared/authUtils';
 
 interface ConvertLeadResult {
   success: boolean;
@@ -10,19 +10,7 @@ interface ConvertLeadResult {
 
 export async function convertLeadToCustomer(leadId: string): Promise<ConvertLeadResult> {
   try {
-    const supabase = await createClient();
-    
-    // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      throw new Error('User not authenticated');
-    }
-
-    // Get organization ID from user metadata
-    const organizationId = user.user_metadata?.organization_id;
-    if (!organizationId) {
-      throw new Error('User organization not found in metadata');
-    }
+    const { organizationId, supabase } = await getAuthenticatedUser();
 
     // First, get the lead data
     const { data: lead, error: leadError } = await supabase

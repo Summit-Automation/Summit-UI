@@ -1,19 +1,13 @@
 'use server';
 
-import { createClient } from '@/utils/supabase/server';
+import { getAuthenticatedUser } from '@/app/lib/services/shared/authUtils';
 import { MileageEntry } from "@/types/mileage";
 
 type NewMileageEntryInput = Omit<MileageEntry, 'id' | 'created_at' | 'updated_at' | 'user_id'>;
 
 export async function createMileageEntry(input: NewMileageEntryInput): Promise<boolean> {
     try {
-        const supabase = await createClient();
-
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) {
-            console.error('Failed to get user:', userError);
-            return false;
-        }
+        const { supabase } = await getAuthenticatedUser();
 
         // Call the proxy function in public schema
         const { data, error } = await supabase.rpc('add_mileage_entry', {

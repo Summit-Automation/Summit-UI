@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@/utils/supabase/server';
+import { getAuthenticatedUser } from '@/app/lib/services/shared/authUtils';
 
 export async function checkAIGenerationCooldown(): Promise<{ 
   canGenerate: boolean; 
@@ -8,19 +8,7 @@ export async function checkAIGenerationCooldown(): Promise<{
   lastGeneration?: string;
 }> {
   try {
-    const supabase = await createClient();
-    
-    // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return { canGenerate: false };
-    }
-
-    // Get organization ID from user metadata
-    const organizationId = user.user_metadata?.organization_id;
-    if (!organizationId) {
-      return { canGenerate: false };
-    }
+    const { organizationId, supabase } = await getAuthenticatedUser();
 
     // Check the last AI batch generation for this organization
     const { data: lastBatch, error } = await supabase

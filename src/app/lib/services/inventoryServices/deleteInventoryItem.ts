@@ -1,16 +1,10 @@
 'use server';
 
-import { createClient } from '@/utils/supabase/server';
+import { getAuthenticatedUser } from '@/app/lib/services/shared/authUtils';
 
 export async function deleteInventoryItem(itemId: string): Promise<{ success: boolean; error?: string }> {
     try {
-        const supabase = await createClient();
-
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) {
-            console.error('Failed to get user:', userError);
-            return { success: false, error: 'Authentication failed' };
-        }
+        const { supabase } = await getAuthenticatedUser();
 
         const { error } = await supabase.rpc('delete_inventory_item', {
             p_id: itemId
