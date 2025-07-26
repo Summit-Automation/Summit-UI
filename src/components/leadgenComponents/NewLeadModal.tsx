@@ -112,6 +112,7 @@ export default function NewLeadModal({ isOpen, onClose }: NewLeadModalProps) {
         ...data,
         source: 'manual' as const,
         estimated_value: data.estimated_value ? parseFloat(data.estimated_value) : undefined,
+        expected_close_date: data.expected_close_date || undefined,
         tags: tags.length > 0 ? tags : undefined,
       };
 

@@ -141,6 +141,7 @@ export default function EditLeadModal({ isOpen, onClose, lead }: EditLeadModalPr
       const leadData = {
         ...data,
         estimated_value: data.estimated_value ? parseFloat(data.estimated_value) : undefined,
+        expected_close_date: data.expected_close_date || undefined,
         tags: tags.length > 0 ? tags : undefined,
       };
 
