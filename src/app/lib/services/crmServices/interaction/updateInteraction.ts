@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@/utils/supabase/server';
+import { getAuthenticatedUser } from '@/app/lib/services/shared/authUtils';
 import { Interaction } from '@/types/interaction';
 
 type UpdateInteractionInput = Omit<Interaction, 'customer_name' | 'created_at' | 'updated_at' | 'interaction_index'>
@@ -13,12 +13,7 @@ type UpdateInteractionInput = Omit<Interaction, 'customer_name' | 'created_at' |
  */
 export async function updateInteraction(input: UpdateInteractionInput): Promise<boolean> {
     try {
-        const supabase = await createClient();
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) {
-            console.error('Failed to get user:', userError);
-            return false;
-        }
+        const { supabase } = await getAuthenticatedUser();
 
         const { error } = await supabase.rpc('update_interaction', {
             p_id: input.id,

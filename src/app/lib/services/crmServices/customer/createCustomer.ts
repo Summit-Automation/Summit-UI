@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@/utils/supabase/server';
+import { getAuthenticatedUser } from '@/app/lib/services/shared/authUtils';
 import { Customer } from '@/types/customer';
 
 type NewCustomerInput = Omit<Customer, 'id' | 'created_at' | 'updated_at'>;
@@ -14,13 +14,7 @@ type NewCustomerInput = Omit<Customer, 'id' | 'created_at' | 'updated_at'>;
  */
 export async function createCustomer(input: NewCustomerInput): Promise<boolean> {
     try {
-        const supabase = await createClient();
-
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) {
-            console.error('Failed to get user:', userError);
-            return false;
-        }
+        const { supabase } = await getAuthenticatedUser();
 
         const { error } = await supabase.rpc('add_customer', {
             full_name: input.full_name,

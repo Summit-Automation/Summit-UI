@@ -1,24 +1,11 @@
 'use server';
 
 import { InventoryAlert } from '@/types/inventory';
-import { createClient } from '@/utils/supabase/server';
+import { getAuthenticatedUser } from '@/app/lib/services/shared/authUtils';
 
 export async function getInventoryAlerts(): Promise<InventoryAlert[]> {
     try {
-        const supabase = await createClient();
-
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) {
-            console.error('Failed to get user:', userError);
-            return [];
-        }
-
-        // Get organization_id from user metadata for manual filtering
-        const organizationId = user.user_metadata?.organization_id;
-        if (!organizationId) {
-            console.error('User does not have organization_id in metadata');
-            return [];
-        }
+        const { organizationId, supabase } = await getAuthenticatedUser();
 
         const { data, error } = await supabase
             .from('inventory_alerts')

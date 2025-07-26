@@ -1,15 +1,10 @@
 'use server';
 
-import { createClient } from '@/utils/supabase/server';
+import { getAuthenticatedUser } from '@/app/lib/services/shared/authUtils';
 
 export async function deleteInteraction(id: string): Promise<boolean> {
     try {
-        const supabase = await createClient();
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) {
-            console.error('Failed to get user:', userError);
-            return false;
-        }
+        const { supabase } = await getAuthenticatedUser();
 
         const { error } = await supabase
             .from('interactions')

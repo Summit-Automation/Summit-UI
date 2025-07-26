@@ -1,17 +1,11 @@
 'use server';
 
 import { CreateInventoryItemRequest, InventoryItem } from '@/types/inventory';
-import { createClient } from '@/utils/supabase/server';
+import { getAuthenticatedUser } from '@/app/lib/services/shared/authUtils';
 
 export async function createInventoryItem(itemData: CreateInventoryItemRequest): Promise<InventoryItem | null> {
     try {
-        const supabase = await createClient();
-
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) {
-            console.error('Failed to get user:', userError);
-            return null;
-        }
+        const { supabase } = await getAuthenticatedUser();
 
         const { error } = await supabase.rpc('add_inventory_item', {
             p_name: itemData.name,
