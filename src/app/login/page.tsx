@@ -52,8 +52,12 @@ export default function LoginPage() {
             const formData = new FormData();
             formData.append('email', resetEmail);
             const result = await resetPassword(formData);
-            setResetMessage({ type: 'success', text: result.message });
-            setResetEmail('');
+            if (result.success && result.message) {
+                setResetMessage({ type: 'success', text: result.message });
+                setResetEmail('');
+            } else if (result.error) {
+                setResetMessage({ type: 'error', text: result.error });
+            }
         } catch (error) {
             setResetMessage({ 
                 type: 'error', 
