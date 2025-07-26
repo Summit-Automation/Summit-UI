@@ -1,8 +1,9 @@
 'use server';
 
 import { getAuthenticatedUser } from '../shared/authUtils';
+import { Result, success, error } from '@/types/result';
 
-export async function deleteTransaction(id: string): Promise<boolean> {
+export async function deleteTransaction(id: string): Promise<Result<void, string>> {
     try {
         const { supabase, organizationId } = await getAuthenticatedUser();
 
@@ -14,17 +15,17 @@ export async function deleteTransaction(id: string): Promise<boolean> {
 
         if (!existingTransaction || existingTransaction.organization_id !== organizationId) {
             console.error('Transaction not found or access denied');
-            return false;
+            return error('Transaction not found or access denied');
         }
 
-        const { error } = await supabase.rpc('delete_transaction', { p_id: id });
-        if (error) {
-            console.error('Error deleting transaction:', error);
-            return false;
+        const { error: deleteError } = await supabase.rpc('delete_transaction', { p_id: id });
+        if (deleteError) {
+            console.error('Error deleting transaction:', deleteError);
+            return error(deleteError.message);
         }
-        return true;
+        return success(undefined);
     } catch (err) {
         console.error('Exception in deleteTransaction:', err);
-        return false;
+        return error(err instanceof Error ? err.message : 'Unknown error occurred');
     }
 }

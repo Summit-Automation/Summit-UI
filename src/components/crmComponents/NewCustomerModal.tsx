@@ -11,6 +11,7 @@ import {Input} from '@/components/ui/input';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
 import {createCustomer} from '@/app/lib/services/crmServices/customer/createCustomer';
 import {formatPhoneNumber} from '@/lib/phoneUtils';
+import {isSuccess} from '@/types/result';
 
 type FormValues = {
     full_name: string;
@@ -30,13 +31,13 @@ export default function NewCustomerModal({onSuccess}: { onSuccess?: () => void }
     });
 
     const onSubmit = async (values: FormValues) => {
-        const ok = await createCustomer(values);
-        if (ok) {
+        const result = await createCustomer(values);
+        if (isSuccess(result)) {
             form.reset();
             setOpen(false);
             onSuccess?.();
         } else {
-            form.setError('full_name', {message: 'Failed to create customer'});
+            form.setError('full_name', {message: result.error});
         }
     };
 
