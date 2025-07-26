@@ -186,7 +186,7 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
                 {/* Purpose - Full Text */}
                 <div className="border-t border-slate-700 pt-4">
                     <div className="text-xs text-slate-400 uppercase mb-2">Full Purpose</div>
-                    <div className="text-sm text-white p-3 bg-slate-800/30 rounded-lg break-words">
+                    <div className="text-sm text-white p-3 bg-slate-800 rounded-lg break-words">
                         {mileageEntry.purpose}
                     </div>
                 </div>
@@ -202,13 +202,13 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                             <div>
                                 <div className="text-xs text-slate-400 uppercase mb-1">From</div>
-                                <div className="text-slate-200 break-words p-2 bg-slate-800/20 rounded">
+                                <div className="text-slate-200 break-words p-2 bg-slate-800 rounded">
                                     {mileageEntry.start_location || 'Not specified'}
                                 </div>
                             </div>
                             <div>
                                 <div className="text-xs text-slate-400 uppercase mb-1">To</div>
-                                <div className="text-slate-200 break-words p-2 bg-slate-800/20 rounded">
+                                <div className="text-slate-200 break-words p-2 bg-slate-800 rounded">
                                     {mileageEntry.end_location || 'Not specified'}
                                 </div>
                             </div>
@@ -250,17 +250,17 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
                                 <span>Delete</span>
                             </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent>
+                        <AlertDialogContent className="bg-slate-900 border-slate-700">
                             <AlertDialogHeader>
-                                <AlertDialogTitle>Confirm deletion</AlertDialogTitle>
-                                <AlertDialogDescription>
+                                <AlertDialogTitle className="text-white">Confirm deletion</AlertDialogTitle>
+                                <AlertDialogDescription className="text-slate-300">
                                     Are you sure you want to permanently delete this mileage entry for {formatMiles(mileageEntry.miles)} miles? 
                                     This action cannot be undone.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <div className="flex flex-col-reverse sm:flex-row justify-end space-y-2 space-y-reverse sm:space-y-0 sm:space-x-2 pt-4">
                                 <AlertDialogCancel asChild>
-                                    <Button variant="outline" className="w-full sm:w-auto">Cancel</Button>
+                                    <Button variant="outline" className="w-full sm:w-auto border-slate-600 text-slate-300 hover:bg-slate-800">Cancel</Button>
                                 </AlertDialogCancel>
                                 <AlertDialogAction asChild>
                                     <Button 

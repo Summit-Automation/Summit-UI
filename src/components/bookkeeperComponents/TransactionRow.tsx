@@ -71,7 +71,7 @@ export default function TransactionRow({
 
         {open && (<TableRow>
             <TableCell colSpan={7} className="p-0 bg-transparent">
-                <div className="m-4 bg-slate-700 bg-opacity-50 dark:bg-opacity-30 rounded-lg p-4">
+                <div className="m-4 bg-slate-700 rounded-lg p-4">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         {/* Customer */}
                         <div className="flex items-start space-x-2">
@@ -122,17 +122,17 @@ export default function TransactionRow({
                                         <Trash2 className="h-4 w-4"/> <span>Delete</span>
                                     </Button>
                                 </AlertDialogTrigger>
-                                <AlertDialogContent>
+                                <AlertDialogContent className="bg-slate-900 border-slate-700">
                                     <AlertDialogHeader>
-                                        <AlertDialogTitle>Confirm deletion</AlertDialogTitle>
-                                        <AlertDialogDescription>
+                                        <AlertDialogTitle className="text-white">Confirm deletion</AlertDialogTitle>
+                                        <AlertDialogDescription className="text-slate-300">
                                             Are you sure you want to permanently delete this transaction? This action
                                             cannot be undone.
                                         </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <div className="flex justify-end space-x-2 pt-4">
                                         <AlertDialogCancel asChild>
-                                            <Button variant="outline">Cancel</Button>
+                                            <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800">Cancel</Button>
                                         </AlertDialogCancel>
                                         <AlertDialogAction asChild>
                                             <Button variant="destructive" onClick={deleteTransactionHandler}>

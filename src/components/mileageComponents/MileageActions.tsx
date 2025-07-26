@@ -43,7 +43,7 @@ export default function MileageActions() {
             </div>
 
             {/* AI Feature Note */}
-            <div className="flex items-start gap-2 text-xs text-slate-500 mt-3 p-3 bg-slate-800/20 rounded-lg border border-slate-700/50">
+            <div className="flex items-start gap-2 text-xs text-slate-500 mt-3 p-3 bg-slate-800 rounded-lg border border-slate-700">
                 <Sparkles className="h-3 w-3 mt-0.5 flex-shrink-0" />
                 <span>AI-powered mileage calculation using Google Maps Directions API</span>
             </div>

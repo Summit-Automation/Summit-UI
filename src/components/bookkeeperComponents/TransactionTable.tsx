@@ -153,7 +153,7 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
             {/* Full Description */}
             <div className="border-t border-slate-700 pt-4">
                 <div className="text-xs text-slate-400 uppercase mb-2">Full Description</div>
-                <div className="text-sm text-white p-3 bg-slate-800/30 rounded-lg break-words whitespace-pre-wrap">
+                <div className="text-sm text-white p-3 bg-slate-800 rounded-lg break-words whitespace-pre-wrap">
                     {transaction.description}
                 </div>
             </div>
@@ -176,17 +176,17 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
                             <span>Delete</span>
                         </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent>
+                    <AlertDialogContent className="bg-slate-900 border-slate-700">
                         <AlertDialogHeader>
-                            <AlertDialogTitle>Confirm deletion</AlertDialogTitle>
-                            <AlertDialogDescription>
+                            <AlertDialogTitle className="text-white">Confirm deletion</AlertDialogTitle>
+                            <AlertDialogDescription className="text-slate-300">
                                 Are you sure you want to permanently delete this transaction? This action
                                 cannot be undone.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <div className="flex flex-col-reverse sm:flex-row justify-end space-y-2 space-y-reverse sm:space-y-0 sm:space-x-2 pt-4">
                             <AlertDialogCancel asChild>
-                                <Button variant="outline" className="w-full sm:w-auto">Cancel</Button>
+                                <Button variant="outline" className="w-full sm:w-auto border-slate-600 text-slate-300 hover:bg-slate-800">Cancel</Button>
                             </AlertDialogCancel>
                             <AlertDialogAction asChild>
                                 <Button 

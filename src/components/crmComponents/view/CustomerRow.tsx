@@ -46,7 +46,7 @@ export default function CustomerRow({
         <>
             <TableRow
                 onClick={() => setOpen((o) => !o)}
-                className="bg-slate-900/50 border-b border-slate-800 hover:bg-slate-900/70 transition-all duration-200 cursor-pointer"
+                className="bg-slate-900 border-b border-slate-800 hover:bg-slate-800 transition-all duration-200 cursor-pointer"
             >
                 {/* Name */}
                 <TableCell className="flex items-center gap-3 p-4">
@@ -113,25 +113,25 @@ export default function CustomerRow({
                                     <Trash2 className="h-4 w-4" />
                                 </Button>
                             </AlertDialogTrigger>
-                            <AlertDialogContent>
+                            <AlertDialogContent className="bg-slate-900 border-slate-700">
                                 <AlertDialogHeader>
-                                    <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
-                                    <AlertDialogDescription>
+                                    <AlertDialogTitle className="text-white">Confirm Deletion</AlertDialogTitle>
+                                    <AlertDialogDescription className="text-slate-300">
                                         Are you sure you want to delete <strong>{customer.full_name || 'Not Specified'}</strong>? This action cannot be undone.
                                     </AlertDialogDescription>
-                                    <div className="flex justify-end space-x-2 mt-4">
-                                        <AlertDialogCancel asChild>
-                                            <Button variant="outline" size="sm">
-                                                Cancel
-                                            </Button>
-                                        </AlertDialogCancel>
-                                        <AlertDialogAction asChild>
-                                            <Button variant="destructive" size="sm" onClick={handleDelete}>
-                                                Delete
-                                            </Button>
-                                        </AlertDialogAction>
-                                    </div>
                                 </AlertDialogHeader>
+                                <div className="flex justify-end space-x-2 pt-4">
+                                    <AlertDialogCancel asChild>
+                                        <Button variant="outline" size="sm" className="border-slate-600 text-slate-300 hover:bg-slate-800">
+                                            Cancel
+                                        </Button>
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction asChild>
+                                        <Button variant="destructive" size="sm" onClick={handleDelete}>
+                                            Delete
+                                        </Button>
+                                    </AlertDialogAction>
+                                </div>
                             </AlertDialogContent>
                         </AlertDialog>
                     </div>

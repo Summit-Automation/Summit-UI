@@ -11,6 +11,16 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
 import { 
     Edit, 
     Trash2, 
@@ -77,10 +87,6 @@ export default function InventoryTable({ items, onItemsChange }: InventoryTableP
     };
 
     const handleDelete = async (item: InventoryItem) => {
-        if (!confirm(`Are you sure you want to delete "${item.name}"? This action cannot be undone.`)) {
-            return;
-        }
-
         try {
             const result = await deleteInventoryItemAction(item.id);
             if (result.success) {
@@ -133,7 +139,7 @@ export default function InventoryTable({ items, onItemsChange }: InventoryTableP
         <div className="border border-slate-700 rounded-lg overflow-hidden">
             <Table>
                 <TableHeader>
-                    <TableRow className="border-slate-700 hover:bg-slate-800/50">
+                    <TableRow className="border-slate-700 hover:bg-slate-800">
                         <TableHead 
                             className="text-slate-300 cursor-pointer hover:text-blue-400 transition-colors"
                             onClick={() => handleSort('name')}
@@ -182,7 +188,7 @@ export default function InventoryTable({ items, onItemsChange }: InventoryTableP
                         return (
                             <TableRow 
                                 key={item.id} 
-                                className="border-slate-700 hover:bg-slate-800/30 transition-colors"
+                                className="border-slate-700 hover:bg-slate-800 transition-colors"
                             >
                                 <TableCell className="font-medium text-slate-200">
                                     <div className="flex items-center gap-2">
@@ -192,7 +198,7 @@ export default function InventoryTable({ items, onItemsChange }: InventoryTableP
                                 </TableCell>
                                 <TableCell className="text-slate-400 font-mono text-sm">
                                     {item.sku ? (
-                                        <span className="bg-slate-800/50 px-2 py-1 rounded text-xs border border-slate-700">
+                                        <span className="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700">
                                             {item.sku}
                                         </span>
                                     ) : (
@@ -214,7 +220,7 @@ export default function InventoryTable({ items, onItemsChange }: InventoryTableP
                                     </span>
                                 </TableCell>
                                 <TableCell className="text-slate-300">
-                                    <Badge variant="secondary" className="bg-slate-700/50 text-slate-300 border-slate-600">
+                                    <Badge variant="secondary" className="bg-slate-700 text-slate-300 border-slate-600">
                                         {item.unit_of_measurement}
                                     </Badge>
                                 </TableCell>
@@ -239,7 +245,7 @@ export default function InventoryTable({ items, onItemsChange }: InventoryTableP
                                             variant="ghost" 
                                             size="sm"
                                             onClick={() => handleEdit(item)}
-                                            className="h-8 w-8 p-0 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10"
+                                            className="h-8 w-8 p-0 text-slate-400 hover:text-blue-400 hover:bg-blue-500"
                                             title="Edit Item"
                                         >
                                             <Edit className="h-3 w-3" />
@@ -248,20 +254,41 @@ export default function InventoryTable({ items, onItemsChange }: InventoryTableP
                                             variant="ghost" 
                                             size="sm"
                                             onClick={() => handleQRCode(item)}
-                                            className="h-8 w-8 p-0 text-slate-400 hover:text-orange-400 hover:bg-orange-500/10"
+                                            className="h-8 w-8 p-0 text-slate-400 hover:text-orange-400 hover:bg-orange-500"
                                             title="View QR Code"
                                         >
                                             <QrCode className="h-3 w-3" />
                                         </Button>
-                                        <Button 
-                                            variant="ghost" 
-                                            size="sm"
-                                            onClick={() => handleDelete(item)}
-                                            className="h-8 w-8 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/10"
-                                            title="Delete"
-                                        >
-                                            <Trash2 className="h-3 w-3" />
-                                        </Button>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button 
+                                                    variant="ghost" 
+                                                    size="sm"
+                                                    className="h-8 w-8 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/10"
+                                                    title="Delete"
+                                                >
+                                                    <Trash2 className="h-3 w-3" />
+                                                </Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent className="bg-slate-900 border-slate-700">
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle className="text-white">Confirm deletion</AlertDialogTitle>
+                                                    <AlertDialogDescription className="text-slate-300">
+                                                        Are you sure you want to permanently delete &quot;{item.name}&quot;? This action cannot be undone.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <div className="flex justify-end space-x-2 pt-4">
+                                                    <AlertDialogCancel asChild>
+                                                        <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800">Cancel</Button>
+                                                    </AlertDialogCancel>
+                                                    <AlertDialogAction asChild>
+                                                        <Button variant="destructive" onClick={() => handleDelete(item)}>
+                                                            Yes, delete
+                                                        </Button>
+                                                    </AlertDialogAction>
+                                                </div>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
                                     </div>
                                 </TableCell>
                             </TableRow>

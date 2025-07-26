@@ -222,7 +222,7 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                     {customerInteractions.length > 0 ? (
                         <div className="space-y-2 max-h-32 overflow-y-auto">
                             {customerInteractions.slice(0, 3).map((interaction) => (
-                                <div key={interaction.id} className="bg-slate-800/30 rounded p-2">
+                                <div key={interaction.id} className="bg-slate-800 rounded p-2">
                                     <div className="flex justify-between items-start">
                                         <span className="text-xs font-medium text-white">
                                             {interaction.title}
@@ -275,17 +275,17 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                                 <span>Delete</span>
                             </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent>
+                        <AlertDialogContent className="bg-slate-900 border-slate-700">
                             <AlertDialogHeader>
-                                <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
-                                <AlertDialogDescription>
+                                <AlertDialogTitle className="text-white">Confirm Deletion</AlertDialogTitle>
+                                <AlertDialogDescription className="text-slate-300">
                                     Are you sure you want to delete <strong>{customer.full_name || 'Not Specified'}</strong>? 
                                     This action cannot be undone and will also remove all associated interactions.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <div className="flex flex-col-reverse sm:flex-row justify-end space-y-2 space-y-reverse sm:space-y-0 sm:space-x-2 pt-4">
                                 <AlertDialogCancel asChild>
-                                    <Button variant="outline" className="w-full sm:w-auto">
+                                    <Button variant="outline" className="w-full sm:w-auto border-slate-600 text-slate-300 hover:bg-slate-800">
                                         Cancel
                                     </Button>
                                 </AlertDialogCancel>
@@ -329,7 +329,7 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                 return (
                     <div 
                         key={customer.id}
-                        className="bg-slate-900/50 border border-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 p-4"
+                        className="bg-slate-900 border border-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 p-4"
                     >
                         <div className="space-y-3">
                             <div className="flex items-center justify-between">

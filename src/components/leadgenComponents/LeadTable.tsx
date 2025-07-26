@@ -13,6 +13,16 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from "@/components/ui/alert-dialog";
 import { 
   Edit, 
   Trash2, 
@@ -99,13 +109,32 @@ const MobileLeadCard = React.memo(function MobileLeadCard({ lead, onEdit, onDele
               </Button>
             )}
             {onDelete && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onDelete(lead.id)}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="bg-slate-900 border-slate-700">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-white">Confirm deletion</AlertDialogTitle>
+                    <AlertDialogDescription className="text-slate-300">
+                      Are you sure you want to permanently delete this lead for {lead.first_name} {lead.last_name}? 
+                      This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <div className="flex justify-end space-x-2 pt-4">
+                    <AlertDialogCancel asChild>
+                      <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800">Cancel</Button>
+                    </AlertDialogCancel>
+                    <AlertDialogAction asChild>
+                      <Button variant="destructive" onClick={() => onDelete(lead.id)}>
+                        Yes, delete
+                      </Button>
+                    </AlertDialogAction>
+                  </div>
+                </AlertDialogContent>
+              </AlertDialog>
             )}
           </div>
         </div>
@@ -332,14 +361,36 @@ function LeadTable({ leads, onEdit, onDelete, onConvertToCustomer }: LeadTablePr
                       </Button>
                     )}
                     {onDelete && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onDelete(lead.id)}
-                        title="Delete Lead"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            title="Delete Lead"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="bg-slate-900 border-slate-700">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="text-white">Confirm deletion</AlertDialogTitle>
+                            <AlertDialogDescription className="text-slate-300">
+                              Are you sure you want to permanently delete this lead for {lead.first_name} {lead.last_name}? 
+                              This action cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <div className="flex justify-end space-x-2 pt-4">
+                            <AlertDialogCancel asChild>
+                              <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800">Cancel</Button>
+                            </AlertDialogCancel>
+                            <AlertDialogAction asChild>
+                              <Button variant="destructive" onClick={() => onDelete(lead.id)}>
+                                Yes, delete
+                              </Button>
+                            </AlertDialogAction>
+                          </div>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     )}
                   </div>
                 </TableCell>
