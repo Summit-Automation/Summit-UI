@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
     Table,
     TableBody,
@@ -39,7 +39,7 @@ interface InventoryTableProps {
     onItemsChange?: () => void;
 }
 
-export default function InventoryTable({ items, onItemsChange }: InventoryTableProps) {
+const InventoryTable = React.memo(function InventoryTable({ items, onItemsChange }: InventoryTableProps) {
     const [sortField, setSortField] = useState<keyof InventoryItem>('name');
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
     const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
@@ -54,7 +54,7 @@ export default function InventoryTable({ items, onItemsChange }: InventoryTableP
         }
     };
 
-    const sortedItems = [...items].sort((a, b) => {
+    const sortedItems = useMemo(() => [...items].sort((a, b) => {
         const aValue = a[sortField];
         const bValue = b[sortField];
         
@@ -69,7 +69,7 @@ export default function InventoryTable({ items, onItemsChange }: InventoryTableP
         }
         
         return 0;
-    });
+    }), [items, sortField, sortDirection]);
 
     const getStockStatus = (current: number, minimum: number) => {
         if (current === 0) {
@@ -306,4 +306,6 @@ export default function InventoryTable({ items, onItemsChange }: InventoryTableP
             />
         </div>
     );
-}
+});
+
+export default InventoryTable;

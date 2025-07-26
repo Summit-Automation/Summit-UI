@@ -97,7 +97,7 @@ export default function InventoryClientWrapper({ initialItems, initialAlerts }: 
                     <Card className="chart-container-enhanced card-enhanced">
                         <CardHeader className="pb-4">
                             <CardTitle className="flex items-center gap-2 text-gradient">
-                                <div className="p-2 bg-slate-800/50 rounded-lg transition-all duration-300 hover:scale-110">
+                                <div className="p-2 bg-slate-800 rounded-lg transition-transform duration-200 ease-out hover:scale-105">
                                     <Activity className="h-5 w-5 text-blue-400 icon-interactive" />
                                 </div>
                                 Inventory Trends
@@ -114,7 +114,7 @@ export default function InventoryClientWrapper({ initialItems, initialAlerts }: 
                     <Card className="chart-container-enhanced card-enhanced">
                         <CardHeader className="pb-4">
                             <CardTitle className="flex items-center gap-2 text-gradient">
-                                <div className="p-2 bg-slate-800/50 rounded-lg transition-all duration-300 hover:scale-110">
+                                <div className="p-2 bg-slate-800 rounded-lg transition-transform duration-200 ease-out hover:scale-105">
                                     <AlertTriangle className="h-5 w-5 text-orange-400 icon-interactive" />
                                 </div>
                                 Stock Alerts

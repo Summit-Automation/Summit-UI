@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, Search, Filter, QrCode, Download, Upload } from 'lucide-react';
@@ -12,9 +12,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import AddItemModal from './AddItemModal';
-import ImportModal from './ImportModal';
-import AdvancedFiltersModal from './AdvancedFiltersModal';
+// Lazy load heavy modals for better initial performance
+const AddItemModal = lazy(() => import('./AddItemModal'));
+const ImportModal = lazy(() => import('./ImportModal'));
+const AdvancedFiltersModal = lazy(() => import('./AdvancedFiltersModal'));
 import { CreateInventoryItemRequest, InventoryItem, InventoryFilters } from '@/types/inventory';
 import { addInventoryItem, bulkImportInventoryItems } from '@/app/inventory/actions';
 import { exportInventoryToCSV, exportInventoryToJSON, generateInventoryReport } from '@/app/lib/services/inventoryServices/exportInventory';
@@ -234,25 +235,37 @@ export default function InventoryActions({
                 </div>
             </CardContent>
 
-            {/* Modals */}
-            <AddItemModal
-                isOpen={showAddModal}
-                onClose={() => setShowAddModal(false)}
-                onSubmit={handleSubmitNewItem}
-            />
+            {/* Modals with lazy loading */}
+            {showAddModal && (
+                <Suspense fallback={<div className="hidden" />}>
+                    <AddItemModal
+                        isOpen={showAddModal}
+                        onClose={() => setShowAddModal(false)}
+                        onSubmit={handleSubmitNewItem}
+                    />
+                </Suspense>
+            )}
 
-            <ImportModal
-                isOpen={showImportModal}
-                onClose={() => setShowImportModal(false)}
-                onImport={handleImportItems}
-            />
+            {showImportModal && (
+                <Suspense fallback={<div className="hidden" />}>
+                    <ImportModal
+                        isOpen={showImportModal}
+                        onClose={() => setShowImportModal(false)}
+                        onImport={handleImportItems}
+                    />
+                </Suspense>
+            )}
 
-            <AdvancedFiltersModal
-                isOpen={showFiltersModal}
-                onClose={() => setShowFiltersModal(false)}
-                onApplyFilters={handleApplyFilters}
-                currentFilters={currentFilters}
-            />
+            {showFiltersModal && (
+                <Suspense fallback={<div className="hidden" />}>
+                    <AdvancedFiltersModal
+                        isOpen={showFiltersModal}
+                        onClose={() => setShowFiltersModal(false)}
+                        onApplyFilters={handleApplyFilters}
+                        currentFilters={currentFilters}
+                    />
+                </Suspense>
+            )}
         </Card>
     );
 }

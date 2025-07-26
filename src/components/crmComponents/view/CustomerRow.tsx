@@ -46,7 +46,7 @@ export default function CustomerRow({
         <>
             <TableRow
                 onClick={() => setOpen((o) => !o)}
-                className="bg-slate-900 border-b border-slate-800 hover:bg-slate-800 transition-all duration-200 cursor-pointer"
+                className="bg-slate-900 border-b border-slate-800 hover:bg-slate-800 transition-colors duration-150 cursor-pointer"
             >
                 {/* Name */}
                 <TableCell className="flex items-center gap-3 p-4">

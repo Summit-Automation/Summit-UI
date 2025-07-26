@@ -66,7 +66,7 @@ export function MobileTable<T>({
     return (
         <div className={cn("w-full", className)}>
             {/* Desktop Table */}
-            <div className="hidden md:block overflow-x-auto custom-scrollbar">
+            <div className="hidden md:block overflow-x-auto custom-scrollbar" style={{ contain: 'layout style paint' }}>
                 <table className="table-enhanced w-full">
                     <thead>
                         <tr className="border-b border-slate-700">
@@ -86,7 +86,7 @@ export function MobileTable<T>({
                             return (
                                 <React.Fragment key={key}>
                                     <tr 
-                                        className="table-row-interactive border-b border-slate-800 hover:bg-slate-900/50 transition-colors cursor-pointer data-appear"
+                                        className="table-row-interactive border-b border-slate-800 hover:bg-slate-900 transition-colors duration-150 cursor-pointer data-appear"
                                         onClick={renderExpanded ? () => toggleExpanded(key) : undefined}
                                     >
                                         {columns.map((column, colIndex) => (
