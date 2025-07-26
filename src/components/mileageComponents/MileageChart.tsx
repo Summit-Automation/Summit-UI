@@ -31,6 +31,14 @@ function groupMileageByMonth(entries: MileageEntry[]): ChartData[] {
 export default function MileageChart({ mileageEntries }: { mileageEntries: MileageEntry[] }) {
     const data = groupMileageByMonth(mileageEntries);
 
+    if (data.length === 0) {
+        return (
+            <div className="flex items-center justify-center h-48 text-slate-400">
+                No mileage data available
+            </div>
+        );
+    }
+
     return (
         <div className="bg-transparent p-4 rounded-lg shadow-md">
             <ResponsiveContainer width="100%" height={350}>

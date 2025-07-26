@@ -49,6 +49,13 @@ function groupInteractionsByType(interactions: Interaction[]): InteractionBucket
 export default function InteractionTypeBar({ interactions }: { interactions: Interaction[] }) {
     const data = useMemo(() => groupInteractionsByType(interactions), [interactions]);
 
+    if (data.length === 0) {
+        return (
+            <div className="flex items-center justify-center h-48 text-slate-400">
+                No interaction data available
+            </div>
+        );
+    }
     const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
         if (active && payload && payload.length) {
             return (

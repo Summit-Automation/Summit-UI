@@ -25,6 +25,14 @@ function groupByDay(customers: Customer[]): Bucket[] {
 const CustomerGrowthLine = memo(function CustomerGrowthLine({ customers }: { customers: Customer[] }) {
     const data = useMemo(() => groupByDay(customers), [customers]);
 
+    if (data.length === 0) {
+        return (
+            <div className="flex items-center justify-center h-48 text-slate-400">
+                No customer growth data available
+            </div>
+        );
+    }
+
     return (
         <BaseChart mobileHeight={200} height={350}>
             <LineChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
