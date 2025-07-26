@@ -3,6 +3,10 @@
 import { createClient } from '@/utils/supabase/client';
 import { RecurringPayment } from '@/types/recurringPayment';
 
+// SECURITY WARNING: This client-side function lacks organization_id filtering
+// and could potentially expose data across organizations if RLS is not properly configured.
+// Consider migrating to server-side implementation or ensure proper RLS policies.
+
 export async function getRecurringPayments(): Promise<RecurringPayment[]> {
     try {
         const supabase = createClient();

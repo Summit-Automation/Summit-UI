@@ -1,32 +1,25 @@
-// app/crm/getCustomers.ts
+'use server';
 
-'use server'
-
-import {Transaction} from '@/types/transaction';
-import {createClient} from '@/utils/supabase/server';
+import { Transaction } from '@/types/transaction';
+import { getAuthenticatedUser } from '../shared/authUtils';
 
 export async function getTransactions(): Promise<Transaction[]> {
     try {
-        const supabase = await createClient();
+        const { supabase, organizationId } = await getAuthenticatedUser();
 
-        const {data, error} = await supabase
+        const { data, error } = await supabase
             .from('transactions')
-            .select('*');
+            .select('*')
+            .eq('organization_id', organizationId);
 
         if (error) {
-            console.warn(
-                'Supabase error fetching from \'transactions\' table', error);
-            return [];
-        }
-
-        if (!data || data.length === 0) {
-            console.warn('No valid data returned from \'customers\' table. Got:', data);
-            return [];
+            console.error('Error fetching transactions:', error);
+            throw new Error('Failed to fetch transactions');
         }
 
         return data || [];
     } catch (error) {
-        console.error('Error in getCustomers:', error);
-        return [];
+        console.error('Error in getTransactions:', error);
+        throw error;
     }
 }

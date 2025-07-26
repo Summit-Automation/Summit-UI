@@ -1,36 +1,26 @@
-// app/crm/getInteractions.ts
-'use server'
+'use server';
 
-import {Interaction} from "@/types/interaction";
-import {createClient} from "@/utils/supabase/server";
+import { Interaction } from "@/types/interaction";
+import { getAuthenticatedUser } from '../../shared/authUtils';
 
-/**
- * Fetches all interactions from the 'interactions' table in Supabase.
- * @returns {Promise<Interaction[]>} A promise that resolves to an array of interactions.
- */
 export async function getInteractions(): Promise<Interaction[]> {
     try {
-        const supabase = await createClient();
+        const { supabase, organizationId } = await getAuthenticatedUser();
 
-        const {data, error} = await supabase
+        const { data, error } = await supabase
             .from('interactions')
-            .select('*');
-
+            .select('*')
+            .eq('organization_id', organizationId)
+            .order('created_at', { ascending: false });
 
         if (error) {
-            console.warn(
-                'Supabase error fetching from \'interactions\' table', error);
-            return [];
-        }
-
-        if (!data || data.length === 0) {
-            console.warn('No valid data returned from \'interactions\' table. Got:', data);
-            return [];
+            console.error('Error fetching interactions:', error);
+            throw new Error('Failed to fetch interactions');
         }
 
         return data || [];
     } catch (error) {
         console.error('Error in getInteractions:', error);
-        return [];
+        throw error;
     }
 }
