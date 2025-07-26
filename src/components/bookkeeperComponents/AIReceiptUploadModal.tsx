@@ -58,7 +58,28 @@ export default function AIReceiptUploadModal({
         mode: 'onBlur',
     });
 
+    const validateFile = (file: File): boolean => {
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        
+        if (!allowedTypes.includes(file.type)) {
+            setError('Please select a valid image file (JPEG, PNG, or WebP)');
+            return false;
+        }
+        
+        if (file.size > maxSize) {
+            setError('File size must be less than 5MB');
+            return false;
+        }
+        
+        return true;
+    };
+
     const handleFileSelect = (file: File) => {
+        if (!validateFile(file)) {
+            return;
+        }
+        
         setSelectedFile(file);
         setReceiptData(null);
         setError(null);
