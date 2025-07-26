@@ -3,7 +3,7 @@
 import { createClient } from '@/utils/supabase/server';
 import { RecurringPaymentCreateRequest, RecurringPayment } from '@/types/recurringPayment';
 import { revalidatePath } from 'next/cache';
-import { Result, success, error } from '@/types/result';
+import { Result, success, error as createError } from '@/types/result';
 
 export async function createRecurringPayment(
     data: RecurringPaymentCreateRequest
@@ -13,7 +13,7 @@ export async function createRecurringPayment(
 
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
-            return error('User not authenticated');
+            return createError('User not authenticated');
         }
 
         // If start date is today or in the past, create the first transaction immediately
@@ -53,7 +53,7 @@ export async function createRecurringPayment(
 
         if (error) {
             console.error('Error creating recurring payment:', error);
-            return error(error.message);
+            return createError(error.message);
         }
 
         // If we should create an immediate transaction (start date is today or past)
@@ -88,7 +88,7 @@ export async function createRecurringPayment(
         return success(result);
     } catch (catchError) {
         console.error('Error creating recurring payment:', catchError);
-        return error('Failed to create recurring payment');
+        return createError('Failed to create recurring payment');
     }
 }
 
