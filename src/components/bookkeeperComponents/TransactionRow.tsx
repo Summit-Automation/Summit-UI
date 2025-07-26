@@ -19,6 +19,7 @@ import UpdateTransactionModal from '@/components/bookkeeperComponents/UpdateTran
 import {deleteTransaction} from '@/app/lib/services/bookkeeperServices/deleteTransaction';
 import {cn} from '@/lib/utils';
 import {useRouter} from 'next/navigation';
+import {isSuccess} from '@/types/result';
 
 export default function TransactionRow({
                                            transaction,
@@ -35,8 +36,12 @@ export default function TransactionRow({
 
     const deleteTransactionHandler = async () => {
         try {
-            await deleteTransaction(transaction.id);
-            router.refresh(); // Refresh the page to reflect changes
+            const result = await deleteTransaction(transaction.id);
+            if (isSuccess(result)) {
+                router.refresh(); // Refresh the page to reflect changes
+            } else {
+                console.error('Failed to delete transaction:', result.error);
+            }
         } catch (error) {
             console.error('Failed to delete transaction:', error);
         }
