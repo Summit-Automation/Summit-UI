@@ -1,7 +1,7 @@
 // Request deduplication utility to prevent multiple identical concurrent requests
 
 class RequestDeduplicator {
-  private pendingRequests = new Map<string, Promise<any>>();
+  private pendingRequests = new Map<string, Promise<unknown>>();
 
   async deduplicate<T>(key: string, requestFn: () => Promise<T>): Promise<T> {
     // If there's already a pending request with this key, return it
@@ -37,7 +37,7 @@ class RequestDeduplicator {
 export const requestDeduplicator = new RequestDeduplicator();
 
 // Helper function to create deduplicated service methods
-export function withDeduplication<TArgs extends any[], TReturn>(
+export function withDeduplication<TArgs extends unknown[], TReturn>(
   fn: (...args: TArgs) => Promise<TReturn>,
   keyGenerator: (...args: TArgs) => string
 ) {
