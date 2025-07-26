@@ -141,9 +141,9 @@ const MobileLeadCard = React.memo(function MobileLeadCard({ lead, onEdit, onDele
             </div>
             
             {lead.estimated_value && (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1" title="Estimated deal value - for reference only">
                 <DollarSign className="h-4 w-4 text-green-500" />
-                <span>${lead.estimated_value.toLocaleString()}</span>
+                <span className="text-muted-foreground">~${lead.estimated_value.toLocaleString()}</span>
               </div>
             )}
             
@@ -229,7 +229,7 @@ function LeadTable({ leads, onEdit, onDelete, onConvertToCustomer }: LeadTablePr
               <TableHead>Status</TableHead>
               <TableHead>Priority</TableHead>
               <TableHead>Score</TableHead>
-              <TableHead>Value</TableHead>
+              <TableHead>Est. Deal Value</TableHead>
               <TableHead>Source</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -295,7 +295,11 @@ function LeadTable({ leads, onEdit, onDelete, onConvertToCustomer }: LeadTablePr
                 </TableCell>
                 
                 <TableCell>
-                  {lead.estimated_value ? `$${lead.estimated_value.toLocaleString()}` : "-"}
+                  {lead.estimated_value ? (
+                    <span className="text-muted-foreground" title="Estimated deal value - for reference only">
+                      ~${lead.estimated_value.toLocaleString()}
+                    </span>
+                  ) : "-"}
                 </TableCell>
                 
                 <TableCell>

@@ -43,13 +43,13 @@ export async function checkAIGenerationCooldown(): Promise<{
 
     const lastGenerationTime = new Date(lastBatch.created_at);
     const now = new Date();
-    const sixHoursInMs = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+    const twoHoursInMs = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
     const timeSinceLastGeneration = now.getTime() - lastGenerationTime.getTime();
 
-    if (timeSinceLastGeneration >= sixHoursInMs) {
+    if (timeSinceLastGeneration >= twoHoursInMs) {
       return { canGenerate: true };
     } else {
-      const timeUntilNext = sixHoursInMs - timeSinceLastGeneration;
+      const timeUntilNext = twoHoursInMs - timeSinceLastGeneration;
       return { 
         canGenerate: false, 
         timeUntilNext,

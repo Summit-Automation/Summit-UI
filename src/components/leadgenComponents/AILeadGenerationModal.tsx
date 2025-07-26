@@ -92,14 +92,14 @@ function AILeadGenerationModal({ isOpen, onClose }: AILeadGenerationModalProps) 
 
   const generateLeadsWithAI = useCallback(async (data: AIGenerationFormData) => {
     // Construct the prompt for the AI agent
-    const prompt = `Generate 3 high-quality small business leads based on the following criteria:
+    const prompt = `Generate 1 high-quality small business lead based on the following criteria:
 
 Profession/Service: ${data.profession}
 Target Location: ${data.target_location}
 Search Radius: ${data.search_radius} miles
 Industry Focus: ${data.industry_focus || 'Any relevant industry'}
 
-Please find active small businesses (under 50 employees) that would benefit from ${data.profession} services. For each lead, provide:
+Please find an active lesser-known small business that would benefit from ${data.profession} services. Prioritize businesses that are not widely recognized or well-known companies, focusing on genuine prospects rather than obvious large corporations. For the lead, provide:
 - Company name and industry
 - Contact person (first name, last name, job title)
 - Contact information (email, phone)
@@ -177,73 +177,43 @@ Return the results in the structured JSON format as specified in your system pro
             throw new Error('Invalid JSON format in AI response');
           }
         } else {
-          // If no JSON found, create mock leads for demonstration
-          console.log('No JSON found in response, creating mock leads');
+          // If no JSON found, create mock lead for demonstration
+          console.log('No JSON found in response, creating mock lead');
           parsedResponse = {
-            leads: [
-              {
-                lead_score: 85,
-                confidence_score: 0.9,
-                company: "Tech Solutions LLC",
-                industry: "Technology",
-                first_name: "Sarah",
-                last_name: "Johnson",
-                job_title: "CEO",
-                email: "sarah@techsolutions.com",
-                phone: "(555) 123-4567",
-                address: "123 Business Ave",
-                city: data.target_location.split(',')[0] || "Sample City",
-                state: "PA",
-                zip_code: "15201",
-                company_size: "25-50",
-                estimated_value: 15000,
-                notes: `Potential client for ${data.profession} services`,
-                ai_generated_notes: "AI-generated lead based on your criteria"
-              },
-              {
-                lead_score: 92,
-                confidence_score: 0.95,
-                company: "Growth Industries Inc",
-                industry: data.industry_focus || "Manufacturing",
-                first_name: "Michael",
-                last_name: "Chen",
-                job_title: "Operations Manager",
-                email: "m.chen@growthindustries.com",
-                phone: "(555) 987-6543",
-                address: "456 Industrial Dr",
-                city: data.target_location.split(',')[0] || "Sample City",
-                state: "PA",
-                zip_code: "15202",
-                company_size: "11-50",
-                estimated_value: 25000,
-                notes: `High-potential prospect for ${data.profession}`,
-                ai_generated_notes: "Strong fit based on business needs analysis"
-              },
-              {
-                lead_score: 78,
-                confidence_score: 0.85,
-                company: "Local Business Co",
-                industry: "Retail",
-                first_name: "Emma",
-                last_name: "Davis",
-                job_title: "Owner",
-                email: "emma@localbusiness.com",
-                phone: "(555) 456-7890",
-                address: "789 Main St",
-                city: data.target_location.split(',')[0] || "Sample City",
-                state: "PA",
-                zip_code: "15203",
-                company_size: "1-10",
-                estimated_value: 8000,
-                notes: "Small business with growth potential",
-                ai_generated_notes: "Good entry-level client for services"
-              }
-            ]
+            lead: {
+              lead_score: 85,
+              confidence_score: 0.9,
+              company: "Regional Tech Solutions LLC",
+              industry: data.industry_focus || "Technology Services",
+              first_name: "Sarah",
+              last_name: "Johnson",
+              job_title: "CEO",
+              email: "sarah@regionaltechsolutions.com",
+              phone: "(555) 123-4567",
+              address: "123 Business Ave",
+              city: data.target_location.split(',')[0] || "Sample City",
+              state: "PA",
+              zip_code: "15201",
+              company_size: "25-50",
+              estimated_value: 15000,
+              notes: `Lesser-known regional business that could benefit from ${data.profession} services`,
+              ai_generated_notes: "AI-identified prospect based on your criteria - independent business with growth potential"
+            }
           };
         }
 
-        // Save the leads to database if we have valid data
-        if (parsedResponse?.leads && Array.isArray(parsedResponse.leads)) {
+        // Handle both single lead and leads array format for backwards compatibility
+        let leadsToProcess = [];
+        if (parsedResponse?.lead) {
+          // New single lead format from Flowise agent v2.1
+          leadsToProcess = [parsedResponse.lead];
+        } else if (parsedResponse?.leads && Array.isArray(parsedResponse.leads)) {
+          // Legacy leads array format
+          leadsToProcess = parsedResponse.leads;
+        }
+
+        // Save the lead(s) to database if we have valid data
+        if (leadsToProcess.length > 0) {
           const batchData = {
             batch_metadata: {
               search_criteria: {
@@ -254,7 +224,7 @@ Return the results in the structured JSON format as specified in your system pro
               },
               total_searches: 1
             },
-            leads: parsedResponse.leads
+            leads: leadsToProcess
           };
 
           console.log('Saving batch data:', batchData);
@@ -266,8 +236,8 @@ Return the results in the structured JSON format as specified in your system pro
               stage: 'completed',
               progress: 100,
               message: 'Lead generation completed successfully!',
-              leadsGenerated: parsedResponse.leads.length,
-              leadsQualified: parsedResponse.leads.filter((lead: { lead_score?: number }) => (lead.lead_score || 0) >= 70).length,
+              leadsGenerated: leadsToProcess.length,
+              leadsQualified: leadsToProcess.filter((lead: { lead_score?: number }) => (lead.lead_score || 0) >= 70).length,
             });
           } else {
             throw new Error('Failed to save leads to database');
@@ -360,7 +330,7 @@ Return the results in the structured JSON format as specified in your system pro
             AI Lead Generation
           </DialogTitle>
           <DialogDescription>
-            Provide your service details and target criteria. Our AI agent will research and generate 3 high-quality leads for you.
+            Provide your service details and target criteria. Our AI agent will research and generate 1 high-quality lead for you.
           </DialogDescription>
         </DialogHeader>
 
@@ -489,7 +459,7 @@ Return the results in the structured JSON format as specified in your system pro
                   Cooldown Active
                 </h4>
                 <p className="text-sm text-red-300">
-                  AI lead generation is limited to once every 6 hours per organization. 
+                  AI lead generation is limited to once every 2 hours per organization. 
                   {cooldownInfo.timeUntilNext && (
                     <>Time remaining: <strong>{formatTimeRemaining(cooldownInfo.timeUntilNext)}</strong></>
                   )}
@@ -510,7 +480,7 @@ Return the results in the structured JSON format as specified in your system pro
             <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
               <h4 className="font-medium text-slate-300 mb-2">What the AI will provide:</h4>
               <ul className="text-sm text-slate-400 space-y-1">
-                <li>• 3 active small businesses (under 50 employees)</li>
+                <li>• 1 active lesser-known small business</li>
                 <li>• Decision maker contact information</li>
                 <li>• Lead scoring and estimated value</li>
                 <li>• Business pain points and opportunities</li>
@@ -540,7 +510,7 @@ Return the results in the structured JSON format as specified in your system pro
                 ) : (
                   <>
                     <Bot className="mr-2 h-4 w-4" />
-                    Generate 3 Leads
+                    Generate 1 Lead
                   </>
                 )}
               </Button>
