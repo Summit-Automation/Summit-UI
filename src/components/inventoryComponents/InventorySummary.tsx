@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Package, TrendingDown, AlertTriangle, DollarSign, Warehouse } from 'lucide-react';
 
@@ -26,17 +27,26 @@ interface InventorySummaryProps {
 }
 
 export default function InventorySummary({ items, alerts }: InventorySummaryProps) {
-    const totalItems = items.length;
-    const totalValue = items.reduce((sum, item) => sum + (item.current_quantity * item.unit_cost), 0);
-    const lowStockItems = items.filter(item => item.current_quantity <= item.minimum_threshold).length;
-    const outOfStockItems = items.filter(item => item.current_quantity === 0).length;
-    const criticalAlerts = alerts.filter(alert => alert.priority === 'high' || alert.priority === 'critical').length;
-    const categories = new Set(items.map(item => item.category)).size;
+    // Memoize expensive calculations
+    const calculations = useMemo(() => {
+        const totalItems = items.length;
+        const totalValue = items.reduce((sum, item) => sum + (item.current_quantity * item.unit_cost), 0);
+        const lowStockItems = items.filter(item => item.current_quantity <= item.minimum_threshold).length;
+        const outOfStockItems = items.filter(item => item.current_quantity === 0).length;
+        const categories = new Set(items.map(item => item.category)).size;
+        
+        return { totalItems, totalValue, lowStockItems, outOfStockItems, categories };
+    }, [items]);
+
+    const criticalAlerts = useMemo(() => 
+        alerts.filter(alert => alert.priority === 'high' || alert.priority === 'critical').length,
+        [alerts]
+    );
 
     const summaryCards = [
         {
             title: 'Total Items',
-            value: totalItems.toLocaleString(),
+            value: calculations.totalItems.toLocaleString(),
             description: 'Active inventory items',
             icon: Package,
             color: 'text-blue-400',
@@ -44,7 +54,7 @@ export default function InventorySummary({ items, alerts }: InventorySummaryProp
         },
         {
             title: 'Total Value',
-            value: `$${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+            value: `$${calculations.totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
             description: 'Current inventory value',
             icon: DollarSign,
             color: 'text-green-400',
@@ -52,7 +62,7 @@ export default function InventorySummary({ items, alerts }: InventorySummaryProp
         },
         {
             title: 'Low Stock',
-            value: lowStockItems.toString(),
+            value: calculations.lowStockItems.toString(),
             description: 'Items below threshold',
             icon: TrendingDown,
             color: 'text-orange-400',
@@ -60,7 +70,7 @@ export default function InventorySummary({ items, alerts }: InventorySummaryProp
         },
         {
             title: 'Out of Stock',
-            value: outOfStockItems.toString(),
+            value: calculations.outOfStockItems.toString(),
             description: 'Items need restocking',
             icon: AlertTriangle,
             color: 'text-red-400',
@@ -76,7 +86,7 @@ export default function InventorySummary({ items, alerts }: InventorySummaryProp
         },
         {
             title: 'Categories',
-            value: categories.toString(),
+            value: calculations.categories.toString(),
             description: 'Unique item categories',
             icon: Warehouse,
             color: 'text-purple-400',
@@ -89,12 +99,12 @@ export default function InventorySummary({ items, alerts }: InventorySummaryProp
             {summaryCards.map((card, index) => {
                 const IconComponent = card.icon;
                 return (
-                    <Card key={card.title} className={`card-enhanced data-appear transition-all duration-300 hover:scale-105`} style={{ animationDelay: `${index * 100}ms` }}>
+                    <Card key={card.title} className={`card-enhanced data-appear transition-transform duration-200 ease-out hover:scale-[1.02]`} style={{ animationDelay: `${index * 100}ms` }}>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium text-slate-300">
                                 {card.title}
                             </CardTitle>
-                            <div className={`p-2 rounded-lg ${card.bgColor} transition-all duration-300 hover:scale-110`}>
+                            <div className={`p-2 rounded-lg ${card.bgColor} transition-transform duration-200 ease-out hover:scale-105`}>
                                 <IconComponent className={`h-4 w-4 ${card.color} icon-interactive`} />
                             </div>
                         </CardHeader>

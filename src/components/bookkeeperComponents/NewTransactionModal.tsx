@@ -34,9 +34,9 @@ type FormValues = {
 };
 
 export default function NewTransactionModal({
-                                                customers, interactions, onSuccess,
+                                                customers, interactions, onSuccess, triggerContent, triggerClassName,
                                             }: {
-    customers: Customer[]; interactions: Interaction[]; onSuccess?: () => void;
+    customers: Customer[]; interactions: Interaction[]; onSuccess?: () => void; triggerContent?: React.ReactNode; triggerClassName?: string;
 }) {
     const [open, setOpen] = React.useState(false);
 
@@ -120,12 +120,14 @@ export default function NewTransactionModal({
 
     return (<Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-            <Button 
-                variant="outline"
-                className="w-full sm:w-auto bg-emerald-600 border-emerald-600 text-white hover:bg-emerald-700 hover:border-emerald-700 transition-all duration-200"
-            >
-                + Add Transaction
-            </Button>
+            {triggerContent || (
+                <Button 
+                    variant="outline"
+                    className={triggerClassName || "w-full sm:w-auto bg-emerald-600 border-emerald-600 text-white hover:bg-emerald-700 hover:border-emerald-700 transition-all duration-200"}
+                >
+                    + Add Transaction
+                </Button>
+            )}
         </DialogTrigger>
         <DialogContent className="max-w-xl max-h-[90vh] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl">
             <DialogHeader>

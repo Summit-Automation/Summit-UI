@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, lazy, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
-import CreateTransactionClientWrapper from '@/components/bookkeeperComponents/bookkeeperActions/CreateTransactionClientWrapper';
-import AIReceiptUploadModal from '@/components/bookkeeperComponents/AIReceiptUploadModal';
+
+// Lazy load heavy modals
+const CreateTransactionClientWrapper = lazy(() => import('@/components/bookkeeperComponents/bookkeeperActions/CreateTransactionClientWrapper'));
+const AIReceiptUploadModal = lazy(() => import('@/components/bookkeeperComponents/AIReceiptUploadModal'));
 import { getCustomers } from '@/app/lib/services/crmServices/customer/getCustomers';
 import { getTransactions } from '@/app/lib/services/bookkeeperServices/getTransactions';
 import { Customer } from '@/types/customer';
@@ -208,16 +210,20 @@ export default function BookkeeperActions() {
             {/* Primary Actions - Mobile: 1 column, Desktop: 4 columns */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {/* Add Transaction */}
-                <CreateTransactionClientWrapper />
+                <Suspense fallback={<div className="h-10 bg-slate-800 border border-slate-600 rounded-lg animate-pulse" />}>
+                    <CreateTransactionClientWrapper />
+                </Suspense>
 
                 {/* AI Receipt Upload */}
                 {loading ? (
                     <div className="h-10 bg-slate-800 border border-slate-600 rounded-lg animate-pulse" />
                 ) : (
-                    <AIReceiptUploadModal
-                        customers={customers}
-                        onSuccess={() => router.refresh()}
-                    />
+                    <Suspense fallback={<div className="h-10 bg-slate-800 border border-slate-600 rounded-lg animate-pulse" />}>
+                        <AIReceiptUploadModal
+                            customers={customers}
+                            onSuccess={() => router.refresh()}
+                        />
+                    </Suspense>
                 )}
 
                 {/* Import CSV */}

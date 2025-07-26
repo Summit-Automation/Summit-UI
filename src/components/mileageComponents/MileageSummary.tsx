@@ -8,7 +8,7 @@ const cardStyles = `metric-enhanced card-enhanced data-appear`;
 const cardHeaders = `flex items-center justify-between pb-2`;
 const cardTitleStyles = `text-sm font-medium text-slate-300 uppercase tracking-wide`;
 const iconStyles = `h-4 w-4`;
-const iconContainerStyles = `p-2 bg-slate-800 rounded-lg transition-all duration-300 group-hover:scale-110`;
+const iconContainerStyles = `p-2 bg-slate-800 rounded-lg transition-transform duration-200 ease-out group-hover:scale-105`;
 const cardContentStyles = `pt-0`;
 
 interface MetricCardProps {

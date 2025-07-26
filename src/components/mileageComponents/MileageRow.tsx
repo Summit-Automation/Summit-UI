@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { MileageEntry } from '@/types/mileage';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { CheckCircle, ChevronDown, ChevronUp, MapPin, Trash2 } from 'lucide-react';
@@ -48,15 +48,15 @@ export default function MileageRow({ mileageEntry }: { mileageEntry: MileageEntr
     const standardMileageRate = 0.67;
     const potentialDeduction = mileageEntry.miles * standardMileageRate;
 
-    // Format currency with exact precision
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }).format(amount);
-    };
+    // Memoized formatters for performance
+    const formatCurrency = useMemo(() => new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }), []);
+
+    const formatDate = useMemo(() => new Intl.DateTimeFormat('en-US'), []);
 
     return (
         <>
@@ -65,7 +65,7 @@ export default function MileageRow({ mileageEntry }: { mileageEntry: MileageEntr
                 className={cn('cursor-pointer transition-colors duration-150', hoverBg)}
             >
                 <TableCell>
-                    {new Date(mileageEntry.date).toLocaleDateString()}
+                    {formatDate.format(new Date(mileageEntry.date))}
                 </TableCell>
                 <TableCell className="max-w-xs truncate">
                     {mileageEntry.start_location || <span className="text-slate-500 italic">Not specified</span>}
@@ -124,13 +124,13 @@ export default function MileageRow({ mileageEntry }: { mileageEntry: MileageEntr
                                         </div>
                                         <div className="text-lg font-mono font-bold text-white">
                                             {isBusiness 
-                                                ? formatCurrency(potentialDeduction)
+                                                ? formatCurrency.format(potentialDeduction)
                                                 : 'Not deductible'
                                             }
                                         </div>
                                         {isBusiness && (
                                             <div className="text-xs text-slate-400 mt-1">
-                                                {formatMiles(mileageEntry.miles)} × ${standardMileageRate} = {formatCurrency(potentialDeduction)}
+                                                {formatMiles(mileageEntry.miles)} × ${standardMileageRate} = {formatCurrency.format(potentialDeduction)}
                                             </div>
                                         )}
                                     </div>

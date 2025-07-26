@@ -202,10 +202,20 @@ function LeadTable({ leads, onEdit, onDelete, onConvertToCustomer }: LeadTablePr
       setIsMobile(window.innerWidth < 768);
     };
     
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
+    // Throttle resize events for better performance
+    let timeoutId: NodeJS.Timeout;
+    const throttledCheckMobile = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(checkMobile, 100);
+    };
     
-    return () => window.removeEventListener('resize', checkMobile);
+    checkMobile();
+    window.addEventListener('resize', throttledCheckMobile, { passive: true });
+    
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', throttledCheckMobile);
+    };
   }, []);
 
   const statusColors = {

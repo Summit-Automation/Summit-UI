@@ -26,10 +26,12 @@ type FormValues = {
 };
 
 export default function NewMileageEntryModal({
-    customers, onSuccess,
+    customers, onSuccess, triggerContent, triggerClassName,
 }: {
     customers: Customer[];
     onSuccess?: () => void;
+    triggerContent?: React.ReactNode;
+    triggerClassName?: string;
 }) {
     const [open, setOpen] = React.useState(false);
     const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -103,9 +105,11 @@ export default function NewMileageEntryModal({
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="bg-emerald-600 text-white hover:bg-emerald-700">
-                    + Add Mileage
-                </Button>
+                {triggerContent || (
+                    <Button variant="outline" className={triggerClassName || "bg-emerald-600 text-white hover:bg-emerald-700"}>
+                        + Add Mileage
+                    </Button>
+                )}
             </DialogTrigger>
             <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto bg-slate-900 border border-slate-700 rounded-xl shadow-2xl">
                 <DialogHeader>

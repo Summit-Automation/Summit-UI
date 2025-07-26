@@ -88,7 +88,7 @@ export default function InventoryAlerts({ alerts }: InventoryAlertsProps) {
                 const colors = getAlertColor(alert.priority);
                 
                 return (
-                    <Card key={alert.id} className={`${colors.bg} ${colors.border} border transition-all duration-200 hover:scale-[1.02]`}>
+                    <Card key={alert.id} className={`${colors.bg} ${colors.border} border transition-transform duration-150 ease-out hover:scale-[1.01]`}>
                         <CardContent className="p-4">
                             <div className="flex items-start gap-3">
                                 <div className={`p-2 rounded-lg ${colors.bg} mt-1`}>
