@@ -28,8 +28,8 @@ export default function UpdateInteractionClientWrapper({
     }, []);
 
     if (loading) {
-        return (<Button variant="outline" disabled size="sm">
-            <Pencil className="w-4 h-4"/> Loading…
+        return (<Button variant="ghost" disabled size="sm" className="h-7 w-7 p-0 text-slate-500">
+            <Pencil className="w-3.5 h-3.5"/>
         </Button>);
     }
 

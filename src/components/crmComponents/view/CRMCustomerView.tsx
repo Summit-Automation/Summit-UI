@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MobileTable } from '@/components/ui/mobile-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -19,6 +18,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import UpdateCustomerModal from '@/components/crmComponents/UpdateCustomerModal';
 import UpdateInteractionModalClientWrapper from '@/components/crmComponents/CRMActions/UpdateInteractionClientWrapper';
+import InteractionNotesDisplay from '@/components/crmComponents/view/InteractionNotesDisplay';
 import { deleteCustomer } from '@/app/lib/services/crmServices/customer/deleteCustomer';
 import { deleteInteraction } from '@/app/lib/services/crmServices/interaction/deleteInteraction';
 import { useRouter } from 'next/navigation';
@@ -222,33 +222,38 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                     </div>
                     
                     {customerInteractions.length > 0 ? (
-                        <div className="space-y-2 max-h-32 overflow-y-auto">
-                            {customerInteractions.slice(0, 3).map((interaction) => (
-                                <div key={interaction.id} className="bg-slate-800 rounded p-2">
-                                    <div className="flex justify-between items-start">
-                                        <span className="text-xs font-medium text-white">
-                                            {interaction.title}
-                                        </span>
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-xs text-slate-400">
-                                                {formatDate(interaction.created_at)}
-                                            </span>
-                                            <div className="flex gap-1">
+                        <div className="space-y-3 max-h-64 overflow-y-auto">
+                            {customerInteractions.slice(0, 5).map((interaction) => (
+                                <div key={interaction.id} className="bg-slate-800 rounded-lg border border-slate-700/50 hover:border-slate-600 transition-colors">
+                                    {/* Desktop Layout */}
+                                    <div className="hidden sm:block p-3">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div className="flex-1 min-w-0">
+                                                <h4 className="text-sm font-medium text-white truncate mb-1">
+                                                    {interaction.title}
+                                                </h4>
+                                                <div className="flex items-center gap-2 text-xs text-slate-400">
+                                                    <span className="capitalize">{interaction.type}</span>
+                                                    <span>•</span>
+                                                    <span>{formatDate(interaction.created_at)}</span>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-1 ml-2 flex-shrink-0">
                                                 <UpdateInteractionModalClientWrapper
                                                     interaction={interaction}
                                                     onSuccess={() => router.refresh()}
                                                 />
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild>
-                                                        <Button variant="destructive" size="sm" className="p-1 h-6 w-6">
-                                                            <Trash2 className="w-3 h-3"/>
+                                                        <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/10">
+                                                            <Trash2 className="w-3.5 h-3.5"/>
                                                         </Button>
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent className="bg-slate-900 border-slate-700">
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle className="text-white">Delete Interaction?</AlertDialogTitle>
                                                             <AlertDialogDescription className="text-slate-300">
-                                                                This cannot be undone.
+                                                                This will permanently delete &ldquo;{interaction.title}&rdquo;. This action cannot be undone.
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
                                                         <div className="flex justify-end space-x-2 pt-4">
@@ -272,30 +277,113 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                                                 </AlertDialog>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="flex items-center justify-between mt-1">
-                                        <div className="text-xs text-slate-400">
-                                            {interaction.type} • {interaction.outcome || 'No outcome'}
+                                        
+                                        {/* Outcome and Follow-up */}
+                                        <div className="flex items-center justify-between mb-2">
+                                            <div className="text-xs text-slate-400">
+                                                <span className="font-medium">Outcome:</span> {interaction.outcome || 'No outcome recorded'}
+                                            </div>
+                                            {interaction.follow_up_required && (
+                                                <Badge className="bg-red-500/10 text-red-400 border-red-500/20 px-2 py-0.5 rounded-full text-xs flex items-center gap-1">
+                                                    <AlertCircle className="h-3 w-3" />
+                                                    Follow-up needed
+                                                </Badge>
+                                            )}
                                         </div>
+
+                                        {/* Notes with expand/collapse */}
+                                        {interaction.notes && (
+                                            <div className="mt-2 pt-2 border-t border-slate-700/50">
+                                                <div className="text-xs text-slate-400 mb-1 font-medium">Notes:</div>
+                                                <InteractionNotesDisplay notes={interaction.notes} maxLength={80} />
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Mobile Layout */}
+                                    <div className="sm:hidden p-3 space-y-3">
+                                        {/* Header with actions */}
+                                        <div className="flex justify-between items-start">
+                                            <div className="flex-1 min-w-0">
+                                                <h4 className="text-sm font-medium text-white mb-1">
+                                                    {interaction.title}
+                                                </h4>
+                                                <div className="flex items-center gap-2 text-xs text-slate-400">
+                                                    <Badge className="bg-slate-700 text-slate-300 px-2 py-0.5 text-xs capitalize">
+                                                        {interaction.type}
+                                                    </Badge>
+                                                    <span>{formatDate(interaction.created_at)}</span>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-1 ml-2">
+                                                <UpdateInteractionModalClientWrapper
+                                                    interaction={interaction}
+                                                    onSuccess={() => router.refresh()}
+                                                />
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/10">
+                                                            <Trash2 className="w-3.5 h-3.5"/>
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent className="bg-slate-900 border-slate-700">
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle className="text-white">Delete Interaction?</AlertDialogTitle>
+                                                            <AlertDialogDescription className="text-slate-300">
+                                                                This will permanently delete &ldquo;{interaction.title}&rdquo;. This action cannot be undone.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <div className="flex justify-end space-x-2 pt-4">
+                                                            <AlertDialogCancel asChild>
+                                                                <Button variant="outline" size="sm" className="border-slate-600 text-slate-300 hover:bg-slate-800">Cancel</Button>
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction asChild>
+                                                                <Button
+                                                                    variant="destructive"
+                                                                    size="sm"
+                                                                    onClick={async () => {
+                                                                        await deleteInteraction(interaction.id);
+                                                                        router.refresh();
+                                                                    }}
+                                                                >
+                                                                    Delete
+                                                                </Button>
+                                                            </AlertDialogAction>
+                                                        </div>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Outcome */}
+                                        {interaction.outcome && (
+                                            <div className="space-y-1">
+                                                <div className="text-xs text-slate-400 font-medium">Outcome:</div>
+                                                <div className="text-xs text-slate-300">{interaction.outcome}</div>
+                                            </div>
+                                        )}
+
+                                        {/* Notes */}
+                                        {interaction.notes && (
+                                            <div className="space-y-1">
+                                                <div className="text-xs text-slate-400 font-medium">Notes:</div>
+                                                <InteractionNotesDisplay notes={interaction.notes} maxLength={120} />
+                                            </div>
+                                        )}
+
+                                        {/* Follow-up badge */}
                                         {interaction.follow_up_required && (
-                                            <Badge className="bg-red-500/10 text-red-400 border-red-500/20 px-1.5 py-0.5 rounded text-xs flex items-center gap-1">
-                                                <AlertCircle className="h-2.5 w-2.5" />
-                                                Follow-up
+                                            <Badge className="bg-red-500/10 text-red-400 border-red-500/20 px-2 py-1 rounded-full text-xs flex items-center gap-1 w-fit">
+                                                <AlertCircle className="h-3 w-3" />
+                                                Follow-up needed
                                             </Badge>
                                         )}
                                     </div>
-                                    {interaction.notes && (
-                                        <div className="mt-1">
-                                            <p className="text-xs text-slate-300 truncate" title={interaction.notes}>
-                                                {interaction.notes}
-                                            </p>
-                                        </div>
-                                    )}
                                 </div>
                             ))}
-                            {customerInteractions.length > 3 && (
+                            {customerInteractions.length > 5 && (
                                 <div className="text-xs text-slate-500 text-center">
-                                    +{customerInteractions.length - 3} more interactions
+                                    +{customerInteractions.length - 5} more interactions
                                 </div>
                             )}
                         </div>
@@ -355,73 +443,6 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
         );
     };
 
-    // Legacy card view component for comparison
-    const CardView = () => {
-        if (filteredCustomers.length === 0) {
-            return (
-                <div className="text-center py-8 text-slate-400 card-enhanced p-8 rounded-lg">
-                    <div className="text-lg font-medium mb-2">
-                        {searchTerm ? "No customers match your search" : "No customers found"}
-                    </div>
-                    <div className="text-sm text-slate-500">
-                        {searchTerm ? "Try adjusting your search terms" : "Start by adding some customers to see them here"}
-                    </div>
-                </div>
-            );
-        }
-
-        return (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredCustomers.map(customer => {
-                const customerInteractions = interactionsById.get(customer.id) ?? [];
-                
-                return (
-                    <div 
-                        key={customer.id}
-                        className="bg-slate-900 border border-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 p-4"
-                    >
-                        <div className="space-y-3">
-                            <div className="flex items-center justify-between">
-                                <h3 className="font-semibold text-white">{customer.full_name || 'Not Specified'}</h3>
-                                <Badge className={`${statusColor(customer.status)} px-2 py-1 text-xs`}>
-                                    {customer.status}
-                                </Badge>
-                            </div>
-                            
-                            <div className="space-y-2 text-sm">
-                                <div className="flex items-center gap-2 text-slate-400">
-                                    <Building className="w-4 h-4" />
-                                    {customer.business || 'No business'}
-                                </div>
-                                <div className="flex items-center gap-2 text-slate-400">
-                                    <Mail className="w-4 h-4" />
-                                    <span className="truncate">{customer.email}</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-slate-400">
-                                    <Phone className="w-4 h-4" />
-                                    {customer.phone}
-                                </div>
-                            </div>
-                            
-                            <div className="flex items-center justify-between">
-                                <div className="text-xs text-slate-500">
-                                    {customerInteractions.length} interactions • 
-                                    Created {formatDate(customer.created_at)}
-                                </div>
-                                {hasFollowUpRequired(customer.id) && (
-                                    <Badge className="bg-red-500/10 text-red-400 border-red-500/20 px-1.5 py-0.5 rounded text-xs flex items-center gap-1">
-                                        <AlertCircle className="h-2.5 w-2.5" />
-                                        Follow-up
-                                    </Badge>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                );
-            })}
-            </div>
-        );
-    };
 
     return (
         <div className="space-y-4">
@@ -452,26 +473,13 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                 </div>
             )}
 
-            <Tabs defaultValue="table" className="space-y-4">
-                <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="table">Table View</TabsTrigger>
-                    <TabsTrigger value="cards">Card View</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="table">
-                    <MobileTable
-                        data={filteredCustomers}
-                        columns={columns}
-                        renderExpanded={renderCustomerExpanded}
-                        keyExtractor={(customer) => customer.id}
-                        emptyMessage={searchTerm ? "No customers match your search" : "No customers found"}
-                    />
-                </TabsContent>
-
-                <TabsContent value="cards">
-                    <CardView />
-                </TabsContent>
-            </Tabs>
+            <MobileTable
+                data={filteredCustomers}
+                columns={columns}
+                renderExpanded={renderCustomerExpanded}
+                keyExtractor={(customer) => customer.id}
+                emptyMessage={searchTerm ? "No customers match your search" : "No customers found"}
+            />
         </div>
     );
 }
