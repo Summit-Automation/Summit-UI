@@ -79,7 +79,7 @@ export default function UpdateInteractionModal({
         </DialogTrigger>
 
         <DialogContent
-            className="max-w-xl bg-primary/90 backdrop-blur-lg border border-border rounded-xl shadow-premium">
+            className="max-w-xl bg-slate-900 border border-slate-700 rounded-xl shadow-2xl">
             <DialogHeader>
                 <DialogTitle className="text-white">Edit Interaction</DialogTitle>
                 <DialogDescription className="text-slate-300">
@@ -97,11 +97,11 @@ export default function UpdateInteractionModal({
                             <FormLabel className="text-slate-300">Customer</FormLabel>
                             <FormControl>
                                 <Select onValueChange={field.onChange} value={field.value}>
-                                    <SelectTrigger>
+                                    <SelectTrigger className="bg-slate-900 border-slate-700 text-slate-50">
                                         <SelectValue placeholder="Select a customer…"/>
                                     </SelectTrigger>
-                                    <SelectContent>
-                                        {customers.map((c) => (<SelectItem key={c.id} value={c.id}>
+                                    <SelectContent className="bg-slate-900 border-slate-700">
+                                        {customers.map((c) => (<SelectItem key={c.id} value={c.id} className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800">
                                             {c.full_name || 'Not Specified'}
                                         </SelectItem>))}
                                     </SelectContent>
@@ -120,12 +120,12 @@ export default function UpdateInteractionModal({
                                 <FormLabel className="text-slate-300">Type</FormLabel>
                                 <FormControl>
                                     <Select onValueChange={field.onChange} value={field.value}>
-                                        <SelectTrigger>
+                                        <SelectTrigger className="bg-slate-900 border-slate-700 text-slate-50">
                                             <SelectValue placeholder="Select type…"/>
                                         </SelectTrigger>
-                                        <SelectContent>
+                                        <SelectContent className="bg-slate-900 border-slate-700">
                                             {['call', 'email', 'meeting', 'site visit', 'other'].map((t) => (
-                                                <SelectItem key={t} value={t}>
+                                                <SelectItem key={t} value={t} className="text-slate-50 hover:bg-slate-800 focus:bg-slate-800">
                                                     {t}
                                                 </SelectItem>))}
                                         </SelectContent>
@@ -140,7 +140,7 @@ export default function UpdateInteractionModal({
                             render={({field}) => (<FormItem>
                                 <FormLabel className="text-slate-300">Title</FormLabel>
                                 <FormControl>
-                                    <Input {...field} placeholder="Interaction title…"/>
+                                    <Input {...field} placeholder="Interaction title…" className="bg-slate-900 border-slate-700 text-slate-50"/>
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>)}
@@ -154,7 +154,7 @@ export default function UpdateInteractionModal({
                         render={({field}) => (<FormItem>
                             <FormLabel className="text-slate-300">Notes</FormLabel>
                             <FormControl>
-                                <Textarea {...field} placeholder="Detailed notes…"/>
+                                <Textarea {...field} placeholder="Detailed notes…" className="bg-slate-900 border-slate-700 text-slate-50"/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>)}
@@ -165,7 +165,7 @@ export default function UpdateInteractionModal({
                         render={({field}) => (<FormItem>
                             <FormLabel className="text-slate-300">Outcome</FormLabel>
                             <FormControl>
-                                <Input {...field} placeholder="Result of the interaction…"/>
+                                <Input {...field} placeholder="Result of the interaction…" className="bg-slate-900 border-slate-700 text-slate-50"/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>)}
@@ -177,7 +177,7 @@ export default function UpdateInteractionModal({
                         name="follow_up_required"
                         render={({field}) => (<FormItem className="flex items-center space-x-2">
                             <FormControl>
-                                <Checkbox checked={field.value} onCheckedChange={field.onChange}/>
+                                <Checkbox checked={field.value} onCheckedChange={field.onChange} className="border-slate-600"/>
                             </FormControl>
                             <FormLabel className="text-slate-300">Follow-up required</FormLabel>
                         </FormItem>)}
@@ -187,7 +187,7 @@ export default function UpdateInteractionModal({
                         <DialogClose asChild>
                             <Button variant="ghost">Cancel</Button>
                         </DialogClose>
-                        <Button variant="outline" type="submit">
+                        <Button variant="outline" type="submit" className="bg-blue-600 border-blue-600 text-white hover:bg-blue-700 hover:border-blue-700">
                             Save Changes
                         </Button>
                     </DialogFooter>

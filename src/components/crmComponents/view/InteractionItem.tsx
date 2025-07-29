@@ -42,7 +42,7 @@ export default function InteractionItem({interaction, variant}: InteractionItemP
         });
         return (<div
                 className="
-        grid grid-cols-[6rem,1fr,8rem,2fr,6rem,4rem,auto]
+        grid grid-cols-[6rem,1fr,8rem,1fr,1fr,6rem,auto]
         gap-4 items-center
         py-2 px-4
         border-b border-slate-700
@@ -70,20 +70,13 @@ export default function InteractionItem({interaction, variant}: InteractionItemP
                 </div>
 
                 {/* Notes */}
-                <span className="text-xs text-slate-400 truncate">
-                    Notes:
-                </span>
-
-                <span className="text-sm text-slate-300 truncate">
-                {interaction.notes}
+                <span className="text-sm text-slate-300 truncate" title={interaction.notes}>
+                    {interaction.notes || 'No notes'}
                 </span>
 
                 {/* Outcome */}
-                <span className="text-xs text-slate-400 truncate">
-                    Outcome:
-                </span>
-                <span className="text-sm text-slate-300 truncate">
-                {interaction.outcome}
+                <span className="text-sm text-slate-300 truncate" title={interaction.outcome}>
+                    {interaction.outcome || 'No outcome'}
                 </span>
 
                 {/* Follow-up */}

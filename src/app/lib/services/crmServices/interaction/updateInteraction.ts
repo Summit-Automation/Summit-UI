@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { getAuthenticatedUser } from '@/app/lib/services/shared/authUtils';
 import { Interaction } from '@/types/interaction';
 
@@ -30,6 +31,10 @@ export async function updateInteraction(input: UpdateInteractionInput): Promise<
             console.error('Error updating interaction:', error);
             return false;
         }
+        
+        // Revalidate the CRM page to reflect the updated interaction
+        revalidatePath('/crm');
+        
         return true;
     } catch (err) {
         console.error('Exception in updateInteraction:', err);
