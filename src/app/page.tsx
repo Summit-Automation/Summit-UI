@@ -1,33 +1,24 @@
 export const dynamic = 'force-dynamic';
 
-import { getCustomers } from "@/app/lib/services/crmServices/customer/getCustomers";
-import { getInteractions } from "@/app/lib/services/crmServices/interaction/getInteractions";
-import { getTransactions } from "@/app/lib/services/bookkeeperServices/getTransactions";
+import {getCustomers} from "@/app/lib/services/crmServices/customer/getCustomers";
+import {getInteractions} from "@/app/lib/services/crmServices/interaction/getInteractions";
+import {getTransactions} from "@/app/lib/services/bookkeeperServices/getTransactions";
 
-import { calculateMonthlyGrowth, getFollowUpsDue, getOverdueFollowUps } from "@/utils/dashboard/dashboardUtils";
+import {calculateMonthlyGrowth, getFollowUpsDue, getOverdueFollowUps} from "@/utils/dashboard/dashboardUtils";
 
 import DashboardControls from "@/components/dashboardComponents/DashboardControls";
 import CustomerStatusPie from "@/components/dashboardComponents/CustomerStatusPie";
 import FollowUpPie from "@/components/dashboardComponents/FollowUpPie";
 import ExpenseCategoryPie from "@/components/dashboardComponents/ExpenseCategoryPie";
 import CustomerGrowthLine from "@/components/dashboardComponents/CustomerGrowthLine";
-import CashFlowArea from "@/components/dashboardComponents/CashFlowArea";
+import CashFlowCard from '@/components/dashboardComponents/CashFlowCard';
 import InteractionTypeBar from "@/components/dashboardComponents/InteractionTypeBar";
 import FeedbackButton from "@/components/globalComponents/FeedbackButton";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-    Calendar, 
-    DollarSign, 
-    MessageSquare, 
-    TrendingDown, 
-    TrendingUp, 
-    Users,
-    PieChart,
-    Activity,
-} from "lucide-react";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import {Activity, Calendar, DollarSign, MessageSquare, PieChart, TrendingDown, TrendingUp, Users,} from "lucide-react";
 
 export default async function DashboardPage() {
     const [customers, interactions, transactions] = await Promise.all([
@@ -73,10 +64,10 @@ export default async function DashboardPage() {
         );
     }
 
-    function MetricCard({ 
-        title, 
-        value, 
-        growth, 
+    function MetricCard({
+        title,
+        value,
+        growth,
         icon: Icon,
     }: {
         title: string;
@@ -223,24 +214,7 @@ export default async function DashboardPage() {
                             </CardContent>
                         </Card>
 
-                        <Card className="chart-container-enhanced card-enhanced">
-                            <CardHeader className="pb-3 sm:pb-4">
-                                <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg text-gradient">
-                                    <div className="p-1.5 bg-slate-800/50 rounded-lg">
-                                        <Activity className="h-4 w-4 text-green-400 icon-interactive" />
-                                    </div>
-                                    Cash Flow
-                                </CardTitle>
-                                <CardDescription className="text-slate-400 text-xs sm:text-sm">
-                                    Income vs expenses
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="p-3 sm:p-6 custom-scrollbar">
-                                <div className="h-48 sm:h-64 lg:h-80">
-                                    <CashFlowArea transactions={transactions} />
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <CashFlowCard transactions={transactions} />
                     </div>
 
                     {/* Full width chart on mobile and desktop */}
@@ -327,24 +301,7 @@ export default async function DashboardPage() {
                             </CardContent>
                         </Card>
 
-                        <Card className="chart-container-enhanced card-enhanced">
-                            <CardHeader className="pb-3 sm:pb-4">
-                                <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg text-gradient">
-                                    <div className="p-1.5 bg-slate-800/50 rounded-lg">
-                                        <Activity className="h-4 w-4 text-green-400 icon-interactive" />
-                                    </div>
-                                    Financial Overview
-                                </CardTitle>
-                                <CardDescription className="text-slate-400 text-xs sm:text-sm">
-                                    Comprehensive cash flow
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="p-3 sm:p-6 custom-scrollbar">
-                                <div className="h-48 sm:h-64 lg:h-80">
-                                    <CashFlowArea transactions={transactions} />
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <CashFlowCard transactions={transactions} />
                     </div>
                 </TabsContent>
             </Tabs>
