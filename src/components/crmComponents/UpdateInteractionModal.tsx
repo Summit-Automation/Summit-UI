@@ -73,8 +73,8 @@ export default function UpdateInteractionModal({
 
     return (<Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-            <Button variant="outline" size="sm" className="flex items-center space-x-1">
-                <Pencil className="h-4 w-4"/>
+            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10">
+                <Pencil className="h-3.5 w-3.5"/>
             </Button>
         </DialogTrigger>
 
