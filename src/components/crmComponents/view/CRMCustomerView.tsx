@@ -18,7 +18,9 @@ import {
     AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import UpdateCustomerModal from '@/components/crmComponents/UpdateCustomerModal';
+import UpdateInteractionModalClientWrapper from '@/components/crmComponents/CRMActions/UpdateInteractionClientWrapper';
 import { deleteCustomer } from '@/app/lib/services/crmServices/customer/deleteCustomer';
+import { deleteInteraction } from '@/app/lib/services/crmServices/interaction/deleteInteraction';
 import { useRouter } from 'next/navigation';
 import type { Customer } from '@/types/customer';
 import type { Interaction } from '@/types/interaction';
@@ -227,9 +229,49 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                                         <span className="text-xs font-medium text-white">
                                             {interaction.title}
                                         </span>
-                                        <span className="text-xs text-slate-400">
-                                            {formatDate(interaction.created_at)}
-                                        </span>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-xs text-slate-400">
+                                                {formatDate(interaction.created_at)}
+                                            </span>
+                                            <div className="flex gap-1">
+                                                <UpdateInteractionModalClientWrapper
+                                                    interaction={interaction}
+                                                    onSuccess={() => router.refresh()}
+                                                />
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant="destructive" size="sm" className="p-1 h-6 w-6">
+                                                            <Trash2 className="w-3 h-3"/>
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent className="bg-slate-900 border-slate-700">
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle className="text-white">Delete Interaction?</AlertDialogTitle>
+                                                            <AlertDialogDescription className="text-slate-300">
+                                                                This cannot be undone.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <div className="flex justify-end space-x-2 pt-4">
+                                                            <AlertDialogCancel asChild>
+                                                                <Button variant="outline" size="sm" className="border-slate-600 text-slate-300 hover:bg-slate-800">Cancel</Button>
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction asChild>
+                                                                <Button
+                                                                    variant="destructive"
+                                                                    size="sm"
+                                                                    onClick={async () => {
+                                                                        await deleteInteraction(interaction.id);
+                                                                        router.refresh();
+                                                                    }}
+                                                                >
+                                                                    Delete
+                                                                </Button>
+                                                            </AlertDialogAction>
+                                                        </div>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="flex items-center justify-between mt-1">
                                         <div className="text-xs text-slate-400">
@@ -242,6 +284,13 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                                             </Badge>
                                         )}
                                     </div>
+                                    {interaction.notes && (
+                                        <div className="mt-1">
+                                            <p className="text-xs text-slate-300 truncate" title={interaction.notes}>
+                                                {interaction.notes}
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                             {customerInteractions.length > 3 && (
