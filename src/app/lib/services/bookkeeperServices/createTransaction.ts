@@ -2,30 +2,39 @@
 
 import { getAuthenticatedUser } from '../shared/authUtils';
 import { Transaction } from "@/types/transaction";
+import { createTransactionSchema, type CreateTransactionInput } from '@/lib/validation/schemas';
+import { validateInput, formatValidationErrors } from '@/lib/validation/validator';
+import { Result, success, error as createError } from '@/types/result';
 
-type NewTransactionInput = Omit<Transaction, 'id' | 'source' | 'timestamp' | 'uploaded_by' | 'organization_id'>;
+export async function createTransaction(input: unknown): Promise<Result<boolean, string>> {
+    // Validate input
+    const validationResult = validateInput(createTransactionSchema, input);
+    if (!validationResult.success) {
+        return createError(formatValidationErrors(validationResult.error));
+    }
 
-export async function createTransaction(input: NewTransactionInput): Promise<boolean> {
+    const validatedInput = validationResult.data;
+
     try {
         const { supabase } = await getAuthenticatedUser();
 
         const { error } = await supabase.rpc('add_transaction', {
-            type: input.type,
-            category: input.category,
-            description: input.description,
-            amount: input.amount,
-            customer_id: input.customer_id ?? null,
-            interaction_id: input.interaction_id ?? null,
+            type: validatedInput.type,
+            category: validatedInput.category,
+            description: validatedInput.description,
+            amount: validatedInput.amount,
+            customer_id: validatedInput.customer_id ?? null,
+            interaction_id: validatedInput.interaction_id ?? null,
         });
 
         if (error) {
             console.error('Error inserting new transaction:', error);
-            return false;
+            return createError(error.message);
         }
 
-        return true;
+        return success(true);
     } catch (err) {
         console.error('Exception in createTransaction:', err);
-        return false;
+        return createError(err instanceof Error ? err.message : 'Unknown error occurred');
     }
 }

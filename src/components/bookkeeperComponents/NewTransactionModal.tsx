@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import {useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
 import {
     Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog';
@@ -16,22 +17,24 @@ import {Customer} from '@/types/customer';
 import {Interaction} from '@/types/interaction';
 import {RecurringFrequency} from '@/types/recurringPayment';
 import {Checkbox} from '@/components/ui/checkbox';
+import {createTransactionSchema, createRecurringPaymentSchema} from '@/lib/validation/schemas';
+import {formatErrorsForDisplay, ValidationStateManager, createValidationState} from '@/lib/validation/ui-helpers';
+import {Alert, AlertDescription} from '@/components/ui/alert';
+import {z} from 'zod';
 
-type FormValues = {
-    type: 'income' | 'expense';
-    category: string;
-    description: string;
-    amount: string;
-    customer_id: string;
-    interaction_id: string;
-    is_recurring: boolean;
-    frequency: RecurringFrequency;
-    start_date: string;
-    end_date: string;
-    day_of_month: number;
-    day_of_week: number;
-    payment_limit: number;
-};
+
+// Create combined schema for form validation
+const transactionFormSchema = createTransactionSchema.extend({
+    is_recurring: z.boolean().optional(),
+    frequency: z.enum(['daily', 'weekly', 'monthly', 'quarterly', 'yearly']).optional(),
+    start_date: z.string().optional(),
+    end_date: z.string().optional(),
+    day_of_month: z.number().min(1).max(31).optional(),
+    day_of_week: z.number().min(0).max(6).optional(),
+    payment_limit: z.number().optional(),
+});
+
+type FormValues = z.infer<typeof transactionFormSchema>;
 
 export default function NewTransactionModal({
                                                 customers, interactions, onSuccess, triggerContent, triggerClassName,
@@ -39,8 +42,12 @@ export default function NewTransactionModal({
     customers: Customer[]; interactions: Interaction[]; onSuccess?: () => void; triggerContent?: React.ReactNode; triggerClassName?: string;
 }) {
     const [open, setOpen] = React.useState(false);
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
+    const [submitError, setSubmitError] = React.useState<string | null>(null);
+    const validationState = createValidationState();
 
     const form = useForm<FormValues>({
+        resolver: zodResolver(transactionFormSchema),
         defaultValues: {
             type: 'expense', 
             category: '', 
@@ -55,7 +62,8 @@ export default function NewTransactionModal({
             day_of_month: 1,
             day_of_week: 0,
             payment_limit: 0,
-        }, mode: 'onBlur',
+        }, 
+        mode: 'onBlur',
     });
 
     // filter interactions when a customer is selected
@@ -67,54 +75,64 @@ export default function NewTransactionModal({
     const frequency = form.watch('frequency');
 
     const onSubmit = async (values: FormValues) => {
-        if (values.is_recurring) {
-            // Create recurring payment
-            const recurringData = {
-                type: values.type,
-                category: values.category,
-                description: values.description,
-                amount: values.amount.toString(),
-                frequency: values.frequency,
-                start_date: values.start_date || new Date().toISOString(),
-                end_date: values.end_date || null,
-                day_of_month: frequency === 'monthly' || frequency === 'quarterly' || frequency === 'yearly' ? 
-                    values.day_of_month : null,
-                day_of_week: frequency === 'weekly' ? values.day_of_week : null,
-                customer_id: values.customer_id || null,
-                interaction_id: values.interaction_id || null,
-                payment_limit: values.payment_limit > 0 ? values.payment_limit : null,
-            };
+        setIsSubmitting(true);
+        setSubmitError(null);
+        validationState.clearErrors();
+        
+        try {
+            if (values.is_recurring) {
+                // Create recurring payment
+                const recurringData = {
+                    type: values.type,
+                    category: values.category,
+                    description: values.description,
+                    amount: values.amount.toString(),
+                    frequency: values.frequency || 'monthly',
+                    start_date: values.start_date || new Date().toISOString(),
+                    end_date: values.end_date || undefined,
+                    day_of_month: frequency === 'monthly' || frequency === 'quarterly' || frequency === 'yearly' ? 
+                        values.day_of_month : undefined,
+                    day_of_week: frequency === 'weekly' ? values.day_of_week : undefined,
+                    customer_id: values.customer_id || undefined,
+                    interaction_id: values.interaction_id || undefined,
+                    payment_limit: values.payment_limit && values.payment_limit > 0 ? values.payment_limit : undefined,
+                };
 
-            const result = await createRecurringPayment(recurringData);
-            
-            if (result.success) {
-                form.reset();
-                setOpen(false);
-                onSuccess?.();
+                const result = await createRecurringPayment(recurringData);
+                
+                if (result.success) {
+                    form.reset();
+                    setOpen(false);
+                    onSuccess?.();
+                } else {
+                    setSubmitError(result.error || 'Failed to create recurring payment');
+                }
             } else {
-                form.setError('category', {message: result.error || 'Failed to create recurring payment'});
-            }
-        } else {
-            // Create one-time transaction
-            const success = await createTransaction({
-                type: values.type,
-                category: values.category,
-                description: values.description,
-                amount: values.amount.toString(),
-                customer_id: values.customer_id || null,
-                interaction_id: values.interaction_id || null,
-                customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
-                interaction_title: interactions.find((i) => i.id === values.interaction_id)?.title || null,
-                interaction_outcome: interactions.find((i) => i.id === values.interaction_id)?.outcome || null,
-            });
+                // Create one-time transaction
+                const transactionData = {
+                    type: values.type,
+                    category: values.category,
+                    description: values.description,
+                    amount: values.amount.toString(),
+                    customer_id: values.customer_id || undefined,
+                    interaction_id: values.interaction_id || undefined,
+                };
 
-            if (success) {
-                form.reset();
-                setOpen(false);
-                onSuccess?.();
-            } else {
-                form.setError('category', {message: 'Failed to create transaction'});
+                const result = await createTransaction(transactionData);
+
+                if (result.success) {
+                    form.reset();
+                    setOpen(false);
+                    onSuccess?.();
+                } else {
+                    setSubmitError(result.error || 'Failed to create transaction');
+                }
             }
+        } catch (error) {
+            console.error('Submission error:', error);
+            setSubmitError('An unexpected error occurred. Please try again.');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -136,6 +154,14 @@ export default function NewTransactionModal({
                     Fill out the details below.
                 </DialogDescription>
             </DialogHeader>
+
+            {submitError && (
+                <Alert className="mb-4 border-red-500 bg-red-500/10">
+                    <AlertDescription className="text-red-400">
+                        {submitError}
+                    </AlertDescription>
+                </Alert>
+            )}
 
             <div className="overflow-y-auto max-h-[60vh] pr-2">
                 <Form {...form}>
@@ -439,9 +465,10 @@ export default function NewTransactionModal({
                     variant="outline" 
                     type="submit"
                     onClick={form.handleSubmit(onSubmit)}
-                    className="bg-blue-600 border-blue-600 text-white hover:bg-blue-700 hover:border-blue-700"
+                    disabled={isSubmitting}
+                    className="bg-blue-600 border-blue-600 text-white hover:bg-blue-700 hover:border-blue-700 disabled:opacity-50"
                 >
-                    Save Transaction
+                    {isSubmitting ? 'Saving...' : 'Save Transaction'}
                 </Button>
             </DialogFooter>
         </DialogContent>
