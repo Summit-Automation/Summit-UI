@@ -1,6 +1,7 @@
 'use server';
 
-import puppeteer, { Browser } from 'puppeteer';
+import puppeteer, { Browser } from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
 import { GISSearchCriteria, NewScrapedProperty } from '@/types/gis-properties';
 
 // Helper function to create delays - reduces code repetition
@@ -289,19 +290,35 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
   try {
     console.log('Starting browser-based GIS scrape for:', criteria);
     
-    // Launch headless browser
-    browser = await puppeteer.launch({
-      headless: true,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--disable-gpu'
-      ]
-    });
+    // Launch headless browser - use different config for production vs development
+    const isProduction = process.env.NODE_ENV === 'production';
+    const isVercel = process.env.VERCEL === '1';
+    
+    if (isProduction && isVercel) {
+      // Use @sparticuz/chromium for Vercel serverless functions
+      console.log('Using serverless Chromium for Vercel deployment');
+      browser = await puppeteer.launch({
+        args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
+        defaultViewport: { width: 1280, height: 720 },
+        executablePath: await chromium.executablePath(),
+        headless: true,
+      });
+    } else {
+      // Use local Chromium for development or non-Vercel production
+      console.log('Using local Puppeteer for development/local production');
+      browser = await puppeteer.launch({
+        headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-accelerated-2d-canvas',
+          '--no-first-run',
+          '--no-zygote',
+          '--disable-gpu'
+        ]
+      }) as Browser;
+    }
     
     const page = await browser.newPage();
     

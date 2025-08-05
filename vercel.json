@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "src/app/api/gis-scraper/route.ts": {
+      "maxDuration": 60
+    }
+  },
   "crons": [
     {
       "path": "/api/process-recurring-payments",
