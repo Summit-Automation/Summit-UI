@@ -1,13 +1,23 @@
 'use server';
 
 import { createClient } from '@/utils/supabase/server';
-import { RecurringPaymentCreateRequest, RecurringPayment } from '@/types/recurringPayment';
+import { RecurringPayment } from '@/types/recurringPayment';
 import { revalidatePath } from 'next/cache';
 import { Result, success, error as createError } from '@/types/result';
+import { createRecurringPaymentSchema } from '@/lib/validation/schemas';
+import { validateInput, formatValidationErrors } from '@/lib/validation/validator';
 
 export async function createRecurringPayment(
-    data: RecurringPaymentCreateRequest
+    data: unknown
 ): Promise<Result<RecurringPayment, string>> {
+    // Validate input
+    const validationResult = validateInput(createRecurringPaymentSchema, data);
+    if (!validationResult.success) {
+        return createError(formatValidationErrors(validationResult.error));
+    }
+
+    const validatedData = validationResult.data;
+
     try {
         const supabase = await createClient();
 
@@ -17,7 +27,7 @@ export async function createRecurringPayment(
         }
 
         // Determine if we should create an immediate transaction
-        const startDate = new Date(data.start_date);
+        const startDate = new Date(validatedData.start_date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         startDate.setHours(0, 0, 0, 0);
@@ -29,20 +39,20 @@ export async function createRecurringPayment(
 
         const { data: result, error } = await supabase
             .rpc('create_recurring_payment', {
-                p_type: data.type,
-                p_category: data.category,
-                p_description: data.description,
-                p_amount: data.amount, // Send as string, let SQL handle conversion
-                p_frequency: data.frequency,
-                p_start_date: data.start_date,
-                p_end_date: data.end_date || null,
-                p_day_of_month: data.day_of_month || null,
-                p_day_of_week: data.day_of_week || null,
+                p_type: validatedData.type,
+                p_category: validatedData.category,
+                p_description: validatedData.description,
+                p_amount: validatedData.amount, // Send as string, let SQL handle conversion
+                p_frequency: validatedData.frequency,
+                p_start_date: validatedData.start_date,
+                p_end_date: validatedData.end_date || null,
+                p_day_of_month: validatedData.day_of_month || null,
+                p_day_of_week: validatedData.day_of_week || null,
                 p_created_by: user.id,
-                p_customer_id: data.customer_id || null,
-                p_interaction_id: data.interaction_id || null,
-                p_next_payment_date: data.start_date, // Database will calculate actual next date
-                p_payment_limit: data.payment_limit || null,
+                p_customer_id: validatedData.customer_id || null,
+                p_interaction_id: validatedData.interaction_id || null,
+                p_next_payment_date: validatedData.start_date, // Database will calculate actual next date
+                p_payment_limit: validatedData.payment_limit || null,
                 p_payments_processed: shouldCreateImmediateTransaction ? 1 : 0, // Set initial count
             });
 
@@ -59,15 +69,12 @@ export async function createRecurringPayment(
                 
                 // Create the first transaction immediately
                 const transactionResult = await createTransaction({
-                    type: data.type,
-                    category: data.category,
-                    description: data.description + ' (Recurring)',
-                    amount: data.amount,
-                    customer_id: data.customer_id || null,
-                    interaction_id: data.interaction_id || null,
-                    customer_name: null, // Will be populated by createTransaction
-                    interaction_title: null, // Will be populated by createTransaction
-                    interaction_outcome: null, // Will be populated by createTransaction
+                    type: validatedData.type,
+                    category: validatedData.category,
+                    description: validatedData.description + ' (Recurring)',
+                    amount: validatedData.amount,
+                    customer_id: validatedData.customer_id || null,
+                    interaction_id: validatedData.interaction_id || null,
                 });
 
                 if (transactionResult) {
