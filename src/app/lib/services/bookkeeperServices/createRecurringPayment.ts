@@ -16,7 +16,7 @@ export async function createRecurringPayment(
             return createError('User not authenticated');
         }
 
-        // If start date is today or in the past, create the first transaction immediately
+        // Determine if we should create an immediate transaction
         const startDate = new Date(data.start_date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -24,13 +24,8 @@ export async function createRecurringPayment(
         
         const shouldCreateImmediateTransaction = startDate <= today;
 
-        // Calculate next payment date based on frequency and start date
-        const nextPaymentDate = calculateNextPaymentDate(
-            data.start_date,
-            data.frequency,
-            data.day_of_month,
-            data.day_of_week
-        );
+        // Let the database calculate the next payment date
+        // The stored procedure will handle all date calculations
 
         const { data: result, error } = await supabase
             .rpc('create_recurring_payment', {
@@ -46,7 +41,7 @@ export async function createRecurringPayment(
                 p_created_by: user.id,
                 p_customer_id: data.customer_id || null,
                 p_interaction_id: data.interaction_id || null,
-                p_next_payment_date: nextPaymentDate,
+                p_next_payment_date: data.start_date, // Database will calculate actual next date
                 p_payment_limit: data.payment_limit || null,
                 p_payments_processed: shouldCreateImmediateTransaction ? 1 : 0, // Set initial count
             });
@@ -92,89 +87,6 @@ export async function createRecurringPayment(
     }
 }
 
-function calculateNextPaymentDate(
-    startDate: string,
-    frequency: string,
-    dayOfMonth?: number | null,
-    dayOfWeek?: number | null
-): string {
-    const start = new Date(startDate);
-    const now = new Date();
-    
-    // If start date is in the future, use it as next payment date
-    if (start > now) {
-        return start.toISOString();
-    }
-
-    let nextDate = new Date(start);
-
-    switch (frequency) {
-        case 'daily':
-            // Find next day from now
-            nextDate = new Date(now);
-            nextDate.setDate(nextDate.getDate() + 1);
-            break;
-
-        case 'weekly':
-            // Find next occurrence of the specified day of week
-            if (dayOfWeek !== null && dayOfWeek !== undefined) {
-                nextDate = new Date(now);
-                const daysUntilNext = (dayOfWeek - nextDate.getDay() + 7) % 7;
-                if (daysUntilNext === 0) {
-                    nextDate.setDate(nextDate.getDate() + 7); // Next week if today is the day
-                } else {
-                    nextDate.setDate(nextDate.getDate() + daysUntilNext);
-                }
-            }
-            break;
-
-        case 'monthly':
-            // Find next occurrence of the specified day of month
-            if (dayOfMonth !== null && dayOfMonth !== undefined) {
-                nextDate = new Date(now.getFullYear(), now.getMonth(), dayOfMonth);
-                if (nextDate <= now) {
-                    nextDate.setMonth(nextDate.getMonth() + 1);
-                }
-                // Handle case where day doesn't exist in month (e.g., 31st in February)
-                if (nextDate.getDate() !== dayOfMonth) {
-                    nextDate.setDate(0); // Go to last day of previous month
-                }
-            } else {
-                nextDate = new Date(now.getFullYear(), now.getMonth() + 1, start.getDate());
-            }
-            break;
-
-        case 'quarterly':
-            // Find next quarter occurrence
-            if (dayOfMonth !== null && dayOfMonth !== undefined) {
-                nextDate = new Date(now.getFullYear(), now.getMonth(), dayOfMonth);
-                while (nextDate <= now) {
-                    nextDate.setMonth(nextDate.getMonth() + 3);
-                }
-            } else {
-                nextDate = new Date(start);
-                while (nextDate <= now) {
-                    nextDate.setMonth(nextDate.getMonth() + 3);
-                }
-            }
-            break;
-
-        case 'yearly':
-            // Find next year occurrence
-            if (dayOfMonth !== null && dayOfMonth !== undefined) {
-                nextDate = new Date(now.getFullYear(), start.getMonth(), dayOfMonth);
-                if (nextDate <= now) {
-                    nextDate.setFullYear(nextDate.getFullYear() + 1);
-                }
-            } else {
-                nextDate = new Date(start);
-                nextDate.setFullYear(now.getFullYear());
-                if (nextDate <= now) {
-                    nextDate.setFullYear(nextDate.getFullYear() + 1);
-                }
-            }
-            break;
-    }
-
-    return nextDate.toISOString();
-}
+// Date calculations are now handled by the database stored procedure
+// This eliminates the complex 80+ line date calculation logic
+// and ensures consistency across the application

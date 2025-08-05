@@ -62,7 +62,7 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
             primary: true,
             render: (value: unknown) => (
                 <div className="font-medium max-w-[200px] md:max-w-[300px]" title={value as string}>
-                    <span className="truncate block md:inline">{value as string}</span>
+                    <span className="break-words whitespace-normal leading-tight">{value as string}</span>
                 </div>
             )
         },
