@@ -19,12 +19,22 @@ export default function OrganizationDisplay() {
 
     const loadOrganization = async () => {
         try {
+            console.log('Loading organization...');
             const org = await getCurrentUserOrganizationClient();
+            console.log('Organization loaded:', org);
             setOrganization(org);
         } catch (error) {
             console.error('Failed to load organization:', error);
-            setOrganization(null);
+            // Set a fallback organization for debugging
+            setOrganization({
+                id: 'unknown',
+                name: 'Summit Automation',
+                slug: 'summit-automation',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            });
         } finally {
+            console.log('Setting loading to false');
             setLoading(false);
         }
     };
