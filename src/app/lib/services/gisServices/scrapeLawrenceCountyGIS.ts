@@ -1,6 +1,6 @@
 'use server';
 
-import puppeteer from 'puppeteer';
+import puppeteer, { Browser } from 'puppeteer';
 import { GISSearchCriteria, NewScrapedProperty } from '@/types/gis-properties';
 
 // Helper function to create delays - reduces code repetition
@@ -41,7 +41,7 @@ async function searchAdditionalPages(page: any, browser: any, criteria: GISSearc
       
       // Get more property links from this page
       const moreLinks = await page.evaluate(() => {
-        const links = [];
+        const links: Array<{ address: string; href: string }> = [];
         const addressPatterns = ['a[href*="Property"]', 'a[href*="Detail"]', 'td a', 'tr a'];
         
         addressPatterns.forEach(pattern => {
@@ -75,10 +75,11 @@ async function searchAdditionalPages(page: any, browser: any, criteria: GISSearc
       
       for (const link of linksToProcess) {
         try {
+          if (!browser) throw new Error('Browser not initialized');
           const propertyPage = await browser.newPage();
           await propertyPage.goto(link.href, { waitUntil: 'networkidle2', timeout: 10000 });
           
-          const propertyData = await propertyPage.evaluate((address, searchCriteria) => {
+          const propertyData = await propertyPage.evaluate((address: string, searchCriteria: { min_acreage: number; max_acreage: number; township?: string }) => {
             // Same property extraction logic as main function
             const getText = (selector: string) => {
               const element = document.querySelector(selector);
@@ -209,7 +210,7 @@ async function searchAdditionalPages(page: any, browser: any, criteria: GISSearc
               }
             } else {
               // Fallback to content search
-              const pageContent = (pageHTML + ' ' + pageText).toLowerCase();
+              const pageContent = (pageHTML + ' ' + cityPageText).toLowerCase();
               if (pageContent.includes('slippery rock')) {
                 extractedCity = 'Slippery Rock';
               } else if (pageContent.includes('scott')) {
@@ -231,6 +232,8 @@ async function searchAdditionalPages(page: any, browser: any, criteria: GISSearc
               }
             }
             
+            const parcelId = undefined; // Not extracted in additional pages for simplicity
+            
             // Look for Assessment field in additional pages too
             let assessedValue = null;
             const additionalPageText = document.body ? document.body.textContent || '' : '';
@@ -247,9 +250,9 @@ async function searchAdditionalPages(page: any, browser: any, criteria: GISSearc
               address: actualAddress,
               city: extractedCity,
               acreage: acreage,
-              assessed_value: assessedValue,
+              assessed_value: assessedValue ?? undefined,
               property_type: 'Unknown',
-              parcel_id: null,
+              parcel_id: parcelId ?? undefined,
               search_criteria: searchCriteria
             };
           }, link.address, criteria);
@@ -263,12 +266,12 @@ async function searchAdditionalPages(page: any, browser: any, criteria: GISSearc
           if (additionalProperties.length >= needed) break;
           
         } catch (error) {
-          console.log(`Error processing additional property ${link.address}:`, error.message);
+          console.log(`Error processing additional property ${link.address}:`, error instanceof Error ? error instanceof Error ? error.message : error : error);
         }
       }
     }
   } catch (error) {
-    console.log('Error searching additional pages:', error.message);
+    console.log('Error searching additional pages:', error instanceof Error ? error.message : error);
   }
   
   return additionalProperties;
@@ -281,7 +284,7 @@ async function searchAdditionalPages(page: any, browser: any, criteria: GISSearc
  * @returns Promise with array of scraped property data
  */
 export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Promise<NewScrapedProperty[]> {
-  let browser;
+  let browser: Browser | undefined;
   
   try {
     console.log('Starting browser-based GIS scrape for:', criteria);
@@ -320,7 +323,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
       const buttons = Array.from(document.querySelectorAll('button'));
       const selects = Array.from(document.querySelectorAll('select'));
       const checkboxes = inputs.filter(input => input.type === 'checkbox');
-      const submitButtons = inputs.filter(input => input.type === 'submit').concat(buttons);
+      const submitButtons = [...inputs.filter(input => input.type === 'submit'), ...buttons];
       
       return {
         checkboxCount: checkboxes.length,
@@ -362,13 +365,13 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
             checkedModels++;
             console.log(`Checked model box ${i + 1}`);
           } catch (error) {
-            console.log(`Could not check model box ${i + 1}:`, error.message);
+            console.log(`Could not check model box ${i + 1}:`, error instanceof Error ? error.message : error);
           }
         }
         
         if (checkedModels > 0) break;
       } catch (error) {
-        console.log(`Pattern ${pattern} failed:`, error.message);
+        console.log(`Pattern ${pattern} failed:`, error instanceof Error ? error.message : error);
       }
     }
     
@@ -399,7 +402,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
       let maxAcreageField = null;
       
       // Try to find fields that might contain land area values (look for fields with values like 0.23, 0.57, etc.)
-      const potentialFields = allInputs.filter(input => 
+      const potentialFields = allInputs.filter((input: any) => // eslint-disable-line @typescript-eslint/no-explicit-any 
         input.type === 'text' && 
         input.value && 
         input.value.match(/^\d+\.?\d*$/) && 
@@ -430,7 +433,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
       }
       
     } catch (error) {
-      console.log('Error setting land area range:', error.message);
+      console.log('Error setting land area range:', error instanceof Error ? error.message : error);
     }
     
     // Set sales price range to reasonable values to avoid filtering out properties
@@ -492,7 +495,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
       // If we found specific price field candidates from inspection, use those
       if (!minPriceField && !maxPriceField && allInputsForPrice.length >= 2) {
         // Filter out date fields and prioritize actual price fields
-        const actualPriceFields = allInputsForPrice.filter(field => 
+        const actualPriceFields = allInputsForPrice.filter((field: any) => // eslint-disable-line @typescript-eslint/no-explicit-any 
           !field.className.includes('datepicker') && // Exclude date picker fields
           !field.value.includes('/') && // Exclude fields with date-like values
           !field.id.toLowerCase().includes('date') &&
@@ -505,7 +508,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
             maxPriceField = await page.$(`input[id="${actualPriceFields[1].id}"]`);
             console.log(`Using filtered price fields: ${actualPriceFields[0].id}, ${actualPriceFields[1].id}`);
           } catch (error) {
-            console.log('Could not use filtered price fields:', error.message);
+            console.log('Could not use filtered price fields:', error instanceof Error ? error.message : error);
           }
         } else {
           console.log('No suitable price fields found after filtering out date fields');
@@ -527,7 +530,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
       }
       
     } catch (error) {
-      console.log('Error setting sales price range:', error.message);
+      console.log('Error setting sales price range:', error instanceof Error ? error.message : error);
     }
     
     // Look for styles checkboxes and check all link
@@ -586,7 +589,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
             break;
           }
         } catch (error) {
-          console.log(`Style pattern ${pattern} failed:`, error.message);
+          console.log(`Style pattern ${pattern} failed:`, error instanceof Error ? error.message : error);
         }
       }
     }
@@ -611,7 +614,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
         submitted = true;
         break;
       } catch (error) {
-        console.log(`Submit pattern ${pattern} failed:`, error.message);
+        console.log(`Submit pattern ${pattern} failed:`, error instanceof Error ? error.message : error);
       }
     }
     
@@ -632,11 +635,11 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
         
         // Look for page links
         const pageLinks = await page.$$eval('a[href*="Page"]', links => 
-          links.map(link => ({ href: link.href, text: link.textContent?.trim() }))
+          links.map((link: any) => ({ href: link.href, text: link.textContent?.trim() })) // eslint-disable-line @typescript-eslint/no-explicit-any
         );
         
-        const targetPageLink = pageLinks.find(link => 
-          link.text && link.text.includes(randomPage.toString())
+        const targetPageLink = pageLinks.find((link: any) => // eslint-disable-line @typescript-eslint/no-explicit-any 
+          (link as any).text && (link as any).text.includes(randomPage.toString()) // eslint-disable-line @typescript-eslint/no-explicit-any
         );
         
         if (targetPageLink) {
@@ -647,13 +650,13 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
           console.log(`Page ${randomPage} link not found, using default results`);
         }
       } catch (error) {
-        console.log(`Could not navigate to page ${randomPage}:`, error.message);
+        console.log(`Could not navigate to page ${randomPage}:`, error instanceof Error ? error.message : error);
       }
     }
     
     // Parse the results page for property links with enhanced debugging
     const propertyLinks = await page.evaluate(() => {
-      const links = [];
+      const links: Array<{ address: string; href: string }> = [];
       
       // Debug: Log page content to understand structure
       console.log('Page title:', document.title);
@@ -702,8 +705,8 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
       console.log(`Total property links found: ${links.length}`);
       
       // Remove duplicates based on href
-      const uniqueLinks = [];
-      const seenHrefs = new Set();
+      const uniqueLinks: Array<{ address: string; href: string }> = [];
+      const seenHrefs = new Set<string>();
       
       links.forEach(link => {
         if (!seenHrefs.has(link.href)) {
@@ -730,7 +733,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
     if (propertyLinks.length < 10) {
       try {
         const moreLinks = await page.evaluate(() => {
-          const additionalLinks = [];
+          const additionalLinks: Array<{ address: string; href: string }> = [];
           
           // Look for pagination buttons (removed invalid :contains selector)
           // const nextButtons = document.querySelectorAll('a[href*="Page"], input[value*="Next"]');
@@ -757,8 +760,8 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
         console.log(`Found ${moreLinks.length} additional potential property links`);
         
         // Add unique links to our collection
-        const existingHrefs = new Set(propertyLinks.map(link => link.href));
-        const newLinks = moreLinks.filter(link => !existingHrefs.has(link.href));
+        const existingHrefs = new Set(propertyLinks.map((link: any) => link.href)); // eslint-disable-line @typescript-eslint/no-explicit-any
+        const newLinks = moreLinks.filter((link: any) => !existingHrefs.has(link.href)); // eslint-disable-line @typescript-eslint/no-explicit-any
         
         // Shuffle and add up to 10 more links
         for (let i = newLinks.length - 1; i > 0; i--) {
@@ -770,7 +773,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
         console.log(`Total property links after expansion: ${propertyLinks.length}`);
         
       } catch (error) {
-        console.log('Could not find additional property links:', error.message);
+        console.log('Could not find additional property links:', error instanceof Error ? error.message : error);
       }
     }
     
@@ -778,7 +781,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
     
     // Process properties in larger batches for better performance
     const batchSize = 5; // Process 5 properties at a time
-    const batches = [];
+    const batches: Array<Array<{ address: string; href: string }>> = [];
     
     for (let i = 0; i < propertyLinks.length; i += batchSize) {
       batches.push(propertyLinks.slice(i, i + batchSize));
@@ -793,6 +796,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
       const batchPromises = batch.map(async (link) => {
         try {
           // Create a new page for each property in the batch to allow parallel processing
+          if (!browser) throw new Error('Browser not initialized');
           const propertyPage = await browser.newPage();
           await propertyPage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
           
@@ -800,7 +804,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
           await propertyPage.goto(link.href, { waitUntil: 'domcontentloaded', timeout: 10000 }); // Faster loading
           
           // Extract property details from the page
-          const propertyData = await propertyPage.evaluate((address, searchCriteria) => {
+          const propertyData = await propertyPage.evaluate((address: string, searchCriteria: { min_acreage: number; max_acreage: number; township?: string }) => {
             const getText = (selector: string) => {
               const element = document.querySelector(selector);
               return element ? element.textContent?.trim() || '' : '';
@@ -951,7 +955,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
             }
             
             const parcelId = getText('span[id*="Parcel"]') || 
-                            getText('span[id*="ID"]') || null;
+                            getText('span[id*="ID"]') || undefined;
             
             // Try to extract city from the page - no zip code needed since GIS doesn't provide reliable ones
             let extractedCity = '';
@@ -1080,9 +1084,9 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
               address: actualAddress,
               city: extractedCity,
               acreage: acreage,
-              assessed_value: assessedValue,
+              assessed_value: assessedValue ?? undefined,
               property_type: 'Unknown',
-              parcel_id: parcelId,
+              parcel_id: parcelId ?? undefined,
               search_criteria: searchCriteria
             };
           }, link.address, criteria);
@@ -1171,7 +1175,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
           await delay(1000);
           
           // Set expanded acreage range
-          await page.evaluate((minAcres, maxAcres) => {
+          await page.evaluate((minAcres: number, maxAcres: number) => {
             const minField = document.querySelector('#MainContent_txtLandFrom') as HTMLInputElement;
             const maxField = document.querySelector('#MainContent_txtLandTo') as HTMLInputElement;
             if (minField && maxField) {
@@ -1208,7 +1212,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
         }
         
       } catch (error) {
-        console.log('Could not search for additional properties:', error.message);
+        console.log('Could not search for additional properties:', error instanceof Error ? error.message : error);
       }
     }
     
