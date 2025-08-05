@@ -115,6 +115,11 @@ export default function GISScraperContent() {
   };
 
   const handleExportProperty = async (propertyId: string) => {
+    if (!propertyId) {
+      toast.error('Cannot export property: Property ID is missing');
+      return;
+    }
+    
     setExportingIds(prev => new Set(prev).add(propertyId));
     
     try {
@@ -127,11 +132,12 @@ export default function GISScraperContent() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to export lead');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to export lead');
       }
 
       const data = await response.json();
-      toast.success(data.message);
+      toast.success(data.message || 'Property exported to CRM successfully');
       
       // Update the property in both results and saved properties
       const updateProperty = (property: GISProperty) => 
@@ -144,7 +150,7 @@ export default function GISScraperContent() {
       
     } catch (error) {
       console.error('Error exporting lead:', error);
-      toast.error('Failed to export lead. Please try again.');
+      toast.error(`Failed to export lead: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setExportingIds(prev => {
         const newSet = new Set(prev);
@@ -206,6 +212,11 @@ export default function GISScraperContent() {
     // Generate a temporary ID for tracking saving state
     const tempId = `${property.owner_name}-${property.address}`.replace(/\s+/g, '-');
     
+    if (!property.id) {
+      toast.error('Cannot save property: Property ID is missing');
+      return;
+    }
+    
     setSavingIds(prev => new Set(prev).add(tempId));
     
     try {
@@ -218,7 +229,8 @@ export default function GISScraperContent() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save property');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save property');
       }
 
       toast.success('Property saved successfully');
@@ -226,7 +238,7 @@ export default function GISScraperContent() {
       loadRecentScrapedProperties(); // Reload scraped properties to show updated status
     } catch (error) {
       console.error('Error saving property:', error);
-      toast.error('Failed to save property');
+      toast.error(`Failed to save property: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setSavingIds(prev => {
         const newSet = new Set(prev);

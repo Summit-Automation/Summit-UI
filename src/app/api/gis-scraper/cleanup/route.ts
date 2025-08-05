@@ -34,17 +34,26 @@ export async function POST(request: Request) {
       console.log('Properties:', allProperties);
     }
 
-    // Delete old scraped properties that are not saved (is_saved = false)
-    // and are older than 7 days
+    // Delete scraped properties based on cleanup type
     console.log(`Cleanup: Looking for properties older than ${cutoffDate.toISOString()}`);
     
-    const { data, error } = await supabase
+    let query = supabase
       .from('scraped_properties')
       .delete()
-      .eq('user_id', user.id)
-      .eq('is_saved', false)
-      .lt('scraped_at', cutoffDate.toISOString())
-      .select('id');
+      .eq('user_id', user.id);
+
+    if (forceCleanup) {
+      // Force cleanup: delete ALL scraped properties for this user (both saved and unsaved)
+      // This clears the search results but doesn't affect the saved_properties table
+      console.log('Force cleanup: deleting ALL scraped properties regardless of save status');
+    } else {
+      // Normal cleanup: only delete unsaved properties older than 7 days
+      query = query.eq('is_saved', false);
+    }
+    
+    query = query.lt('scraped_at', cutoffDate.toISOString());
+    
+    const { data, error } = await query.select('id');
 
     if (error) {
       console.error('Error cleaning up scraped properties:', error);
@@ -67,8 +76,8 @@ export async function POST(request: Request) {
     const deletedCount = data?.length || 0;
 
     const message = forceCleanup 
-      ? `Force cleaned up ${deletedCount} unsaved scraped properties`
-      : `Cleaned up ${deletedCount} old scraped properties (older than 7 days)`;
+      ? `Force cleaned up ${deletedCount} scraped properties from search results`
+      : `Cleaned up ${deletedCount} old unsaved scraped properties (older than 7 days)`;
 
     return NextResponse.json({
       success: true,

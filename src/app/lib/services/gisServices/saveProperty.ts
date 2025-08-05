@@ -58,7 +58,6 @@ export async function saveProperty(scrapedPropertyId: string): Promise<{
       owner_name: scrapedProperty.owner_name,
       address: scrapedProperty.address,
       city: scrapedProperty.city,
-      zip_code: scrapedProperty.zip_code,
       acreage: scrapedProperty.acreage,
       assessed_value: scrapedProperty.assessed_value,
       property_type: scrapedProperty.property_type,

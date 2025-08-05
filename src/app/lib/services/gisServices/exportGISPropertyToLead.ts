@@ -56,7 +56,7 @@ export async function exportSavedPropertyToLead(savedPropertyId: string): Promis
     const customerData = {
       full_name: savedProperty.owner_name,
       email: '', // GIS data doesn't include email, but field is required
-      phone: null,
+      phone: '', // GIS data doesn't include phone, use empty string instead of null
       business: `${savedProperty.address}, ${savedProperty.city}`,
       status: 'prospect',
       organization_id: organizationId

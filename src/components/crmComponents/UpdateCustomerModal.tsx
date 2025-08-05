@@ -24,11 +24,11 @@ export default function UpdateCustomerModal({
     const [open, setOpen] = React.useState(false);
     const form = useForm<FormValues>({
         defaultValues: {
-            full_name: customer.full_name,
-            email: customer.email,
-            phone: customer.phone,
-            business: customer.business,
-            status: customer.status,
+            full_name: customer.full_name || '',
+            email: customer.email || '',
+            phone: customer.phone || '',
+            business: customer.business || '',
+            status: customer.status || 'lead',
         }, mode: 'onBlur',
     });
 

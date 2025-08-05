@@ -142,9 +142,10 @@ export default function GISScraperActions({
                 size="sm"
                 onClick={() => onCleanupOldData(true)}
                 className="flex items-center gap-2 text-red-600 border-red-200 hover:bg-red-50"
+                title="Clears all search results (saved properties remain in Saved Properties tab)"
               >
                 <Trash2 className="h-4 w-4" />
-                Force Cleanup All
+                Clear All Search Results
               </Button>
               <Button
                 variant="outline"
