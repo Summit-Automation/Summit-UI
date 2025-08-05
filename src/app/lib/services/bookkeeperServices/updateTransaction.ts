@@ -1,12 +1,9 @@
 'use server';
 
 import { getAuthenticatedUser } from '../shared/authUtils';
-import { Transaction } from "@/types/transaction";
 import { updateTransactionSchema } from '@/lib/validation/schemas';
 import { validateInput, formatValidationErrors } from '@/lib/validation/validator';
 import { Result, success, error as createError } from '@/types/result';
-
-type UpdateTransactionInput = Omit<Transaction, 'source' | 'timestamp' | 'uploaded_by'>;
 
 export async function updateTransaction(input: unknown): Promise<Result<boolean, string>> {
     // Validate input

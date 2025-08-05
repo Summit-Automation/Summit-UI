@@ -10,7 +10,6 @@ import {
 const uuidSchema = z.string().uuid('Invalid UUID format');
 const emailSchema = z.string().email('Invalid email format').max(255, 'Email too long');
 const phoneSchema = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number format').optional();
-const urlSchema = z.string().url('Invalid URL format').optional();
 const nonEmptyString = z.string().min(1, 'This field is required').max(1000, 'Text too long');
 const optionalString = z.string().max(1000, 'Text too long').optional();
 const positiveNumber = z.number().positive('Must be a positive number');
@@ -20,11 +19,11 @@ const dateString = z.string().datetime('Invalid date format').optional();
 
 // ===== TRANSACTION SCHEMAS =====
 export const transactionTypeSchema = z.enum(['income', 'expense'], {
-  errorMap: () => ({ message: 'Type must be either income or expense' })
+  message: 'Type must be either income or expense'
 });
 
 export const transactionSourceSchema = z.enum(['manual', 'ai_agent', 'import', 'recurring_payment'], {
-  errorMap: () => ({ message: 'Invalid transaction source' })
+  message: 'Invalid transaction source'
 });
 
 export const createTransactionSchema = z.object({
@@ -48,7 +47,7 @@ export const updateTransactionSchema = z.object({
 
 // ===== CUSTOMER SCHEMAS =====
 export const customerStatusSchema = z.enum(['active', 'inactive', 'prospect', 'qualified'], {
-  errorMap: () => ({ message: 'Invalid customer status' })
+  message: 'Invalid customer status'
 });
 
 export const createCustomerSchema = z.object({
@@ -70,19 +69,19 @@ export const updateCustomerSchema = z.object({
 
 // ===== LEAD SCHEMAS =====
 export const leadStatusSchema = z.enum(LEAD_STATUSES, {
-  errorMap: () => ({ message: 'Invalid lead status' })
+  message: 'Invalid lead status'
 });
 
 export const leadPrioritySchema = z.enum(LEAD_PRIORITIES, {
-  errorMap: () => ({ message: 'Invalid lead priority' })
+  message: 'Invalid lead priority'
 });
 
 export const leadSourceSchema = z.enum(['manual', 'ai_agent'], {
-  errorMap: () => ({ message: 'Lead source must be manual or ai_agent' })
+  message: 'Lead source must be manual or ai_agent'
 });
 
 export const companySizeSchema = z.enum(COMPANY_SIZES, {
-  errorMap: () => ({ message: 'Invalid company size' })
+  message: 'Invalid company size'
 });
 
 export const createLeadSchema = z.object({
@@ -120,7 +119,7 @@ export const updateLeadSchema = createLeadSchema.partial().extend({
 
 // ===== ACTIVITY SCHEMAS =====
 export const activityTypeSchema = z.enum(ACTIVITY_TYPES, {
-  errorMap: () => ({ message: 'Invalid activity type' })
+  message: 'Invalid activity type'
 });
 
 export const createActivitySchema = z.object({
@@ -138,7 +137,7 @@ export const createActivitySchema = z.object({
 
 // ===== RECURRING PAYMENT SCHEMAS =====
 export const recurringFrequencySchema = z.enum(['daily', 'weekly', 'monthly', 'quarterly', 'yearly'], {
-  errorMap: () => ({ message: 'Invalid frequency' })
+  message: 'Invalid frequency'
 });
 
 export const createRecurringPaymentSchema = z.object({
@@ -162,7 +161,7 @@ export const updateRecurringPaymentSchema = createRecurringPaymentSchema.partial
 
 // ===== INVENTORY SCHEMAS =====
 export const inventoryStatusSchema = z.enum(['in_stock', 'low_stock', 'out_of_stock', 'discontinued'], {
-  errorMap: () => ({ message: 'Invalid inventory status' })
+  message: 'Invalid inventory status'
 });
 
 export const createInventoryItemSchema = z.object({
@@ -198,11 +197,11 @@ export const updateMileageEntrySchema = createMileageEntrySchema.partial().exten
 
 // ===== INTERACTION SCHEMAS =====
 export const interactionTypeSchema = z.enum(['call', 'email', 'meeting', 'service', 'support'], {
-  errorMap: () => ({ message: 'Invalid interaction type' })
+  message: 'Invalid interaction type'
 });
 
 export const interactionOutcomeSchema = z.enum(['successful', 'follow_up_needed', 'resolved', 'escalated'], {
-  errorMap: () => ({ message: 'Invalid interaction outcome' })
+  message: 'Invalid interaction outcome'
 });
 
 export const createInteractionSchema = z.object({
@@ -237,7 +236,7 @@ export const createGISPropertySchema = z.object({
 
 // ===== EXPORT SCHEMAS =====
 export const exportFormatSchema = z.enum(['csv', 'excel', 'pdf'], {
-  errorMap: () => ({ message: 'Export format must be csv, excel, or pdf' })
+  message: 'Export format must be csv, excel, or pdf'
 });
 
 export const exportFilterSchema = z.object({
@@ -259,7 +258,7 @@ export const paginationSchema = z.object({
 // ===== SEARCH SCHEMAS =====
 export const searchSchema = z.object({
   query: z.string().min(1, 'Search query is required').max(255, 'Query too long'),
-  filters: z.record(z.any()).optional(),
+  filters: z.record(z.string(), z.unknown()).optional(),
   ...paginationSchema.shape,
 });
 

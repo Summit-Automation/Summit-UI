@@ -1,7 +1,6 @@
 'use server';
 
 import { getAuthenticatedUser } from '@/app/lib/services/shared/authUtils';
-import { NewLead } from '@/types/leadgen';
 import { createLeadSchema } from '@/lib/validation/schemas';
 import { validateInput, formatValidationErrors } from '@/lib/validation/validator';
 import { Result, success, error as createError } from '@/types/result';

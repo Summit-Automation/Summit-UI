@@ -1,8 +1,7 @@
 'use server';
 
 import { getAuthenticatedUser } from '../shared/authUtils';
-import { Transaction } from "@/types/transaction";
-import { createTransactionSchema, type CreateTransactionInput } from '@/lib/validation/schemas';
+import { createTransactionSchema } from '@/lib/validation/schemas';
 import { validateInput, formatValidationErrors } from '@/lib/validation/validator';
 import { Result, success, error as createError } from '@/types/result';
 

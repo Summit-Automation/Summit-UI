@@ -1,1 +1,387 @@
-import { describe, it, expect } from '@jest/globals';\nimport {\n  createTransactionSchema,\n  createCustomerSchema,\n  createLeadSchema,\n  createRecurringPaymentSchema,\n} from '../schemas';\nimport {\n  validateInput,\n  validatePartialInput,\n  formatValidationErrors,\n  ValidationError,\n} from '../validator';\n\ndescribe('Validation Schemas', () => {\n  describe('createTransactionSchema', () => {\n    it('should validate valid transaction data', () => {\n      const validData = {\n        type: 'expense',\n        category: 'Office Supplies',\n        description: 'Monthly office supplies purchase',\n        amount: '150.50',\n        customer_id: '123e4567-e89b-12d3-a456-426614174000',\n      };\n\n      const result = validateInput(createTransactionSchema, validData);\n      expect(result.success).toBe(true);\n      if (result.success) {\n        expect(result.data.type).toBe('expense');\n        expect(result.data.amount).toBe('150.50');\n      }\n    });\n\n    it('should reject invalid transaction type', () => {\n      const invalidData = {\n        type: 'invalid_type',\n        category: 'Office Supplies',\n        description: 'Monthly office supplies purchase',\n        amount: '150.50',\n      };\n\n      const result = validateInput(createTransactionSchema, invalidData);\n      expect(result.success).toBe(false);\n      if (!result.success) {\n        expect(result.error[0].field).toBe('type');\n      }\n    });\n\n    it('should reject invalid amount format', () => {\n      const invalidData = {\n        type: 'expense',\n        category: 'Office Supplies',\n        description: 'Monthly office supplies purchase',\n        amount: 'invalid-amount',\n      };\n\n      const result = validateInput(createTransactionSchema, invalidData);\n      expect(result.success).toBe(false);\n      if (!result.success) {\n        expect(result.error[0].field).toBe('amount');\n      }\n    });\n\n    it('should reject invalid UUID format', () => {\n      const invalidData = {\n        type: 'expense',\n        category: 'Office Supplies',\n        description: 'Monthly office supplies purchase',\n        amount: '150.50',\n        customer_id: 'not-a-uuid',\n      };\n\n      const result = validateInput(createTransactionSchema, invalidData);\n      expect(result.success).toBe(false);\n      if (!result.success) {\n        expect(result.error[0].field).toBe('customer_id');\n      }\n    });\n\n    it('should require mandatory fields', () => {\n      const incompleteData = {\n        type: 'expense',\n        // missing category, description, amount\n      };\n\n      const result = validateInput(createTransactionSchema, incompleteData);\n      expect(result.success).toBe(false);\n      if (!result.success) {\n        expect(result.error.length).toBeGreaterThan(0);\n        const fieldNames = result.error.map(e => e.field);\n        expect(fieldNames).toContain('category');\n        expect(fieldNames).toContain('description');\n        expect(fieldNames).toContain('amount');\n      }\n    });\n  });\n\n  describe('createCustomerSchema', () => {\n    it('should validate valid customer data', () => {\n      const validData = {\n        full_name: 'John Doe',\n        email: 'john@example.com',\n        phone: '+1234567890',\n        business: 'Acme Corp',\n        status: 'active',\n      };\n\n      const result = validateInput(createCustomerSchema, validData);\n      expect(result.success).toBe(true);\n    });\n\n    it('should reject invalid email format', () => {\n      const invalidData = {\n        full_name: 'John Doe',\n        email: 'invalid-email',\n        phone: '+1234567890',\n        status: 'active',\n      };\n\n      const result = validateInput(createCustomerSchema, invalidData);\n      expect(result.success).toBe(false);\n      if (!result.success) {\n        expect(result.error[0].field).toBe('email');\n      }\n    });\n\n    it('should reject invalid status', () => {\n      const invalidData = {\n        full_name: 'John Doe',\n        email: 'john@example.com',\n        phone: '+1234567890',\n        status: 'invalid_status',\n      };\n\n      const result = validateInput(createCustomerSchema, invalidData);\n      expect(result.success).toBe(false);\n      if (!result.success) {\n        expect(result.error[0].field).toBe('status');\n      }\n    });\n  });\n\n  describe('createLeadSchema', () => {\n    it('should validate valid lead data', () => {\n      const validData = {\n        first_name: 'Jane',\n        last_name: 'Smith',\n        email: 'jane@example.com',\n        phone: '+1234567890',\n        company: 'Tech Corp',\n        source: 'manual',\n        status: 'new',\n        priority: 'medium',\n      };\n\n      const result = validateInput(createLeadSchema, validData);\n      expect(result.success).toBe(true);\n    });\n\n    it('should reject invalid ZIP code format', () => {\n      const invalidData = {\n        first_name: 'Jane',\n        last_name: 'Smith',\n        source: 'manual',\n        zip_code: 'invalid-zip',\n      };\n\n      const result = validateInput(createLeadSchema, invalidData);\n      expect(result.success).toBe(false);\n      if (!result.success) {\n        const zipError = result.error.find(e => e.field === 'zip_code');\n        expect(zipError).toBeDefined();\n      }\n    });\n\n    it('should reject invalid confidence score', () => {\n      const invalidData = {\n        first_name: 'Jane',\n        last_name: 'Smith',\n        source: 'ai_agent',\n        ai_confidence_score: 150, // > 100\n      };\n\n      const result = validateInput(createLeadSchema, invalidData);\n      expect(result.success).toBe(false);\n      if (!result.success) {\n        const scoreError = result.error.find(e => e.field === 'ai_confidence_score');\n        expect(scoreError).toBeDefined();\n      }\n    });\n  });\n\n  describe('createRecurringPaymentSchema', () => {\n    it('should validate valid recurring payment data', () => {\n      const validData = {\n        type: 'expense',\n        category: 'Subscription',\n        description: 'Monthly software subscription',\n        amount: '99.99',\n        frequency: 'monthly',\n        start_date: '2025-01-01T00:00:00Z',\n        day_of_month: 15,\n      };\n\n      const result = validateInput(createRecurringPaymentSchema, validData);\n      expect(result.success).toBe(true);\n    });\n\n    it('should reject invalid frequency', () => {\n      const invalidData = {\n        type: 'expense',\n        category: 'Subscription',\n        description: 'Monthly software subscription',\n        amount: '99.99',\n        frequency: 'invalid_frequency',\n        start_date: '2025-01-01T00:00:00Z',\n      };\n\n      const result = validateInput(createRecurringPaymentSchema, invalidData);\n      expect(result.success).toBe(false);\n      if (!result.success) {\n        expect(result.error[0].field).toBe('frequency');\n      }\n    });\n\n    it('should reject invalid day_of_month', () => {\n      const invalidData = {\n        type: 'expense',\n        category: 'Subscription',\n        description: 'Monthly software subscription',\n        amount: '99.99',\n        frequency: 'monthly',\n        start_date: '2025-01-01T00:00:00Z',\n        day_of_month: 32, // > 31\n      };\n\n      const result = validateInput(createRecurringPaymentSchema, invalidData);\n      expect(result.success).toBe(false);\n      if (!result.success) {\n        const dayError = result.error.find(e => e.field === 'day_of_month');\n        expect(dayError).toBeDefined();\n      }\n    });\n\n    it('should reject invalid day_of_week', () => {\n      const invalidData = {\n        type: 'expense',\n        category: 'Subscription',\n        description: 'Weekly service',\n        amount: '29.99',\n        frequency: 'weekly',\n        start_date: '2025-01-01T00:00:00Z',\n        day_of_week: 7, // > 6\n      };\n\n      const result = validateInput(createRecurringPaymentSchema, invalidData);\n      expect(result.success).toBe(false);\n      if (!result.success) {\n        const dayError = result.error.find(e => e.field === 'day_of_week');\n        expect(dayError).toBeDefined();\n      }\n    });\n  });\n});\n\ndescribe('Validation Helpers', () => {\n  describe('validatePartialInput', () => {\n    it('should validate partial updates', () => {\n      const partialData = {\n        category: 'Updated Category',\n        // other fields omitted\n      };\n\n      const result = validatePartialInput(createTransactionSchema, partialData);\n      expect(result.success).toBe(true);\n      if (result.success) {\n        expect(result.data.category).toBe('Updated Category');\n      }\n    });\n\n    it('should reject invalid partial data', () => {\n      const partialData = {\n        type: 'invalid_type',\n      };\n\n      const result = validatePartialInput(createTransactionSchema, partialData);\n      expect(result.success).toBe(false);\n    });\n  });\n\n  describe('formatValidationErrors', () => {\n    it('should format validation errors correctly', () => {\n      const errors: ValidationError[] = [\n        { field: 'email', message: 'Invalid email format', code: 'invalid_string' },\n        { field: 'amount', message: 'Must be positive', code: 'too_small' },\n      ];\n\n      const formatted = formatValidationErrors(errors);\n      expect(formatted).toBe('email: Invalid email format; amount: Must be positive');\n    });\n\n    it('should handle single error', () => {\n      const errors: ValidationError[] = [\n        { field: 'email', message: 'Invalid email format', code: 'invalid_string' },\n      ];\n\n      const formatted = formatValidationErrors(errors);\n      expect(formatted).toBe('Invalid email format');\n    });\n\n    it('should handle empty errors', () => {\n      const errors: ValidationError[] = [];\n      const formatted = formatValidationErrors(errors);\n      expect(formatted).toBe('Validation failed');\n    });\n  });\n});\n\ndescribe('Edge Cases', () => {\n  it('should handle null and undefined values', () => {\n    const result = validateInput(createTransactionSchema, null);\n    expect(result.success).toBe(false);\n  });\n\n  it('should handle empty objects', () => {\n    const result = validateInput(createTransactionSchema, {});\n    expect(result.success).toBe(false);\n  });\n\n  it('should handle very long strings', () => {\n    const longString = 'a'.repeat(2000); // Very long string\n    const data = {\n      type: 'expense',\n      category: longString,\n      description: 'Test',\n      amount: '100.00',\n    };\n\n    const result = validateInput(createTransactionSchema, data);\n    expect(result.success).toBe(false);\n    if (!result.success) {\n      const categoryError = result.error.find(e => e.field === 'category');\n      expect(categoryError).toBeDefined();\n    }\n  });\n\n  it('should handle SQL injection attempts', () => {\n    const maliciousData = {\n      type: 'expense',\n      category: \"'; DROP TABLE transactions; --\",\n      description: 'Normal description',\n      amount: '100.00',\n    };\n\n    const result = validateInput(createTransactionSchema, maliciousData);\n    // Should still validate as it's just a string, but will be sanitized by database\n    expect(result.success).toBe(true);\n    if (result.success) {\n      expect(result.data.category).toBe(\"'; DROP TABLE transactions; --\");\n    }\n  });\n\n  it('should handle XSS attempts', () => {\n    const xssData = {\n      type: 'expense',\n      category: '<script>alert(\"xss\")</script>',\n      description: 'Normal description',\n      amount: '100.00',\n    };\n\n    const result = validateInput(createTransactionSchema, xssData);\n    // Should validate but content should be escaped in UI\n    expect(result.success).toBe(true);\n  });\n\n  it('should handle unicode characters', () => {\n    const unicodeData = {\n      type: 'expense',\n      category: '测试类别', // Chinese characters\n      description: 'Test with émojis 🎉',\n      amount: '100.00',\n    };\n\n    const result = validateInput(createTransactionSchema, unicodeData);\n    expect(result.success).toBe(true);\n  });\n});
+import { describe, it, expect } from '@jest/globals';
+import {
+  createTransactionSchema,
+  createCustomerSchema,
+  createLeadSchema,
+  createRecurringPaymentSchema,
+} from '../schemas';
+import {
+  validateInput,
+  validatePartialInput,
+  formatValidationErrors,
+  ValidationError,
+} from '../validator';
+
+describe('Validation Schemas', () => {
+  describe('createTransactionSchema', () => {
+    it('should validate valid transaction data', () => {
+      const validData = {
+        type: 'expense',
+        category: 'Office Supplies',
+        description: 'Monthly office supplies purchase',
+        amount: '150.50',
+        customer_id: '123e4567-e89b-12d3-a456-426614174000',
+      };
+
+      const result = validateInput(createTransactionSchema, validData);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.type).toBe('expense');
+        expect(result.data.amount).toBe('150.50');
+      }
+    });
+
+    it('should reject invalid transaction type', () => {
+      const invalidData = {
+        type: 'invalid_type',
+        category: 'Office Supplies',
+        description: 'Monthly office supplies purchase',
+        amount: '150.50',
+      };
+
+      const result = validateInput(createTransactionSchema, invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error[0].field).toBe('type');
+      }
+    });
+
+    it('should reject invalid amount format', () => {
+      const invalidData = {
+        type: 'expense',
+        category: 'Office Supplies',
+        description: 'Monthly office supplies purchase',
+        amount: 'invalid-amount',
+      };
+
+      const result = validateInput(createTransactionSchema, invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error[0].field).toBe('amount');
+      }
+    });
+
+    it('should reject invalid UUID format', () => {
+      const invalidData = {
+        type: 'expense',
+        category: 'Office Supplies',
+        description: 'Monthly office supplies purchase',
+        amount: '150.50',
+        customer_id: 'not-a-uuid',
+      };
+
+      const result = validateInput(createTransactionSchema, invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error[0].field).toBe('customer_id');
+      }
+    });
+
+    it('should require mandatory fields', () => {
+      const incompleteData = {
+        type: 'expense',
+        // missing category, description, amount
+      };
+
+      const result = validateInput(createTransactionSchema, incompleteData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.length).toBeGreaterThan(0);
+        const fieldNames = result.error.map(e => e.field);
+        expect(fieldNames).toContain('category');
+        expect(fieldNames).toContain('description');
+        expect(fieldNames).toContain('amount');
+      }
+    });
+  });
+
+  describe('createCustomerSchema', () => {
+    it('should validate valid customer data', () => {
+      const validData = {
+        full_name: 'John Doe',
+        email: 'john@example.com',
+        phone: '+1234567890',
+        business: 'Acme Corp',
+        status: 'active',
+      };
+
+      const result = validateInput(createCustomerSchema, validData);
+      expect(result.success).toBe(true);
+    });
+
+    it('should reject invalid email format', () => {
+      const invalidData = {
+        full_name: 'John Doe',
+        email: 'invalid-email',
+        phone: '+1234567890',
+        status: 'active',
+      };
+
+      const result = validateInput(createCustomerSchema, invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error[0].field).toBe('email');
+      }
+    });
+
+    it('should reject invalid status', () => {
+      const invalidData = {
+        full_name: 'John Doe',
+        email: 'john@example.com',
+        phone: '+1234567890',
+        status: 'invalid_status',
+      };
+
+      const result = validateInput(createCustomerSchema, invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error[0].field).toBe('status');
+      }
+    });
+  });
+
+  describe('createLeadSchema', () => {
+    it('should validate valid lead data', () => {
+      const validData = {
+        first_name: 'Jane',
+        last_name: 'Smith',
+        email: 'jane@example.com',
+        phone: '+1234567890',
+        company: 'Tech Corp',
+        source: 'manual',
+        status: 'new',
+        priority: 'medium',
+      };
+
+      const result = validateInput(createLeadSchema, validData);
+      expect(result.success).toBe(true);
+    });
+
+    it('should reject invalid ZIP code format', () => {
+      const invalidData = {
+        first_name: 'Jane',
+        last_name: 'Smith',
+        source: 'manual',
+        zip_code: 'invalid-zip',
+      };
+
+      const result = validateInput(createLeadSchema, invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const zipError = result.error.find(e => e.field === 'zip_code');
+        expect(zipError).toBeDefined();
+      }
+    });
+
+    it('should reject invalid confidence score', () => {
+      const invalidData = {
+        first_name: 'Jane',
+        last_name: 'Smith',
+        source: 'ai_agent',
+        ai_confidence_score: 150, // > 100
+      };
+
+      const result = validateInput(createLeadSchema, invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const scoreError = result.error.find(e => e.field === 'ai_confidence_score');
+        expect(scoreError).toBeDefined();
+      }
+    });
+  });
+
+  describe('createRecurringPaymentSchema', () => {
+    it('should validate valid recurring payment data', () => {
+      const validData = {
+        type: 'expense',
+        category: 'Subscription',
+        description: 'Monthly software subscription',
+        amount: '99.99',
+        frequency: 'monthly',
+        start_date: '2025-01-01T00:00:00Z',
+        day_of_month: 15,
+      };
+
+      const result = validateInput(createRecurringPaymentSchema, validData);
+      expect(result.success).toBe(true);
+    });
+
+    it('should reject invalid frequency', () => {
+      const invalidData = {
+        type: 'expense',
+        category: 'Subscription',
+        description: 'Monthly software subscription',
+        amount: '99.99',
+        frequency: 'invalid_frequency',
+        start_date: '2025-01-01T00:00:00Z',
+      };
+
+      const result = validateInput(createRecurringPaymentSchema, invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error[0].field).toBe('frequency');
+      }
+    });
+
+    it('should reject invalid day_of_month', () => {
+      const invalidData = {
+        type: 'expense',
+        category: 'Subscription',
+        description: 'Monthly software subscription',
+        amount: '99.99',
+        frequency: 'monthly',
+        start_date: '2025-01-01T00:00:00Z',
+        day_of_month: 32, // > 31
+      };
+
+      const result = validateInput(createRecurringPaymentSchema, invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const dayError = result.error.find(e => e.field === 'day_of_month');
+        expect(dayError).toBeDefined();
+      }
+    });
+
+    it('should reject invalid day_of_week', () => {
+      const invalidData = {
+        type: 'expense',
+        category: 'Subscription',
+        description: 'Weekly service',
+        amount: '29.99',
+        frequency: 'weekly',
+        start_date: '2025-01-01T00:00:00Z',
+        day_of_week: 7, // > 6
+      };
+
+      const result = validateInput(createRecurringPaymentSchema, invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const dayError = result.error.find(e => e.field === 'day_of_week');
+        expect(dayError).toBeDefined();
+      }
+    });
+  });
+});
+
+describe('Validation Helpers', () => {
+  describe('validatePartialInput', () => {
+    it('should validate partial updates', () => {
+      const partialData = {
+        category: 'Updated Category',
+        // other fields omitted
+      };
+
+      const result = validatePartialInput(createTransactionSchema, partialData);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.category).toBe('Updated Category');
+      }
+    });
+
+    it('should reject invalid partial data', () => {
+      const partialData = {
+        type: 'invalid_type',
+      };
+
+      const result = validatePartialInput(createTransactionSchema, partialData);
+      expect(result.success).toBe(false);
+    });
+  });
+
+  describe('formatValidationErrors', () => {
+    it('should format validation errors correctly', () => {
+      const errors: ValidationError[] = [
+        { field: 'email', message: 'Invalid email format', code: 'invalid_string' },
+        { field: 'amount', message: 'Must be positive', code: 'too_small' },
+      ];
+
+      const formatted = formatValidationErrors(errors);
+      expect(formatted).toBe('email: Invalid email format; amount: Must be positive');
+    });
+
+    it('should handle single error', () => {
+      const errors: ValidationError[] = [
+        { field: 'email', message: 'Invalid email format', code: 'invalid_string' },
+      ];
+
+      const formatted = formatValidationErrors(errors);
+      expect(formatted).toBe('Invalid email format');
+    });
+
+    it('should handle empty errors', () => {
+      const errors: ValidationError[] = [];
+      const formatted = formatValidationErrors(errors);
+      expect(formatted).toBe('Validation failed');
+    });
+  });
+});
+
+describe('Edge Cases', () => {
+  it('should handle null and undefined values', () => {
+    const result = validateInput(createTransactionSchema, null);
+    expect(result.success).toBe(false);
+  });
+
+  it('should handle empty objects', () => {
+    const result = validateInput(createTransactionSchema, {});
+    expect(result.success).toBe(false);
+  });
+
+  it('should handle very long strings', () => {
+    const longString = 'a'.repeat(2000); // Very long string
+    const data = {
+      type: 'expense',
+      category: longString,
+      description: 'Test',
+      amount: '100.00',
+    };
+
+    const result = validateInput(createTransactionSchema, data);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      const categoryError = result.error.find(e => e.field === 'category');
+      expect(categoryError).toBeDefined();
+    }
+  });
+
+  it('should handle SQL injection attempts', () => {
+    const maliciousData = {
+      type: 'expense',
+      category: "'; DROP TABLE transactions; --",
+      description: 'Normal description',
+      amount: '100.00',
+    };
+
+    const result = validateInput(createTransactionSchema, maliciousData);
+    // Should still validate as it's just a string, but will be sanitized by database
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.category).toBe("'; DROP TABLE transactions; --");
+    }
+  });
+
+  it('should handle XSS attempts', () => {
+    const xssData = {
+      type: 'expense',
+      category: '<script>alert("xss")</script>',
+      description: 'Normal description',
+      amount: '100.00',
+    };
+
+    const result = validateInput(createTransactionSchema, xssData);
+    // Should validate but content should be escaped in UI
+    expect(result.success).toBe(true);
+  });
+
+  it('should handle unicode characters', () => {
+    const unicodeData = {
+      type: 'expense',
+      category: '测试类别', // Chinese characters
+      description: 'Test with émojis 🎉',
+      amount: '100.00',
+    };
+
+    const result = validateInput(createTransactionSchema, unicodeData);
+    expect(result.success).toBe(true);
+  });
+});

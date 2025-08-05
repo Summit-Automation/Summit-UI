@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { validateInput, validateQueryParams, formatValidationErrors, ValidationError } from './validator';
+import { validateInput, validateQueryParams, ValidationError } from './validator';
 
 /**
  * Middleware wrapper for API routes that validates request body
@@ -169,7 +169,7 @@ export interface ValidationErrorResponse {
 /**
  * Standard success response format for API endpoints
  */
-export interface SuccessResponse<T = any> {
+export interface SuccessResponse<T = unknown> {
   success: true;
   data: T;
   timestamp: string;
@@ -268,7 +268,7 @@ export function withRateLimit(
 
   return (handler: (request: NextRequest) => Promise<NextResponse>) => {
     return async (request: NextRequest): Promise<NextResponse> => {
-      const clientIP = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
+      const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
       const now = Date.now();
       
       const clientData = requestCounts.get(clientIP) || { count: 0, resetTime: now + windowMs };

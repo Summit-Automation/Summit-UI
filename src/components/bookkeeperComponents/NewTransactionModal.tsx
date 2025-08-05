@@ -15,10 +15,9 @@ import {createTransaction} from '@/app/lib/services/bookkeeperServices/createTra
 import {createRecurringPayment} from '@/app/lib/services/bookkeeperServices/createRecurringPayment';
 import {Customer} from '@/types/customer';
 import {Interaction} from '@/types/interaction';
-import {RecurringFrequency} from '@/types/recurringPayment';
 import {Checkbox} from '@/components/ui/checkbox';
-import {createTransactionSchema, createRecurringPaymentSchema} from '@/lib/validation/schemas';
-import {formatErrorsForDisplay, ValidationStateManager, createValidationState} from '@/lib/validation/ui-helpers';
+import {createTransactionSchema} from '@/lib/validation/schemas';
+import {createValidationState} from '@/lib/validation/ui-helpers';
 import {Alert, AlertDescription} from '@/components/ui/alert';
 import {z} from 'zod';
 

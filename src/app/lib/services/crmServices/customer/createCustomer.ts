@@ -1,12 +1,9 @@
 'use server';
 
 import { getAuthenticatedUser } from '@/app/lib/services/shared/authUtils';
-import { Customer } from '@/types/customer';
 import { Result, success, error } from '@/types/result';
 import { createCustomerSchema } from '@/lib/validation/schemas';
 import { validateInput, formatValidationErrors } from '@/lib/validation/validator';
-
-type NewCustomerInput = Omit<Customer, 'id' | 'created_at' | 'updated_at'>;
 
 /**
  * Creates a new customer in the CRM system.

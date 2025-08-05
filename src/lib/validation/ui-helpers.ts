@@ -88,7 +88,7 @@ export class ValidationStateManager {
   /**
    * Set validation errors from a Result type
    */
-  setErrorsFromResult(result: Result<any, ValidationError[]>): void {
+  setErrorsFromResult<T>(result: Result<T, ValidationError[]>): void {
     if (!result.success) {
       this.errors = formatErrorsForUI(result.error);
     } else {

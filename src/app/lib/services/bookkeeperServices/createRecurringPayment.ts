@@ -1,7 +1,7 @@
 'use server';
 
 import { createClient } from '@/utils/supabase/server';
-import { RecurringPaymentCreateRequest, RecurringPayment } from '@/types/recurringPayment';
+import { RecurringPayment } from '@/types/recurringPayment';
 import { revalidatePath } from 'next/cache';
 import { Result, success, error as createError } from '@/types/result';
 import { createRecurringPaymentSchema } from '@/lib/validation/schemas';

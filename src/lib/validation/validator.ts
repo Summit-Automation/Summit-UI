@@ -11,7 +11,7 @@ export interface ValidationError {
 export interface ValidationResult {
   success: boolean;
   errors: ValidationError[];
-  data?: any;
+  data?: unknown;
 }
 
 /**
@@ -29,7 +29,7 @@ export function validateInput<T>(
     return success(validatedData);
   } catch (err) {
     if (err instanceof z.ZodError) {
-      const validationErrors: ValidationError[] = err.errors.map((zodError) => ({
+      const validationErrors: ValidationError[] = err.issues.map((zodError) => ({
         field: zodError.path.join('.'),
         message: zodError.message,
         code: zodError.code,
@@ -62,7 +62,7 @@ export function validateInputStrict<T>(
     return schema.parse(data);
   } catch (err) {
     if (err instanceof z.ZodError) {
-      const validationErrors: ValidationError[] = err.errors.map((zodError) => ({
+      const validationErrors: ValidationError[] = err.issues.map((zodError) => ({
         field: zodError.path.join('.'),
         message: zodError.message,
         code: zodError.code,
@@ -85,17 +85,17 @@ export function validateInputStrict<T>(
  * @returns Result with validated data or validation errors
  */
 export function validatePartialInput<T>(
-  schema: z.ZodSchema<T>,
+  schema: z.ZodObject<z.ZodRawShape>,
   data: unknown
 ): Result<Partial<T>, ValidationError[]> {
   try {
     // Remove undefined values before validation
     const cleanedData = removeUndefinedValues(data);
-    const validatedData = schema.partial().parse(cleanedData);
+    const validatedData = schema.partial().parse(cleanedData) as Partial<T>;
     return success(validatedData);
   } catch (err) {
     if (err instanceof z.ZodError) {
-      const validationErrors: ValidationError[] = err.errors.map((zodError) => ({
+      const validationErrors: ValidationError[] = err.issues.map((zodError) => ({
         field: zodError.path.join('.'),
         message: zodError.message,
         code: zodError.code,
@@ -127,7 +127,7 @@ export function validateArray<T>(
     return success(validatedData);
   } catch (err) {
     if (err instanceof z.ZodError) {
-      const validationErrors: ValidationError[] = err.errors.map((zodError) => ({
+      const validationErrors: ValidationError[] = err.issues.map((zodError) => ({
         field: zodError.path.join('.'),
         message: zodError.message,
         code: zodError.code,
@@ -160,7 +160,7 @@ export function validateQueryParams<T>(
     return success(validatedData);
   } catch (err) {
     if (err instanceof z.ZodError) {
-      const validationErrors: ValidationError[] = err.errors.map((zodError) => ({
+      const validationErrors: ValidationError[] = err.issues.map((zodError) => ({
         field: zodError.path.join('.'),
         message: zodError.message,
         code: zodError.code,
@@ -179,7 +179,7 @@ export function validateQueryParams<T>(
 /**
  * Helper function to remove undefined values from an object
  */
-function removeUndefinedValues(obj: any): any {
+function removeUndefinedValues(obj: unknown): unknown {
   if (obj === null || typeof obj !== 'object') {
     return obj;
   }
@@ -188,7 +188,7 @@ function removeUndefinedValues(obj: any): any {
     return obj.map(removeUndefinedValues);
   }
   
-  const cleaned: any = {};
+  const cleaned: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(obj)) {
     if (value !== undefined) {
       cleaned[key] = removeUndefinedValues(value);
@@ -202,8 +202,8 @@ function removeUndefinedValues(obj: any): any {
  */
 function processQueryParams(
   params: Record<string, string | string[] | undefined>
-): Record<string, any> {
-  const processed: Record<string, any> = {};
+): Record<string, unknown> {
+  const processed: Record<string, unknown> = {};
   
   for (const [key, value] of Object.entries(params)) {
     if (value === undefined) {
@@ -251,8 +251,8 @@ export function formatValidationErrors(errors: ValidationError[]): string {
 /**
  * Type guard to check if a result contains validation errors
  */
-export function hasValidationErrors(
-  result: Result<any, ValidationError[]>
+export function hasValidationErrors<T>(
+  result: Result<T, ValidationError[]>
 ): result is Result<never, ValidationError[]> & { success: false } {
   return !result.success;
 }
