@@ -10,6 +10,7 @@ export interface ScrapedProperty {
   owner_name: string;
   address: string;
   city: string;
+  zip_code?: string;
   acreage: number;
   assessed_value?: number;
   property_type?: string;
@@ -34,6 +35,7 @@ export interface NewScrapedProperty {
   owner_name: string;
   address: string;
   city: string;
+  zip_code?: string;
   acreage: number;
   assessed_value?: number;
   property_type?: string;
