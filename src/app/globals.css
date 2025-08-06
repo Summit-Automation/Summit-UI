@@ -738,24 +738,54 @@ input[class*="bg-slate-"]:focus, textarea[class*="bg-slate-"]:focus, select[clas
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
 }
 
-/* Checkbox Styling */
-[data-radix-checkbox-root], button[role="checkbox"] {
+/* Checkbox Styling - Force square dimensions */
+[data-slot="checkbox"], 
+[data-radix-checkbox-root], 
+button[role="checkbox"] {
     width: 1rem !important;
     height: 1rem !important;
+    min-width: 1rem !important;
+    min-height: 1rem !important;
+    max-width: 1rem !important;
+    max-height: 1rem !important;
     background-color: rgb(15 23 42) !important;
     border: 1px solid rgb(51 65 85) !important;
     border-radius: 4px !important;
+    flex-shrink: 0 !important;
+    aspect-ratio: 1 / 1 !important;
+    box-sizing: border-box !important;
 }
 
-[data-radix-checkbox-root]:hover, button[role="checkbox"]:hover {
+[data-slot="checkbox"]:hover,
+[data-radix-checkbox-root]:hover, 
+button[role="checkbox"]:hover {
     border-color: rgb(71 85 105) !important;
     background-color: rgb(30 41 59) !important;
 }
 
-[data-radix-checkbox-root][data-state="checked"], button[role="checkbox"][data-state="checked"] {
+[data-slot="checkbox"][data-state="checked"],
+[data-radix-checkbox-root][data-state="checked"], 
+button[role="checkbox"][data-state="checked"] {
     background-color: rgb(59 130 246) !important;
     border-color: rgb(59 130 246) !important;
     color: white !important;
+}
+
+/* Checkbox indicator styling */
+[data-slot="checkbox-indicator"],
+[data-radix-checkbox-indicator] {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+[data-slot="checkbox-indicator"] svg,
+[data-radix-checkbox-indicator] svg {
+    width: 0.875rem !important;
+    height: 0.875rem !important;
+    flex-shrink: 0 !important;
 }
 
 /* Chart Text Colors */
