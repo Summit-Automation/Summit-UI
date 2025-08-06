@@ -1,7 +1,7 @@
 'use server';
 
-import puppeteer, { Browser } from 'puppeteer-core';
 import chromium from '@sparticuz/chromium';
+import { Browser } from 'puppeteer-core';
 import { GISSearchCriteria, NewScrapedProperty } from '@/types/gis-properties';
 
 // Helper function to create delays - reduces code repetition
@@ -234,12 +234,67 @@ async function searchAdditionalPages(page: any, browser: any, criteria: GISSearc
             }
             
             const parcelId = undefined; // Not extracted in additional pages for simplicity
+
+            // Extract property type for additional pages too - search for "Property Type [description]" pattern
+            let propertyType = 'Unknown';
+            
+            // First, search the entire page content for the "Property Type" pattern
+            const additionalPageText = document.body ? document.body.textContent || '' : '';
+            // More robust pattern to capture the full property type description - allow more characters and better boundary detection
+            const additionalPropertyTypePattern = /Property Type\s+([^:;\n\r\t]+?)(?:\s{2,}[A-Z]|$|\n|\r)/i;
+            const additionalPropertyTypeMatch = additionalPageText.match(additionalPropertyTypePattern);
+            
+            let propertyTypeText = '';
+            if (additionalPropertyTypeMatch && additionalPropertyTypeMatch[1]) {
+              propertyTypeText = additionalPropertyTypeMatch[1].trim();
+              console.log(`  Additional page found property type from page text pattern: "${additionalPropertyTypeMatch[0]}" -> extracted: "${propertyTypeText}"`);
+            } else {
+              // Fallback to table cell approach
+              propertyTypeText = getTextByContentInNextCell('Property Type') || 
+                                getTextByContentInNextCell('Type') ||
+                                getText('span[id*="Type"]') ||
+                                getText('span[id*="Property"]') || '';
+              console.log(`  Additional page found property type from table/span fallback: "${propertyTypeText}"`);
+            }
+            
+            if (propertyTypeText.trim()) {
+              // Clean up the property type - remove extra whitespace and normalize
+              const cleanType = propertyTypeText.trim().replace(/\s+/g, ' ');
+              
+              // Map common property types to standardized categories or use the full description
+              const typeLower = cleanType.toLowerCase();
+              if (typeLower.includes('buildings usually res') || (typeLower.includes('residential') && !typeLower.includes('not applicable'))) {
+                propertyType = 'Residential';
+              } else if (typeLower.includes('commercial') || typeLower.includes('comm')) {
+                propertyType = 'Commercial';
+              } else if (typeLower.includes('industrial') || typeLower.includes('ind')) {
+                propertyType = 'Industrial';
+              } else if (typeLower.includes('agricultural') || typeLower.includes('farm') || typeLower.includes('agr')) {
+                propertyType = 'Agricultural';
+              } else if (typeLower.includes('vacant') || typeLower.includes('land')) {
+                propertyType = 'Vacant Land';
+              } else if (typeLower.includes('multi') || typeLower.includes('apartment')) {
+                propertyType = 'Multi-Family';
+              } else if (typeLower.includes('mixed')) {
+                propertyType = 'Mixed Use';
+              } else if (typeLower.includes('not applicable')) {
+                propertyType = 'Not Applicable';
+              } else if (typeLower.includes('finished')) {
+                propertyType = 'Finished';
+              } else if (cleanType.length > 0 && cleanType.length < 200) {
+                // Use the full cleaned description if it's reasonable length
+                propertyType = cleanType;
+              }
+              
+              console.log(`  Additional page mapped property type "${cleanType}" to "${propertyType}"`);
+            }
             
             // Look for Assessment field in additional pages too
             let assessedValue = null;
-            const additionalPageText = document.body ? document.body.textContent || '' : '';
-            const assessmentPattern = /Assessment\s*\$([0-9,]+)/i;
-            const assessmentMatch = additionalPageText.match(assessmentPattern);
+            const assessmentPageText = document.body ? document.body.textContent || '' : '';
+            // Updated pattern to handle both "Assessed Value $amount" and "Assessment $amount" with variable spacing
+            const assessmentPattern = /(?:Assessed Value|Assessment)\s*\$([0-9,]+)/i;
+            const assessmentMatch = assessmentPageText.match(assessmentPattern);
             
             if (assessmentMatch && assessmentMatch[1]) {
               assessedValue = parseInt(assessmentMatch[1].replace(/,/g, ''));
@@ -252,7 +307,7 @@ async function searchAdditionalPages(page: any, browser: any, criteria: GISSearc
               city: extractedCity,
               acreage: acreage,
               assessed_value: assessedValue ?? undefined,
-              property_type: 'Unknown',
+              property_type: propertyType,
               parcel_id: parcelId ?? undefined,
               search_criteria: searchCriteria
             };
@@ -297,27 +352,75 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
     if (isProduction && isVercel) {
       // Use @sparticuz/chromium for Vercel serverless functions
       console.log('Using serverless Chromium for Vercel deployment');
-      browser = await puppeteer.launch({
+      const puppeteerCore = await import('puppeteer-core');
+      browser = await puppeteerCore.default.launch({
         args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
         defaultViewport: { width: 1280, height: 720 },
         executablePath: await chromium.executablePath(),
         headless: true,
       });
     } else {
-      // Use local Chromium for development or non-Vercel production
+      // Use local Puppeteer for development or non-Vercel production
       console.log('Using local Puppeteer for development/local production');
-      browser = await puppeteer.launch({
-        headless: true,
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-accelerated-2d-canvas',
-          '--no-first-run',
-          '--no-zygote',
-          '--disable-gpu'
-        ]
-      }) as Browser;
+      try {
+        // Try to use full puppeteer first (includes Chromium)
+        const puppeteerFull = await import('puppeteer');
+        browser = await puppeteerFull.default.launch({
+          headless: true,
+          args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-accelerated-2d-canvas',
+            '--no-first-run',
+            '--no-zygote',
+            '--disable-gpu'
+          ]
+        }) as unknown as Browser;
+      } catch {
+        console.log('Full puppeteer not available, using puppeteer-core with system Chrome');
+        // Fallback to puppeteer-core with system Chrome
+        const puppeteerCore = await import('puppeteer-core');
+        
+        // Common Chrome executable paths
+        const chromePaths = [
+          '/usr/bin/google-chrome',
+          '/usr/bin/google-chrome-stable',
+          '/usr/bin/chromium',
+          '/usr/bin/chromium-browser',
+          '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+          'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+          'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
+        ];
+
+        let executablePath = '';
+        const fs = await import('fs');
+        
+        for (const path of chromePaths) {
+          if (fs.existsSync(path)) {
+            executablePath = path;
+            break;
+          }
+        }
+
+        if (!executablePath) {
+          throw new Error('No Chrome executable found. Please install Chrome or use the full puppeteer package.');
+        }
+
+        browser = await puppeteerCore.default.launch({
+          executablePath,
+          headless: true,
+          args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-accelerated-2d-canvas',
+            '--no-first-run',
+            '--no-zygote',
+            '--disable-gpu'
+          ]
+        });
+      }
     }
     
     const page = await browser.newPage();
@@ -943,9 +1046,11 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
             // Look for Assessment field - search for "Assessment $" pattern in page content
             let assessedValue = null;
             
-            // First try the table cell approach
-            const valueText = getTextByContentInNextCell('Assessment') || 
-                             getText('span[id*="Assessment"]') || '';
+            // First try the table cell approach with multiple field name patterns
+            const valueText = getTextByContentInNextCell('Assessed Value') || 
+                             getTextByContentInNextCell('Assessment') || 
+                             getText('span[id*="Assessment"]') ||
+                             getText('span[id*="Value"]') || '';
             
             console.log(`  Found assessment text from cell/span: "${valueText}"`);
             
@@ -957,10 +1062,11 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
               }
             }
             
-            // If that didn't work, search the entire page content for "Assessment $" pattern
+            // If that didn't work, search the entire page content for "Assessed Value $" or "Assessment $" patterns
             if (!assessedValue) {
               const assessmentPageText = document.body ? document.body.textContent || '' : '';
-              const assessmentPattern = /Assessment\s*\$([0-9,]+)/i;
+              // Updated pattern to handle both "Assessed Value $amount" and "Assessment $amount" with variable spacing
+              const assessmentPattern = /(?:Assessed Value|Assessment)\s*\$([0-9,]+)/i;
               const assessmentMatch = assessmentPageText.match(assessmentPattern);
               
               if (assessmentMatch && assessmentMatch[1]) {
@@ -973,6 +1079,60 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
             
             const parcelId = getText('span[id*="Parcel"]') || 
                             getText('span[id*="ID"]') || undefined;
+
+            // Extract property type - search for "Property Type [description]" pattern in page text
+            let propertyType = 'Unknown';
+            
+            // First, search the entire page content for the "Property Type" pattern
+            const pageText = document.body ? document.body.textContent || '' : '';
+            // More robust pattern to capture the full property type description - allow more characters and better boundary detection
+            const propertyTypePattern = /Property Type\s+([^:;\n\r\t]+?)(?:\s{2,}[A-Z]|$|\n|\r)/i;
+            const propertyTypeMatch = pageText.match(propertyTypePattern);
+            
+            let propertyTypeText = '';
+            if (propertyTypeMatch && propertyTypeMatch[1]) {
+              propertyTypeText = propertyTypeMatch[1].trim();
+              console.log(`  Found property type from page text pattern: "${propertyTypeMatch[0]}" -> extracted: "${propertyTypeText}"`);
+            } else {
+              // Fallback to table cell approach
+              propertyTypeText = getTextByContentInNextCell('Property Type') || 
+                                getTextByContentInNextCell('Type') ||
+                                getText('span[id*="Type"]') ||
+                                getText('span[id*="Property"]') || '';
+              console.log(`  Found property type from table/span fallback: "${propertyTypeText}"`);
+            }
+            
+            if (propertyTypeText.trim()) {
+              // Clean up the property type - remove extra whitespace and normalize
+              const cleanType = propertyTypeText.trim().replace(/\s+/g, ' ');
+              
+              // Map common property types to standardized categories or use the full description
+              const typeLower = cleanType.toLowerCase();
+              if (typeLower.includes('buildings usually res') || (typeLower.includes('residential') && !typeLower.includes('not applicable'))) {
+                propertyType = 'Residential';
+              } else if (typeLower.includes('commercial') || typeLower.includes('comm')) {
+                propertyType = 'Commercial';
+              } else if (typeLower.includes('industrial') || typeLower.includes('ind')) {
+                propertyType = 'Industrial';
+              } else if (typeLower.includes('agricultural') || typeLower.includes('farm') || typeLower.includes('agr')) {
+                propertyType = 'Agricultural';
+              } else if (typeLower.includes('vacant') || typeLower.includes('land')) {
+                propertyType = 'Vacant Land';
+              } else if (typeLower.includes('multi') || typeLower.includes('apartment')) {
+                propertyType = 'Multi-Family';
+              } else if (typeLower.includes('mixed')) {
+                propertyType = 'Mixed Use';
+              } else if (typeLower.includes('not applicable')) {
+                propertyType = 'Not Applicable';
+              } else if (typeLower.includes('finished')) {
+                propertyType = 'Finished';
+              } else if (cleanType.length > 0 && cleanType.length < 200) {
+                // Use the full cleaned description if it's reasonable length
+                propertyType = cleanType;
+              }
+              
+              console.log(`  Mapped property type "${cleanType}" to "${propertyType}"`);
+            }
             
             // Try to extract city from the page - no zip code needed since GIS doesn't provide reliable ones
             let extractedCity = '';
@@ -1102,7 +1262,7 @@ export async function scrapeLawrenceCountyGIS(criteria: GISSearchCriteria): Prom
               city: extractedCity,
               acreage: acreage,
               assessed_value: assessedValue ?? undefined,
-              property_type: 'Unknown',
+              property_type: propertyType,
               parcel_id: parcelId ?? undefined,
               search_criteria: searchCriteria
             };

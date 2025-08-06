@@ -104,6 +104,15 @@ export interface GISSearchCriteria {
   township?: string;
   min_acreage: number;
   max_acreage: number;
+  // Enhanced search criteria
+  min_assessed_value?: number;
+  max_assessed_value?: number;
+  property_types?: string[];
+  owner_name_contains?: string;
+  address_contains?: string;
+  exclude_exported?: boolean;
+  sort_by?: 'acreage' | 'assessed_value' | 'scraped_at' | 'address';
+  sort_order?: 'asc' | 'desc';
 }
 
 // Union type for both scraped and saved properties
@@ -132,4 +141,65 @@ export interface CleanupResult {
   success: boolean;
   deleted_count: number;
   cleaned_at: string;
+}
+
+// Enhanced types for new features
+export interface PropertyAnalytics {
+  total_properties: number;
+  avg_acreage: number;
+  avg_assessed_value: number;
+  acreage_distribution: { range: string; count: number }[];
+  value_distribution: { range: string; count: number }[];
+  city_breakdown: { city: string; count: number; avg_acreage: number }[];
+  property_type_breakdown: { type: string; count: number }[];
+  market_insights: {
+    high_value_properties: number;
+    large_acreage_properties: number;
+    potential_deals: number;
+  };
+}
+
+export interface SearchTemplate {
+  id: string;
+  name: string;
+  description?: string;
+  criteria: GISSearchCriteria;
+  is_favorite: boolean;
+  created_at: string;
+  last_used: string;
+  use_count: number;
+}
+
+export interface SearchHistory {
+  id: string;
+  criteria: GISSearchCriteria;
+  results_count: number;
+  searched_at: string;
+}
+
+export interface BatchOperation {
+  id: string;
+  type: 'export' | 'delete' | 'save';
+  property_ids: string[];
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  progress: number;
+  error_message?: string;
+  created_at: string;
+  completed_at?: string;
+}
+
+export interface PropertyEnrichment {
+  property_id: string;
+  market_value_estimate?: number;
+  last_sale_date?: string;
+  last_sale_price?: number;
+  tax_assessment_year?: number;
+  zoning_info?: string;
+  flood_zone?: string;
+  school_district?: string;
+  nearby_amenities?: string[];
+  walkability_score?: number;
+  crime_rating?: 'low' | 'moderate' | 'high';
+  investment_score?: number;
+  enriched_at: string;
 }

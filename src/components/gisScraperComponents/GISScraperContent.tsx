@@ -3,18 +3,26 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { History } from 'lucide-react';
+import { History, BarChart3, Filter, Users } from 'lucide-react';
 import { GISProperty, GISSearchCriteria } from '@/types/gis-properties';
 import GISScraperActions from './GISScraperActions';
 import GISPropertyTable from './GISPropertyTable';
 import GISScraperSummary from './GISScraperSummary';
+import AdvancedSearchFilters from './AdvancedSearchFilters';
+import PropertyAnalytics from './PropertyAnalytics';
+import BatchOperations from './BatchOperations';
+import EnhancedExportOptions from './EnhancedExportOptions';
+import SearchHistoryTemplates from './SearchHistoryTemplates';
 
 export default function GISScraperContent() {
   const [criteria, setCriteria] = useState<GISSearchCriteria>({
     min_acreage: 10,
-    max_acreage: 20
+    max_acreage: 20,
+    sort_by: 'scraped_at',
+    sort_order: 'desc'
   });
   const [results, setResults] = useState<GISProperty[]>([]);
   const [savedProperties, setSavedProperties] = useState<GISProperty[]>([]);
@@ -22,6 +30,9 @@ export default function GISScraperContent() {
   const [exportingIds, setExportingIds] = useState<Set<string>>(new Set());
   const [savingIds, setSavingIds] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState('search');
+  const [selectedPropertyIds, setSelectedPropertyIds] = useState<Set<string>>(new Set());
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
 
   useEffect(() => {
     loadSavedProperties();
@@ -62,7 +73,7 @@ export default function GISScraperContent() {
     }
   };
 
-  const handleInputChange = (field: keyof GISSearchCriteria, value: string | number) => {
+  const handleInputChange = (field: keyof GISSearchCriteria, value: string | number | boolean | string[] | undefined) => {
     setCriteria(prev => ({
       ...prev,
       [field]: value
@@ -248,6 +259,41 @@ export default function GISScraperContent() {
     }
   };
 
+  // New handlers for enhanced features
+  const handleBatchExport = async (ids: string[]) => {
+    for (const id of ids) {
+      await handleExportProperty(id);
+    }
+  };
+
+  const handleBatchSave = async (ids: string[]) => {
+    for (const id of ids) {
+      const property = results.find(p => p.id === id);
+      if (property) {
+        await handleSaveProperty(property);
+      }
+    }
+  };
+
+  const handleBatchDelete = async (ids: string[]) => {
+    for (const id of ids) {
+      await handleDeleteSavedProperty(id);
+    }
+  };
+
+  const handleAdvancedSearch = () => {
+    handleScrape();
+  };
+
+  const handleLoadSearchCriteria = (newCriteria: GISSearchCriteria) => {
+    setCriteria(newCriteria);
+  };
+
+  const handleRunSearch = (searchCriteria: GISSearchCriteria) => {
+    setCriteria(searchCriteria);
+    setTimeout(handleScrape, 100); // Small delay to ensure state update
+  };
+
   return (
     <>
       <GISScraperSummary 
@@ -255,73 +301,195 @@ export default function GISScraperContent() {
         savedProperties={savedProperties}
       />
       
-      <div className="card-enhanced" data-appear>
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2 mb-6">
-            <TabsTrigger value="search" className="flex items-center gap-2">
-              <span>Search & Results</span>
-              {results.length > 0 && (
-                <Badge variant="secondary">
-                  {results.length}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="saved" className="flex items-center gap-2">
-              <span>Saved Properties</span>
-              <Badge variant="secondary">
-                {savedProperties.length}
-              </Badge>
-            </TabsTrigger>
+      <div className="w-full max-w-none p-2 sm:p-4 space-y-4" data-appear>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="w-full h-auto p-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-1 w-full">
+              <TabsTrigger 
+                value="search" 
+                className="h-10 px-2 text-xs font-medium rounded-md data-[state=active]:bg-white data-[state=active]:text-gray-900 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white"
+              >
+                <div className="flex items-center gap-1 truncate">
+                  <span>Search</span>
+                  {results.length > 0 && (
+                    <Badge variant="secondary" className="h-4 px-1 text-[10px] min-w-0">
+                      {results.length}
+                    </Badge>
+                  )}
+                </div>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="saved" 
+                className="h-10 px-2 text-xs font-medium rounded-md data-[state=active]:bg-white data-[state=active]:text-gray-900 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white"
+              >
+                <div className="flex items-center gap-1 truncate">
+                  <span>Saved</span>
+                  <Badge variant="secondary" className="h-4 px-1 text-[10px] min-w-0">
+                    {savedProperties.length}
+                  </Badge>
+                </div>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="analytics" 
+                className="h-10 px-2 text-xs font-medium rounded-md data-[state=active]:bg-white data-[state=active]:text-gray-900 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white"
+              >
+                <div className="flex items-center gap-1 truncate">
+                  <BarChart3 className="h-3 w-3" />
+                  <span className="hidden sm:inline">Analytics</span>
+                  <span className="sm:hidden">Stats</span>
+                </div>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="batch" 
+                className="h-10 px-2 text-xs font-medium rounded-md data-[state=active]:bg-white data-[state=active]:text-gray-900 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white"
+              >
+                <div className="flex items-center gap-1 truncate">
+                  <Users className="h-3 w-3" />
+                  <span className="hidden sm:inline">Batch</span>
+                  <span className="sm:hidden">Bulk</span>
+                </div>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="history" 
+                className="h-10 px-2 text-xs font-medium rounded-md data-[state=active]:bg-white data-[state=active]:text-gray-900 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white"
+              >
+                <div className="flex items-center gap-1 truncate">
+                  <History className="h-3 w-3" />
+                  <span>History</span>
+                </div>
+              </TabsTrigger>
+            </div>
           </TabsList>
 
-        <TabsContent value="search" className="space-y-6">
-          <GISScraperActions
-            criteria={criteria}
-            isLoading={isLoading}
-            results={results}
-            onCriteriaChange={handleInputChange}
-            onScrape={handleScrape}
-            onDownloadCSV={() => {}} // Handled internally by GISScraperActions
-            onCleanupOldData={(force) => handleCleanupOldData(force)}
-          />
+          <TabsContent value="search" className="space-y-4 sm:space-y-6">
+            {/* Controls Section */}
+            <div className="space-y-3 mb-6">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  variant={showAdvancedFilters ? "default" : "outline"}
+                  onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                  className="h-10 px-4 text-sm font-medium"
+                >
+                  <Filter className="h-4 w-4 mr-2" />
+                  {showAdvancedFilters ? 'Hide Filters' : 'Show Filters'}
+                </Button>
+                
+                {(results.length > 0 || savedProperties.length > 0) && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowExportModal(true)}
+                    className="h-10 px-4 text-sm font-medium"
+                  >
+                    Enhanced Export
+                  </Button>
+                )}
+              </div>
+            </div>
 
-          {/* Results */}
-          {results.length > 0 && (
-            <GISPropertyTable 
-              properties={results} 
-              actionType="save"
-              exportingIds={exportingIds}
-              savingIds={savingIds}
-              onExportProperty={handleExportProperty}
-              onSaveProperty={handleSaveProperty}
-              onDeleteProperty={handleDeleteSavedProperty}
-            />
-          )}
-        </TabsContent>
+            {/* Search Interface */}
+            {showAdvancedFilters ? (
+              <AdvancedSearchFilters
+                criteria={criteria}
+                onCriteriaChange={handleInputChange}
+                onSearch={handleAdvancedSearch}
+                isLoading={isLoading}
+              />
+            ) : (
+              <GISScraperActions
+                criteria={criteria}
+                isLoading={isLoading}
+                results={results}
+                onCriteriaChange={handleInputChange}
+                onScrape={handleScrape}
+                onDownloadCSV={() => {}}
+                onCleanupOldData={(force) => handleCleanupOldData(force)}
+              />
+            )}
 
-        <TabsContent value="saved" className="space-y-6">
-          {savedProperties.length > 0 ? (
-            <GISPropertyTable 
-              properties={savedProperties} 
-              actionType="delete"
-              exportingIds={exportingIds}
-              savingIds={savingIds}
-              onExportProperty={handleExportProperty}
-              onSaveProperty={handleSaveProperty}
-              onDeleteProperty={handleDeleteSavedProperty}
+            {/* Results */}
+            {results.length > 0 && (
+              <GISPropertyTable 
+                properties={results} 
+                actionType="save"
+                exportingIds={exportingIds}
+                savingIds={savingIds}
+                onExportProperty={handleExportProperty}
+                onSaveProperty={handleSaveProperty}
+                onDeleteProperty={handleDeleteSavedProperty}
+              />
+            )}
+          </TabsContent>
+
+          <TabsContent value="saved" className="space-y-6">
+            {savedProperties.length > 0 ? (
+              <GISPropertyTable 
+                properties={savedProperties} 
+                actionType="delete"
+                exportingIds={exportingIds}
+                savingIds={savingIds}
+                onExportProperty={handleExportProperty}
+                onSaveProperty={handleSaveProperty}
+                onDeleteProperty={handleDeleteSavedProperty}
+              />
+            ) : (
+              <Card className="card-enhanced" data-appear>
+                <CardContent className="text-center py-12">
+                  <History className="mx-auto h-12 w-12 mb-4 text-muted-foreground" />
+                  <h3 className="text-lg font-semibold mb-2">No saved properties yet</h3>
+                  <p className="text-muted-foreground">Use the search tab to find and save properties</p>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="analytics" className="space-y-6">
+            <PropertyAnalytics
+              properties={results}
+              savedProperties={savedProperties}
             />
-          ) : (
-            <Card className="card-enhanced" data-appear>
-              <CardContent className="text-center py-12">
-                <History className="mx-auto h-12 w-12 mb-4 text-muted-foreground" />
-                <h3 className="text-lg font-semibold mb-2">No saved properties yet</h3>
-                <p className="text-muted-foreground">Use the search tab to find and save properties</p>
-              </CardContent>
-            </Card>
-          )}
-        </TabsContent>
+          </TabsContent>
+
+          <TabsContent value="batch" className="space-y-6">
+            <BatchOperations
+              properties={activeTab === 'search' ? results : savedProperties}
+              selectedIds={selectedPropertyIds}
+              onSelectionChange={setSelectedPropertyIds}
+              onBatchExport={handleBatchExport}
+              onBatchSave={handleBatchSave}
+              onBatchDelete={handleBatchDelete}
+            />
+          </TabsContent>
+
+
+          <TabsContent value="history" className="space-y-6">
+            <SearchHistoryTemplates
+              currentCriteria={criteria}
+              onLoadCriteria={handleLoadSearchCriteria}
+              onRunSearch={handleRunSearch}
+            />
+          </TabsContent>
         </Tabs>
       </div>
+
+      {/* Enhanced Export Modal */}
+      {showExportModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-2 sm:p-4 z-50">
+          <div className="bg-white dark:bg-slate-900 rounded-lg max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-auto shadow-xl border border-slate-200 dark:border-slate-700">
+            <EnhancedExportOptions
+              properties={results.length > 0 ? results : savedProperties}
+              selectedProperties={selectedPropertyIds.size > 0 
+                ? [...results, ...savedProperties].filter(p => selectedPropertyIds.has(p.id))
+                : undefined
+              }
+              onExport={(format, options) => {
+                console.log('Export:', format, options);
+                toast.success(`Export initiated in ${format} format`);
+              }}
+              onClose={() => setShowExportModal(false)}
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 }
