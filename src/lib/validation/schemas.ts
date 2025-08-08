@@ -8,6 +8,7 @@ import {
 
 // Common validation patterns
 const uuidSchema = z.string().uuid('Invalid UUID format');
+const optionalUuidSchema = z.string().uuid('Invalid UUID format').optional().or(z.literal('').transform(() => undefined));
 const emailSchema = z.string().email('Invalid email format').max(255, 'Email too long');
 const phoneSchema = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number format').optional();
 const nonEmptyString = z.string().min(1, 'This field is required').max(1000, 'Text too long');
@@ -31,8 +32,8 @@ export const createTransactionSchema = z.object({
   category: nonEmptyString,
   description: nonEmptyString,
   amount: decimalString,
-  customer_id: uuidSchema.optional(),
-  interaction_id: uuidSchema.optional(),
+  customer_id: optionalUuidSchema,
+  interaction_id: optionalUuidSchema,
 });
 
 export const updateTransactionSchema = z.object({
@@ -41,8 +42,8 @@ export const updateTransactionSchema = z.object({
   category: optionalString,
   description: optionalString,
   amount: decimalString.optional(),
-  customer_id: uuidSchema.optional(),
-  interaction_id: uuidSchema.optional(),
+  customer_id: optionalUuidSchema,
+  interaction_id: optionalUuidSchema,
 });
 
 // ===== CUSTOMER SCHEMAS =====
@@ -94,7 +95,7 @@ export const createLeadSchema = z.object({
   source: leadSourceSchema,
   status: leadStatusSchema.optional(),
   priority: leadPrioritySchema.optional(),
-  ai_agent_batch_id: uuidSchema.optional(),
+  ai_agent_batch_id: optionalUuidSchema,
   ai_confidence_score: z.number().min(0).max(100).optional(),
   ai_generated_notes: optionalString,
   score: nonNegativeNumber.optional(),
@@ -150,8 +151,8 @@ export const createRecurringPaymentSchema = z.object({
   end_date: z.string().datetime('Invalid end date').optional(),
   day_of_month: z.number().min(1).max(31).optional(),
   day_of_week: z.number().min(0).max(6).optional(),
-  customer_id: uuidSchema.optional(),
-  interaction_id: uuidSchema.optional(),
+  customer_id: optionalUuidSchema,
+  interaction_id: optionalUuidSchema,
   payment_limit: positiveNumber.optional(),
 });
 
