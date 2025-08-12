@@ -19,7 +19,6 @@ import {
     LogOut,
     Menu,
     X,
-    MapPin,
 } from 'lucide-react';
 
 const navItems = [
@@ -53,11 +52,6 @@ const navItems = [
         label: 'Lead Generation (WIP)',
         icon: UserPlus,
     },
-    {
-        href: '/gis-scraper',
-        label: 'GIS Property Scraper',
-        icon: MapPin,
-    },
 ];
 
 interface UserData {
@@ -65,7 +59,6 @@ interface UserData {
     full_name?: string;
     avatar_url?: string;
     organization_id?: string;
-    hasGISAccess?: boolean;
 }
 
 export default function Sidebar() {
@@ -110,20 +103,16 @@ export default function Sidebar() {
     useEffect(() => {
         const supabase = createClient();
 
-        // Get initial user and check GIS permissions
+        // Get initial user
         const getInitialUser = async () => {
             const { data: { user }, error } = await supabase.auth.getUser();
             
             if (user && !error) {
-                // Temporarily use direct organization check (no RPC calls)
-                const hasGISAccess = user.user_metadata?.organization_id === 'b36152e9-6035-44b0-bf69-157db934699d';
-
                 setUser({
                     email: user.email || '',
                     full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
                     avatar_url: user.user_metadata?.avatar_url,
                     organization_id: user.user_metadata?.organization_id,
-                    hasGISAccess
                 });
             } else {
                 setUser(null);
@@ -137,15 +126,11 @@ export default function Sidebar() {
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             async (event, session) => {
                 if (event === 'SIGNED_IN' && session?.user) {
-                    // Temporarily use direct organization check (no RPC calls)
-                    const hasGISAccess = session.user.user_metadata?.organization_id === 'b36152e9-6035-44b0-bf69-157db934699d';
-
                     setUser({
                         email: session.user.email || '',
                         full_name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
                         avatar_url: session.user.user_metadata?.avatar_url,
                         organization_id: session.user.user_metadata?.organization_id,
-                        hasGISAccess
                     });
                     setLoading(false);
                 } else if (event === 'SIGNED_OUT') {
@@ -246,11 +231,6 @@ export default function Sidebar() {
                     <div className="space-y-1">
                         {navItems.map(({ href, label, icon: Icon }) => {
                             const isActive = pathname === href;
-                            
-                            // Hide GIS scraper for unauthorized organizations (check database permissions)
-                            if (href === '/gis-scraper' && !user?.hasGISAccess) {
-                                return null;
-                            }
 
                             return (
                                 <Link key={href} href={href}>

@@ -219,21 +219,6 @@ export const updateInteractionSchema = createInteractionSchema.partial().extend(
   id: uuidSchema,
 });
 
-// ===== GIS PROPERTY SCHEMAS =====
-export const createGISPropertySchema = z.object({
-  parcel_id: nonEmptyString,
-  address: nonEmptyString,
-  city: nonEmptyString,
-  state: z.string().length(2, 'State must be 2 characters'),
-  zip_code: z.string().regex(/^\d{5}(-\d{4})?$/, 'Invalid ZIP code'),
-  owner_name: optionalString,
-  owner_address: optionalString,
-  assessed_value: positiveNumber.optional(),
-  market_value: positiveNumber.optional(),
-  property_type: optionalString,
-  acreage: positiveNumber.optional(),
-  year_built: z.number().min(1800).max(new Date().getFullYear()).optional(),
-});
 
 // ===== EXPORT SCHEMAS =====
 export const exportFormatSchema = z.enum(['csv', 'excel', 'pdf'], {
@@ -288,7 +273,6 @@ export type CreateMileageEntryInput = z.infer<typeof createMileageEntrySchema>;
 export type UpdateMileageEntryInput = z.infer<typeof updateMileageEntrySchema>;
 export type CreateInteractionInput = z.infer<typeof createInteractionSchema>;
 export type UpdateInteractionInput = z.infer<typeof updateInteractionSchema>;
-export type CreateGISPropertyInput = z.infer<typeof createGISPropertySchema>;
 export type ExportFilterInput = z.infer<typeof exportFilterSchema>;
 export type PaginationInput = z.infer<typeof paginationSchema>;
 export type SearchInput = z.infer<typeof searchSchema>;
