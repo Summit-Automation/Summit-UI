@@ -94,37 +94,41 @@ export default function InventoryClientWrapper({ initialItems, initialAlerts }: 
             <div className="hidden lg:block space-y-6">
                 {/* Charts and Alerts Grid - Desktop Only */}
                 <div className="grid grid-cols-2 gap-6">
-                    <Card className="chart-container-enhanced card-enhanced">
-                        <CardHeader className="pb-4">
-                            <CardTitle className="flex items-center gap-2 text-gradient">
-                                <div className="p-2 bg-slate-800 rounded-lg transition-transform duration-200 ease-out hover:scale-105">
-                                    <Activity className="h-5 w-5 text-blue-400 icon-interactive" />
+                    <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 backdrop-blur-sm p-6">
+                        <CardHeader className="pb-6">
+                            <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
+                                <div className="p-2.5 bg-blue-500/20 rounded-xl">
+                                    <Activity className="h-5 w-5 text-blue-400" />
                                 </div>
                                 Inventory Trends
                             </CardTitle>
-                            <CardDescription className="text-slate-400">
+                            <CardDescription className="text-slate-400 text-sm mt-2">
                                 Stock levels and movement over time
                             </CardDescription>
                         </CardHeader>
-                        <CardContent className="custom-scrollbar">
-                            <InventoryChart items={filteredItems} />
+                        <CardContent className="p-0">
+                            <div className="h-64 lg:h-80 rounded-xl overflow-hidden">
+                                <InventoryChart items={filteredItems} />
+                            </div>
                         </CardContent>
                     </Card>
 
-                    <Card className="chart-container-enhanced card-enhanced">
-                        <CardHeader className="pb-4">
-                            <CardTitle className="flex items-center gap-2 text-gradient">
-                                <div className="p-2 bg-slate-800 rounded-lg transition-transform duration-200 ease-out hover:scale-105">
-                                    <AlertTriangle className="h-5 w-5 text-orange-400 icon-interactive" />
+                    <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 backdrop-blur-sm p-6">
+                        <CardHeader className="pb-6">
+                            <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
+                                <div className="p-2.5 bg-orange-500/20 rounded-xl">
+                                    <AlertTriangle className="h-5 w-5 text-orange-400" />
                                 </div>
                                 Stock Alerts
                             </CardTitle>
-                            <CardDescription className="text-slate-400">
+                            <CardDescription className="text-slate-400 text-sm mt-2">
                                 Low stock warnings and critical notifications
                             </CardDescription>
                         </CardHeader>
-                        <CardContent className="custom-scrollbar">
-                            <InventoryAlerts alerts={alerts} />
+                        <CardContent className="p-0">
+                            <div className="max-h-80 rounded-xl overflow-hidden">
+                                <InventoryAlerts alerts={alerts} />
+                            </div>
                         </CardContent>
                     </Card>
                 </div>
@@ -138,14 +142,19 @@ export default function InventoryClientWrapper({ initialItems, initialAlerts }: 
                 />
 
                 {/* Table - Desktop */}
-                <Card className="card-enhanced">
-                    <CardHeader>
-                        <CardTitle className="text-gradient">Inventory Items</CardTitle>
-                        <CardDescription className="text-slate-400">
+                <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
+                    <CardHeader className="pb-6">
+                        <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
+                            <div className="p-2.5 bg-purple-500/20 rounded-xl">
+                                <Package className="h-5 w-5 text-purple-400"/>
+                            </div>
+                            Inventory Items
+                        </CardTitle>
+                        <CardDescription className="text-slate-400 text-sm mt-2">
                             Complete inventory with stock levels, pricing, and supplier information
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-0">
                         <InventoryTable items={filteredItems} onItemsChange={fetchData} />
                     </CardContent>
                 </Card>
@@ -154,16 +163,25 @@ export default function InventoryClientWrapper({ initialItems, initialAlerts }: 
             {/* Mobile: Tabbed Layout */}
             <div className="lg:hidden">
                 <Tabs defaultValue="items" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3">
-                        <TabsTrigger value="items" className="flex items-center gap-2">
+                    <TabsList className="grid w-full grid-cols-3 h-11 bg-slate-900/60 rounded-2xl border border-slate-800/40 p-1">
+                        <TabsTrigger 
+                            value="items" 
+                            className="flex items-center gap-2 text-sm px-2 lg:px-4 rounded-xl data-[state=active]:bg-slate-800 data-[state=active]:text-white data-[state=active]:shadow-md text-slate-400 hover:text-slate-300 transition-all duration-200 font-medium"
+                        >
                             <Package className="h-4 w-4" />
                             <span className="hidden sm:inline">Items</span>
                         </TabsTrigger>
-                        <TabsTrigger value="alerts" className="flex items-center gap-2">
+                        <TabsTrigger 
+                            value="alerts" 
+                            className="flex items-center gap-2 text-sm px-2 lg:px-4 rounded-xl data-[state=active]:bg-slate-800 data-[state=active]:text-white data-[state=active]:shadow-md text-slate-400 hover:text-slate-300 transition-all duration-200 font-medium"
+                        >
                             <AlertTriangle className="h-4 w-4" />
                             <span className="hidden sm:inline">Alerts</span>
                         </TabsTrigger>
-                        <TabsTrigger value="analytics" className="flex items-center gap-2">
+                        <TabsTrigger 
+                            value="analytics" 
+                            className="flex items-center gap-2 text-sm px-2 lg:px-4 rounded-xl data-[state=active]:bg-slate-800 data-[state=active]:text-white data-[state=active]:shadow-md text-slate-400 hover:text-slate-300 transition-all duration-200 font-medium"
+                        >
                             <BarChart3 className="h-4 w-4" />
                             <span className="hidden sm:inline">Charts</span>
                         </TabsTrigger>
@@ -177,49 +195,62 @@ export default function InventoryClientWrapper({ initialItems, initialAlerts }: 
                             currentFilters={filters}
                         />
                         
-                        <Card className="card-enhanced">
-                            <CardHeader>
-                                <CardTitle className="text-gradient">Inventory Items</CardTitle>
-                                <CardDescription className="text-slate-400">
+                        <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
+                            <CardHeader className="pb-6">
+                                <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
+                                    <div className="p-2.5 bg-purple-500/20 rounded-xl">
+                                        <Package className="h-5 w-5 text-purple-400"/>
+                                    </div>
+                                    Inventory Items
+                                </CardTitle>
+                                <CardDescription className="text-slate-400 text-sm mt-2">
                                     Complete inventory with stock levels and pricing
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent>
+                            <CardContent className="p-0">
                                 <InventoryTable items={filteredItems} onItemsChange={fetchData} />
                             </CardContent>
                         </Card>
                     </TabsContent>
 
                     <TabsContent value="alerts" className="mt-4">
-                        <Card className="chart-container-enhanced card-enhanced">
-                            <CardHeader className="pb-4">
-                                <CardTitle className="flex items-center gap-2 text-gradient">
-                                    <AlertTriangle className="h-5 w-5 text-orange-400 icon-interactive" />
+                        <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
+                            <CardHeader className="pb-6">
+                                <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
+                                    <div className="p-2.5 bg-orange-500/20 rounded-xl">
+                                        <AlertTriangle className="h-5 w-5 text-orange-400" />
+                                    </div>
                                     Stock Alerts
                                 </CardTitle>
-                                <CardDescription className="text-slate-400">
+                                <CardDescription className="text-slate-400 text-sm mt-2">
                                     Low stock warnings and critical notifications
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent className="custom-scrollbar">
-                                <InventoryAlerts alerts={alerts} />
+                            <CardContent className="p-0">
+                                <div className="h-64 rounded-xl overflow-hidden">
+                                    <InventoryAlerts alerts={alerts} />
+                                </div>
                             </CardContent>
                         </Card>
                     </TabsContent>
 
                     <TabsContent value="analytics" className="mt-4">
-                        <Card className="chart-container-enhanced card-enhanced">
-                            <CardHeader className="pb-4">
-                                <CardTitle className="flex items-center gap-2 text-gradient">
-                                    <Activity className="h-5 w-5 text-blue-400 icon-interactive" />
+                        <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
+                            <CardHeader className="pb-6">
+                                <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
+                                    <div className="p-2.5 bg-blue-500/20 rounded-xl">
+                                        <Activity className="h-5 w-5 text-blue-400" />
+                                    </div>
                                     Inventory Trends
                                 </CardTitle>
-                                <CardDescription className="text-slate-400">
+                                <CardDescription className="text-slate-400 text-sm mt-2">
                                     Stock levels and movement over time
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent className="custom-scrollbar">
-                                <InventoryChart items={filteredItems} />
+                            <CardContent className="p-0">
+                                <div className="h-64 rounded-xl overflow-hidden">
+                                    <InventoryChart items={filteredItems} />
+                                </div>
                             </CardContent>
                         </Card>
                     </TabsContent>

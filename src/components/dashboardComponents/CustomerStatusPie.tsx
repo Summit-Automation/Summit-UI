@@ -6,8 +6,8 @@ import { Customer } from '@/types/customer';
 import { BaseChart, ChartTooltip, ChartLegend } from '@/components/ui/base-chart';
 
 const COLORS = [
-    '#0ea5e9', '#facc15', '#a855f7', '#f97316', 
-    '#6366f1', '#22c55e', '#94a3b8'
+    '#3b82f6', '#10b981', '#f59e0b', '#ef4444', 
+    '#8b5cf6', '#06b6d4', '#6366f1', '#84cc16'
 ];
 
 type StatusCount = { name: string; value: number };
@@ -58,16 +58,23 @@ export default function CustomerStatusPie({
                     cx="50%"
                     cy="45%"
                     outerRadius={typeof window !== 'undefined' && window.innerWidth < 768 ? mobileRadius : radius}
+                    innerRadius={typeof window !== 'undefined' && window.innerWidth < 768 ? mobileRadius * 0.6 : radius * 0.6}
                     label={({ name, percent }) => 
-                        typeof window !== 'undefined' && window.innerWidth >= 768 && percent 
-                            ? `${name} ${(percent * 100).toFixed(0)}%` 
+                        typeof window !== 'undefined' && window.innerWidth >= 768 && (percent ?? 0) > 0.05
+                            ? `${name} ${((percent ?? 0) * 100).toFixed(0)}%` 
                             : ''
                     }
                     labelLine={false}
                     fontSize={12}
+                    paddingAngle={2}
                 >
                     {data.map((_, i) => (
-                        <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                        <Cell 
+                            key={i} 
+                            fill={COLORS[i % COLORS.length]} 
+                            stroke="rgba(15, 23, 42, 0.1)"
+                            strokeWidth={1}
+                        />
                     ))}
                 </Pie>
 

@@ -26,31 +26,39 @@ const navItems = [
         href: '/',
         label: 'Dashboard',
         icon: LayoutDashboard,
+        category: 'Overview'
     },
     {
         href: '/crm',
         label: 'CRM',
         icon: Users,
+        category: 'Business'
     },
     {
         href: '/bookkeeper',
         label: 'Accounting', 
         icon: Calculator,
+        category: 'Business'
     },
     {
         href: '/mileage',
-        label: 'Mileage',
+        label: 'Mileage Tracking',
         icon: Car,
+        category: 'Operations'
     },
     {
         href: '/inventory',
-        label: 'Inventory (WIP)',
+        label: 'Inventory',
         icon: Package,
+        category: 'Operations',
+        badge: 'Beta'
     },
     {
         href: '/leadgen',
-        label: 'Lead Generation (WIP)',
+        label: 'Lead Generation',
         icon: UserPlus,
+        category: 'Marketing',
+        badge: 'AI'
     },
 ];
 
@@ -174,7 +182,7 @@ export default function Sidebar() {
             <button
                 id="hamburger-button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="fixed top-4 left-4 z-[60] lg:hidden bg-slate-900/95 backdrop-blur-sm border border-slate-700 p-2 rounded-lg shadow-lg transition-colors hover:bg-slate-800 btn-feedback"
+                className="fixed top-4 left-4 z-[60] lg:hidden bg-slate-900/95 backdrop-blur-sm border border-slate-700 p-2 rounded-lg shadow-lg transition-colors hover:bg-slate-800 btn-feedback hamburger-btn"
                 aria-label="Toggle navigation menu"
             >
                 {isOpen ? (
@@ -193,7 +201,7 @@ export default function Sidebar() {
             <aside
                 id="mobile-sidebar"
                 className={cn(
-                    "fixed inset-y-0 left-0 z-50 w-64 sidebar-enhanced flex flex-col transition-transform duration-300 ease-in-out custom-scrollbar",
+                    "fixed inset-y-0 left-0 z-50 w-64 bg-slate-950/95 backdrop-blur-xl border-r border-slate-800/60 flex flex-col transition-transform duration-300 ease-in-out custom-scrollbar sidebar-bg",
                     // Desktop: always visible
                     "lg:translate-x-0",
                     // Mobile: slide in/out
@@ -201,7 +209,7 @@ export default function Sidebar() {
                 )}
             >
                 {/* Header */}
-                <div className="p-6 border-b border-slate-800">
+                <div className="p-6 border-b border-slate-800 sidebar-border">
                     {/* Mobile: Add top padding to account for hamburger button */}
                     <div className="lg:hidden h-8" />
                     
@@ -221,38 +229,69 @@ export default function Sidebar() {
                     </div>
                     
                     {/* Organization Display */}
-                    <div className="mt-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700 card-enhanced">
+                    <div className="mt-4 p-4 bg-slate-900/50 rounded-xl border border-slate-800/40 transition-all duration-200 hover:bg-slate-900/70 hover:border-slate-700/60 sidebar-org-bg">
                         <OrganizationDisplay />
                     </div>
                 </div>
 
                 {/* Navigation */}
                 <nav className="flex-1 p-4 overflow-y-auto custom-scrollbar">
-                    <div className="space-y-1">
-                        {navItems.map(({ href, label, icon: Icon }) => {
-                            const isActive = pathname === href;
+                    <div className="space-y-6">
+                        {Object.entries(
+                            navItems.reduce((acc, item) => {
+                                if (!acc[item.category]) acc[item.category] = [];
+                                acc[item.category].push(item);
+                                return acc;
+                            }, {} as Record<string, typeof navItems>)
+                        ).map(([category, items]) => (
+                            <div key={category}>
+                                <h3 className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider sidebar-text">
+                                    {category}
+                                </h3>
+                                <div className="space-y-1">
+                                    {items.map(({ href, label, icon: Icon, badge }) => {
+                                        const isActive = pathname === href;
 
-                            return (
-                                <Link key={href} href={href}>
-                                    <div
-                                        className={cn(
-                                            "sidebar-nav-item flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all duration-300",
-                                            isActive 
-                                                ? "active bg-blue-600 text-white shadow-lg shadow-blue-600/30" 
-                                                : "text-slate-300 hover:text-white hover:bg-slate-800"
-                                        )}
-                                    >
-                                        <Icon className="h-5 w-5 flex-shrink-0 icon-interactive" />
-                                        <span className="truncate">{label}</span>
-                                    </div>
-                                </Link>
-                            );
-                        })}
+                                        return (
+                                            <Link key={href} href={href}>
+                                                <div
+                                                    className={cn(
+                                                        "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative sidebar-nav-item",
+                                                        isActive 
+                                                            ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20 sidebar-nav-active" 
+                                                            : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/50"
+                                                    )}
+                                                >
+                                                    <Icon className={cn(
+                                                        "h-5 w-5 flex-shrink-0 transition-colors duration-200",
+                                                        isActive ? "text-white" : "text-slate-500 group-hover:text-slate-300"
+                                                    )} />
+                                                    <span className="truncate flex-1">{label}</span>
+                                                    {badge && (
+                                                        <span className={cn(
+                                                            "px-2 py-0.5 text-xs font-medium rounded-full",
+                                                            badge === 'AI' 
+                                                                ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                                                                : "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+                                                        )}>
+                                                            {badge}
+                                                        </span>
+                                                    )}
+                                                    {isActive && (
+                                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-white/30 rounded-r-full" />
+                                                    )}
+                                                </div>
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </nav>
 
                 {/* Footer */}
-                <div className="p-4 border-t border-slate-800">
+                <div className="p-4 border-t border-slate-800 sidebar-border">
                     {loading ? (
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -271,24 +310,23 @@ export default function Sidebar() {
                                         <Image 
                                             src={user.avatar_url} 
                                             alt="User avatar"
-                                            width={32}
-                                            height={32}
-                                            className="rounded-full flex-shrink-0 ring-2 ring-blue-500/30"
+                                            width={36}
+                                            height={36}
+                                            className="rounded-full flex-shrink-0 ring-1 ring-slate-700"
                                         />
-                                        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500/20 to-transparent"></div>
                                     </div>
                                 ) : (
-                                    <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center flex-shrink-0 ring-2 ring-blue-500/30 shadow-lg">
+                                    <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
                                         <span className="text-white text-sm font-medium">
                                             {user ? getUserInitials(getDisplayName()) : 'U'}
                                         </span>
                                     </div>
                                 )}
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-sm font-medium text-white truncate text-gradient" title={getDisplayName()}>
+                                    <p className="text-sm font-medium text-slate-200 truncate sidebar-text" title={getDisplayName()}>
                                         {getDisplayName()}
                                     </p>
-                                    <p className="text-xs text-slate-400 truncate" title={user?.email}>
+                                    <p className="text-xs text-slate-500 truncate sidebar-text-secondary" title={user?.email}>
                                         {user?.email || 'user@example.com'}
                                     </p>
                                 </div>
@@ -296,21 +334,17 @@ export default function Sidebar() {
                             <Button 
                                 variant="ghost" 
                                 size="sm" 
-                                className="text-slate-400 hover:text-white flex-shrink-0 ml-2 btn-feedback hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
+                                className="text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 flex-shrink-0 ml-2 transition-all duration-200 rounded-lg"
                                 onClick={handleSignOut}
                                 title="Sign out"
                             >
-                                <LogOut className="h-4 w-4 icon-interactive" />
+                                <LogOut className="h-4 w-4" />
                             </Button>
                         </div>
                     )}
                     
-                    <div className="mt-4 text-center text-xs text-slate-500">
-                        <div className="flex items-center justify-center gap-1">
-                            <div className="w-1 h-1 bg-blue-500/50 rounded-full animate-pulse"></div>
-                            © 2025 Summit Automation
-                            <div className="w-1 h-1 bg-blue-500/50 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-                        </div>
+                    <div className="mt-4 pt-3 border-t border-slate-800/50 text-center text-xs text-slate-600 sidebar-text-muted">
+                        © 2025 Summit Automation
                     </div>
                 </div>
             </aside>

@@ -51,27 +51,29 @@ const CashFlowArea = memo(function CashFlowArea({ transactions }: { transactions
                 </defs>
 
                 <CartesianGrid 
-                    stroke="#475569" 
-                    strokeDasharray="3 3" 
+                    stroke="#334155" 
+                    strokeDasharray="2 4" 
                     horizontal={true}
                     vertical={false}
+                    opacity={0.3}
                 />
                 
                 <XAxis
                     dataKey="date"
-                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
                     tickFormatter={formatDate}
                     axisLine={false}
                     tickLine={false}
                     interval="preserveStartEnd"
+                    height={40}
                 />
                 
                 <YAxis
-                    tick={{ fill: '#94a3b8', fontSize: 11 }}
-                    tickFormatter={(value) => `${value}`}
+                    tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
+                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                     axisLine={false}
                     tickLine={false}
-                    width={50}
+                    width={60}
                 />
 
                 <ChartTooltip
@@ -85,7 +87,9 @@ const CashFlowArea = memo(function CashFlowArea({ transactions }: { transactions
                     stackId="1"
                     stroke="#10b981"
                     fill="url(#incomeGradient)"
-                    strokeWidth={2}
+                    strokeWidth={3}
+                    dot={false}
+                    activeDot={{ r: 6, stroke: '#10b981', strokeWidth: 2, fill: '#065f46' }}
                 />
                 <Area
                     type="monotone"
@@ -93,7 +97,9 @@ const CashFlowArea = memo(function CashFlowArea({ transactions }: { transactions
                     stackId="1"
                     stroke="#ef4444"
                     fill="url(#expenseGradient)"
-                    strokeWidth={2}
+                    strokeWidth={3}
+                    dot={false}
+                    activeDot={{ r: 6, stroke: '#ef4444', strokeWidth: 2, fill: '#991b1b' }}
                 />
             </AreaChart>
         </BaseChart>

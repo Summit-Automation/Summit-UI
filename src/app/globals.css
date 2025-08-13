@@ -1,924 +1,712 @@
 @import "tailwindcss";
 
-/* Professional Design System Variables */
-:root {
-    /* Brand Colors */
-    --brand-primary: #3b82f6;
-    --brand-primary-hover: #2563eb;
-    --brand-primary-light: #60a5fa;
-    --brand-secondary: #1e40af;
-    
-    /* Background System */
-    --background: #020617;
-    --surface: #0f172a;
-    --surface-elevated: #1e293b;
-    --surface-hover: #334155;
-    --surface-glass: rgba(15, 23, 42, 0.8);
-    
-    /* Border System */
-    --border-primary: #334155;
-    --border-secondary: #475569;
-    --border-subtle: #1e293b;
-    --border-accent: rgba(59, 130, 246, 0.3);
-    
-    /* Text Hierarchy */
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
-    --text-accent: var(--brand-primary);
-    
-    /* Status Colors */
-    --success: #10b981;
-    --success-light: #34d399;
-    --warning: #f59e0b;
-    --warning-light: #fbbf24;
-    --error: #ef4444;
-    --error-light: #f87171;
-    --info: var(--brand-primary);
-    
-    /* Shadows & Effects */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
-    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15), 0 10px 10px rgba(0, 0, 0, 0.04);
-    --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
-    --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.3);
-    --shadow-premium: 0 32px 64px rgba(0, 0, 0, 0.35);
-    
-    /* Glass Effects */
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-bg: rgba(15, 23, 42, 0.7);
-    --glass-strong: rgba(30, 41, 59, 0.8);
-    
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-    --gradient-surface: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
-    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-    
-    /* Spacing Scale */
-    --space-xs: 0.25rem;
-    --space-sm: 0.5rem;
-    --space-md: 1rem;
-    --space-lg: 1.5rem;
-    --space-xl: 2rem;
-    --space-2xl: 3rem;
-    
-    /* Border Radius */
-    --radius-sm: 0.375rem;
-    --radius: 0.5rem;
-    --radius-lg: 0.75rem;
-    --radius-xl: 1rem;
-    
-    /* Animation Curves */
-    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-    --ease-out: cubic-bezier(0, 0, 0.2, 1);
-    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+/* Theme System - Light Mode Overrides */
+/* Dark mode is the default - no changes needed for existing classes */
+
+/* Light Theme - Override specific components when data-theme="light" */
+[data-theme="light"] {
+  /* Body and main backgrounds */
+  background-color: rgb(249, 250, 251); /* gray-50 */
+  color: rgb(17, 24, 39); /* slate-900 */
 }
 
-/* Professional Base Styles */
-@layer base {
-    * { 
-        @apply border-slate-700; 
-        box-sizing: border-box;
-    }
-    
-    body { 
-        @apply bg-slate-950 text-slate-50 font-sans antialiased leading-relaxed; 
-        font-feature-settings: "rlig" 1, "calt" 1;
-    }
-    
-    /* Professional Typography Hierarchy */
-    h1, h2, h3, h4, h5, h6 { 
-        @apply text-slate-50 font-semibold tracking-tight; 
-        line-height: 1.2;
-    }
-    
-    h1 { 
-        @apply text-3xl lg:text-4xl; 
-        font-weight: 700;
-        letter-spacing: -0.025em;
-    }
-    
-    h2 { 
-        @apply text-2xl lg:text-3xl; 
-        font-weight: 600;
-        letter-spacing: -0.025em;
-    }
-    
-    h3 { 
-        @apply text-xl lg:text-2xl; 
-        font-weight: 600;
-    }
-    
-    h4 { 
-        @apply text-lg lg:text-xl; 
-        font-weight: 500;
-    }
-    
-    h5 { 
-        @apply text-base lg:text-lg; 
-        font-weight: 500;
-    }
-    
-    h6 { 
-        @apply text-sm lg:text-base; 
-        font-weight: 500;
-    }
-    
-    p { 
-        @apply leading-relaxed; 
-        max-width: 65ch;
-    }
-    
-    /* Professional Focus Styles */
-    *:focus-visible {
-        outline: 2px solid var(--brand-primary);
-        outline-offset: 2px;
-        border-radius: var(--radius-sm);
-    }
+[data-theme="light"] body {
+  background-color: rgb(249, 250, 251) !important; /* gray-50 */
+  color: rgb(17, 24, 39) !important; /* slate-900 */
 }
 
-/* Component Styles - Consolidated with Feedback */
-@layer components {
-    .card-clean { @apply bg-slate-900 border border-slate-800 rounded-lg shadow-sm hover:border-slate-700 hover:shadow-md; }
-    .btn-clean { @apply px-4 py-2 rounded-lg font-medium transition-colors; }
-    .btn-primary { @apply bg-blue-600 text-white hover:bg-blue-700; }
-    .btn-secondary { @apply bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white; }
-    .nav-clean { @apply bg-slate-900/95 border-r border-slate-800; }
-    .metric-clean { @apply bg-slate-900 border border-slate-800 rounded-lg p-6; }
-    .metric-value { @apply text-2xl font-bold text-slate-50; }
-    .metric-label { @apply text-sm text-slate-400 uppercase tracking-wide; }
-    .table-clean { @apply bg-slate-900 border border-slate-800 rounded-lg overflow-hidden; }
-    .table-header { @apply bg-slate-800 text-slate-300 font-medium; }
-    .table-row { @apply border-b border-slate-800 hover:bg-slate-800/50; }
-    .input-clean { @apply bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20; }
-    .status-success { @apply bg-emerald-100/10 text-emerald-400 border border-emerald-500/20; }
-    .status-warning { @apply bg-amber-100/10 text-amber-400 border border-amber-500/20; }
-    .status-error { @apply bg-red-100/10 text-red-400 border border-red-500/20; }
-
-    /* Optimized Card Interactions */
-    .card-enhanced {
-        transition: all 0.2s var(--ease-in-out);
-    }
-
-    .card-enhanced:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-lg);
-        border-color: rgba(59, 130, 246, 0.3);
-    }
-
-    /* Optimized Metric Cards */
-    .metric-enhanced {
-        background: var(--gradient-surface);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(51, 65, 85, 0.8);
-        transition: all 0.2s var(--ease-in-out);
-    }
-
-    .metric-enhanced:hover {
-        box-shadow: var(--shadow-lg);
-    }
-
-    /* 3. Enhanced Status Badges with Glow Effects */
-    .status-badge-enhanced {
-        position: relative;
-        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
-        transition: all 0.3s ease;
-    }
-
-    .status-badge-enhanced.status-success {
-        box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
-    }
-
-    .status-badge-enhanced.status-warning {
-        box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
-    }
-
-    .status-badge-enhanced.status-error {
-        box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
-    }
-
-    .status-badge-enhanced.status-info {
-        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-    }
-
-    /* 4. Improved Data Table Styling */
-    .table-enhanced {
-        border-collapse: separate;
-        border-spacing: 0;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    .table-enhanced th {
-        background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.8) 100%);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        font-size: 0.75rem;
-        padding: 1rem;
-        border-bottom: 2px solid rgba(59, 130, 246, 0.2);
-    }
-
-    .table-enhanced tr {
-        transition: all 0.2s ease;
-    }
-
-    .table-enhanced tr:hover {
-        background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
-        transform: scale(1.01);
-    }
-
-    .table-enhanced td {
-        padding: 1rem;
-        border-bottom: 1px solid rgba(51, 65, 85, 0.5);
-    }
-
-    /* 5. Enhanced Sidebar with Better Visual Hierarchy */
-    .sidebar-enhanced {
-        background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
-        backdrop-filter: blur(20px);
-        border-right: 1px solid rgba(51, 65, 85, 0.6);
-    }
-
-    .sidebar-nav-item {
-        position: relative;
-        margin: 0.25rem 0;
-        border-radius: 8px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .sidebar-nav-item::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 3px;
-        background: linear-gradient(180deg, #3b82f6, #1d4ed8);
-        border-radius: 0 2px 2px 0;
-        transform: scaleY(0);
-        transition: transform 0.3s ease;
-    }
-
-    .sidebar-nav-item.active::before,
-    .sidebar-nav-item:hover::before {
-        transform: scaleY(1);
-    }
-
-    /* 6. Enhanced Charts with Better Styling */
-    .chart-container-enhanced {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
-        border: 1px solid rgba(51, 65, 85, 0.6);
-        border-radius: 16px;
-        padding: 1.5rem;
-        backdrop-filter: blur(20px);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .chart-container-enhanced::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), transparent);
-    }
-
-    /* 7. Improved Form Inputs with Better Focus States */
-    .input-enhanced {
-        background: rgba(15, 23, 42, 0.8);
-        border: 2px solid rgba(51, 65, 85, 0.6);
-        border-radius: 8px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-    }
-
-    .input-enhanced:focus {
-        border-color: rgba(59, 130, 246, 0.8);
-        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-        background: rgba(30, 41, 59, 0.8);
-        transform: translateY(-1px);
-    }
-
-    /* 8. Enhanced Button Styles */
-    .button-enhanced {
-        position: relative;
-        overflow: hidden;
-        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-        border: none;
-        border-radius: 8px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .button-enhanced::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.6s ease;
-    }
-
-    .button-enhanced:hover::before {
-        left: 100%;
-    }
-
-    .button-enhanced:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
-    }
-
-    /* 9. Enhanced Loading States */
-    .loading-enhanced {
-        background: linear-gradient(90deg, rgba(51, 65, 85, 0.8) 25%, rgba(71, 85, 105, 0.8) 50%, rgba(51, 65, 85, 0.8) 75%);
-        background-size: 200% 100%;
-        animation: loading-shimmer 2s infinite;
-        border-radius: 8px;
-    }
-
-    @keyframes loading-shimmer {
-        0% { background-position: -200% 0; }
-        100% { background-position: 200% 0; }
-    }
-
-    /* 10. Enhanced Modal Styling */
-    .modal-enhanced {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(51, 65, 85, 0.6);
-        border-radius: 16px;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-    }
-
-    /* 11. Subtle Data Animations */
-    .data-appear {
-        animation: data-fade-in 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    @keyframes data-fade-in {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* 12. Enhanced Scrollbars */
-    .custom-scrollbar {
-        scrollbar-width: thin;
-        scrollbar-color: rgba(71, 85, 105, 0.8) transparent;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, rgba(71, 85, 105, 0.8), rgba(51, 65, 85, 0.6));
-        border-radius: 3px;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, rgba(71, 85, 105, 1), rgba(51, 65, 85, 0.8));
-    }
-
-    /* 13. Enhanced Typography with Better Hierarchy */
-    .text-gradient {
-        background: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .text-accent-gradient {
-        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    /* Professional Button Feedback System */
-    .btn-feedback {
-        position: relative;
-        transform: translateZ(0);
-        transition: all 0.2s var(--ease-in-out);
-        will-change: transform, box-shadow;
-        isolation: isolate;
-    }
-
-    .btn-feedback:active {
-        transform: translateY(1px) scale(0.98);
-        transition-duration: 0.08s;
-    }
-
-    .btn-feedback:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-lg);
-    }
-
-    .btn-feedback:focus:not(:disabled) {
-        transform: translateY(-1px);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), var(--shadow-md);
-    }
-
-    /* Ripple effect for tactile feedback */
-    .btn-ripple {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .btn-ripple::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        transform: translate(-50%, -50%);
-        transition: width 0.6s, height 0.6s;
-        pointer-events: none;
-    }
-
-    .btn-ripple:active::before {
-        width: 300px;
-        height: 300px;
-        transition: width 0s, height 0s;
-    }
-
-    /* Gentle pulse for primary actions */
-    .btn-pulse:hover:not(:disabled) {
-        animation: gentle-pulse 1.5s infinite;
-    }
-
-    @keyframes gentle-pulse {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
-        50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
-    }
-
-    /* Professional Card Interactions */
-    .card-interactive {
-        transition: all 0.3s var(--ease-in-out);
-        will-change: transform, box-shadow;
-        isolation: isolate;
-    }
-
-    .card-interactive:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-xl);
-    }
-
-    .card-interactive:active {
-        transform: translateY(-1px);
-        transition-duration: 0.1s;
-        box-shadow: var(--shadow-lg);
-    }
-
-    .card-interactive:focus-within {
-        transform: translateY(-2px);
-        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3), var(--shadow-lg);
-    }
-
-    /* Table row feedback */
-    .table-row-interactive {
-        transition: all 0.15s ease;
-    }
-
-    .table-row-interactive:hover {
-        transform: translateX(2px);
-        background-color: rgba(71, 85, 105, 0.1);
-    }
-
-    .table-row-interactive:active {
-        transform: translateX(0px);
-        transition-duration: 0.05s;
-    }
-
-    /* Form input feedback */
-    .input-feedback {
-        transition: all 0.2s ease;
-    }
-
-    .input-feedback:focus {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-    }
-
-    /* Success/Error feedback */
-    .feedback-success {
-        animation: success-bounce 0.6s ease-out;
-    }
-
-    .feedback-error {
-        animation: error-shake 0.5s ease-out;
-    }
-
-    @keyframes success-bounce {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-    }
-
-    @keyframes error-shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-4px); }
-        75% { transform: translateX(4px); }
-    }
-
-    /* Icon interactions */
-    .icon-interactive {
-        transition: transform 0.2s ease;
-    }
-
-    .icon-interactive:hover {
-        transform: rotate(5deg) scale(1.1);
-    }
-
-    /* Focus Indicators for Better Accessibility */
-    .focus-enhanced:focus {
-        outline: 2px solid #3b82f6;
-        outline-offset: 2px;
-    }
-
-    /* Enhanced Drop Shadows */
-    .shadow-enhanced {
-        box-shadow: 
-            0 1px 3px rgba(0, 0, 0, 0.12),
-            0 1px 2px rgba(0, 0, 0, 0.24);
-    }
-
-    .shadow-enhanced-lg {
-        box-shadow: 
-            0 10px 15px -3px rgba(0, 0, 0, 0.3),
-            0 4px 6px -2px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Professional Glass Effects */
-    .glass {
-        background: var(--glass-bg);
-        backdrop-filter: blur(20px) saturate(180%);
-        border: 1px solid var(--glass-border);
-        box-shadow: var(--shadow-sm);
-    }
-
-    .glass-strong {
-        background: var(--glass-strong);
-        backdrop-filter: blur(24px) saturate(200%);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: var(--shadow-md);
-    }
-
-    .glass-enhanced {
-        background: var(--glass-bg);
-        backdrop-filter: blur(20px) saturate(180%);
-        border: 1px solid var(--glass-border);
-        box-shadow: var(--shadow-lg);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .glass-enhanced::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: var(--gradient-glass);
-        opacity: 0.6;
-    }
+/* Light theme component overrides */
+[data-theme="light"] .sidebar-bg {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(229, 231, 235, 0.6) !important;
+}
+
+[data-theme="light"] .sidebar-border {
+  border-color: rgb(229, 231, 235) !important;
+}
+
+[data-theme="light"] .sidebar-text {
+  color: rgb(107, 114, 128) !important;
+}
+
+[data-theme="light"] .sidebar-text-secondary {
+  color: rgb(71, 85, 105) !important;
+}
+
+[data-theme="light"] .sidebar-text-muted {
+  color: rgb(156, 163, 175) !important;
+}
+
+[data-theme="light"] .sidebar-nav-item {
+  color: rgb(107, 114, 128) !important;
+}
+
+[data-theme="light"] .sidebar-nav-item:hover {
+  color: rgb(17, 24, 39) !important;
+  background-color: rgba(243, 244, 246, 0.5) !important;
+}
+
+[data-theme="light"] .sidebar-nav-active {
+  background-color: rgb(30, 136, 229) !important;
+}
+
+[data-theme="light"] .sidebar-org-bg {
+  background-color: rgba(243, 244, 246, 0.5) !important;
+  border-color: rgba(209, 213, 219, 0.4) !important;
+}
+
+[data-theme="light"] .sidebar-org-bg:hover {
+  background-color: rgba(243, 244, 246, 0.7) !important;
+  border-color: rgba(209, 213, 219, 0.6) !important;
+}
+
+[data-theme="light"] .card-bg {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(209, 213, 219, 0.5) !important;
+}
+
+[data-theme="light"] .card-bg:hover {
+  border-color: rgba(156, 163, 175, 0.6) !important;
+}
+
+[data-theme="light"] .card-title {
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] .card-title-small {
+  color: rgb(107, 114, 128) !important;
+}
+
+[data-theme="light"] .card-description {
+  color: rgb(107, 114, 128) !important;
+}
+
+[data-theme="light"] .card-icon-bg {
+  background-color: rgba(243, 244, 246, 0.4) !important;
+}
+
+[data-theme="light"] .card-icon-bg:hover {
+  background-color: rgba(229, 231, 235, 0.5) !important;
+}
+
+[data-theme="light"] .card-value {
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] .hamburger-btn {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgb(229, 231, 235) !important;
+}
+
+[data-theme="light"] .hamburger-btn:hover {
+  background-color: rgb(243, 244, 246) !important;
+}
+
+/* Light theme - Button overrides - More specific to avoid affecting chart containers */
+[data-theme="light"] button[class*="bg-slate-900"]:not([class*="recharts"]) {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(209, 213, 219, 0.5) !important;
+}
+
+[data-theme="light"] button[class*="bg-slate-800"]:not([class*="recharts"]) {
+  background-color: rgba(243, 244, 246, 0.8) !important;
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] button[class*="bg-slate-800"]:hover:not([class*="recharts"]) {
+  background-color: rgba(229, 231, 235, 0.9) !important;
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] button[class*="text-slate-300"]:not([class*="recharts"]) {
+  color: rgb(107, 114, 128) !important;
+}
+
+[data-theme="light"] button[class*="text-slate-400"]:not([class*="recharts"]) {
+  color: rgb(107, 114, 128) !important;
+}
+
+[data-theme="light"] button[class*="border-slate-700"]:not([class*="recharts"]) {
+  border-color: rgb(209, 213, 219) !important;
+}
+
+[data-theme="light"] button[class*="border-slate-600"]:not([class*="recharts"]) {
+  border-color: rgb(209, 213, 219) !important;
+}
+
+/* Light theme - Quick action buttons - DESKTOP only, exclude mobile responsive classes */
+[data-theme="light"] .lg\:flex:not(.hidden) button:not([class*="recharts"]) {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(209, 213, 219, 0.7) !important;
+  color: rgb(59, 130, 246) !important;
+}
+
+[data-theme="light"] .lg\:flex:not(.hidden) button:hover:not([class*="recharts"]) {
+  background-color: rgba(59, 130, 246, 0.05) !important;
+  border-color: rgb(59, 130, 246) !important;
+}
+
+/* Prevent containers from getting background overrides */
+[data-theme="light"] .lg\:flex {
+  background-color: transparent !important;
+}
+
+/* Light theme - Aggressive but chart-safe overrides for actual Tailwind classes */
+
+/* COMPLETELY NEW APPROACH - ONLY target specific safe elements, NO wildcards */
+
+/* ONLY target elements with our specific CSS classes - NO broad targeting */
+[data-theme="light"] .card-bg {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(209, 213, 219, 0.5) !important;
+}
+
+/* Target cards ONLY by very specific combinations - avoid any chart containers */
+[data-theme="light"] [role="dialog"],
+[data-theme="light"] .bg-slate-900.rounded-2xl.shadow-sm:not([class*="h-64"]):not([class*="h-80"]),
+[data-theme="light"] .bg-slate-900.p-6:not([class*="h-64"]):not([class*="h-80"]),
+[data-theme="light"] .bg-slate-800.rounded-xl:not([class*="h-64"]):not([class*="h-80"]):not([class*="overflow-hidden"]) {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(209, 213, 219, 0.5) !important;
+}
+
+/* Target only UI cards with specific patterns that charts never have */
+[data-theme="light"] .bg-slate-900.backdrop-blur-sm,
+[data-theme="light"] .bg-slate-900.transition-all {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(209, 213, 219, 0.5) !important;
+}
+
+/* Sidebar specific - make sure it's not transparent */
+[data-theme="light"] aside[class*="bg-slate-950"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+/* Header/main backgrounds */
+[data-theme="light"] header[class*="bg-slate"],
+[data-theme="light"] main[class*="bg-slate"] {
+  background-color: rgb(249, 250, 251) !important;
+}
+
+/* Light theme - Strategic blue accents */
+[data-theme="light"] .card-title {
+  color: rgb(59, 130, 246) !important; /* Blue accent for card titles */
+}
+
+[data-theme="light"] h2,
+[data-theme="light"] h1 {
+  color: rgb(30, 64, 175) !important; /* Darker blue for main headings */
+}
+
+/* Light theme - Navigation active states with blue */
+[data-theme="light"] .sidebar-nav-active {
+  background-color: rgb(59, 130, 246) !important;
+  color: white !important;
+}
+
+[data-theme="light"] .sidebar-nav-item:hover {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  color: rgb(59, 130, 246) !important;
+}
+
+/* Light theme - Aggressive text color overrides for actual Tailwind classes */
+
+/* Light text colors -> Dark colors for readability */
+[data-theme="light"] *[class*="text-slate-50"]:not(svg):not([class*="recharts"]) {
+  color: rgb(17, 24, 39) !important; /* Black for lightest slate text */
+}
+
+[data-theme="light"] *[class*="text-slate-100"]:not(svg):not([class*="recharts"]) {
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] *[class*="text-slate-200"]:not(svg):not([class*="recharts"]) {
+  color: rgb(55, 65, 81) !important; /* Dark gray for secondary text */
+}
+
+[data-theme="light"] *[class*="text-slate-300"]:not(svg):not([class*="recharts"]) {
+  color: rgb(75, 85, 99) !important;
+}
+
+[data-theme="light"] *[class*="text-slate-400"]:not(svg):not([class*="recharts"]) {
+  color: rgb(75, 85, 99) !important; /* Darker gray for better readability */
+}
+
+[data-theme="light"] *[class*="text-slate-500"]:not(svg):not([class*="recharts"]) {
+  color: rgb(75, 85, 99) !important;
+}
+
+[data-theme="light"] *[class*="text-slate-600"]:not(svg):not([class*="recharts"]) {
+  color: rgb(17, 24, 39) !important;
+}
+
+/* Headings and titles */
+[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3, 
+[data-theme="light"] h4, [data-theme="light"] h5, [data-theme="light"] h6 {
+  color: rgb(17, 24, 39) !important; /* Black headings */
+}
+
+/* Keep white text on blue/colored backgrounds */
+[data-theme="light"] *[class*="bg-blue"] *,
+[data-theme="light"] *[class*="bg-gradient"] *,
+[data-theme="light"] button[class*="bg-blue"] *,
+[data-theme="light"] [data-state="active"] * {
+  color: white !important;
+}
+
+/* Light theme - Border overrides - more aggressive */
+[data-theme="light"] *[class*="border-slate-800"]:not(svg):not([class*="recharts"]) {
+  border-color: rgba(209, 213, 219, 0.6) !important;
+}
+
+[data-theme="light"] *[class*="border-slate-700"]:not(svg):not([class*="recharts"]) {
+  border-color: rgba(209, 213, 219, 0.7) !important;
+}
+
+[data-theme="light"] *[class*="border-slate-600"]:not(svg):not([class*="recharts"]) {
+  border-color: rgb(209, 213, 219) !important;
+}
+
+[data-theme="light"] *[class*="border-r"]:not(svg):not([class*="recharts"]) {
+  border-color: rgba(209, 213, 219, 0.6) !important;
+}
+
+[data-theme="light"] *[class*="border-t"]:not(svg):not([class*="recharts"]) {
+  border-color: rgba(209, 213, 219, 0.6) !important;
+}
+
+[data-theme="light"] *[class*="border-b"]:not(svg):not([class*="recharts"]) {
+  border-color: rgba(209, 213, 219, 0.6) !important;
+}
+
+/* Light theme - Logo override (change to blue) - More aggressive approach */
+[data-theme="light"] img[alt="Summit Automation"] {
+  filter: invert(1) hue-rotate(190deg) saturate(2) brightness(0.7) !important;
+}
+
+/* Light theme - Tab overrides */
+[data-theme="light"] *[data-state="active"] {
+  background-color: rgb(59, 130, 246) !important;
+  color: white !important;
+}
+
+/* Light theme - Input overrides */
+[data-theme="light"] input[class*="bg-slate-800"] {
+  background-color: rgb(255, 255, 255) !important;
+  border-color: rgb(209, 213, 219) !important;
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] input[class*="bg-slate-800"]:focus {
+  border-color: rgb(59, 130, 246) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Light theme - Select overrides */
+[data-theme="light"] *[class*="bg-slate-800"] select,
+[data-theme="light"] button[class*="bg-slate-800"] {
+  background-color: rgb(255, 255, 255) !important;
+  border-color: rgb(209, 213, 219) !important;
+  color: rgb(17, 24, 39) !important;
+}
+
+/* Light theme - Comprehensive table styling */
+[data-theme="light"] table {
+  background-color: rgb(255, 255, 255) !important;
+}
+
+[data-theme="light"] thead {
+  background-color: rgba(59, 130, 246, 0.05) !important; /* Light blue header */
+}
+
+[data-theme="light"] th {
+  color: rgb(30, 64, 175) !important; /* Blue table headers */
+  border-color: rgb(229, 231, 235) !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] td {
+  color: rgb(17, 24, 39) !important; /* Dark text for readability */
+  border-color: rgb(229, 231, 235) !important;
+}
+
+[data-theme="light"] tr:hover {
+  background-color: rgba(59, 130, 246, 0.03) !important; /* Subtle blue hover */
+}
+
+/* Light theme - Dropdown content and table cell text - force dark for readability */
+[data-theme="light"] td *,
+[data-theme="light"] td span,
+[data-theme="light"] td p,
+[data-theme="light"] td div {
+  color: rgb(17, 24, 39) !important;
+}
+
+/* Light theme - Table action buttons */
+[data-theme="light"] td button {
+  color: rgb(59, 130, 246) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+[data-theme="light"] td button:hover {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  color: rgb(30, 64, 175) !important;
+}
+
+/* Light theme - Modal and Dialog overrides */
+[data-theme="light"] *[class*="bg-slate-900"][role="dialog"],
+[data-theme="light"] *[class*="bg-slate-900"]:is([data-state="open"]) {
+  background-color: rgb(255, 255, 255) !important;
+  border-color: rgb(209, 213, 219) !important;
+}
+
+/* Light theme - Badge overrides */
+[data-theme="light"] *[class*="bg-slate-500"] {
+  background-color: rgb(229, 231, 235) !important;
+  color: rgb(55, 65, 81) !important;
+}
+
+/* Light theme - Strategic blue accents throughout */
+
+/* Icons and accent elements */
+[data-theme="light"] .card-icon-bg {
+  background-color: rgba(59, 130, 246, 0.15) !important; /* More prominent blue */
+}
+
+[data-theme="light"] .card-icon-bg svg,
+[data-theme="light"] .card-icon-bg .lucide {
+  color: rgb(59, 130, 246) !important;
+}
+
+/* Follow-up alerts - make them much more visible */
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] {
+  background: linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.15)) !important;
+  border-color: rgb(59, 130, 246) !important;
+  border-width: 1px !important;
+}
+
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] *[class*="text-amber"] {
+  color: rgb(59, 130, 246) !important; /* Blue text instead of amber */
+}
+
+[data-theme="light"] *[class*="bg-amber-500"] {
+  background-color: rgba(59, 130, 246, 0.2) !important; /* Blue background for amber badges */
+  color: rgb(30, 64, 175) !important; /* Dark blue text */
+}
+
+/* Tab styling with blue accents */
+[data-theme="light"] [data-state="active"] {
+  background-color: rgb(59, 130, 246) !important;
+  color: white !important;
+}
+
+/* More blue accents for interactive elements */
+[data-theme="light"] *[class*="text-blue-400"] {
+  color: rgb(59, 130, 246) !important;
+}
+
+/* Dashboard section headers */
+[data-theme="light"] h2[class*="text-slate-50"] {
+  color: rgb(30, 64, 175) !important; /* Dark blue for section headers */
+}
+
+[data-theme="light"] p[class*="text-slate-400"] {
+  color: rgb(75, 85, 99) !important; /* Darker for better readability */
+}
+
+/* Form focus states */
+[data-theme="light"] input:focus,
+[data-theme="light"] select:focus,
+[data-theme="light"] textarea:focus {
+  border-color: rgb(59, 130, 246) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Badge and status indicators */
+[data-theme="light"] .badge,
+[data-theme="light"] [class*="bg-blue-500"] {
+  background-color: rgb(59, 130, 246) !important;
+  color: white !important;
+}
+
+/* Progress indicators and growth metrics */
+[data-theme="light"] [class*="text-emerald-"],
+[data-theme="light"] [class*="text-green-"] {
+  color: rgb(34, 197, 94) !important; /* Keep green for positive metrics */
+}
+
+[data-theme="light"] [class*="text-red-"] {
+  color: rgb(239, 68, 68) !important; /* Keep red for negative metrics */
+}
+
+/* Links and interactive text */
+[data-theme="light"] a,
+[data-theme="light"] [class*="text-blue-"] {
+  color: rgb(59, 130, 246) !important;
+}
+
+[data-theme="light"] a:hover {
+  color: rgb(30, 64, 175) !important;
+}
+
+/* Keep blue buttons blue with better contrast */
+[data-theme="light"] button[class*="bg-blue-"] {
+  background-color: rgb(59, 130, 246) !important;
+  color: white !important;
+}
+
+[data-theme="light"] button[class*="bg-blue-"]:hover {
+  background-color: rgb(30, 64, 175) !important;
+}
+
+[data-theme="light"] button[class*="bg-gradient-to-r"] {
+  background: linear-gradient(to right, rgb(59, 130, 246), rgb(147, 51, 234)) !important;
+}
+
+[data-theme="light"] button[class*="bg-gradient-to-r"]:hover {
+  background: linear-gradient(to right, rgb(30, 64, 175), rgb(126, 34, 206)) !important;
+}
+
+/* Light theme - Mobile responsive fixes */
+@media (max-width: 768px) {
+  /* Mobile table improvements */
+  [data-theme="light"] table,
+  [data-theme="light"] tbody,
+  [data-theme="light"] tr,
+  [data-theme="light"] td {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(17, 24, 39) !important;
+  }
+  
+  /* Mobile quick action buttons - VERY specific targeting to prevent blue containers */
+  [data-theme="light"] .lg\:hidden button:not([class*="recharts"]),
+  [data-theme="light"] .sm\:hidden button:not([class*="recharts"]),
+  [data-theme="light"] .md\:hidden button:not([class*="recharts"]),
+  [data-theme="light"] .hidden button:not([class*="recharts"]),
+  [data-theme="light"] .lg\:flex.hidden button:not([class*="recharts"]) {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(59, 130, 246, 0.3) !important;
+    color: rgb(59, 130, 246) !important;
+  }
+  
+  [data-theme="light"] .lg\:hidden button:hover:not([class*="recharts"]),
+  [data-theme="light"] .sm\:hidden button:hover:not([class*="recharts"]),
+  [data-theme="light"] .md\:hidden button:hover:not([class*="recharts"]),
+  [data-theme="light"] .hidden button:hover:not([class*="recharts"]),
+  [data-theme="light"] .lg\:flex.hidden button:hover:not([class*="recharts"]) {
+    background-color: rgba(59, 130, 246, 0.05) !important;
+    border-color: rgb(59, 130, 246) !important;
+  }
+
+  /* Mobile - prevent ANY background overrides on divs containing buttons */
+  [data-theme="light"] .lg\:hidden,
+  [data-theme="light"] .sm\:hidden,
+  [data-theme="light"] .md\:hidden {
+    background-color: transparent !important;
+  }
+
+  /* Mobile - specific container exclusions */
+  [data-theme="light"] div[class*="lg:flex"]:not([class*="bg-"]) {
+    background-color: transparent !important;
+  }
+}
+
+/* Light theme - Additional blue accents for better visual hierarchy */
+[data-theme="light"] .card-title {
+  color: rgb(30, 64, 175) !important; /* Darker blue for card titles */
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] *[class*="text-slate-600"] {
+  color: rgb(75, 85, 99) !important; /* Darker gray for better contrast */
+}
+
+/* Light theme - Ensure growth indicators remain visible */
+[data-theme="light"] *[class*="text-emerald-400"] {
+  color: rgb(34, 197, 94) !important; /* Keep green bright for positive metrics */
+}
+
+[data-theme="light"] *[class*="text-red-400"] {
+  color: rgb(239, 68, 68) !important; /* Keep red bright for negative metrics */
+}
+
+/* Light theme - Navigation improvements */
+[data-theme="light"] .sidebar-nav-item {
+  color: rgb(75, 85, 99) !important; /* Darker navigation text */
+}
+
+[data-theme="light"] .sidebar-nav-item:hover {
+  background-color: rgba(59, 130, 246, 0.08) !important;
+  color: rgb(59, 130, 246) !important;
+}
+
+/* Light theme - Comprehensive component fixes */
+
+/* NO broad div targeting - this was causing chart container issues */
+/* Instead, we'll only style elements we add specific classes to */
+
+/* TabsList and Tab components */
+[data-theme="light"] *[role="tablist"] {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(209, 213, 219, 0.4) !important;
+}
+
+/* Input and form elements */
+[data-theme="light"] input[class*="bg-slate-"],
+[data-theme="light"] select[class*="bg-slate-"],
+[data-theme="light"] textarea[class*="bg-slate-"] {
+  background-color: rgb(255, 255, 255) !important;
+  border-color: rgb(209, 213, 219) !important;
+  color: rgb(17, 24, 39) !important;
+}
+
+/* Button hover states for non-blue buttons */
+[data-theme="light"] button[class*="hover:bg-slate-"]:hover:not([class*="bg-blue"]):not([class*="recharts"]) {
+  background-color: rgba(243, 244, 246, 0.8) !important;
+  color: rgb(17, 24, 39) !important;
+}
+
+/* REMOVED broad selectors - they were causing chart container issues */
+
+/* Ensure charts maintain their styling */
+[data-theme="light"] .recharts-wrapper,
+[data-theme="light"] .recharts-responsive-container,
+[data-theme="light"] [class*="recharts"],
+[data-theme="light"] svg[class*="recharts"] {
+  background-color: transparent !important;
+}
+
+/* Force text readability in common elements only */
+[data-theme="light"] p, [data-theme="light"] span, [data-theme="light"] div:not([class*="recharts"]):not(svg),
+[data-theme="light"] label, [data-theme="light"] td, [data-theme="light"] th {
+  color: rgb(17, 24, 39) !important;
+}
+
+/* Exception: keep special colors for metrics and states */
+[data-theme="light"] *[class*="text-emerald"]:not([class*="recharts"]),
+[data-theme="light"] *[class*="text-green"]:not([class*="recharts"]),
+[data-theme="light"] *[class*="text-red"]:not([class*="recharts"]),
+[data-theme="light"] *[class*="text-amber"]:not([class*="recharts"]),
+[data-theme="light"] *[class*="text-blue"]:not([class*="recharts"]) {
+  /* Keep their original colors */
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Professional Focus Styles */
+*:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 0.375rem;
 }
 
 /* Animations */
-.transition-smooth { transition: all 0.2s ease-in-out; }
-.fade-in { animation: fadeIn 0.3s ease-out; }
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.transition-smooth {
+  transition: all 0.2s ease-in-out;
 }
 
 /* Mobile Optimizations */
 @media (max-width: 768px) {
-    .btn-feedback:active {
-        transform: translateY(0.5px) scale(0.99);
-    }
-    
-    .btn-feedback:hover:not(:disabled) {
-        transform: none; /* Disable hover effects on mobile */
-        box-shadow: none;
-    }
-    
-    .card-interactive:hover,
-    .card-enhanced:hover {
-        transform: none;
-        box-shadow: none;
-    }
-    
-    .table-enhanced tr:hover {
-        transform: none; /* Disable transform on mobile */
-    }
-    
-    .mobile-optimized { padding: 0.5rem; font-size: 0.875rem; }
-    .touch-target, button { min-height: 44px; min-width: 44px; }
-    .mobile-card { margin: 0 0.5rem; border-radius: 12px; }
-    .mobile-form-grid { grid-template-columns: 1fr; gap: 1rem; }
-    
-    [data-radix-dialog-content] {
-        width: calc(100vw - 2rem) !important;
-        max-width: none !important;
-        max-height: calc(100vh - 4rem) !important;
-        margin: 0 !important;
-    }
-    
-    .mobile-table-wrapper {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
+  .touch-target, button { 
+    min-height: 44px; 
+    min-width: 44px; 
+  }
 }
 
-/* Accessibility Improvements */
-@media (prefers-reduced-motion: reduce) {
-    .card-enhanced,
-    .metric-enhanced,
-    .button-enhanced,
-    .sidebar-nav-item,
-    .input-enhanced,
-    .btn-feedback,
-    .card-interactive,
-    .input-feedback {
-        transition: none;
-        animation: none;
-    }
-    
-    .card-enhanced:hover,
-    .button-enhanced:hover,
-    .input-enhanced:focus,
-    .btn-feedback:active {
-        transform: none;
-    }
-    
-    .btn-pulse:hover:not(:disabled) {
-        animation: none;
-    }
-}
-
-/* Radix UI Component Fixes - Consolidated */
-[data-radix-select-content], [data-radix-dialog-content] {
-    background-color: rgb(15 23 42) !important;
-    border: 1px solid rgb(51 65 85) !important;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4) !important;
-}
-
-[data-radix-select-item], [data-radix-select-item]:hover, [data-radix-select-item][data-highlighted] {
-    color: rgb(248 250 252) !important;
-    background-color: transparent !important;
-    padding: 0.5rem 0.75rem !important;
-}
-
-[data-radix-select-item]:hover, [data-radix-select-item][data-highlighted] {
-    background-color: rgb(30 41 59) !important;
-}
-
-[data-radix-select-item][data-state="checked"] {
-    background-color: rgb(59 130 246) !important;
-    color: white !important;
-}
-
-[data-radix-select-trigger], [data-radix-dialog-overlay] {
-    background-color: rgb(15 23 42) !important;
-    border: 1px solid rgb(51 65 85) !important;
-    color: rgb(248 250 252) !important;
-}
-
-[data-radix-select-trigger]:hover, [data-radix-select-trigger]:focus {
-    background-color: rgb(30 41 59) !important;
-    border-color: rgb(71 85 105) !important;
-}
-
-[data-radix-dialog-overlay] {
-    background-color: rgba(0, 0, 0, 0.75) !important;
-    backdrop-filter: blur(8px) !important;
-}
-
-/* Button Consistency */
-.btn-outline, button[class*="outline"] {
-    background-color: rgb(15 23 42) !important;
-    border: 1px solid rgb(51 65 85) !important;
-    color: rgb(248 250 252) !important;
-    min-height: 2.5rem !important;
-}
-
-.btn-outline:hover, button[class*="outline"]:hover {
-    background-color: rgb(30 41 59) !important;
-    border-color: rgb(71 85 105) !important;
-}
-
-/* Input Consistency */
-input[class*="bg-slate-"], textarea[class*="bg-slate-"], select[class*="bg-slate-"] {
-    background-color: rgb(15 23 42) !important;
-    border: 1px solid rgb(51 65 85) !important;
-    color: rgb(248 250 252) !important;
-}
-
-input[class*="bg-slate-"]:focus, textarea[class*="bg-slate-"]:focus, select[class*="bg-slate-"]:focus {
-    border-color: rgb(59 130 246) !important;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
-}
-
-/* Checkbox Styling - Force square dimensions */
-[data-slot="checkbox"], 
-[data-radix-checkbox-root], 
-button[role="checkbox"] {
-    width: 1rem !important;
-    height: 1rem !important;
-    min-width: 1rem !important;
-    min-height: 1rem !important;
-    max-width: 1rem !important;
-    max-height: 1rem !important;
-    background-color: rgb(15 23 42) !important;
-    border: 1px solid rgb(51 65 85) !important;
-    border-radius: 4px !important;
-    flex-shrink: 0 !important;
-    aspect-ratio: 1 / 1 !important;
-    box-sizing: border-box !important;
-}
-
-[data-slot="checkbox"]:hover,
-[data-radix-checkbox-root]:hover, 
-button[role="checkbox"]:hover {
-    border-color: rgb(71 85 105) !important;
-    background-color: rgb(30 41 59) !important;
-}
-
-[data-slot="checkbox"][data-state="checked"],
-[data-radix-checkbox-root][data-state="checked"], 
-button[role="checkbox"][data-state="checked"] {
-    background-color: rgb(59 130 246) !important;
-    border-color: rgb(59 130 246) !important;
-    color: white !important;
-}
-
-/* Checkbox indicator styling */
-[data-slot="checkbox-indicator"],
-[data-radix-checkbox-indicator] {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 100% !important;
-    height: 100% !important;
-}
-
-[data-slot="checkbox-indicator"] svg,
-[data-radix-checkbox-indicator] svg {
-    width: 0.875rem !important;
-    height: 0.875rem !important;
-    flex-shrink: 0 !important;
-}
-
-/* Chart Text Colors */
-.recharts-cartesian-axis-tick-value, .recharts-legend-item-text {
-    fill: #94a3b8 !important;
-    color: #cbd5e1 !important;
+/* Enhanced Chart Styling for Mercury Design */
+.recharts-cartesian-axis-tick-value, 
+.recharts-legend-item-text {
+  fill: rgb(148, 163, 184) !important;
+  color: rgb(148, 163, 184) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
 }
 
 .recharts-tooltip-wrapper .recharts-default-tooltip {
-    background-color: #1e293b !important;
-    border: 1px solid #475569 !important;
-    border-radius: 8px !important;
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  border: 1px solid rgba(100, 116, 139, 0.5) !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(8px) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+  color: rgb(248, 250, 252) !important;
 }
 
-.recharts-line-dot {
-    fill: #f8fafc !important;
-    stroke: #3b82f6 !important;
-    stroke-width: 2px !important;
-    r: 4 !important;
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: rgb(100, 116, 139) !important;
+  stroke-width: 0.5 !important;
+  opacity: 0.3 !important;
 }
 
-.recharts-line-dot:hover, .recharts-active-dot {
-    fill: #ffffff !important;
-    stroke: #2563eb !important;
-    stroke-width: 3px !important;
-    r: 5 !important;
+/* Light theme chart overrides */
+[data-theme="light"] .recharts-cartesian-axis-tick-value, 
+[data-theme="light"] .recharts-legend-item-text {
+  fill: rgb(107, 114, 128) !important;
+  color: rgb(107, 114, 128) !important;
 }
 
-/* Chart Specific Optimizations */
-.chart-clean { @apply bg-slate-900 border border-slate-800 rounded-lg p-6; }
-.chart-title { @apply text-lg font-semibold text-slate-50 mb-2; }
-.chart-subtitle { @apply text-sm text-slate-400 mb-4; }
-
-/* Cash Flow Chart Colors */
-.recharts-area[data-key="income"] { fill: url(#incomeGradient) !important; stroke: #10b981 !important; }
-.recharts-area[data-key="expense"] { fill: url(#expenseGradient) !important; stroke: #ef4444 !important; }
-
-/* Scrollbar Styling */
-.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-.scrollbar-hide::-webkit-scrollbar { display: none; }
-
-/* Loading States */
-.mobile-skeleton {
-    background: linear-gradient(90deg, rgba(15, 23, 42, 0.8) 25%, rgba(30, 41, 59, 0.8) 50%, rgba(15, 23, 42, 0.8) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.8s infinite;
-    border-radius: 6px;
+[data-theme="light"] .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(209, 213, 219, 0.8) !important;
+  color: rgb(17, 24, 39) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
-@keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+[data-theme="light"] .recharts-cartesian-grid-horizontal line,
+[data-theme="light"] .recharts-cartesian-grid-vertical line {
+  stroke: rgb(209, 213, 219) !important;
+  opacity: 0.4 !important;
 }
 
-/* Professional Utility Classes */
-.mobile-only { display: none; }
-
-/* Professional Spacing System */
-.space-section { margin-bottom: var(--space-2xl); }
-.space-content { margin-bottom: var(--space-xl); }
-.space-group { margin-bottom: var(--space-lg); }
-.space-item { margin-bottom: var(--space-md); }
-
-/* Professional Layout Utilities */
-.container-professional { 
-    max-width: 1400px; 
-    margin: 0 auto; 
-    padding: 0 var(--space-lg);
+.recharts-pie-sector:hover,
+.recharts-area:hover,
+.recharts-bar:hover {
+  filter: brightness(1.1) !important;
+  transition: filter 0.2s ease-in-out !important;
 }
 
-.grid-professional { 
-    display: grid; 
-    gap: var(--space-lg);
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+/* Radix UI Component Fixes - Theme Aware */
+[data-radix-select-content], 
+[data-radix-dialog-content] {
+  background-color: rgb(var(--color-background-secondary)) !important;
+  border: 1px solid rgb(var(--color-border)) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
-.flex-professional { 
-    display: flex; 
-    gap: var(--space-md);
-    flex-wrap: wrap;
-    align-items: center;
+[data-theme="light"] [data-radix-select-content], 
+[data-theme="light"] [data-radix-dialog-content] {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Professional Status Indicators */
-.indicator-online { 
-    position: relative;
+[data-radix-select-item] {
+  color: rgb(var(--color-text-primary)) !important;
+  background-color: transparent !important;
+  padding: 0.5rem 0.75rem !important;
 }
 
-.indicator-online::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 8px;
-    height: 8px;
-    background: var(--success);
-    border-radius: 50%;
-    box-shadow: 0 0 0 2px var(--surface);
+[data-radix-select-item]:hover, 
+[data-radix-select-item][data-highlighted] {
+  background-color: rgb(var(--color-background-tertiary)) !important;
 }
 
-/* Loading States */
-.skeleton-professional {
-    background: linear-gradient(90deg, 
-        rgba(51, 65, 85, 0.8) 25%, 
-        rgba(71, 85, 105, 0.8) 50%, 
-        rgba(51, 65, 85, 0.8) 75%
-    );
-    background-size: 200% 100%;
-    animation: skeleton-shimmer 2s infinite;
-    border-radius: var(--radius);
-}
-
-@keyframes skeleton-shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-}
-
-@media (max-width: 768px) {
-    .mobile-only { display: block; }
-    .mobile-hidden { display: none; }
-    .mobile-flex { display: flex; }
-    .mobile-grid { display: grid; }
-    
-    .container-professional { 
-        padding: 0 var(--space-md);
-    }
-    
-    .grid-professional { 
-        grid-template-columns: 1fr;
-        gap: var(--space-md);
-    }
-    
-    .flex-professional { 
-        gap: var(--space-sm);
-    }
+[data-radix-select-item][data-state="checked"] {
+  background-color: rgb(var(--color-primary)) !important;
+  color: white !important;
 }

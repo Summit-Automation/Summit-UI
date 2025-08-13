@@ -4,30 +4,30 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background relative overflow-hidden touch-manipulation btn-feedback btn-ripple",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 relative overflow-hidden touch-manipulation shadow-sm",
   {
     variants: {
       variant: {
         default:
-          "bg-brand-primary text-white shadow-md hover:bg-blue-600 hover:shadow-lg active:scale-95 hover:-translate-y-0.5",
+          "bg-blue-600 text-white shadow-md hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] border-0",
         destructive:
-          "bg-red-600 text-white shadow-md hover:bg-red-700 hover:shadow-lg active:scale-95 hover:-translate-y-0.5",
+          "bg-red-600 text-white shadow-md hover:bg-red-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] border-0",
         outline:
-          "border-2 border-border-primary bg-transparent text-text-primary shadow-sm hover:bg-surface-elevated hover:border-border-secondary hover:shadow-md active:scale-95",
+          "border border-slate-700 bg-slate-900/50 text-slate-300 hover:bg-slate-800 hover:text-white hover:border-slate-600 active:scale-[0.98] backdrop-blur-sm",
         secondary:
-          "bg-surface-elevated text-text-primary shadow-sm hover:bg-slate-700 hover:shadow-md active:scale-95 hover:-translate-y-0.5",
+          "bg-slate-800 text-slate-300 shadow-sm hover:bg-slate-700 hover:text-white hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98] border-0",
         ghost:
-          "text-text-secondary hover:bg-surface-elevated hover:text-text-primary active:scale-95",
+          "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 active:scale-[0.98] border-0 shadow-none",
         link: 
-          "text-brand-primary underline-offset-4 hover:underline active:scale-95",
+          "text-blue-400 underline-offset-4 hover:underline active:scale-[0.98] border-0 shadow-none",
         gradient:
-          "bg-gradient-primary text-white shadow-lg hover:shadow-xl active:scale-95 hover:-translate-y-0.5 before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/0 before:via-white/10 before:to-white/0 before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-500 btn-pulse",
+          "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700 hover:-translate-y-0.5 active:scale-[0.98] border-0",
         success:
-          "bg-green-600 text-white shadow-md hover:bg-green-700 hover:shadow-lg active:scale-95 hover:-translate-y-0.5",
+          "bg-emerald-600 text-white shadow-md hover:bg-emerald-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] border-0",
         warning:
-          "bg-yellow-600 text-white shadow-md hover:bg-yellow-700 hover:shadow-lg active:scale-95 hover:-translate-y-0.5",
+          "bg-amber-600 text-white shadow-md hover:bg-amber-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] border-0",
         glass:
-          "glass border border-border-primary text-text-primary hover:glass-strong hover:border-border-secondary backdrop-blur-xl active:scale-95",
+          "bg-slate-900/30 backdrop-blur-xl border border-slate-700/50 text-slate-300 hover:bg-slate-800/50 hover:border-slate-600/50 hover:text-white active:scale-[0.98]",
       },
       size: {
         default: "h-10 px-6 py-2 min-h-[44px] sm:min-h-[40px]", // Mobile-friendly touch target

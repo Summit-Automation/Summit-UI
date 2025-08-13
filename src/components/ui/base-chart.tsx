@@ -59,7 +59,7 @@ export function BaseChart({
     );
 }
 
-// Shared Tooltip Component
+// Shared Tooltip Component with Mercury-style design
 export function ChartTooltip({ 
     active, 
     payload, 
@@ -70,23 +70,23 @@ export function ChartTooltip({
     if (!active || !payload || !payload.length) return null;
 
     return (
-        <div className="bg-slate-800 border border-slate-600 rounded-lg p-3 shadow-lg max-w-xs">
+        <div className="bg-slate-900/95 backdrop-blur-sm border border-slate-700/50 rounded-xl p-4 shadow-2xl shadow-black/20 max-w-xs">
             {label && (
-                <p className="text-slate-300 text-sm font-medium mb-2">
+                <p className="text-slate-50 text-sm font-semibold mb-3 pb-2 border-b border-slate-700/50">
                     {labelFormatter ? labelFormatter(label) : label}
                 </p>
             )}
-            <div className="space-y-1">
+            <div className="space-y-2">
                 {payload.map((entry: TooltipPayloadItem, index: number) => (
-                    <div key={index} className="flex items-center justify-between gap-2">
+                    <div key={index} className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-2">
                             <div 
-                                className="w-3 h-3 rounded-full"
+                                className="w-3 h-3 rounded-full shadow-sm"
                                 style={{ backgroundColor: entry.color }}
                             />
-                            <span className="text-slate-400 text-xs">{entry.dataKey}:</span>
+                            <span className="text-slate-400 text-sm capitalize">{entry.dataKey}:</span>
                         </div>
-                        <span className="text-slate-100 text-xs font-medium">
+                        <span className="text-slate-100 text-sm font-semibold">
                             {formatter ? formatter(entry.value) : String(entry.value)}
                         </span>
                     </div>
@@ -96,19 +96,19 @@ export function ChartTooltip({
     );
 }
 
-// Shared Legend Component
+// Shared Legend Component with Mercury-style design
 export function ChartLegend({ payload }: LegendProps) {
     if (!payload || !payload.length) return null;
 
     return (
-        <div className="flex flex-wrap justify-center gap-3 mt-4 px-2">
+        <div className="flex flex-wrap justify-center gap-4 mt-6 px-2">
             {payload.map((entry: LegendPayloadItem, index: number) => (
-                <div key={index} className="flex items-center gap-2">
+                <div key={index} className="flex items-center gap-2 px-3 py-1.5 bg-slate-800/30 rounded-full border border-slate-700/30 hover:bg-slate-800/50 transition-colors duration-200">
                     <div 
-                        className="w-3 h-3 rounded-full"
+                        className="w-3 h-3 rounded-full shadow-sm"
                         style={{ backgroundColor: entry.color }}
                     />
-                    <span className="text-slate-300 text-xs">{entry.value}</span>
+                    <span className="text-slate-300 text-sm font-medium">{entry.value}</span>
                 </div>
             ))}
         </div>
