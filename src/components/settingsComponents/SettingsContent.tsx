@@ -146,7 +146,10 @@ export default function SettingsContent() {
             if (error) throw error;
 
             // Update user metadata if profile info changed
-            if (settings.full_name !== user.user_metadata?.full_name) {
+            if (settings.full_name !== user.user_metadata?.full_name ||
+                settings.phone !== user.user_metadata?.phone ||
+                settings.company !== user.user_metadata?.company ||
+                settings.position !== user.user_metadata?.position) {
                 await supabase.auth.updateUser({
                     data: { 
                         full_name: settings.full_name,
@@ -155,6 +158,9 @@ export default function SettingsContent() {
                         position: settings.position
                     }
                 });
+                
+                // Emit custom event to notify other components of user data update
+                window.dispatchEvent(new CustomEvent('userDataUpdated'));
             }
 
             // Update the original settings reference

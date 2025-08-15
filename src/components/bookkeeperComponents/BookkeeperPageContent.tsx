@@ -60,7 +60,7 @@ export default function BookkeeperPageContent({ transactions, recurringPayments 
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-0">
-                        <div className="h-64 lg:h-80 rounded-xl overflow-hidden">
+                        <div className="min-h-64 lg:min-h-80 rounded-xl">
                             <CashFlowArea transactions={transactions}/>
                         </div>
                     </CardContent>
@@ -187,7 +187,7 @@ export default function BookkeeperPageContent({ transactions, recurringPayments 
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <div className="h-64 rounded-xl overflow-hidden">
+                                <div className="min-h-64 rounded-xl">
                                     <CashFlowArea transactions={transactions}/>
                                 </div>
                             </CardContent>

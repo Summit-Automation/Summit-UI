@@ -244,7 +244,7 @@ export function DashboardContent({
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <div className="h-64 lg:h-80 rounded-xl overflow-hidden">
+                                <div className="min-h-64 lg:min-h-80 rounded-xl">
                                     <CustomerGrowthLine customers={customers} />
                                 </div>
                             </CardContent>
@@ -263,7 +263,7 @@ export function DashboardContent({
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <div className="h-64 lg:h-80 rounded-xl overflow-hidden">
+                                <div className="min-h-64 lg:min-h-80 rounded-xl">
                                     <CashFlowArea transactions={transactions} />
                                 </div>
                             </CardContent>
@@ -284,7 +284,7 @@ export function DashboardContent({
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="p-0">
-                            <div className="h-64 lg:h-80 rounded-xl overflow-hidden">
+                            <div className="min-h-64 lg:min-h-80 rounded-xl">
                                 <InteractionTypeBar interactions={interactions} />
                             </div>
                         </CardContent>
@@ -306,7 +306,7 @@ export function DashboardContent({
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <div className="h-64 lg:h-80 rounded-xl overflow-hidden">
+                                <div className="min-h-64 lg:min-h-80 rounded-xl">
                                     <CustomerStatusPie customers={customers} size="lg" />
                                 </div>
                             </CardContent>
@@ -325,7 +325,7 @@ export function DashboardContent({
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <div className="h-64 lg:h-80 rounded-xl overflow-hidden">
+                                <div className="min-h-64 lg:min-h-80 rounded-xl">
                                     <FollowUpPie interactions={interactions} />
                                 </div>
                             </CardContent>
@@ -348,7 +348,7 @@ export function DashboardContent({
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <div className="h-64 lg:h-80 rounded-xl overflow-hidden">
+                                <div className="min-h-64 lg:min-h-80 rounded-xl">
                                     <ExpenseCategoryPie transactions={transactions} />
                                 </div>
                             </CardContent>
@@ -367,7 +367,7 @@ export function DashboardContent({
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <div className="h-64 lg:h-80 rounded-xl overflow-hidden">
+                                <div className="min-h-64 lg:min-h-80 rounded-xl">
                                     <CashFlowArea transactions={transactions} />
                                 </div>
                             </CardContent>

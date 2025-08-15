@@ -134,21 +134,16 @@
   border-color: rgb(209, 213, 219) !important;
 }
 
-/* Light theme - Quick action buttons - DESKTOP only, exclude mobile responsive classes */
-[data-theme="light"] .lg\:flex:not(.hidden) button:not([class*="recharts"]) {
+/* Light theme - Quick action buttons - ONLY target actual buttons, NOT containers */
+[data-theme="light"] button[class*="bg-slate-800"]:not([class*="recharts"]) {
   background-color: rgba(255, 255, 255, 0.95) !important;
   border-color: rgba(209, 213, 219, 0.7) !important;
-  color: rgb(59, 130, 246) !important;
+  color: #1E88E5 !important;
 }
 
-[data-theme="light"] .lg\:flex:not(.hidden) button:hover:not([class*="recharts"]) {
-  background-color: rgba(59, 130, 246, 0.05) !important;
-  border-color: rgb(59, 130, 246) !important;
-}
-
-/* Prevent containers from getting background overrides */
-[data-theme="light"] .lg\:flex {
-  background-color: transparent !important;
+[data-theme="light"] button[class*="bg-slate-800"]:hover:not([class*="recharts"]) {
+  background-color: rgba(30, 136, 229, 0.05) !important;
+  border-color: #1E88E5 !important;
 }
 
 /* Light theme - Aggressive but chart-safe overrides for actual Tailwind classes */
@@ -161,19 +156,9 @@
   border-color: rgba(209, 213, 219, 0.5) !important;
 }
 
-/* Target cards ONLY by very specific combinations - avoid any chart containers */
-[data-theme="light"] [role="dialog"],
-[data-theme="light"] .bg-slate-900.rounded-2xl.shadow-sm:not([class*="h-64"]):not([class*="h-80"]),
-[data-theme="light"] .bg-slate-900.p-6:not([class*="h-64"]):not([class*="h-80"]),
-[data-theme="light"] .bg-slate-800.rounded-xl:not([class*="h-64"]):not([class*="h-80"]):not([class*="overflow-hidden"]) {
-  background-color: rgba(255, 255, 255, 0.9) !important;
-  border-color: rgba(209, 213, 219, 0.5) !important;
-}
-
-/* Target only UI cards with specific patterns that charts never have */
-[data-theme="light"] .bg-slate-900.backdrop-blur-sm,
-[data-theme="light"] .bg-slate-900.transition-all {
-  background-color: rgba(255, 255, 255, 0.9) !important;
+/* Target ONLY specific card elements with card-bg class - avoid chart containers completely */
+[data-theme="light"] [role="dialog"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
   border-color: rgba(209, 213, 219, 0.5) !important;
 }
 
@@ -189,25 +174,50 @@
   background-color: rgb(249, 250, 251) !important;
 }
 
-/* Light theme - Strategic blue accents */
+/* Light theme - PROMINENT blue accents throughout */
 [data-theme="light"] .card-title {
-  color: rgb(59, 130, 246) !important; /* Blue accent for card titles */
+  color: #1E88E5 !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 2px rgba(30, 136, 229, 0.1) !important;
 }
 
 [data-theme="light"] h2,
 [data-theme="light"] h1 {
-  color: rgb(30, 64, 175) !important; /* Darker blue for main headings */
+  color: #1565C0 !important;
+  font-weight: 700 !important;
 }
 
-/* Light theme - Navigation active states with blue */
-[data-theme="light"] .sidebar-nav-active {
-  background-color: rgb(59, 130, 246) !important;
+[data-theme="light"] h3,
+[data-theme="light"] h4 {
+  color: #1E88E5 !important;
+  font-weight: 600 !important;
+}
+
+/* Light theme - Navigation active states - TARGET EXACT CLASSES */
+[data-theme="light"] .bg-blue-600.sidebar-nav-active {
+  background-color: #1E88E5 !important;
+  border: 2px solid #1E88E5 !important;
+  box-shadow: 0 4px 12px rgba(30, 136, 229, 0.4) !important;
+  transform: translateX(4px) !important;
+}
+
+[data-theme="light"] .bg-blue-600.sidebar-nav-active .text-white,
+[data-theme="light"] .bg-blue-600.sidebar-nav-active span,
+[data-theme="light"] .sidebar-nav-active.text-white {
   color: white !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .sidebar-nav-item {
+  color: rgb(71, 85, 105) !important;
+  transition: all 0.2s ease-in-out !important;
 }
 
 [data-theme="light"] .sidebar-nav-item:hover {
-  background-color: rgba(59, 130, 246, 0.1) !important;
-  color: rgb(59, 130, 246) !important;
+  background-color: rgba(30, 136, 229, 0.1) !important; /* Blue tinted hover */
+  color: #1E88E5 !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
 }
 
 /* Light theme - Aggressive text color overrides for actual Tailwind classes */
@@ -280,14 +290,14 @@
   border-color: rgba(209, 213, 219, 0.6) !important;
 }
 
-/* Light theme - Logo override (change to blue) - More aggressive approach */
+/* Light theme - Logo override (exact accent blue match) */
 [data-theme="light"] img[alt="Summit Automation"] {
-  filter: invert(1) hue-rotate(190deg) saturate(2) brightness(0.7) !important;
+  filter: brightness(0) saturate(100%) invert(27%) sepia(93%) saturate(1352%) hue-rotate(195deg) brightness(98%) contrast(97%) !important;
 }
 
 /* Light theme - Tab overrides */
 [data-theme="light"] *[data-state="active"] {
-  background-color: rgb(59, 130, 246) !important;
+  background-color: #1E88E5 !important;
   color: white !important;
 }
 
@@ -299,8 +309,8 @@
 }
 
 [data-theme="light"] input[class*="bg-slate-800"]:focus {
-  border-color: rgb(59, 130, 246) !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  border-color: #1E88E5 !important;
+  box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1) !important;
 }
 
 /* Light theme - Select overrides */
@@ -317,11 +327,11 @@
 }
 
 [data-theme="light"] thead {
-  background-color: rgba(59, 130, 246, 0.05) !important; /* Light blue header */
+  background-color: rgba(30, 136, 229, 0.05) !important; /* Light blue header */
 }
 
 [data-theme="light"] th {
-  color: rgb(30, 64, 175) !important; /* Blue table headers */
+  color: #1565C0 !important; /* Blue table headers */
   border-color: rgb(229, 231, 235) !important;
   font-weight: 600 !important;
 }
@@ -332,7 +342,7 @@
 }
 
 [data-theme="light"] tr:hover {
-  background-color: rgba(59, 130, 246, 0.03) !important; /* Subtle blue hover */
+  background-color: rgba(30, 136, 229, 0.03) !important; /* Subtle blue hover */
 }
 
 /* Light theme - Dropdown content and table cell text - force dark for readability */
@@ -345,13 +355,13 @@
 
 /* Light theme - Table action buttons */
 [data-theme="light"] td button {
-  color: rgb(59, 130, 246) !important;
-  border-color: rgba(59, 130, 246, 0.3) !important;
+  color: #1E88E5 !important;
+  border-color: rgba(30, 136, 229, 0.3) !important;
 }
 
 [data-theme="light"] td button:hover {
-  background-color: rgba(59, 130, 246, 0.1) !important;
-  color: rgb(30, 64, 175) !important;
+  background-color: rgba(30, 136, 229, 0.1) !important;
+  color: #1565C0 !important;
 }
 
 /* Light theme - Modal and Dialog overrides */
@@ -371,44 +381,44 @@
 
 /* Icons and accent elements */
 [data-theme="light"] .card-icon-bg {
-  background-color: rgba(59, 130, 246, 0.15) !important; /* More prominent blue */
+  background-color: rgba(30, 136, 229, 0.15) !important; /* More prominent blue */
 }
 
 [data-theme="light"] .card-icon-bg svg,
 [data-theme="light"] .card-icon-bg .lucide {
-  color: rgb(59, 130, 246) !important;
+  color: #1E88E5 !important;
 }
 
 /* Follow-up alerts - make them much more visible */
 [data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] {
-  background: linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.15)) !important;
-  border-color: rgb(59, 130, 246) !important;
+  background: linear-gradient(to right, rgba(30, 136, 229, 0.1), rgba(30, 136, 229, 0.15)) !important;
+  border-color: #1E88E5 !important;
   border-width: 1px !important;
 }
 
 [data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] *[class*="text-amber"] {
-  color: rgb(59, 130, 246) !important; /* Blue text instead of amber */
+  color: #1E88E5 !important; /* Blue text instead of amber */
 }
 
 [data-theme="light"] *[class*="bg-amber-500"] {
-  background-color: rgba(59, 130, 246, 0.2) !important; /* Blue background for amber badges */
-  color: rgb(30, 64, 175) !important; /* Dark blue text */
+  background-color: rgba(30, 136, 229, 0.2) !important; /* Blue background for amber badges */
+  color: #1565C0 !important; /* Dark blue text */
 }
 
 /* Tab styling with blue accents */
 [data-theme="light"] [data-state="active"] {
-  background-color: rgb(59, 130, 246) !important;
+  background-color: #1E88E5 !important;
   color: white !important;
 }
 
 /* More blue accents for interactive elements */
 [data-theme="light"] *[class*="text-blue-400"] {
-  color: rgb(59, 130, 246) !important;
+  color: #1E88E5 !important;
 }
 
 /* Dashboard section headers */
 [data-theme="light"] h2[class*="text-slate-50"] {
-  color: rgb(30, 64, 175) !important; /* Dark blue for section headers */
+  color: #1565C0 !important; /* Dark blue for section headers */
 }
 
 [data-theme="light"] p[class*="text-slate-400"] {
@@ -419,14 +429,14 @@
 [data-theme="light"] input:focus,
 [data-theme="light"] select:focus,
 [data-theme="light"] textarea:focus {
-  border-color: rgb(59, 130, 246) !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  border-color: #1E88E5 !important;
+  box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1) !important;
 }
 
 /* Badge and status indicators */
 [data-theme="light"] .badge,
 [data-theme="light"] [class*="bg-blue-500"] {
-  background-color: rgb(59, 130, 246) !important;
+  background-color: #1E88E5 !important;
   color: white !important;
 }
 
@@ -443,29 +453,29 @@
 /* Links and interactive text */
 [data-theme="light"] a,
 [data-theme="light"] [class*="text-blue-"] {
-  color: rgb(59, 130, 246) !important;
+  color: #1E88E5 !important;
 }
 
 [data-theme="light"] a:hover {
-  color: rgb(30, 64, 175) !important;
+  color: #1565C0 !important;
 }
 
 /* Keep blue buttons blue with better contrast */
 [data-theme="light"] button[class*="bg-blue-"] {
-  background-color: rgb(59, 130, 246) !important;
+  background-color: #1E88E5 !important;
   color: white !important;
 }
 
 [data-theme="light"] button[class*="bg-blue-"]:hover {
-  background-color: rgb(30, 64, 175) !important;
+  background-color: #1565C0 !important;
 }
 
 [data-theme="light"] button[class*="bg-gradient-to-r"] {
-  background: linear-gradient(to right, rgb(59, 130, 246), rgb(147, 51, 234)) !important;
+  background: linear-gradient(to right, #1E88E5, rgb(147, 51, 234)) !important;
 }
 
 [data-theme="light"] button[class*="bg-gradient-to-r"]:hover {
-  background: linear-gradient(to right, rgb(30, 64, 175), rgb(126, 34, 206)) !important;
+  background: linear-gradient(to right, #1565C0, rgb(126, 34, 206)) !important;
 }
 
 /* Light theme - Mobile responsive fixes */
@@ -479,42 +489,257 @@
     color: rgb(17, 24, 39) !important;
   }
   
-  /* Mobile quick action buttons - VERY specific targeting to prevent blue containers */
-  [data-theme="light"] .lg\:hidden button:not([class*="recharts"]),
-  [data-theme="light"] .sm\:hidden button:not([class*="recharts"]),
-  [data-theme="light"] .md\:hidden button:not([class*="recharts"]),
-  [data-theme="light"] .hidden button:not([class*="recharts"]),
-  [data-theme="light"] .lg\:flex.hidden button:not([class*="recharts"]) {
+  /* Mobile quick action buttons - ONLY style actual buttons, NOT containers */
+  [data-theme="light"] button[class*="bg-slate-"]:not([class*="recharts"]) {
     background-color: rgba(255, 255, 255, 0.95) !important;
-    border: 1px solid rgba(59, 130, 246, 0.3) !important;
-    color: rgb(59, 130, 246) !important;
+    border: 1px solid rgba(30, 136, 229, 0.3) !important;
+    color: #1E88E5 !important;
   }
   
-  [data-theme="light"] .lg\:hidden button:hover:not([class*="recharts"]),
-  [data-theme="light"] .sm\:hidden button:hover:not([class*="recharts"]),
-  [data-theme="light"] .md\:hidden button:hover:not([class*="recharts"]),
-  [data-theme="light"] .hidden button:hover:not([class*="recharts"]),
-  [data-theme="light"] .lg\:flex.hidden button:hover:not([class*="recharts"]) {
-    background-color: rgba(59, 130, 246, 0.05) !important;
-    border-color: rgb(59, 130, 246) !important;
+  [data-theme="light"] button[class*="bg-slate-"]:hover:not([class*="recharts"]) {
+    background-color: rgba(30, 136, 229, 0.05) !important;
+    border-color: #1E88E5 !important;
   }
 
-  /* Mobile - prevent ANY background overrides on divs containing buttons */
-  [data-theme="light"] .lg\:hidden,
-  [data-theme="light"] .sm\:hidden,
-  [data-theme="light"] .md\:hidden {
-    background-color: transparent !important;
-  }
-
-  /* Mobile - specific container exclusions */
-  [data-theme="light"] div[class*="lg:flex"]:not([class*="bg-"]) {
+  /* Mobile - ensure containers stay transparent */
+  [data-theme="light"] div[class*="flex"] {
     background-color: transparent !important;
   }
 }
 
+/* Light theme - HIGHLY SPECIFIC overrides for hardcoded Tailwind classes */
+
+/* Chart and Card containers - target exact Tailwind class combinations */
+[data-theme="light"] .bg-slate-900 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+[data-theme="light"] .border-slate-800 {
+  border-color: rgba(209, 213, 219, 0.6) !important;
+}
+
+/* Light theme layering with cleaner backgrounds and blue accents */
+[data-theme="light"] [class*="bg-slate-900"] {
+  background-color: rgb(249, 250, 251) !important; /* Very light cards */
+  border-color: rgba(30, 136, 229, 0.15) !important; /* Subtle blue borders */
+}
+
+[data-theme="light"] [class*="border-slate-800"] {
+  border-color: rgb(226, 232, 240) !important;
+}
+
+/* Specific targeting for commonly used opacity classes with cleaner backgrounds */
+[data-theme="light"] .bg-slate-900,
+[data-theme="light"] .bg-slate-900\/90 {
+  background-color: rgb(249, 250, 251) !important; /* Very light card background */
+}
+
+[data-theme="light"] .bg-slate-900\/60 {
+  background-color: rgba(30, 136, 229, 0.03) !important; /* Very subtle blue tint for tab lists */
+}
+
+[data-theme="light"] .border-slate-800,
+[data-theme="light"] .border-slate-800\/50,
+[data-theme="light"] .border-slate-800\/40 {
+  border-color: rgb(226, 232, 240) !important;
+}
+
+/* Text color overrides for cards */
+[data-theme="light"] .text-slate-50 {
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] .text-slate-400 {
+  color: rgb(107, 114, 128) !important;
+}
+
+[data-theme="light"] .text-slate-300 {
+  color: rgb(107, 114, 128) !important;
+}
+
+[data-theme="light"] .text-slate-500 {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* Icon background overrides with strong blue presence */
+[data-theme="light"] [class*="bg-blue-500"] {
+  background-color: rgba(30, 136, 229, 0.2) !important;
+  border: 1px solid rgba(30, 136, 229, 0.3) !important;
+}
+
+[data-theme="light"] [class*="bg-emerald-500"] {
+  background-color: rgba(34, 197, 94, 0.15) !important;
+}
+
+[data-theme="light"] [class*="bg-purple-500"] {
+  background-color: rgba(147, 51, 234, 0.15) !important;
+}
+
+[data-theme="light"] [class*="bg-slate-800"] {
+  background-color: rgba(30, 136, 229, 0.1) !important; /* Light blue tint for icon backgrounds */
+  border: 1px solid rgba(30, 136, 229, 0.2) !important;
+}
+
+/* Add more blue throughout the interface */
+[data-theme="light"] .text-blue-400,
+[data-theme="light"] .text-blue-500 {
+  color: #1E88E5 !important;
+  font-weight: 600 !important;
+}
+
+/* Button improvements with more blue */
+[data-theme="light"] button:not([class*="bg-slate-"]) {
+  border-color: rgba(30, 136, 229, 0.3) !important;
+}
+
+[data-theme="light"] button:not([class*="bg-slate-"]):hover {
+  background-color: rgba(30, 136, 229, 0.1) !important;
+  border-color: #1E88E5 !important;
+  color: #1E88E5 !important;
+}
+
+/* Links and interactive elements */
+[data-theme="light"] a {
+  color: #1E88E5 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] a:hover {
+  color: #1565C0 !important;
+  text-decoration: underline !important;
+}
+
+/* Sidebar improvements */
+[data-theme="light"] .sidebar-bg {
+  background-color: rgb(248, 250, 252) !important; /* Light grey sidebar background */
+  border-color: rgb(226, 232, 240) !important;
+}
+
+/* Settings page improvements */
+[data-theme="light"] .bg-slate-900\/90.backdrop-blur-sm {
+  background-color: rgb(248, 250, 252) !important;
+  border-color: rgb(226, 232, 240) !important;
+}
+
+/* TabsList specific overrides */
+[data-theme="light"] [class*="bg-slate-900"].rounded-2xl {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(209, 213, 219, 0.5) !important;
+}
+
+/* Table container overrides */
+[data-theme="light"] [class*="bg-slate-"] table {
+  background-color: rgb(255, 255, 255) !important;
+}
+
+[data-theme="light"] [class*="bg-slate-"] tbody {
+  background-color: rgb(255, 255, 255) !important;
+}
+
+[data-theme="light"] [class*="bg-slate-"] tr {
+  background-color: rgb(255, 255, 255) !important;
+  border-color: rgba(229, 231, 235, 0.6) !important;
+}
+
+[data-theme="light"] [class*="bg-slate-"] td {
+  background-color: rgb(255, 255, 255) !important;
+  color: rgb(17, 24, 39) !important;
+  border-color: rgba(229, 231, 235, 0.6) !important;
+}
+
+/* Tab triggers - TARGET EXACT ACTIVE STATE CLASSES */
+[data-theme="light"] [data-state="active"].bg-slate-800,
+[data-theme="light"] .bg-slate-800[data-state="active"] {
+  background-color: #1E88E5 !important;
+  border: 2px solid #1E88E5 !important;
+  box-shadow: 0 3px 8px rgba(30, 136, 229, 0.3) !important;
+}
+
+[data-theme="light"] [data-state="active"].text-white,
+[data-theme="light"] [data-state="active"] .text-white,
+[data-theme="light"] [data-state="active"] span {
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+/* Tab list background with blue accents */
+[data-theme="light"] [class*="bg-slate-900"].rounded-2xl {
+  background-color: rgba(30, 136, 229, 0.05) !important; /* Very subtle blue tint */
+  border: 2px solid rgba(30, 136, 229, 0.2) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* Non-active tab states with blue accents */
+[data-theme="light"] [class*="text-slate-400"] {
+  color: rgb(100, 116, 139) !important;
+}
+
+[data-theme="light"] [class*="hover:text-slate-300"]:hover {
+  color: #1E88E5 !important;
+  background-color: rgba(30, 136, 229, 0.1) !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+}
+
+/* Mobile button container fixes - prevent containers from getting blue backgrounds */
+[data-theme="light"] div[class*="flex"] {
+  background-color: transparent !important;
+}
+
+[data-theme="light"] div[class*="grid"] {
+  background-color: transparent !important;
+}
+
+/* Only style actual buttons, not containers */
+[data-theme="light"] button[class*="bg-slate-"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(30, 136, 229, 0.4) !important;
+  color: #1E88E5 !important;
+}
+
+[data-theme="light"] button[class*="bg-slate-"]:hover {
+  background-color: rgba(30, 136, 229, 0.05) !important;
+  border-color: #1E88E5 !important;
+}
+
+/* Clean dashboard card styling with blue accents */
+[data-theme="light"] .card-bg {
+  background-color: rgb(249, 250, 251) !important; /* Very light cards */
+  border-color: rgba(30, 136, 229, 0.2) !important; /* Subtle blue borders */
+  box-shadow: 0 1px 3px 0 rgba(30, 136, 229, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .card-bg:hover {
+  background-color: rgba(30, 136, 229, 0.02) !important; /* Very subtle blue tint on hover */
+  border-color: #1E88E5 !important;
+  box-shadow: 0 4px 12px -2px rgba(30, 136, 229, 0.15), 0 2px 6px -1px rgba(30, 136, 229, 0.1) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Hover states for all cards with light grey layering */
+[data-theme="light"] [class*="bg-slate-"]:hover {
+  background-color: rgb(241, 245, 249) !important; /* Slightly darker grey on hover */
+  border-color: rgba(30, 136, 229, 0.4) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+/* Ensure charts don't get styled */
+[data-theme="light"] [class*="recharts"],
+[data-theme="light"] .recharts-wrapper,
+[data-theme="light"] .recharts-responsive-container {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+/* Ensure chart containers inside cards remain transparent */
+[data-theme="light"] [class*="h-64"],
+[data-theme="light"] [class*="h-80"] {
+  background-color: transparent !important;
+}
+
 /* Light theme - Additional blue accents for better visual hierarchy */
 [data-theme="light"] .card-title {
-  color: rgb(30, 64, 175) !important; /* Darker blue for card titles */
+  color: #1565C0 !important; /* Darker blue for card titles */
   font-weight: 600 !important;
 }
 
@@ -537,8 +762,8 @@
 }
 
 [data-theme="light"] .sidebar-nav-item:hover {
-  background-color: rgba(59, 130, 246, 0.08) !important;
-  color: rgb(59, 130, 246) !important;
+  background-color: rgba(30, 136, 229, 0.08) !important;
+  color: #1E88E5 !important;
 }
 
 /* Light theme - Comprehensive component fixes */
@@ -583,13 +808,146 @@
   color: rgb(17, 24, 39) !important;
 }
 
-/* Exception: keep special colors for metrics and states */
-[data-theme="light"] *[class*="text-emerald"]:not([class*="recharts"]),
-[data-theme="light"] *[class*="text-green"]:not([class*="recharts"]),
-[data-theme="light"] *[class*="text-red"]:not([class*="recharts"]),
-[data-theme="light"] *[class*="text-amber"]:not([class*="recharts"]),
-[data-theme="light"] *[class*="text-blue"]:not([class*="recharts"]) {
-  /* Keep their original colors */
+/* Note: Special colors for metrics and states keep their original colors in light theme */
+
+/* Final light mode improvements - Perfect text contrast and spacing */
+[data-theme="light"] .text-slate-300 {
+  color: rgb(71, 85, 105) !important;
+}
+
+[data-theme="light"] .text-slate-500 {
+  color: rgb(71, 85, 105) !important;
+}
+
+/* Fix mobile quick action buttons - TARGET EXACT BUTTON CLASSES */
+[data-theme="light"] button.text-slate-300,
+[data-theme="light"] .bg-slate-900.text-slate-300,
+[data-theme="light"] button .text-slate-300 {
+  color: #1E88E5 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] button.text-slate-300:hover,
+[data-theme="light"] .bg-slate-900.text-slate-300:hover {
+  color: #1565C0 !important;
+}
+
+/* Additional targeting for sidebar active states - belt and suspenders approach */
+[data-theme="light"] aside .bg-blue-600 {
+  background-color: #1E88E5 !important;
+}
+
+[data-theme="light"] aside .text-white {
+  color: white !important;
+}
+
+[data-theme="light"] nav .bg-blue-600 {
+  background-color: #1E88E5 !important;
+}
+
+[data-theme="light"] nav .text-white {
+  color: white !important;
+}
+
+/* Additional targeting for mobile tabs */
+[data-theme="light"] [role="tablist"] [data-state="active"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+  border: 2px solid #1E88E5 !important;
+}
+
+/* Target all button text colors in light mode */
+[data-theme="light"] button span.text-slate-300,
+[data-theme="light"] button > .text-slate-300 {
+  color: #1E88E5 !important;
+}
+
+/* Hamburger button text fix */
+[data-theme="light"] .hamburger-btn .text-slate-300 {
+  color: #1E88E5 !important;
+}
+
+[data-theme="light"] .hamburger-btn:hover .text-slate-300 {
+  color: #1565C0 !important;
+}
+
+/* Enhanced readability and spacing */
+[data-theme="light"] p {
+  line-height: 1.6 !important;
+  color: rgb(55, 65, 81) !important;
+}
+
+[data-theme="light"] .text-slate-400 {
+  color: rgb(107, 114, 128) !important;
+  font-weight: 500 !important;
+}
+
+/* Clean focus states */
+[data-theme="light"] *:focus-visible {
+  outline: 2px solid #1E88E5 !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.1) !important;
+}
+
+/* Improved table styling for light mode */
+[data-theme="light"] table {
+  background-color: rgb(252, 253, 254) !important; /* Almost white tables */
+}
+
+[data-theme="light"] thead {
+  background-color: rgba(30, 136, 229, 0.08) !important; /* Light blue header */
+  border-bottom: 2px solid rgba(30, 136, 229, 0.2) !important;
+}
+
+[data-theme="light"] th {
+  color: #1565C0 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] tr:hover {
+  background-color: rgba(30, 136, 229, 0.04) !important;
+}
+
+/* Body and main container improvements - Much cleaner and easier on eyes */
+[data-theme="light"] body {
+  background-color: rgb(252, 253, 254) !important; /* Almost white body for clean look */
+}
+
+/* REDESIGNED Light mode layering hierarchy - Cleaner and more blue accents */
+/* Level 1: Body background - rgb(252, 253, 254) - almost white */
+/* Level 2: Card backgrounds - rgb(249, 250, 251) - very light cards */
+/* Level 3: Interactive elements - rgb(241, 245, 249) - subtle interactions */
+/* Level 4: Active elements - #1E88E5 - strong blue presence */
+/* Level 5: Hover accents - rgba(30, 136, 229, 0.1) - blue tinted backgrounds */
+
+/* Ensure consistent layering for all slate backgrounds - Cleaner greys */
+[data-theme="light"] [class*="bg-slate-950"],
+[data-theme="light"] [class*="bg-slate-900"],
+[data-theme="light"] [class*="bg-slate-800"] {
+  background-color: rgb(249, 250, 251) !important; /* Very light cards */
+}
+
+/* Lighter elements for secondary containers with blue tints */
+[data-theme="light"] [class*="bg-slate-800\/40"],
+[data-theme="light"] [class*="bg-slate-800\/30"] {
+  background-color: rgba(30, 136, 229, 0.03) !important; /* Very subtle blue tint */
+}
+
+/* More prominent blue accents for headings and titles */
+[data-theme="light"] .text-slate-50,
+[data-theme="light"] .text-white {
+  color: #1565C0 !important; /* Strong blue for main text */
+}
+
+[data-theme="light"] .text-slate-100 {
+  color: #1E88E5 !important; /* Medium blue for secondary text */
+}
+
+/* Sidebar improvements with blue accents */
+[data-theme="light"] .sidebar-bg {
+  background-color: rgba(30, 136, 229, 0.02) !important; /* Very subtle blue tint */
+  border-color: rgba(30, 136, 229, 0.2) !important;
+  box-shadow: 2px 0 8px rgba(30, 136, 229, 0.08) !important;
 }
 
 /* Base Styles */
@@ -709,4 +1067,1307 @@ body {
 [data-radix-select-item][data-state="checked"] {
   background-color: rgb(var(--color-primary)) !important;
   color: white !important;
+}
+
+/* Light theme - Select dropdown overrides - More specific selectors */
+[data-theme="light"] [data-slot="select-content"].bg-slate-900 {
+  background-color: rgb(255, 255, 255) !important;
+  border-color: rgb(209, 213, 219) !important;
+  color: rgb(17, 24, 39) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] [data-slot="select-item"].text-slate-200 {
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] [data-slot="select-item"].text-slate-200:hover,
+[data-theme="light"] [data-slot="select-item"][data-highlighted] {
+  background-color: rgb(243, 244, 246) !important;
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] [data-slot="select-item"][data-state="checked"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+}
+
+/* Dark theme - Ensure select dropdowns have proper opacity in dark mode */
+[data-slot="select-content"].bg-slate-900 {
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+/* Additional specificity for Radix Select components */
+[data-theme="light"] .bg-slate-900[data-slot="select-content"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(209, 213, 219, 0.8) !important;
+  color: rgb(17, 24, 39) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+/* Dark mode - Fix select component text visibility in tables */
+[data-slot="select-trigger"].bg-transparent {
+  color: rgb(148, 163, 184) !important;
+}
+
+[data-slot="select-trigger"].bg-transparent .text-slate-100 {
+  color: rgb(148, 163, 184) !important;
+}
+
+/* Dark mode - Ensure select triggers are visible */
+.bg-slate-800[data-slot="select-trigger"] {
+  background-color: rgba(30, 41, 59, 0.8) !important;
+  border-color: rgba(100, 116, 139, 0.5) !important;
+  color: rgb(226, 232, 240) !important;
+}
+
+.bg-slate-800[data-slot="select-trigger"]:hover {
+  background-color: rgba(30, 41, 59, 0.9) !important;
+  border-color: rgba(100, 116, 139, 0.7) !important;
+}
+
+[data-theme="light"] .text-slate-200[data-slot="select-item"] {
+  color: rgb(17, 24, 39) !important;
+  background-color: transparent !important;
+}
+
+[data-theme="light"] .text-slate-200[data-slot="select-item"]:hover {
+  background-color: rgb(243, 244, 246) !important;
+  color: rgb(17, 24, 39) !important;
+}
+
+/* FINAL FIXES - Mobile Light Mode Issues */
+
+/* 1. Quick action buttons - Fix white text issue with highest specificity */
+[data-theme="light"] button[class*="text-slate-300"] {
+  color: #1E88E5 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] button[class*="text-slate-300"]:hover {
+  color: #1565C0 !important;
+}
+
+[data-theme="light"] button span[class*="text-slate-300"],
+[data-theme="light"] button .text-slate-300 {
+  color: #1E88E5 !important;
+}
+
+[data-theme="light"] .bg-slate-900.text-slate-300 button,
+[data-theme="light"] .bg-slate-900 button.text-slate-300 {
+  color: #1E88E5 !important;
+}
+
+/* 2. Mobile tab active states - Fix white highlighting issue */
+[data-theme="light"] *[data-state="active"][class*="bg-slate-800"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+  border: 2px solid #1E88E5 !important;
+  box-shadow: 0 3px 8px rgba(30, 136, 229, 0.3) !important;
+}
+
+[data-theme="light"] *[data-state="active"][class*="text-white"] {
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] *[data-state="active"] span,
+[data-theme="light"] *[data-state="active"] * {
+  color: white !important;
+}
+
+/* 3. Mobile table text - Fix white text in tables */
+[data-theme="light"] table td,
+[data-theme="light"] table th,
+[data-theme="light"] table td *,
+[data-theme="light"] table th *,
+[data-theme="light"] table span,
+[data-theme="light"] table p,
+[data-theme="light"] table div:not([class*="recharts"]) {
+  color: rgb(17, 24, 39) !important;
+  background-color: transparent !important;
+}
+
+[data-theme="light"] tbody td {
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] thead th {
+  color: #1565C0 !important;
+  font-weight: 700 !important;
+}
+
+/* 4. Additional mobile fixes - Ensure all text is readable */
+@media (max-width: 768px) {
+  [data-theme="light"] button[class*="bg-slate-"],
+  [data-theme="light"] .bg-slate-900 button,
+  [data-theme="light"] .bg-slate-800 button {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-color: rgba(30, 136, 229, 0.4) !important;
+    color: #1E88E5 !important;
+  }
+  
+  [data-theme="light"] button[class*="bg-slate-"]:hover,
+  [data-theme="light"] .bg-slate-900 button:hover,
+  [data-theme="light"] .bg-slate-800 button:hover {
+    background-color: rgba(30, 136, 229, 0.05) !important;
+    border-color: #1E88E5 !important;
+    color: #1565C0 !important;
+  }
+
+  /* Mobile-specific tab fixes */
+  [data-theme="light"] [role="tablist"] [data-state="active"] {
+    background-color: #1E88E5 !important;
+    color: white !important;
+    border: 2px solid #1E88E5 !important;
+    box-shadow: 0 3px 8px rgba(30, 136, 229, 0.3) !important;
+  }
+  
+  [data-theme="light"] [role="tablist"] [data-state="active"] span,
+  [data-theme="light"] [role="tablist"] [data-state="active"] svg {
+    color: white !important;
+  }
+
+  /* Mobile table improvements */
+  [data-theme="light"] table,
+  [data-theme="light"] tbody,
+  [data-theme="light"] tr,
+  [data-theme="light"] td,
+  [data-theme="light"] th {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(17, 24, 39) !important;
+  }
+}
+
+/* 5. Belt and suspenders - Override any remaining white text issues */
+[data-theme="light"] *[class*="text-white"]:not([data-state="active"]):not(.sidebar-nav-active):not([class*="bg-blue"]) {
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] button *[class*="text-white"]:not([data-state="active"]) {
+  color: #1E88E5 !important;
+}
+
+/* 6. Specific component targeting for comprehensive coverage */
+[data-theme="light"] .bookkeeper-actions button {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(30, 136, 229, 0.4) !important;
+  color: #1E88E5 !important;
+}
+
+[data-theme="light"] .bookkeeper-actions button:hover {
+  background-color: rgba(30, 136, 229, 0.05) !important;
+  border-color: #1E88E5 !important;
+  color: #1565C0 !important;
+}
+
+[data-theme="light"] .bookkeeper-actions button span {
+  color: #1E88E5 !important;
+}
+
+/* COMPREHENSIVE FIX - All Button Variants Across All Pages */
+
+/* 1. Emerald buttons (CRM and Mileage pages) */
+[data-theme="light"] button[class*="bg-emerald-600"],
+[data-theme="light"] .bg-emerald-600,
+[data-theme="light"] button[class*="bg-emerald-"] {
+  background-color: #10B981 !important;
+  border-color: #059669 !important;
+  color: white !important;
+}
+
+[data-theme="light"] button[class*="bg-emerald-600"]:hover,
+[data-theme="light"] .bg-emerald-600:hover,
+[data-theme="light"] button[class*="bg-emerald-"]:hover {
+  background-color: #059669 !important;
+  border-color: #047857 !important;
+  color: white !important;
+}
+
+/* 2. Blue buttons (CRM, Inventory pages) - ensure they stay blue */
+[data-theme="light"] button[class*="bg-blue-600"],
+[data-theme="light"] .bg-blue-600,
+[data-theme="light"] button[class*="bg-blue-"] {
+  background-color: #1E88E5 !important;
+  border-color: #1565C0 !important;
+  color: white !important;
+}
+
+[data-theme="light"] button[class*="bg-blue-600"]:hover,
+[data-theme="light"] .bg-blue-600:hover,
+[data-theme="light"] button[class*="bg-blue-"]:hover {
+  background-color: #1565C0 !important;
+  border-color: #0D47A1 !important;
+  color: white !important;
+}
+
+/* 3. Slate buttons (Bookkeeper page) - ALREADY FIXED ABOVE */
+
+/* 4. CRM Actions specific targeting */
+[data-theme="light"] .crm-actions button {
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .crm-actions button[class*="bg-emerald"] {
+  background-color: #10B981 !important;
+  color: white !important;
+}
+
+[data-theme="light"] .crm-actions button[class*="bg-blue"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+}
+
+/* 5. MOBILE TAB ACTIVE STATES - More Specific Targeting */
+
+/* Mobile tab triggers - SUPER SPECIFIC TARGETING */
+[data-theme="light"] [role="tablist"] [class*="data-[state=active]:bg-slate-800"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+  border: 2px solid #1E88E5 !important;
+}
+
+[data-theme="light"] [data-state="active"][class*="bg-slate-800"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+  border: 2px solid #1E88E5 !important;
+  box-shadow: 0 3px 8px rgba(30, 136, 229, 0.3) !important;
+}
+
+[data-theme="light"] [data-state="active"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+}
+
+[data-theme="light"] [data-state="active"] span,
+[data-theme="light"] [data-state="active"] svg,
+[data-theme="light"] [data-state="active"] *:not([class*="recharts"]) {
+  color: white !important;
+}
+
+/* 6. Belt and suspenders - Target exact TabsTrigger classes from the components */
+[data-theme="light"] .grid.w-full.grid-cols-2 [data-state="active"],
+[data-theme="light"] .grid.w-full.grid-cols-3 [data-state="active"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+  border: 2px solid #1E88E5 !important;
+  box-shadow: 0 3px 8px rgba(30, 136, 229, 0.3) !important;
+}
+
+/* 7. Additional mobile responsiveness for all button types */
+@media (max-width: 768px) {
+  [data-theme="light"] button[class*="bg-emerald"] {
+    background-color: #10B981 !important;
+    color: white !important;
+  }
+  
+  [data-theme="light"] button[class*="bg-blue"] {
+    background-color: #1E88E5 !important;
+    color: white !important;
+  }
+  
+  /* Mobile tab active states - FINAL OVERRIDE */
+  [data-theme="light"] [role="tablist"] [data-state="active"] {
+    background-color: #1E88E5 !important;
+    color: white !important;
+    border: 2px solid #1E88E5 !important;
+    box-shadow: 0 3px 8px rgba(30, 136, 229, 0.3) !important;
+  }
+  
+  [data-theme="light"] [role="tablist"] [data-state="active"] span,
+  [data-theme="light"] [role="tablist"] [data-state="active"] svg {
+    color: white !important;
+  }
+}
+
+/* 8. Component-specific targeting for maximum coverage */
+[data-theme="light"] .space-y-4.crm-actions button[class*="bg-"],
+[data-theme="light"] .space-y-4 button[class*="bg-emerald"],
+[data-theme="light"] .space-y-4 button[class*="bg-blue"] {
+  font-weight: 600 !important;
+}
+
+/* 9. Page-specific class targeting */
+[data-theme="light"] button[class*="bg-emerald-600"][class*="border-emerald-600"] {
+  background-color: #10B981 !important;
+  border-color: #059669 !important;
+  color: white !important;
+}
+
+[data-theme="light"] button[class*="bg-blue-600"][class*="border-blue-600"] {
+  background-color: #1E88E5 !important;
+  border-color: #1565C0 !important;
+  color: white !important;
+}
+
+/* FINAL COMPREHENSIVE MOBILE BUTTON FIX - TARGET NESTED ELEMENTS */
+
+/* 1. Bookkeeper buttons - target nested spans specifically */
+[data-theme="light"] .bookkeeper-actions button span.truncate {
+  color: #1E88E5 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .bookkeeper-actions button[class*="text-slate-300"] span {
+  color: #1E88E5 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .grid.grid-cols-1 button[class*="text-slate-300"] span {
+  color: #1E88E5 !important;
+}
+
+[data-theme="light"] .grid.grid-cols-1 button[class*="text-slate-300"] {
+  color: #1E88E5 !important;
+}
+
+/* 2. Mileage actions - super specific targeting */
+[data-theme="light"] .space-y-4 .flex.flex-col button[class*="bg-emerald"] {
+  background-color: #10B981 !important;
+  color: white !important;
+  border-color: #059669 !important;
+}
+
+[data-theme="light"] .space-y-4 .flex.flex-col button[class*="text-white"] {
+  color: white !important;
+}
+
+[data-theme="light"] .w-full button[class*="bg-emerald"] {
+  background-color: #10B981 !important;
+  color: white !important;
+}
+
+/* 3. Inventory actions - target card content structure */
+[data-theme="light"] .space-y-4 .flex.flex-wrap button[class*="bg-blue"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+  border-color: #1565C0 !important;
+}
+
+[data-theme="light"] .space-y-4 .flex.flex-wrap button[class*="text-white"] {
+  color: white !important;
+}
+
+/* 4. Mobile-specific overrides for all failing button patterns */
+@media (max-width: 768px) {
+  /* Bookkeeper mobile fixes */
+  [data-theme="light"] .grid.grid-cols-1 button[class*="bg-slate-900"] {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-color: rgba(30, 136, 229, 0.4) !important;
+    color: #1E88E5 !important;
+  }
+  
+  [data-theme="light"] .grid.grid-cols-1 button[class*="bg-slate-900"] span,
+  [data-theme="light"] .grid.grid-cols-1 button span.truncate {
+    color: #1E88E5 !important;
+    font-weight: 600 !important;
+  }
+  
+  /* Mileage mobile fixes */
+  [data-theme="light"] .flex.flex-col button[class*="bg-emerald"],
+  [data-theme="light"] .w-full button[class*="bg-emerald"] {
+    background-color: #10B981 !important;
+    color: white !important;
+    border-color: #059669 !important;
+  }
+  
+  /* Inventory mobile fixes */
+  [data-theme="light"] .flex.flex-wrap button[class*="bg-blue"] {
+    background-color: #1E88E5 !important;
+    color: white !important;
+    border-color: #1565C0 !important;
+  }
+}
+
+/* 5. Nuclear option - Target by exact button structure patterns */
+[data-theme="light"] button[class*="w-full"][class*="bg-slate-900"][class*="text-slate-300"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(30, 136, 229, 0.4) !important;
+  color: #1E88E5 !important;
+}
+
+[data-theme="light"] button[class*="w-full"][class*="bg-slate-900"][class*="text-slate-300"] span {
+  color: #1E88E5 !important;
+}
+
+[data-theme="light"] button[class*="bg-emerald-600"][class*="text-white"] {
+  background-color: #10B981 !important;
+  color: white !important;
+}
+
+[data-theme="light"] button[class*="bg-blue-600"][class*="text-white"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+}
+
+/* 6. Container-specific overrides */
+[data-theme="light"] div[class*="gap-3"] button[class*="text-slate-300"] {
+  color: #1E88E5 !important;
+}
+
+[data-theme="light"] div[class*="gap-3"] button[class*="text-slate-300"] span {
+  color: #1E88E5 !important;
+}
+
+[data-theme="light"] div[class*="space-y-4"] button[class*="bg-emerald"] {
+  background-color: #10B981 !important;
+  color: white !important;
+}
+
+[data-theme="light"] div[class*="space-y-4"] button[class*="bg-blue"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+}
+
+/* MOBILE CRM INTERACTION TEXT FIXES - Fix White Text in Light Mode */
+
+/* 1. Interaction date text - Fix "call•Jul 20, 2025 Outcome" white text issue */
+[data-theme="light"] .text-slate-400 {
+  color: rgb(75, 85, 99) !important; /* slate-600 for better readability */
+}
+
+[data-theme="light"] .text-slate-300 {
+  color: rgb(55, 65, 81) !important; /* slate-700 for better readability */
+}
+
+/* 2. Mobile interaction cards - Target nested text elements specifically */
+[data-theme="light"] .bg-slate-800 .text-slate-400,
+[data-theme="light"] .bg-slate-800 .text-slate-300 {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 3. Mobile table interaction text - Target mobile layout specifically */
+@media (max-width: 639px) {
+  [data-theme="light"] .text-slate-400,
+  [data-theme="light"] .text-slate-300 {
+    color: rgb(75, 85, 99) !important;
+  }
+}
+
+/* 4. Badge and interaction type text in mobile view */
+[data-theme="light"] .badge[class*="text-slate-300"],
+[data-theme="light"] .capitalize.text-slate-400 {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 5. Mobile table "Show More/Show Less" button text */
+[data-theme="light"] button[class*="text-slate-400"] {
+  color: rgb(75, 85, 99) !important;
+}
+
+[data-theme="light"] button[class*="text-slate-400"]:hover {
+  color: rgb(55, 65, 81) !important;
+}
+
+/* MOBILE CRM TABLE BADGE FIXES - Status and Follow-up Text Visibility */
+
+/* 6. Status badges - Fix light text colors (text-*-100) that appear white */
+[data-theme="light"] .badge[class*="text-sky-100"],
+[data-theme="light"] [class*="text-sky-100"] {
+  color: #0369a1 !important; /* sky-700 for better contrast */
+}
+
+[data-theme="light"] .badge[class*="text-yellow-100"],
+[data-theme="light"] [class*="text-yellow-100"] {
+  color: #a16207 !important; /* yellow-700 */
+}
+
+[data-theme="light"] .badge[class*="text-purple-100"],
+[data-theme="light"] [class*="text-purple-100"] {
+  color: #7c3aed !important; /* violet-600 */
+}
+
+[data-theme="light"] .badge[class*="text-orange-100"],
+[data-theme="light"] [class*="text-orange-100"] {
+  color: #c2410c !important; /* orange-700 */
+}
+
+[data-theme="light"] .badge[class*="text-indigo-100"],
+[data-theme="light"] [class*="text-indigo-100"] {
+  color: #4338ca !important; /* indigo-600 */
+}
+
+[data-theme="light"] .badge[class*="text-emerald-100"],
+[data-theme="light"] [class*="text-emerald-100"] {
+  color: #059669 !important; /* emerald-600 */
+}
+
+[data-theme="light"] .badge[class*="text-red-100"],
+[data-theme="light"] [class*="text-red-100"] {
+  color: #dc2626 !important; /* red-600 */
+}
+
+[data-theme="light"] .badge[class*="text-slate-100"],
+[data-theme="light"] [class*="text-slate-100"] {
+  color: rgb(51, 65, 85) !important; /* slate-700 */
+}
+
+/* 2. Follow-up badges - Improve red text visibility */
+[data-theme="light"] .badge[class*="text-red-400"],
+[data-theme="light"] [class*="text-red-400"] {
+  color: #dc2626 !important; /* red-600 for better contrast */
+}
+
+/* 3. Mobile-specific badges - Fix slate text */
+[data-theme="light"] .badge[class*="text-slate-300"],
+[data-theme="light"] [class*="text-slate-300"] {
+  color: rgb(51, 65, 85) !important; /* slate-700 */
+}
+
+/* 4. Mobile-only targeting for CRM table badges */
+@media (max-width: 768px) {
+  /* Status badges in mobile table */
+  [data-theme="light"] [class*="bg-sky-600"] {
+    background-color: rgba(2, 132, 199, 0.15) !important; /* sky-600 with opacity */
+    border: 1px solid #0369a1 !important;
+  }
+  
+  [data-theme="light"] [class*="bg-yellow-600"] {
+    background-color: rgba(202, 138, 4, 0.15) !important;
+    border: 1px solid #a16207 !important;
+  }
+  
+  [data-theme="light"] [class*="bg-purple-600"] {
+    background-color: rgba(124, 58, 237, 0.15) !important;
+    border: 1px solid #7c3aed !important;
+  }
+  
+  [data-theme="light"] [class*="bg-orange-600"] {
+    background-color: rgba(234, 88, 12, 0.15) !important;
+    border: 1px solid #c2410c !important;
+  }
+  
+  [data-theme="light"] [class*="bg-indigo-600"] {
+    background-color: rgba(67, 56, 202, 0.15) !important;
+    border: 1px solid #4338ca !important;
+  }
+  
+  [data-theme="light"] [class*="bg-emerald-600"] {
+    background-color: rgba(5, 150, 105, 0.15) !important;
+    border: 1px solid #059669 !important;
+  }
+  
+  [data-theme="light"] [class*="bg-red-600"] {
+    background-color: rgba(220, 38, 38, 0.15) !important;
+    border: 1px solid #dc2626 !important;
+  }
+  
+  [data-theme="light"] [class*="bg-slate-600"] {
+    background-color: rgba(71, 85, 105, 0.15) !important;
+    border: 1px solid rgb(51, 65, 85) !important;
+  }
+
+  /* Follow-up badges mobile fixes */
+  [data-theme="light"] [class*="bg-red-500/10"][class*="text-red-400"] {
+    background-color: rgba(220, 38, 38, 0.1) !important;
+    border-color: rgba(220, 38, 38, 0.3) !important;
+    color: #dc2626 !important;
+  }
+
+  /* Mobile interaction type badges */
+  [data-theme="light"] [class*="bg-slate-700"][class*="text-slate-300"] {
+    background-color: rgba(71, 85, 105, 0.15) !important;
+    border: 1px solid rgb(51, 65, 85) !important;
+    color: rgb(51, 65, 85) !important;
+  }
+}
+
+/* 5. Target Badge component specifically */
+[data-theme="light"] [data-slot="badge"] {
+  color: inherit !important;
+}
+
+[data-theme="light"] [data-slot="badge"][class*="text-"] {
+  color: inherit !important;
+}
+
+/* MOBILE ACTION BUTTON FIXES - Edit/Delete Buttons in Expanded Tables */
+
+/* 1. Ghost variant buttons - Fix invisible buttons in mobile expanded views */
+[data-theme="light"] button[variant="ghost"] {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(209, 213, 219, 0.6) !important;
+  color: rgb(75, 85, 99) !important;
+}
+
+[data-theme="light"] button[variant="ghost"]:hover {
+  background-color: rgba(243, 244, 246, 0.9) !important;
+  border-color: rgba(156, 163, 175, 0.8) !important;
+  color: rgb(55, 65, 81) !important;
+}
+
+/* 2. Icon-only action buttons - Fix edit/delete button visibility */
+[data-theme="light"] button[class*="h-7"][class*="w-7"][class*="p-0"] {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(209, 213, 219, 0.7) !important;
+  color: rgb(75, 85, 99) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] button[class*="h-7"][class*="w-7"][class*="p-0"]:hover {
+  background-color: rgba(243, 244, 246, 0.95) !important;
+  border-color: rgba(156, 163, 175, 0.8) !important;
+  color: rgb(55, 65, 81) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 3. Delete button specific styling - Red hover states */
+[data-theme="light"] button[class*="hover:text-red-400"] {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(209, 213, 219, 0.7) !important;
+  color: rgb(75, 85, 99) !important;
+}
+
+[data-theme="light"] button[class*="hover:text-red-400"]:hover {
+  background-color: rgba(254, 242, 242, 0.9) !important;
+  border-color: rgba(248, 113, 113, 0.5) !important;
+  color: #dc2626 !important;
+}
+
+/* 4. Icons inside buttons - Ensure visibility */
+[data-theme="light"] button svg,
+[data-theme="light"] button .lucide {
+  color: inherit !important;
+}
+
+[data-theme="light"] button[class*="text-slate-400"] svg,
+[data-theme="light"] button[class*="text-slate-400"] .lucide {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 5. Mobile-specific button fixes */
+@media (max-width: 768px) {
+  /* Enhanced mobile button visibility */
+  [data-theme="light"] button[variant="ghost"] {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border: 1.5px solid rgba(209, 213, 219, 0.8) !important;
+    color: rgb(55, 65, 81) !important;
+    min-height: 32px !important;
+    min-width: 32px !important;
+  }
+  
+  [data-theme="light"] button[variant="ghost"]:hover {
+    background-color: rgba(243, 244, 246, 1) !important;
+    border-color: rgba(156, 163, 175, 1) !important;
+    color: rgb(17, 24, 39) !important;
+    transform: scale(1.05) !important;
+  }
+
+  /* Mobile icon buttons - Extra visibility */
+  [data-theme="light"] button[class*="h-7"][class*="w-7"] {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border: 1.5px solid rgba(209, 213, 219, 0.8) !important;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* Mobile delete buttons */
+  [data-theme="light"] button[class*="hover:text-red-400"]:hover {
+    background-color: rgba(254, 242, 242, 1) !important;
+    border-color: rgba(239, 68, 68, 0.6) !important;
+    color: #dc2626 !important;
+    transform: scale(1.05) !important;
+  }
+
+  /* Mobile button text and icons */
+  [data-theme="light"] button[class*="text-slate-400"] {
+    color: rgb(55, 65, 81) !important;
+  }
+  
+  [data-theme="light"] button[class*="text-slate-400"] svg {
+    color: rgb(55, 65, 81) !important;
+  }
+}
+
+/* 6. AlertDialog trigger buttons */
+[data-theme="light"] [data-slot="alert-dialog-trigger"] button {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(209, 213, 219, 0.7) !important;
+  color: rgb(75, 85, 99) !important;
+}
+
+[data-theme="light"] [data-slot="alert-dialog-trigger"] button:hover {
+  background-color: rgba(243, 244, 246, 0.95) !important;
+  color: rgb(55, 65, 81) !important;
+}
+
+/* 7. Update/Edit modal trigger buttons */
+[data-theme="light"] button[class*="border-slate-600"] {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(209, 213, 219, 0.7) !important;
+  color: rgb(75, 85, 99) !important;
+}
+
+[data-theme="light"] button[class*="border-slate-600"]:hover {
+  background-color: rgba(243, 244, 246, 0.95) !important;
+  border-color: rgba(156, 163, 175, 0.8) !important;
+  color: rgb(55, 65, 81) !important;
+}
+
+/* COMPREHENSIVE GHOST BUTTON FIXES - All Pages and Components */
+
+/* 8. Header icon buttons - Notifications, Settings, Help, Mobile Menu */
+[data-theme="light"] button[size="icon"][variant="ghost"] {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(209, 213, 219, 0.6) !important;
+  color: rgb(75, 85, 99) !important;
+}
+
+[data-theme="light"] button[size="icon"][variant="ghost"]:hover {
+  background-color: rgba(243, 244, 246, 0.95) !important;
+  border-color: rgba(156, 163, 175, 0.8) !important;
+  color: rgb(55, 65, 81) !important;
+}
+
+/* 9. Inventory table action buttons - Edit, QR, Delete */
+[data-theme="light"] button[class*="h-8"][class*="w-8"][class*="p-0"] {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(209, 213, 219, 0.7) !important;
+  color: rgb(75, 85, 99) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] button[class*="h-8"][class*="w-8"][class*="p-0"]:hover {
+  background-color: rgba(243, 244, 246, 0.95) !important;
+  border-color: rgba(156, 163, 175, 0.8) !important;
+  color: rgb(55, 65, 81) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 10. Mobile table expand/collapse buttons - "Show More/Show Less" */
+[data-theme="light"] button[class*="w-full"][class*="text-xs"][class*="text-slate-400"] {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(209, 213, 219, 0.6) !important;
+  color: rgb(75, 85, 99) !important;
+}
+
+[data-theme="light"] button[class*="w-full"][class*="text-xs"][class*="text-slate-400"]:hover {
+  background-color: rgba(243, 244, 246, 0.95) !important;
+  border-color: rgba(156, 163, 175, 0.8) !important;
+  color: rgb(55, 65, 81) !important;
+}
+
+/* 11. Dialog/Modal cancel buttons */
+[data-theme="light"] button[variant="ghost"][disabled] {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(209, 213, 219, 0.5) !important;
+  color: rgb(156, 163, 175) !important;
+  opacity: 0.7 !important;
+}
+
+/* 12. Special hover states for colored action buttons */
+[data-theme="light"] button[class*="hover:text-blue-400"]:hover {
+  background-color: rgba(239, 246, 255, 0.95) !important;
+  border-color: rgba(96, 165, 250, 0.5) !important;
+  color: #1E88E5 !important;
+}
+
+[data-theme="light"] button[class*="hover:text-orange-400"]:hover {
+  background-color: rgba(255, 247, 237, 0.95) !important;
+  border-color: rgba(251, 146, 60, 0.5) !important;
+  color: #f97316 !important;
+}
+
+/* 13. Mobile-specific enhancements for all ghost buttons */
+@media (max-width: 768px) {
+  /* All ghost buttons get enhanced visibility on mobile */
+  [data-theme="light"] button[variant="ghost"] {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border: 1.5px solid rgba(209, 213, 219, 0.8) !important;
+    color: rgb(55, 65, 81) !important;
+    min-height: 36px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  [data-theme="light"] button[variant="ghost"]:hover {
+    background-color: rgba(243, 244, 246, 1) !important;
+    border-color: rgba(156, 163, 175, 1) !important;
+    color: rgb(17, 24, 39) !important;
+    transform: scale(1.02) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  /* Icon buttons on mobile - Extra emphasis */
+  [data-theme="light"] button[size="icon"] {
+    min-width: 40px !important;
+    min-height: 40px !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border: 1.5px solid rgba(209, 213, 219, 0.8) !important;
+    border-radius: 8px !important;
+  }
+
+  /* Mobile table buttons */
+  [data-theme="light"] button[class*="w-full"][class*="text-xs"] {
+    min-height: 36px !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border: 1.5px solid rgba(209, 213, 219, 0.8) !important;
+    color: rgb(55, 65, 81) !important;
+    font-weight: 500 !important;
+  }
+}
+
+/* 14. Ensure all button icons inherit proper colors */
+[data-theme="light"] button[variant="ghost"] svg,
+[data-theme="light"] button[variant="ghost"] .lucide,
+[data-theme="light"] button[class*="text-slate-400"] svg,
+[data-theme="light"] button[class*="text-slate-400"] .lucide {
+  color: inherit !important;
+}
+
+/* 15. DialogClose buttons specific targeting */
+[data-theme="light"] [data-slot="dialog-close"] button[variant="ghost"] {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(209, 213, 219, 0.7) !important;
+  color: rgb(75, 85, 99) !important;
+}
+
+[data-theme="light"] [data-slot="dialog-close"] button[variant="ghost"]:hover {
+  background-color: rgba(243, 244, 246, 0.95) !important;
+  color: rgb(55, 65, 81) !important;
+}
+
+/* HIGHLY SPECIFIC MOBILE CRM FIXES - Override Component Classes */
+
+/* 1. Target exact button variant classes with highest specificity */
+[data-theme="light"] button[class*="text-slate-400"],
+[data-theme="light"] button[class*="text-slate-500"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border: 1.5px solid rgba(209, 213, 219, 0.7) !important;
+  color: rgb(75, 85, 99) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+[data-theme="light"] button[class*="text-slate-400"]:hover,
+[data-theme="light"] button[class*="text-slate-500"]:hover {
+  background-color: rgba(243, 244, 246, 0.95) !important;
+  border-color: rgba(156, 163, 175, 0.8) !important;
+  color: rgb(55, 65, 81) !important;
+}
+
+/* 2. Target specific CRM button sizes and positions */
+[data-theme="light"] .flex.items-center.gap-1 button.h-7.w-7.p-0,
+[data-theme="light"] .flex.items-center.gap-1 button[class*="h-7"][class*="w-7"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border: 1.5px solid rgba(209, 213, 219, 0.7) !important;
+  color: rgb(75, 85, 99) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .flex.items-center.gap-1 button.h-7.w-7.p-0:hover,
+[data-theme="light"] .flex.items-center.gap-1 button[class*="h-7"][class*="w-7"]:hover {
+  background-color: rgba(243, 244, 246, 0.95) !important;
+  border-color: rgba(156, 163, 175, 0.8) !important;
+  color: rgb(55, 65, 81) !important;
+  transform: translateY(-1px) scale(1.05) !important;
+}
+
+/* 2. CRM interaction delete buttons - specific red hover targeting */
+[data-theme="light"] button[class*="hover:text-red-400"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(209, 213, 219, 0.7) !important;
+  color: rgb(75, 85, 99) !important;
+}
+
+[data-theme="light"] button[class*="hover:text-red-400"]:hover {
+  background-color: rgba(254, 242, 242, 0.95) !important;
+  border-color: rgba(248, 113, 113, 0.5) !important;
+  color: #dc2626 !important;
+}
+
+/* 3. Mobile CRM specific - interaction cards on mobile */
+@media (max-width: 639px) {
+  [data-theme="light"] .flex.justify-between button {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(209, 213, 219, 0.7) !important;
+    color: rgb(75, 85, 99) !important;
+  }
+
+  [data-theme="light"] .flex.justify-between button:hover {
+    background-color: rgba(243, 244, 246, 0.95) !important;
+    color: rgb(55, 65, 81) !important;
+  }
+}
+
+/* 4. Mobile interaction text - Target all interaction display text */
+[data-theme="light"] .space-y-3 .text-slate-400,
+[data-theme="light"] .space-y-3 .text-slate-300 {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 5. Badge text in mobile interactions - capitalize classes */
+[data-theme="light"] .capitalize {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 6. Force visibility on all nested slate text in mobile CRM */
+@media (max-width: 640px) {
+  [data-theme="light"] .text-slate-400,
+  [data-theme="light"] .text-slate-300,
+  [data-theme="light"] .text-slate-500 {
+    color: rgb(75, 85, 99) !important;
+  }
+  
+  [data-theme="light"] button .text-slate-400,
+  [data-theme="light"] button .text-slate-300 {
+    color: rgb(75, 85, 99) !important;
+  }
+  
+  /* Mobile button backgrounds for better visibility */
+  [data-theme="light"] button[class*="h-7"][class*="w-7"] {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border: 1.5px solid rgba(209, 213, 219, 0.8) !important;
+    color: rgb(75, 85, 99) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  }
+}
+
+/* NUCLEAR OPTION - Force all slate text colors to be visible in light mode */
+
+/* 1. Override ALL slate text colors with maximum specificity */
+[data-theme="light"] .text-slate-400,
+[data-theme="light"] .text-slate-300,
+[data-theme="light"] .text-slate-500,
+[data-theme="light"] span.text-slate-400,
+[data-theme="light"] span.text-slate-300,
+[data-theme="light"] div.text-slate-400,
+[data-theme="light"] div.text-slate-300 {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 2. Target interaction badges specifically */
+[data-theme="light"] .bg-slate-700.text-slate-300,
+[data-theme="light"] [class*="bg-slate-700"][class*="text-slate-300"] {
+  background-color: rgba(243, 244, 246, 0.8) !important;
+  color: rgb(75, 85, 99) !important;
+  border: 1px solid rgba(209, 213, 219, 0.6) !important;
+}
+
+/* 3. Force all interaction-related text to be dark */
+[data-theme="light"] .space-y-3 span,
+[data-theme="light"] .space-y-3 div,
+[data-theme="light"] .bg-slate-800 span,
+[data-theme="light"] .bg-slate-800 div:not([class*="recharts"]) {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 4. Target mobile-specific flex containers */
+[data-theme="light"] .flex.items-center.gap-2 span,
+[data-theme="light"] .flex.items-center.gap-2 div,
+[data-theme="light"] .flex.items-center.gap-2 .capitalize {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 5. Override any remaining white text in CRM components */
+[data-theme="light"] .text-white:not([data-state="active"]):not(.sidebar-nav-active):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]) {
+  color: rgb(17, 24, 39) !important;
+}
+
+/* 6. Mobile table content - force dark text */
+@media (max-width: 768px) {
+  [data-theme="light"] .card-enhanced span,
+  [data-theme="light"] .card-enhanced div:not([class*="recharts"]),
+  [data-theme="light"] .card-enhanced .text-slate-400,
+  [data-theme="light"] .card-enhanced .text-slate-300 {
+    color: rgb(75, 85, 99) !important;
+  }
+
+  /* Nuclear override for all mobile CRM text */
+  [data-theme="light"] [class*="bg-slate-"] span:not([class*="text-white"]),
+  [data-theme="light"] [class*="bg-slate-"] div:not([class*="recharts"]):not([class*="text-white"]) {
+    color: rgb(75, 85, 99) !important;
+  }
+}
+
+/* FINAL SPECIFIC FIXES - Target Exact Remaining White Elements */
+
+/* 1. Fix "Outcome" text specifically - ULTRA AGGRESSIVE targeting */
+[data-theme="light"] .text-xs.text-slate-300,
+[data-theme="light"] div.text-xs.text-slate-300,
+[data-theme="light"] .space-y-1 .text-xs.text-slate-300,
+[data-theme="light"] .space-y-1 div.text-xs.text-slate-300,
+[data-theme="light"] [class*="sm:hidden"] .text-xs.text-slate-300 {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 1b. Even more specific - target any div containing outcome text */
+[data-theme="light"] div[class="text-xs text-slate-300"],
+[data-theme="light"] div[class*="text-xs"][class*="text-slate-300"] {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 2. Fix SVG icons inside ghost buttons - Edit and Delete icons */
+[data-theme="light"] button[class*="text-slate-400"] svg,
+[data-theme="light"] button[class*="text-slate-400"] .lucide,
+[data-theme="light"] button[class*="ghost"] svg,
+[data-theme="light"] button[class*="ghost"] .lucide {
+  color: rgb(75, 85, 99) !important;
+  stroke: rgb(75, 85, 99) !important;
+}
+
+/* 3. Specific targeting for Pencil and Trash2 icons */
+[data-theme="light"] button .lucide-pencil,
+[data-theme="light"] button .lucide-trash-2,
+[data-theme="light"] button svg[class*="lucide"] {
+  color: rgb(75, 85, 99) !important;
+  stroke: rgb(75, 85, 99) !important;
+}
+
+/* 4. Target h-7 w-7 button icons specifically */
+[data-theme="light"] button.h-7.w-7 svg,
+[data-theme="light"] button[class*="h-7"][class*="w-7"] svg {
+  color: rgb(75, 85, 99) !important;
+  stroke: rgb(75, 85, 99) !important;
+}
+
+/* 5. Hover states for icon buttons */
+[data-theme="light"] button[class*="text-slate-400"]:hover svg,
+[data-theme="light"] button[class*="ghost"]:hover svg {
+  color: rgb(55, 65, 81) !important;
+  stroke: rgb(55, 65, 81) !important;
+}
+
+/* 6. Red hover state for delete buttons */
+[data-theme="light"] button[class*="hover:text-red-400"]:hover svg {
+  color: #dc2626 !important;
+  stroke: #dc2626 !important;
+}
+
+/* 7. Mobile-specific icon fixes */
+@media (max-width: 768px) {
+  [data-theme="light"] button svg,
+  [data-theme="light"] button .lucide {
+    color: rgb(75, 85, 99) !important;
+    stroke: rgb(75, 85, 99) !important;
+  }
+  
+  [data-theme="light"] button:hover svg,
+  [data-theme="light"] button:hover .lucide {
+    color: rgb(55, 65, 81) !important;
+    stroke: rgb(55, 65, 81) !important;
+  }
+}
+
+/* GLOBAL APPLICATION-WIDE WHITE TEXT FIXES - All Pages */
+
+/* 1. COMPREHENSIVE text-slate overrides for ALL components */
+[data-theme="light"] .text-slate-50,
+[data-theme="light"] .text-slate-100,
+[data-theme="light"] .text-slate-200,
+[data-theme="light"] .text-slate-300,
+[data-theme="light"] .text-slate-400,
+[data-theme="light"] .text-slate-500 {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 2. Target ANY element that might contain white text in mobile views */
+@media (max-width: 768px) {
+  /* ALL mobile table content */
+  [data-theme="light"] [class*="mobile-table"] .text-slate-300,
+  [data-theme="light"] [class*="mobile-table"] .text-slate-400,
+  [data-theme="light"] .card-enhanced .text-slate-300,
+  [data-theme="light"] .card-enhanced .text-slate-400 {
+    color: rgb(75, 85, 99) !important;
+  }
+
+  /* ALL mobile expanded content */
+  [data-theme="light"] [class*="space-y-"] .text-slate-300,
+  [data-theme="light"] [class*="space-y-"] .text-slate-400,
+  [data-theme="light"] [class*="space-y-"] div.text-xs {
+    color: rgb(75, 85, 99) !important;
+  }
+
+  /* ALL mobile badges and labels */
+  [data-theme="light"] .text-xs.text-slate-400,
+  [data-theme="light"] .text-xs.text-slate-300,
+  [data-theme="light"] .text-sm.text-slate-400,
+  [data-theme="light"] .text-sm.text-slate-300 {
+    color: rgb(75, 85, 99) !important;
+  }
+}
+
+/* 3. Target ALL possible text containers in ALL components */
+[data-theme="light"] div[class*="text-slate-"],
+[data-theme="light"] span[class*="text-slate-"],
+[data-theme="light"] p[class*="text-slate-"] {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 4. Target specific patterns found in tables across all pages */
+[data-theme="light"] .font-medium.text-slate-400,
+[data-theme="light"] .font-medium.text-slate-300,
+[data-theme="light"] .capitalize.text-slate-400,
+[data-theme="light"] .capitalize.text-slate-300 {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 5. ALL mobile card components - target ANY text that might be white */
+[data-theme="light"] [class*="card-"] .text-slate-300,
+[data-theme="light"] [class*="card-"] .text-slate-400,
+[data-theme="light"] [class*="bg-slate-"] .text-slate-300,
+[data-theme="light"] [class*="bg-slate-"] .text-slate-400 {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 6. INVENTORY, MILEAGE, BOOKKEEPER pages - additional patterns */
+[data-theme="light"] .table-enhanced .text-slate-300,
+[data-theme="light"] .table-enhanced .text-slate-400,
+[data-theme="light"] [class*="table"] .text-slate-300,
+[data-theme="light"] [class*="table"] .text-slate-400 {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 7. TARGETED white text fixes - Only for problematic patterns */
+[data-theme="light"] .text-xs:not([class*="text-blue"]):not([class*="text-emerald"]):not([class*="text-red"]),
+[data-theme="light"] .text-sm:not([class*="text-blue"]):not([class*="text-emerald"]):not([class*="text-red"]) {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 8. SPECIFIC FIXES for Description, Amount, Category fields across ALL pages */
+
+/* Transaction Table - Bookkeeper Page - EXACT CLASS TARGETING */
+
+/* Amount field - FORCE green/red colors to show properly */
+[data-theme="light"] .font-semibold.whitespace-nowrap.text-green-400 {
+  color: #22c55e !important; /* Keep green for income */
+}
+
+[data-theme="light"] .font-semibold.whitespace-nowrap.text-red-400 {
+  color: #ef4444 !important; /* Keep red for expenses */
+}
+
+/* Category field - Fix truncate block span inside max-w div */
+[data-theme="light"] [class*="max-w-"] .truncate.block,
+[data-theme="light"] [class*="max-w-"] span.truncate,
+[data-theme="light"] .truncate.block {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* General max-w containers */
+[data-theme="light"] .font-medium[class*="max-w-"],
+[data-theme="light"] div[class*="max-w-"] {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* Additional amount field targeting - catch any overrides */
+[data-theme="light"] span.font-semibold.whitespace-nowrap:not(.text-green-400):not(.text-red-400) {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* Mobile table amount and category fixes */
+@media (max-width: 768px) {
+  [data-theme="light"] .font-semibold.whitespace-nowrap {
+    color: inherit !important; /* Allow green/red to show through */
+  }
+  
+  [data-theme="light"] .truncate.block,
+  [data-theme="light"] [class*="max-w-"] span {
+    color: rgb(75, 85, 99) !important;
+  }
+}
+
+/* Inventory Table - Category badges and text */
+[data-theme="light"] .text-slate-300,
+[data-theme="light"] .text-slate-400,
+[data-theme="light"] .border-slate-600.text-slate-300,
+[data-theme="light"] .bg-slate-700.text-slate-300 {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* Table headers and cells - ALL tables */
+[data-theme="light"] .text-slate-300.cursor-pointer,
+[data-theme="light"] th.text-slate-300,
+[data-theme="light"] td.text-slate-300,
+[data-theme="light"] td.text-slate-400 {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* Mobile Table content - ALL pages using MobileTable */
+[data-theme="light"] .font-medium span,
+[data-theme="light"] .break-words,
+[data-theme="light"] .whitespace-normal,
+[data-theme="light"] .truncate {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* Badge components - ALL pages */
+[data-theme="light"] .badge,
+[data-theme="light"] [class*="badge"],
+[data-theme="light"] .border-slate-600,
+[data-theme="light"] .bg-slate-800.px-2.py-1 {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* CRM Dialog content - Fix remaining white text */
+[data-theme="light"] .text-white:not([data-state="active"]):not(.sidebar-nav-active):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-gradient"]) {
+  color: rgb(17, 24, 39) !important;
+}
+
+/* Font mono text - SKU, amounts, etc. */
+[data-theme="light"] .font-mono,
+[data-theme="light"] .font-semibold.font-mono {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* Preserve important colored text - overrides for success/error/warning */
+[data-theme="light"] .text-blue-400,
+[data-theme="light"] .text-blue-500,
+[data-theme="light"] .text-emerald-400,
+[data-theme="light"] .text-emerald-500,
+[data-theme="light"] .text-red-400,
+[data-theme="light"] .text-red-500,
+[data-theme="light"] .text-amber-400,
+[data-theme="light"] .text-amber-500,
+[data-theme="light"] .text-green-400,
+[data-theme="light"] .text-green-500,
+[data-theme="light"] .text-orange-400,
+[data-theme="light"] .text-orange-500 {
+  color: inherit !important; /* Keep original colors for status indicators */
+}
+
+/* FINAL COMPREHENSIVE WHITE TEXT FIXES - Catch All Remaining Issues */
+
+/* 1. ALL table cell content across the entire application */
+[data-theme="light"] td span,
+[data-theme="light"] td div,
+[data-theme="light"] th span,
+[data-theme="light"] th div {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 2. ALL mobile table and card content */
+[data-theme="light"] .card-enhanced span:not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]),
+[data-theme="light"] .card-enhanced div:not([class*="recharts"]):not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]) {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 3. ALL description, title, and content text patterns */
+[data-theme="light"] .font-medium:not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]):not([class*="text-amber"]),
+[data-theme="light"] .break-words:not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]) {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 4. ALL dialog and modal text content */
+[data-theme="light"] [role="dialog"] .text-slate-300,
+[data-theme="light"] [role="dialog"] .text-slate-400,
+[data-theme="light"] [role="dialog"] .text-white:not([class*="bg-blue"]):not([class*="bg-red"]):not([class*="bg-emerald"]) {
+  color: rgb(75, 85, 99) !important;
+}
+
+/* 5. Mobile-specific universal fix */
+@media (max-width: 768px) {
+  [data-theme="light"] span:not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]):not([class*="text-amber"]),
+  [data-theme="light"] div:not([class*="recharts"]):not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]):not([class*="text-amber"]):not([class*="bg-blue"]):not([class*="bg-green"]):not([class*="bg-red"]) {
+    color: rgb(75, 85, 99) !important;
+  }
+}
+
+/* 6. Force visibility for any remaining edge cases */
+[data-theme="light"] .text-slate-50:not([class*="bg-blue"]):not([class*="bg-green"]):not([class*="bg-red"]),
+[data-theme="light"] .text-slate-100:not([class*="bg-blue"]):not([class*="bg-green"]):not([class*="bg-red"]),
+[data-theme="light"] .text-slate-200:not([class*="bg-blue"]):not([class*="bg-green"]):not([class*="bg-red"]) {
+  color: rgb(75, 85, 99) !important;
 }

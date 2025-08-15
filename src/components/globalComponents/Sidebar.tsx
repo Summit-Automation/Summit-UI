@@ -128,6 +128,19 @@ export default function Sidebar() {
             setLoading(false);
         };
 
+        // Function to refresh user data
+        const refreshUserData = async () => {
+            const { data: { user }, error } = await supabase.auth.getUser();
+            if (user && !error) {
+                setUser({
+                    email: user.email || '',
+                    full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
+                    avatar_url: user.user_metadata?.avatar_url,
+                    organization_id: user.user_metadata?.organization_id,
+                });
+            }
+        };
+
         getInitialUser();
 
         // Listen for auth state changes
@@ -148,8 +161,16 @@ export default function Sidebar() {
             }
         );
 
+        // Listen for custom user data update events
+        const handleUserDataUpdate = () => {
+            refreshUserData();
+        };
+
+        window.addEventListener('userDataUpdated', handleUserDataUpdate);
+
         return () => {
             subscription.unsubscribe();
+            window.removeEventListener('userDataUpdated', handleUserDataUpdate);
         };
     }, []);
 
