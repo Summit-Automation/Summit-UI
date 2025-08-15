@@ -33,7 +33,7 @@ export default function CreateMileageEntryClientWrapper() {
             variant="outline" 
             onClick={loadData}
             disabled={isLoading}
-            className="w-full sm:w-auto bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800 hover:border-slate-600 transition-all duration-200"
+            className="w-full sm:w-auto"
         >
             {isLoading ? 'Loading...' : 'Add Mileage'}
         </Button>

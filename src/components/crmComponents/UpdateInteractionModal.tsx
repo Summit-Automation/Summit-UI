@@ -187,7 +187,7 @@ export default function UpdateInteractionModal({
                         <DialogClose asChild>
                             <Button variant="ghost">Cancel</Button>
                         </DialogClose>
-                        <Button variant="outline" type="submit" className="bg-blue-600 border-blue-600 text-white hover:bg-blue-700 hover:border-blue-700">
+                        <Button variant="default" type="submit">
                             Save Changes
                         </Button>
                     </DialogFooter>

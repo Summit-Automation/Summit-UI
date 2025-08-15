@@ -291,7 +291,6 @@ export default function AIReceiptUploadModal({
             <DialogTrigger asChild>
                 <Button
                     variant="outline"
-                    className="bg-blue-600/10 border-blue-500/30 text-blue-400 hover:bg-blue-600/20 hover:border-blue-500/50 h-10"
                 >
                     <Brain className="h-4 w-4 mr-2" />
                     AI Receipt Upload

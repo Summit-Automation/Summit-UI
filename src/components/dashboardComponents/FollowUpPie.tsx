@@ -2,9 +2,9 @@
 
 import { Cell, Pie, PieChart } from 'recharts';
 import { Interaction } from '@/types/interaction';
-import { MobileChart, MobileTooltip, MobileLegend } from '@/components/ui/mobile-chart';
+import { Chart } from '@/components/ui/chart';
 
-const COLORS = ['#ef4444', '#10b981']; // Red for required, Green for no follow-up
+const COLORS = ['#dc2626', '#059669']; // Professional red for required, emerald for no follow-up
 
 export default function FollowUpPie({ interactions }: { interactions: Interaction[] }) {
     const followUpRequired = interactions.filter(i => i.follow_up_required).length;
@@ -24,18 +24,14 @@ export default function FollowUpPie({ interactions }: { interactions: Interactio
     }
 
     return (
-        <MobileChart
-            mobileHeight={200}
-            defaultHeight={280}
-            standalone={false}
-        >
-            <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+        <Chart height={220}>
+            <PieChart margin={{ top: 5, right: 5, bottom: 0, left: 5 }}>
                 <Pie
                     data={data}
                     dataKey="value"
                     nameKey="name"
                     cx="50%"
-                    cy="45%"
+                    cy="40%"
                     outerRadius={typeof window !== 'undefined' && window.innerWidth < 768 ? 50 : 80}
                     label={({ name, percent }) => 
                         typeof window !== 'undefined' && window.innerWidth >= 768 && percent
@@ -50,9 +46,7 @@ export default function FollowUpPie({ interactions }: { interactions: Interactio
                     ))}
                 </Pie>
 
-                <MobileTooltip />
-                <MobileLegend />
             </PieChart>
-        </MobileChart>
+        </Chart>
     );
 }

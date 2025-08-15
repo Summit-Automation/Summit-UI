@@ -222,7 +222,7 @@ export default function Sidebar() {
             <aside
                 id="mobile-sidebar"
                 className={cn(
-                    "fixed inset-y-0 left-0 z-50 w-64 bg-slate-950/95 backdrop-blur-xl border-r border-slate-800/60 flex flex-col transition-transform duration-300 ease-in-out custom-scrollbar sidebar-bg",
+                    "fixed inset-y-0 left-0 z-50 w-64 bg-slate-950/98 backdrop-blur-xl border-r border-slate-800/40 flex flex-col transition-transform duration-300 ease-in-out custom-scrollbar sidebar-bg shadow-2xl",
                     // Desktop: always visible
                     "lg:translate-x-0",
                     // Mobile: slide in/out
@@ -230,7 +230,7 @@ export default function Sidebar() {
                 )}
             >
                 {/* Header */}
-                <div className="p-6 border-b border-slate-800 sidebar-border">
+                <div className="p-6 border-b border-slate-800/30 sidebar-border">
                     {/* Mobile: Add top padding to account for hamburger button */}
                     <div className="lg:hidden h-8" />
                     
@@ -242,15 +242,15 @@ export default function Sidebar() {
                                 width={175}
                                 height={40}
                                 priority
-                                className="max-w-full h-auto drop-shadow-lg"
+                                className="max-w-full h-auto drop-shadow-xl"
                             />
-                            {/* Subtle glow effect behind logo */}
-                            <div className="absolute inset-0 -z-10 bg-blue-500/20 blur-xl rounded-full transform scale-150 opacity-50" />
+                            {/* Enhanced glow effect behind logo */}
+                            <div className="absolute inset-0 -z-10 bg-blue-500/25 blur-2xl rounded-full transform scale-150 opacity-60" />
                         </div>
                     </div>
                     
                     {/* Organization Display */}
-                    <div className="mt-4 p-4 bg-slate-900/50 rounded-xl border border-slate-800/40 transition-all duration-200 hover:bg-slate-900/70 hover:border-slate-700/60 sidebar-org-bg">
+                    <div className="mt-4 p-4 bg-gradient-to-br from-slate-900/70 to-slate-800/50 rounded-xl border border-slate-700/30 transition-all duration-200 hover:from-slate-900/80 hover:to-slate-800/60 hover:border-slate-600/40 sidebar-org-bg shadow-lg backdrop-blur-sm">
                         <OrganizationDisplay />
                     </div>
                 </div>
@@ -266,7 +266,7 @@ export default function Sidebar() {
                             }, {} as Record<string, typeof navItems>)
                         ).map(([category, items]) => (
                             <div key={category}>
-                                <h3 className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider sidebar-text">
+                                <h3 className="px-4 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider sidebar-text mb-2 border-b border-slate-800/30 pb-2">
                                     {category}
                                 </h3>
                                 <div className="space-y-1">
@@ -277,29 +277,29 @@ export default function Sidebar() {
                                             <Link key={href} href={href}>
                                                 <div
                                                     className={cn(
-                                                        "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative sidebar-nav-item",
+                                                        "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 group relative sidebar-nav-item",
                                                         isActive 
-                                                            ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20 sidebar-nav-active" 
-                                                            : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/50"
+                                                            ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/25 border border-blue-500/20 sidebar-nav-active" 
+                                                            : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 hover:border-slate-700/30 border border-transparent"
                                                     )}
                                                 >
                                                     <Icon className={cn(
-                                                        "h-5 w-5 flex-shrink-0 transition-colors duration-200",
-                                                        isActive ? "text-white" : "text-slate-500 group-hover:text-slate-300"
+                                                        "h-5 w-5 flex-shrink-0 transition-all duration-200",
+                                                        isActive ? "text-white drop-shadow-sm" : "text-slate-500 group-hover:text-slate-300 group-hover:scale-110"
                                                     )} />
                                                     <span className="truncate flex-1">{label}</span>
                                                     {badge && (
                                                         <span className={cn(
-                                                            "px-2 py-0.5 text-xs font-medium rounded-full",
+                                                            "px-2 py-0.5 text-xs font-bold rounded-full transition-all duration-200",
                                                             badge === 'AI' 
-                                                                ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
-                                                                : "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+                                                                ? "bg-gradient-to-r from-purple-500/20 to-purple-600/20 text-purple-300 border border-purple-500/40 shadow-sm"
+                                                                : "bg-gradient-to-r from-blue-500/20 to-blue-600/20 text-blue-300 border border-blue-500/40 shadow-sm"
                                                         )}>
                                                             {badge}
                                                         </span>
                                                     )}
                                                     {isActive && (
-                                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-white/30 rounded-r-full" />
+                                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-white/40 rounded-r-full shadow-lg" />
                                                     )}
                                                 </div>
                                             </Link>
@@ -312,11 +312,11 @@ export default function Sidebar() {
                 </nav>
 
                 {/* Footer */}
-                <div className="p-4 border-t border-slate-800 sidebar-border">
+                <div className="p-4 border-t border-slate-800/30 sidebar-border">
                     {loading ? (
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3 min-w-0 flex-1">
-                                <div className="w-8 h-8 loading-enhanced rounded-full flex-shrink-0"></div>
+                                <div className="w-9 h-9 loading-enhanced rounded-full flex-shrink-0"></div>
                                 <div className="min-w-0 flex-1">
                                     <div className="h-4 w-16 loading-enhanced rounded mb-1"></div>
                                     <div className="h-3 w-12 loading-enhanced rounded"></div>
@@ -333,21 +333,21 @@ export default function Sidebar() {
                                             alt="User avatar"
                                             width={36}
                                             height={36}
-                                            className="rounded-full flex-shrink-0 ring-1 ring-slate-700"
+                                            className="rounded-full flex-shrink-0 ring-2 ring-slate-700/50 shadow-lg"
                                         />
                                     </div>
                                 ) : (
-                                    <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                                        <span className="text-white text-sm font-medium">
+                                    <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-blue-500/20">
+                                        <span className="text-white text-sm font-bold">
                                             {user ? getUserInitials(getDisplayName()) : 'U'}
                                         </span>
                                     </div>
                                 )}
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-sm font-medium text-slate-200 truncate sidebar-text" title={getDisplayName()}>
+                                    <p className="text-sm font-semibold text-slate-200 truncate sidebar-text" title={getDisplayName()}>
                                         {getDisplayName()}
                                     </p>
-                                    <p className="text-xs text-slate-500 truncate sidebar-text-secondary" title={user?.email}>
+                                    <p className="text-xs text-slate-500 truncate sidebar-text-secondary font-medium" title={user?.email}>
                                         {user?.email || 'user@example.com'}
                                     </p>
                                 </div>
@@ -364,7 +364,7 @@ export default function Sidebar() {
                         </div>
                     )}
                     
-                    <div className="mt-4 pt-3 border-t border-slate-800/50 text-center text-xs text-slate-600 sidebar-text-muted">
+                    <div className="mt-4 pt-3 border-t border-slate-800/40 text-center text-xs text-slate-600 sidebar-text-muted font-medium">
                         © 2025 Summit Automation
                     </div>
                 </div>

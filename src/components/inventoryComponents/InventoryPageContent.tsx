@@ -14,17 +14,15 @@ interface InventoryPageContentProps {
 export default function InventoryPageContent({ initialItems, initialAlerts }: InventoryPageContentProps) {
     const router = useRouter();
 
-    const handleNotifications = () => router.push('/?tab=notifications');
     const handleSettings = () => router.push('/settings');
     const handleHelp = () => router.push('/?tab=help');
 
     return (
-        <div className="space-y-6">
-            {/* Modern Mercury-style Header */}
+        <div className="space-y-8">
+            {/* Enhanced Header */}
             <Header 
                 title="Inventory Management"
                 subtitle="Track stock levels, manage items, and automate reordering"
-                onNotifications={handleNotifications}
                 onSettings={handleSettings}
                 onHelp={handleHelp}
             />

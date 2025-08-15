@@ -3,27 +3,27 @@
 import { useMemo } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell } from 'recharts';
 import { Transaction } from '@/types/transaction';
-import { MobileChart } from '@/components/ui/mobile-chart';
+import { Chart } from '@/components/ui/chart';
 
 type CategoryBucket = { category: string; amount: number; color: string };
 
-// Modern color palette for expense categories
+// Professional color palette for expense categories
 const CATEGORY_COLORS = [
-    '#ef4444', // red-500
-    '#f97316', // orange-500
-    '#f59e0b', // amber-500
-    '#eab308', // yellow-500
-    '#84cc16', // lime-500
-    '#22c55e', // green-500
-    '#10b981', // emerald-500
-    '#14b8a6', // teal-500
-    '#06b6d4', // cyan-500
-    '#0ea5e9', // sky-500
-    '#3b82f6', // blue-500
-    '#6366f1', // indigo-500
-    '#8b5cf6', // violet-500
-    '#a855f7', // purple-500
-    '#d946ef', // fuchsia-500
+    '#dc2626', // red-600
+    '#ea580c', // orange-600  
+    '#d97706', // amber-600
+    '#ca8a04', // yellow-600
+    '#65a30d', // lime-600
+    '#16a34a', // green-600
+    '#059669', // emerald-600
+    '#0d9488', // teal-600
+    '#0891b2', // cyan-600
+    '#0284c7', // sky-600
+    '#2563eb', // blue-600
+    '#4f46e5', // indigo-600
+    '#7c3aed', // violet-600
+    '#9333ea', // purple-600
+    '#c026d3', // fuchsia-600
 ];
 
 interface TooltipProps {
@@ -92,11 +92,7 @@ export default function ExpenseCategoryBar({ transactions }: { transactions: Tra
     };
 
     return (
-        <MobileChart
-            mobileHeight={200}
-            defaultHeight={Math.max(300, data.length * 40)}
-            standalone={false}
-        >
+        <Chart height={Math.max(260, data.length * 40)}>
             <BarChart
                 data={data}
                 layout="vertical"
@@ -140,6 +136,6 @@ export default function ExpenseCategoryBar({ transactions }: { transactions: Tra
                     ))}
                 </Bar>
             </BarChart>
-        </MobileChart>
+        </Chart>
     );
 }

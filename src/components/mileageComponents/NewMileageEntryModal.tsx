@@ -106,7 +106,7 @@ export default function NewMileageEntryModal({
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {triggerContent || (
-                    <Button variant="outline" className={triggerClassName || "bg-emerald-600 text-white hover:bg-emerald-700"}>
+                    <Button variant="success" className={triggerClassName}>
                         + Add Mileage
                     </Button>
                 )}
@@ -308,10 +308,9 @@ export default function NewMileageEntryModal({
                                 </Button>
                             </DialogClose>
                             <Button 
-                                variant="outline" 
+                                variant="success" 
                                 type="submit" 
                                 disabled={isSubmitting}
-                                className="bg-emerald-600 text-white hover:bg-emerald-700"
                             >
                                 {isSubmitting ? 'Saving...' : 'Save Entry'}
                             </Button>

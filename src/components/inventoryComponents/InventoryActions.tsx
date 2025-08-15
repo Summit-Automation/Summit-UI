@@ -157,7 +157,7 @@ export default function InventoryActions({
                 <div className="flex flex-wrap gap-3">
                     <Button 
                         onClick={handleAddItem}
-                        className="bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 hover:scale-105"
+                        variant="outline"
                     >
                         <Plus className="h-4 w-4 mr-2" />
                         Add Item
@@ -166,7 +166,6 @@ export default function InventoryActions({
                     <Button 
                         onClick={handleQRScan}
                         variant="outline"
-                        className="border-orange-500/50 text-orange-400 hover:bg-orange-500/10 transition-all duration-300 hover:scale-105"
                     >
                         <QrCode className="h-4 w-4 mr-2" />
                         QR Scan (Future)
@@ -175,7 +174,6 @@ export default function InventoryActions({
                     <Button 
                         onClick={handleExport}
                         variant="outline"
-                        className="border-green-500/50 text-green-400 hover:bg-green-500/10 transition-all duration-300 hover:scale-105"
                     >
                         <Download className="h-4 w-4 mr-2" />
                         Export
@@ -184,7 +182,6 @@ export default function InventoryActions({
                     <Button 
                         onClick={handleImport}
                         variant="outline"
-                        className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10 transition-all duration-300 hover:scale-105"
                     >
                         <Upload className="h-4 w-4 mr-2" />
                         Import
@@ -219,7 +216,6 @@ export default function InventoryActions({
                     <Button 
                         onClick={handleAdvancedFilters}
                         variant="outline"
-                        className="border-slate-600 text-slate-300 hover:bg-slate-700 transition-all duration-300"
                     >
                         <Filter className="h-4 w-4 mr-2" />
                         Advanced Filters

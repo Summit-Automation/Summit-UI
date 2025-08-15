@@ -22,17 +22,15 @@ interface BookkeeperPageContentProps {
 export default function BookkeeperPageContent({ transactions, recurringPayments }: BookkeeperPageContentProps) {
     const router = useRouter();
 
-    const handleNotifications = () => router.push('/?tab=notifications');
     const handleSettings = () => router.push('/settings');
     const handleHelp = () => router.push('/?tab=help');
 
     return (
-        <div className="space-y-6">
-            {/* Modern Mercury-style Header */}
+        <div className="space-y-8">
+            {/* Enhanced Header */}
             <Header 
                 title="Accounting Dashboard"
                 subtitle="Manage your business finances with precision and insight"
-                onNotifications={handleNotifications}
                 onSettings={handleSettings}
                 onHelp={handleHelp}
             />

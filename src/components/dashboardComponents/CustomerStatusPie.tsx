@@ -3,11 +3,11 @@
 import React, { useMemo } from 'react';
 import { Cell, Pie, PieChart } from 'recharts';
 import { Customer } from '@/types/customer';
-import { BaseChart, ChartTooltip, ChartLegend } from '@/components/ui/base-chart';
+import { Chart } from '@/components/ui/chart';
 
 const COLORS = [
-    '#3b82f6', '#10b981', '#f59e0b', '#ef4444', 
-    '#8b5cf6', '#06b6d4', '#6366f1', '#84cc16'
+    '#2563eb', '#059669', '#d97706', '#dc2626', 
+    '#7c3aed', '#0891b2', '#4f46e5', '#65a30d'
 ];
 
 type StatusCount = { name: string; value: number };
@@ -46,17 +46,14 @@ export default function CustomerStatusPie({
     const mobileRadius = 50;
 
     return (
-        <BaseChart
-            mobileHeight={200}
-            height={size === 'lg' ? 320 : 280}
-        >
-            <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+        <Chart height={size === 'lg' ? 260 : 220}>
+            <PieChart margin={{ top: 10, right: 10, bottom: 0, left: 10 }}>
                 <Pie
                     data={data}
                     dataKey="value"
                     nameKey="name"
                     cx="50%"
-                    cy="45%"
+                    cy="40%"
                     outerRadius={typeof window !== 'undefined' && window.innerWidth < 768 ? mobileRadius : radius}
                     innerRadius={typeof window !== 'undefined' && window.innerWidth < 768 ? mobileRadius * 0.6 : radius * 0.6}
                     label={({ name, percent }) => 
@@ -65,22 +62,20 @@ export default function CustomerStatusPie({
                             : ''
                     }
                     labelLine={false}
-                    fontSize={12}
+                    fontSize={13}
                     paddingAngle={2}
                 >
                     {data.map((_, i) => (
                         <Cell 
                             key={i} 
                             fill={COLORS[i % COLORS.length]} 
-                            stroke="rgba(15, 23, 42, 0.1)"
-                            strokeWidth={1}
+                            stroke="rgba(255, 255, 255, 0.2)"
+                            strokeWidth={1.5}
                         />
                     ))}
                 </Pie>
 
-                <ChartTooltip />
-                <ChartLegend />
             </PieChart>
-        </BaseChart>
+        </Chart>
     );
 }

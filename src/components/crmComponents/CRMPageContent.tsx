@@ -22,10 +22,6 @@ interface CRMPageContentProps {
 export default function CRMPageContent({ customers, interactions }: CRMPageContentProps) {
     const router = useRouter();
 
-    const handleNotifications = () => {
-        // Navigate to dashboard notifications
-        router.push('/?tab=notifications');
-    };
 
     const handleSettings = () => router.push('/settings');
     const handleHelp = () => {
@@ -34,12 +30,11 @@ export default function CRMPageContent({ customers, interactions }: CRMPageConte
     };
 
     return (
-        <div className="space-y-6">
-            {/* Modern Mercury-style Header */}
+        <div className="space-y-8">
+            {/* Enhanced Header */}
             <Header 
                 title="Customer Relationship Manager"
                 subtitle="Build stronger relationships and track customer interactions"
-                onNotifications={handleNotifications}
                 onSettings={handleSettings}
                 onHelp={handleHelp}
             />
