@@ -1,32 +1,41 @@
 @import "tailwindcss";
 
+/* CSS Custom Properties - Common Light Mode Colors */
+:root {
+  --light-bg-primary: rgba(255, 255, 255, 0.95);
+  --light-bg-secondary: rgba(255, 255, 255, 0.9);
+  --light-bg-muted: rgba(243, 244, 246, 0.95);
+  --light-bg-soft: rgba(243, 244, 246, 0.5);
+  --light-border-primary: rgba(209, 213, 219, 0.7);
+  --light-border-secondary: rgba(156, 163, 175, 0.8);
+  --light-text-gray: rgb(107, 114, 128);
+  --light-text-dark: rgb(75, 85, 99);
+  --light-border-gray: rgb(229, 231, 235);
+}
+
 /* Theme System - Light Mode Overrides */
 /* Dark mode is the default - no changes needed for existing classes */
 
 /* Light Theme - Override specific components when data-theme="light" */
 [data-theme="light"] {
   /* Body and main backgrounds */
-  background-color: rgb(249, 250, 251); /* gray-50 */
-  color: rgb(17, 24, 39); /* slate-900 */
-}
+  background-color: rgb(249, 250, 251);  color: rgb(17, 24, 39);}
 
 [data-theme="light"] body {
-  background-color: rgb(249, 250, 251) !important; /* gray-50 */
-  color: rgb(17, 24, 39) !important; /* slate-900 */
-}
+  background-color: rgb(249, 250, 251) !important;  color: rgb(17, 24, 39) !important;}
 
 /* Light theme component overrides */
 [data-theme="light"] .sidebar-bg {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: var(--light-bg-primary) !important;
   border-color: rgba(229, 231, 235, 0.6) !important;
 }
 
 [data-theme="light"] .sidebar-border {
-  border-color: rgb(229, 231, 235) !important;
+  border-color: var(--light-border-gray) !important;
 }
 
 [data-theme="light"] .sidebar-text {
-  color: rgb(107, 114, 128) !important;
+  color: var(--light-text-gray) !important;
 }
 
 [data-theme="light"] .sidebar-text-secondary {
@@ -38,12 +47,12 @@
 }
 
 [data-theme="light"] .sidebar-nav-item {
-  color: rgb(107, 114, 128) !important;
+  color: var(--light-text-gray) !important;
 }
 
 [data-theme="light"] .sidebar-nav-item:hover {
   color: rgb(17, 24, 39) !important;
-  background-color: rgba(243, 244, 246, 0.5) !important;
+  background-color: var(--light-bg-soft) !important;
 }
 
 [data-theme="light"] .sidebar-nav-active {
@@ -51,7 +60,7 @@
 }
 
 [data-theme="light"] .sidebar-org-bg {
-  background-color: rgba(243, 244, 246, 0.5) !important;
+  background-color: var(--light-bg-soft) !important;
   border-color: rgba(209, 213, 219, 0.4) !important;
 }
 
@@ -74,11 +83,11 @@
 }
 
 [data-theme="light"] .card-title-small {
-  color: rgb(107, 114, 128) !important;
+  color: var(--light-text-gray) !important;
 }
 
 [data-theme="light"] .card-description {
-  color: rgb(107, 114, 128) !important;
+  color: var(--light-text-gray) !important;
 }
 
 [data-theme="light"] .card-icon-bg {
@@ -94,8 +103,8 @@
 }
 
 [data-theme="light"] .hamburger-btn {
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  border-color: rgb(229, 231, 235) !important;
+  background-color: var(--light-bg-primary) !important;
+  border-color: var(--light-border-gray) !important;
 }
 
 [data-theme="light"] .hamburger-btn:hover {
@@ -119,11 +128,11 @@
 }
 
 [data-theme="light"] button[class*="text-slate-300"]:not([class*="recharts"]) {
-  color: rgb(107, 114, 128) !important;
+  color: var(--light-text-gray) !important;
 }
 
 [data-theme="light"] button[class*="text-slate-400"]:not([class*="recharts"]) {
-  color: rgb(107, 114, 128) !important;
+  color: var(--light-text-gray) !important;
 }
 
 [data-theme="light"] button[class*="border-slate-700"]:not([class*="recharts"]) {
@@ -136,7 +145,7 @@
 
 /* Light theme - Quick action buttons - ONLY target actual buttons, NOT containers */
 [data-theme="light"] button[class*="bg-slate-800"]:not([class*="recharts"]) {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: var(--light-bg-primary) !important;
   border-color: rgba(209, 213, 219, 0.7) !important;
   color: #1E88E5 !important;
 }
@@ -158,13 +167,13 @@
 
 /* Target ONLY specific card elements with card-bg class - avoid chart containers completely */
 [data-theme="light"] [role="dialog"] {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: var(--light-bg-primary) !important;
   border-color: rgba(209, 213, 219, 0.5) !important;
 }
 
 /* Sidebar specific - make sure it's not transparent */
 [data-theme="light"] aside[class*="bg-slate-950"] {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: var(--light-bg-primary) !important;
   backdrop-filter: blur(12px) !important;
 }
 
@@ -214,47 +223,36 @@
 }
 
 [data-theme="light"] .sidebar-nav-item:hover {
-  background-color: rgba(30, 136, 229, 0.1) !important; /* Blue tinted hover */
-  color: #1E88E5 !important;
+  background-color: rgba(30, 136, 229, 0.1) !important;  color: #1E88E5 !important;
   border-radius: 8px !important;
   font-weight: 600 !important;
 }
 
 /* Light theme - Aggressive text color overrides for actual Tailwind classes */
 
-/* Light text colors -> Dark colors for readability */
-[data-theme="light"] *[class*="text-slate-50"]:not(svg):not([class*="recharts"]) {
-  color: rgb(17, 24, 39) !important; /* Black for lightest slate text */
-}
-
-[data-theme="light"] *[class*="text-slate-100"]:not(svg):not([class*="recharts"]) {
+/* CONSOLIDATED Text Color Overrides - All slate text colors for light mode */
+[data-theme="light"] *[class*="text-slate-50"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]),
+[data-theme="light"] *[class*="text-slate-100"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]) {
   color: rgb(17, 24, 39) !important;
 }
 
-[data-theme="light"] *[class*="text-slate-200"]:not(svg):not([class*="recharts"]) {
-  color: rgb(55, 65, 81) !important; /* Dark gray for secondary text */
+[data-theme="light"] *[class*="text-slate-200"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]) {
+  color: rgb(55, 65, 81) !important;
 }
 
-[data-theme="light"] *[class*="text-slate-300"]:not(svg):not([class*="recharts"]) {
-  color: rgb(75, 85, 99) !important;
+[data-theme="light"] *[class*="text-slate-300"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]),
+[data-theme="light"] *[class*="text-slate-400"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]),
+[data-theme="light"] *[class*="text-slate-500"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]) {
+  color: var(--light-text-dark) !important;
 }
 
-[data-theme="light"] *[class*="text-slate-400"]:not(svg):not([class*="recharts"]) {
-  color: rgb(75, 85, 99) !important; /* Darker gray for better readability */
-}
-
-[data-theme="light"] *[class*="text-slate-500"]:not(svg):not([class*="recharts"]) {
-  color: rgb(75, 85, 99) !important;
-}
-
-[data-theme="light"] *[class*="text-slate-600"]:not(svg):not([class*="recharts"]) {
+[data-theme="light"] *[class*="text-slate-600"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]) {
   color: rgb(17, 24, 39) !important;
 }
 
-/* Headings and titles */
-[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3, 
+[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3,
 [data-theme="light"] h4, [data-theme="light"] h5, [data-theme="light"] h6 {
-  color: rgb(17, 24, 39) !important; /* Black headings */
+  color: rgb(17, 24, 39) !important;
 }
 
 /* Keep white text on blue/colored backgrounds */
@@ -332,13 +330,13 @@
 
 [data-theme="light"] th {
   color: #1565C0 !important; /* Blue table headers */
-  border-color: rgb(229, 231, 235) !important;
+  border-color: var(--light-border-gray) !important;
   font-weight: 600 !important;
 }
 
 [data-theme="light"] td {
   color: rgb(17, 24, 39) !important; /* Dark text for readability */
-  border-color: rgb(229, 231, 235) !important;
+  border-color: var(--light-border-gray) !important;
 }
 
 [data-theme="light"] tr:hover {
@@ -422,8 +420,7 @@
 }
 
 [data-theme="light"] p[class*="text-slate-400"] {
-  color: rgb(75, 85, 99) !important; /* Darker for better readability */
-}
+  color: var(--light-text-dark) !important;}
 
 /* Form focus states */
 [data-theme="light"] input:focus,
@@ -488,14 +485,14 @@
     background-color: rgb(255, 255, 255) !important;
     color: rgb(17, 24, 39) !important;
   }
-  
+
   /* Mobile quick action buttons - ONLY style actual buttons, NOT containers */
   [data-theme="light"] button[class*="bg-slate-"]:not([class*="recharts"]) {
-    background-color: rgba(255, 255, 255, 0.95) !important;
+    background-color: var(--light-bg-primary) !important;
     border: 1px solid rgba(30, 136, 229, 0.3) !important;
     color: #1E88E5 !important;
   }
-  
+
   [data-theme="light"] button[class*="bg-slate-"]:hover:not([class*="recharts"]) {
     background-color: rgba(30, 136, 229, 0.05) !important;
     border-color: #1E88E5 !important;
@@ -511,7 +508,7 @@
 
 /* Chart and Card containers - target exact Tailwind class combinations */
 [data-theme="light"] .bg-slate-900 {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: var(--light-bg-primary) !important;
 }
 
 [data-theme="light"] .border-slate-800 {
@@ -550,15 +547,15 @@
 }
 
 [data-theme="light"] .text-slate-400 {
-  color: rgb(107, 114, 128) !important;
+  color: var(--light-text-gray) !important;
 }
 
 [data-theme="light"] .text-slate-300 {
-  color: rgb(107, 114, 128) !important;
+  color: var(--light-text-gray) !important;
 }
 
 [data-theme="light"] .text-slate-500 {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* Icon background overrides with strong blue presence */
@@ -692,7 +689,7 @@
 
 /* Only style actual buttons, not containers */
 [data-theme="light"] button[class*="bg-slate-"] {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: var(--light-bg-primary) !important;
   border-color: rgba(30, 136, 229, 0.4) !important;
   color: #1E88E5 !important;
 }
@@ -744,7 +741,7 @@
 }
 
 [data-theme="light"] *[class*="text-slate-600"] {
-  color: rgb(75, 85, 99) !important; /* Darker gray for better contrast */
+  color: var(--light-text-dark) !important; /* Darker gray for better contrast */
 }
 
 /* Light theme - Ensure growth indicators remain visible */
@@ -758,7 +755,7 @@
 
 /* Light theme - Navigation improvements */
 [data-theme="light"] .sidebar-nav-item {
-  color: rgb(75, 85, 99) !important; /* Darker navigation text */
+  color: var(--light-text-dark) !important; /* Darker navigation text */
 }
 
 [data-theme="light"] .sidebar-nav-item:hover {
@@ -878,7 +875,7 @@
 }
 
 [data-theme="light"] .text-slate-400 {
-  color: rgb(107, 114, 128) !important;
+  color: var(--light-text-gray) !important;
   font-weight: 500 !important;
 }
 
@@ -966,30 +963,16 @@ body {
   border-radius: 0.375rem;
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.fade-in {
-  animation: fadeIn 0.3s ease-out;
-}
-
-.transition-smooth {
-  transition: all 0.2s ease-in-out;
-}
-
 /* Mobile Optimizations */
 @media (max-width: 768px) {
-  .touch-target, button { 
-    min-height: 44px; 
-    min-width: 44px; 
+  .touch-target, button {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
 
 /* Enhanced Chart Styling for Mercury Design */
-.recharts-cartesian-axis-tick-value, 
+.recharts-cartesian-axis-tick-value,
 .recharts-legend-item-text {
   fill: rgb(148, 163, 184) !important;
   color: rgb(148, 163, 184) !important;
@@ -1014,14 +997,14 @@ body {
 }
 
 /* Light theme chart overrides */
-[data-theme="light"] .recharts-cartesian-axis-tick-value, 
+[data-theme="light"] .recharts-cartesian-axis-tick-value,
 [data-theme="light"] .recharts-legend-item-text {
   fill: rgb(107, 114, 128) !important;
-  color: rgb(107, 114, 128) !important;
+  color: var(--light-text-gray) !important;
 }
 
 [data-theme="light"] .recharts-tooltip-wrapper .recharts-default-tooltip {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: var(--light-bg-primary) !important;
   border: 1px solid rgba(209, 213, 219, 0.8) !important;
   color: rgb(17, 24, 39) !important;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
@@ -1041,14 +1024,14 @@ body {
 }
 
 /* Radix UI Component Fixes - Theme Aware */
-[data-radix-select-content], 
+[data-radix-select-content],
 [data-radix-dialog-content] {
   background-color: rgb(var(--color-background-secondary)) !important;
   border: 1px solid rgb(var(--color-border)) !important;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
-[data-theme="light"] [data-radix-select-content], 
+[data-theme="light"] [data-radix-select-content],
 [data-theme="light"] [data-radix-dialog-content] {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
@@ -1059,7 +1042,7 @@ body {
   padding: 0.5rem 0.75rem !important;
 }
 
-[data-radix-select-item]:hover, 
+[data-radix-select-item]:hover,
 [data-radix-select-item][data-highlighted] {
   background-color: rgb(var(--color-background-tertiary)) !important;
 }
@@ -1100,7 +1083,7 @@ body {
 
 /* Additional specificity for Radix Select components */
 [data-theme="light"] .bg-slate-900[data-slot="select-content"] {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: var(--light-bg-primary) !important;
   border: 1px solid rgba(209, 213, 219, 0.8) !important;
   color: rgb(17, 24, 39) !important;
   backdrop-filter: blur(12px) !important;
@@ -1203,11 +1186,11 @@ body {
   [data-theme="light"] button[class*="bg-slate-"],
   [data-theme="light"] .bg-slate-900 button,
   [data-theme="light"] .bg-slate-800 button {
-    background-color: rgba(255, 255, 255, 0.95) !important;
+    background-color: var(--light-bg-primary) !important;
     border-color: rgba(30, 136, 229, 0.4) !important;
     color: #1E88E5 !important;
   }
-  
+
   [data-theme="light"] button[class*="bg-slate-"]:hover,
   [data-theme="light"] .bg-slate-900 button:hover,
   [data-theme="light"] .bg-slate-800 button:hover {
@@ -1223,7 +1206,7 @@ body {
     border: 2px solid #1E88E5 !important;
     box-shadow: 0 3px 8px rgba(30, 136, 229, 0.3) !important;
   }
-  
+
   [data-theme="light"] [role="tablist"] [data-state="active"] span,
   [data-theme="light"] [role="tablist"] [data-state="active"] svg {
     color: white !important;
@@ -1251,7 +1234,7 @@ body {
 
 /* 6. Specific component targeting for comprehensive coverage */
 [data-theme="light"] .bookkeeper-actions button {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: var(--light-bg-primary) !important;
   border-color: rgba(30, 136, 229, 0.4) !important;
   color: #1E88E5 !important;
 }
@@ -1301,8 +1284,6 @@ body {
   border-color: #0D47A1 !important;
   color: white !important;
 }
-
-/* 3. Slate buttons (Bookkeeper page) - ALREADY FIXED ABOVE */
 
 /* 4. CRM Actions specific targeting */
 [data-theme="light"] .crm-actions button {
@@ -1361,12 +1342,12 @@ body {
     background-color: #10B981 !important;
     color: white !important;
   }
-  
+
   [data-theme="light"] button[class*="bg-blue"] {
     background-color: #1E88E5 !important;
     color: white !important;
   }
-  
+
   /* Mobile tab active states - FINAL OVERRIDE */
   [data-theme="light"] [role="tablist"] [data-state="active"] {
     background-color: #1E88E5 !important;
@@ -1374,7 +1355,7 @@ body {
     border: 2px solid #1E88E5 !important;
     box-shadow: 0 3px 8px rgba(30, 136, 229, 0.3) !important;
   }
-  
+
   [data-theme="light"] [role="tablist"] [data-state="active"] span,
   [data-theme="light"] [role="tablist"] [data-state="active"] svg {
     color: white !important;
@@ -1453,17 +1434,17 @@ body {
 @media (max-width: 768px) {
   /* Bookkeeper mobile fixes */
   [data-theme="light"] .grid.grid-cols-1 button[class*="bg-slate-900"] {
-    background-color: rgba(255, 255, 255, 0.95) !important;
+    background-color: var(--light-bg-primary) !important;
     border-color: rgba(30, 136, 229, 0.4) !important;
     color: #1E88E5 !important;
   }
-  
+
   [data-theme="light"] .grid.grid-cols-1 button[class*="bg-slate-900"] span,
   [data-theme="light"] .grid.grid-cols-1 button span.truncate {
     color: #1E88E5 !important;
     font-weight: 600 !important;
   }
-  
+
   /* Mileage mobile fixes */
   [data-theme="light"] .flex.flex-col button[class*="bg-emerald"],
   [data-theme="light"] .w-full button[class*="bg-emerald"] {
@@ -1471,7 +1452,7 @@ body {
     color: white !important;
     border-color: #059669 !important;
   }
-  
+
   /* Inventory mobile fixes */
   [data-theme="light"] .flex.flex-wrap button[class*="bg-blue"] {
     background-color: #1E88E5 !important;
@@ -1482,7 +1463,7 @@ body {
 
 /* 5. Nuclear option - Target by exact button structure patterns */
 [data-theme="light"] button[class*="w-full"][class*="bg-slate-900"][class*="text-slate-300"] {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: var(--light-bg-primary) !important;
   border-color: rgba(30, 136, 229, 0.4) !important;
   color: #1E88E5 !important;
 }
@@ -1524,36 +1505,34 @@ body {
 
 /* 1. Interaction date text - Fix "call•Jul 20, 2025 Outcome" white text issue */
 [data-theme="light"] .text-slate-400 {
-  color: rgb(75, 85, 99) !important; /* slate-600 for better readability */
-}
+  color: var(--light-text-dark) !important;}
 
 [data-theme="light"] .text-slate-300 {
-  color: rgb(55, 65, 81) !important; /* slate-700 for better readability */
-}
+  color: rgb(55, 65, 81) !important;}
 
 /* 2. Mobile interaction cards - Target nested text elements specifically */
 [data-theme="light"] .bg-slate-800 .text-slate-400,
 [data-theme="light"] .bg-slate-800 .text-slate-300 {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* 3. Mobile table interaction text - Target mobile layout specifically */
 @media (max-width: 639px) {
   [data-theme="light"] .text-slate-400,
   [data-theme="light"] .text-slate-300 {
-    color: rgb(75, 85, 99) !important;
+    color: var(--light-text-dark) !important;
   }
 }
 
 /* 4. Badge and interaction type text in mobile view */
 [data-theme="light"] .badge[class*="text-slate-300"],
 [data-theme="light"] .capitalize.text-slate-400 {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* 5. Mobile table "Show More/Show Less" button text */
 [data-theme="light"] button[class*="text-slate-400"] {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 [data-theme="light"] button[class*="text-slate-400"]:hover {
@@ -1622,37 +1601,37 @@ body {
     background-color: rgba(2, 132, 199, 0.15) !important; /* sky-600 with opacity */
     border: 1px solid #0369a1 !important;
   }
-  
+
   [data-theme="light"] [class*="bg-yellow-600"] {
     background-color: rgba(202, 138, 4, 0.15) !important;
     border: 1px solid #a16207 !important;
   }
-  
+
   [data-theme="light"] [class*="bg-purple-600"] {
     background-color: rgba(124, 58, 237, 0.15) !important;
     border: 1px solid #7c3aed !important;
   }
-  
+
   [data-theme="light"] [class*="bg-orange-600"] {
     background-color: rgba(234, 88, 12, 0.15) !important;
     border: 1px solid #c2410c !important;
   }
-  
+
   [data-theme="light"] [class*="bg-indigo-600"] {
     background-color: rgba(67, 56, 202, 0.15) !important;
     border: 1px solid #4338ca !important;
   }
-  
+
   [data-theme="light"] [class*="bg-emerald-600"] {
     background-color: rgba(5, 150, 105, 0.15) !important;
     border: 1px solid #059669 !important;
   }
-  
+
   [data-theme="light"] [class*="bg-red-600"] {
     background-color: rgba(220, 38, 38, 0.15) !important;
     border: 1px solid #dc2626 !important;
   }
-  
+
   [data-theme="light"] [class*="bg-slate-600"] {
     background-color: rgba(71, 85, 105, 0.15) !important;
     border: 1px solid rgb(51, 65, 85) !important;
@@ -1688,7 +1667,7 @@ body {
 [data-theme="light"] button[variant="ghost"] {
   background-color: rgba(255, 255, 255, 0.8) !important;
   border: 1px solid rgba(209, 213, 219, 0.6) !important;
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 [data-theme="light"] button[variant="ghost"]:hover {
@@ -1701,7 +1680,7 @@ body {
 [data-theme="light"] button[class*="h-7"][class*="w-7"][class*="p-0"] {
   background-color: rgba(255, 255, 255, 0.9) !important;
   border: 1px solid rgba(209, 213, 219, 0.7) !important;
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
@@ -1717,7 +1696,7 @@ body {
 [data-theme="light"] button[class*="hover:text-red-400"] {
   background-color: rgba(255, 255, 255, 0.9) !important;
   border: 1px solid rgba(209, 213, 219, 0.7) !important;
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 [data-theme="light"] button[class*="hover:text-red-400"]:hover {
@@ -1734,20 +1713,20 @@ body {
 
 [data-theme="light"] button[class*="text-slate-400"] svg,
 [data-theme="light"] button[class*="text-slate-400"] .lucide {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* 5. Mobile-specific button fixes */
 @media (max-width: 768px) {
   /* Enhanced mobile button visibility */
   [data-theme="light"] button[variant="ghost"] {
-    background-color: rgba(255, 255, 255, 0.95) !important;
+    background-color: var(--light-bg-primary) !important;
     border: 1.5px solid rgba(209, 213, 219, 0.8) !important;
     color: rgb(55, 65, 81) !important;
     min-height: 32px !important;
     min-width: 32px !important;
   }
-  
+
   [data-theme="light"] button[variant="ghost"]:hover {
     background-color: rgba(243, 244, 246, 1) !important;
     border-color: rgba(156, 163, 175, 1) !important;
@@ -1757,7 +1736,7 @@ body {
 
   /* Mobile icon buttons - Extra visibility */
   [data-theme="light"] button[class*="h-7"][class*="w-7"] {
-    background-color: rgba(255, 255, 255, 0.95) !important;
+    background-color: var(--light-bg-primary) !important;
     border: 1.5px solid rgba(209, 213, 219, 0.8) !important;
     border-radius: 6px !important;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
@@ -1775,7 +1754,7 @@ body {
   [data-theme="light"] button[class*="text-slate-400"] {
     color: rgb(55, 65, 81) !important;
   }
-  
+
   [data-theme="light"] button[class*="text-slate-400"] svg {
     color: rgb(55, 65, 81) !important;
   }
@@ -1785,7 +1764,7 @@ body {
 [data-theme="light"] [data-slot="alert-dialog-trigger"] button {
   background-color: rgba(255, 255, 255, 0.9) !important;
   border: 1px solid rgba(209, 213, 219, 0.7) !important;
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 [data-theme="light"] [data-slot="alert-dialog-trigger"] button:hover {
@@ -1797,7 +1776,7 @@ body {
 [data-theme="light"] button[class*="border-slate-600"] {
   background-color: rgba(255, 255, 255, 0.9) !important;
   border-color: rgba(209, 213, 219, 0.7) !important;
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 [data-theme="light"] button[class*="border-slate-600"]:hover {
@@ -1812,7 +1791,7 @@ body {
 [data-theme="light"] button[size="icon"][variant="ghost"] {
   background-color: rgba(255, 255, 255, 0.9) !important;
   border: 1px solid rgba(209, 213, 219, 0.6) !important;
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 [data-theme="light"] button[size="icon"][variant="ghost"]:hover {
@@ -1825,7 +1804,7 @@ body {
 [data-theme="light"] button[class*="h-8"][class*="w-8"][class*="p-0"] {
   background-color: rgba(255, 255, 255, 0.9) !important;
   border: 1px solid rgba(209, 213, 219, 0.7) !important;
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
@@ -1841,7 +1820,7 @@ body {
 [data-theme="light"] button[class*="w-full"][class*="text-xs"][class*="text-slate-400"] {
   background-color: rgba(255, 255, 255, 0.9) !important;
   border: 1px solid rgba(209, 213, 219, 0.6) !important;
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 [data-theme="light"] button[class*="w-full"][class*="text-xs"][class*="text-slate-400"]:hover {
@@ -1875,14 +1854,14 @@ body {
 @media (max-width: 768px) {
   /* All ghost buttons get enhanced visibility on mobile */
   [data-theme="light"] button[variant="ghost"] {
-    background-color: rgba(255, 255, 255, 0.95) !important;
+    background-color: var(--light-bg-primary) !important;
     border: 1.5px solid rgba(209, 213, 219, 0.8) !important;
     color: rgb(55, 65, 81) !important;
     min-height: 36px !important;
     border-radius: 8px !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
   }
-  
+
   [data-theme="light"] button[variant="ghost"]:hover {
     background-color: rgba(243, 244, 246, 1) !important;
     border-color: rgba(156, 163, 175, 1) !important;
@@ -1895,7 +1874,7 @@ body {
   [data-theme="light"] button[size="icon"] {
     min-width: 40px !important;
     min-height: 40px !important;
-    background-color: rgba(255, 255, 255, 0.95) !important;
+    background-color: var(--light-bg-primary) !important;
     border: 1.5px solid rgba(209, 213, 219, 0.8) !important;
     border-radius: 8px !important;
   }
@@ -1903,7 +1882,7 @@ body {
   /* Mobile table buttons */
   [data-theme="light"] button[class*="w-full"][class*="text-xs"] {
     min-height: 36px !important;
-    background-color: rgba(255, 255, 255, 0.95) !important;
+    background-color: var(--light-bg-primary) !important;
     border: 1.5px solid rgba(209, 213, 219, 0.8) !important;
     color: rgb(55, 65, 81) !important;
     font-weight: 500 !important;
@@ -1922,7 +1901,7 @@ body {
 [data-theme="light"] [data-slot="dialog-close"] button[variant="ghost"] {
   background-color: rgba(255, 255, 255, 0.9) !important;
   border: 1px solid rgba(209, 213, 219, 0.7) !important;
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 [data-theme="light"] [data-slot="dialog-close"] button[variant="ghost"]:hover {
@@ -1935,9 +1914,9 @@ body {
 /* 1. Target exact button variant classes with highest specificity */
 [data-theme="light"] button[class*="text-slate-400"],
 [data-theme="light"] button[class*="text-slate-500"] {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: var(--light-bg-primary) !important;
   border: 1.5px solid rgba(209, 213, 219, 0.7) !important;
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
   backdrop-filter: blur(4px) !important;
 }
 
@@ -1951,9 +1930,9 @@ body {
 /* 2. Target specific CRM button sizes and positions */
 [data-theme="light"] .flex.items-center.gap-1 button.h-7.w-7.p-0,
 [data-theme="light"] .flex.items-center.gap-1 button[class*="h-7"][class*="w-7"] {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: var(--light-bg-primary) !important;
   border: 1.5px solid rgba(209, 213, 219, 0.7) !important;
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
 }
 
@@ -1967,9 +1946,9 @@ body {
 
 /* 2. CRM interaction delete buttons - specific red hover targeting */
 [data-theme="light"] button[class*="hover:text-red-400"] {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: var(--light-bg-primary) !important;
   border: 1px solid rgba(209, 213, 219, 0.7) !important;
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 [data-theme="light"] button[class*="hover:text-red-400"]:hover {
@@ -1981,9 +1960,9 @@ body {
 /* 3. Mobile CRM specific - interaction cards on mobile */
 @media (max-width: 639px) {
   [data-theme="light"] .flex.justify-between button {
-    background-color: rgba(255, 255, 255, 0.95) !important;
+    background-color: var(--light-bg-primary) !important;
     border: 1px solid rgba(209, 213, 219, 0.7) !important;
-    color: rgb(75, 85, 99) !important;
+    color: var(--light-text-dark) !important;
   }
 
   [data-theme="light"] .flex.justify-between button:hover {
@@ -1995,12 +1974,12 @@ body {
 /* 4. Mobile interaction text - Target all interaction display text */
 [data-theme="light"] .space-y-3 .text-slate-400,
 [data-theme="light"] .space-y-3 .text-slate-300 {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* 5. Badge text in mobile interactions - capitalize classes */
 [data-theme="light"] .capitalize {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* 6. Force visibility on all nested slate text in mobile CRM */
@@ -2008,41 +1987,28 @@ body {
   [data-theme="light"] .text-slate-400,
   [data-theme="light"] .text-slate-300,
   [data-theme="light"] .text-slate-500 {
-    color: rgb(75, 85, 99) !important;
+    color: var(--light-text-dark) !important;
   }
-  
+
   [data-theme="light"] button .text-slate-400,
   [data-theme="light"] button .text-slate-300 {
-    color: rgb(75, 85, 99) !important;
+    color: var(--light-text-dark) !important;
   }
-  
+
   /* Mobile button backgrounds for better visibility */
   [data-theme="light"] button[class*="h-7"][class*="w-7"] {
-    background-color: rgba(255, 255, 255, 0.95) !important;
+    background-color: var(--light-bg-primary) !important;
     border: 1.5px solid rgba(209, 213, 219, 0.8) !important;
-    color: rgb(75, 85, 99) !important;
+    color: var(--light-text-dark) !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
   }
-}
-
-/* NUCLEAR OPTION - Force all slate text colors to be visible in light mode */
-
-/* 1. Override ALL slate text colors with maximum specificity */
-[data-theme="light"] .text-slate-400,
-[data-theme="light"] .text-slate-300,
-[data-theme="light"] .text-slate-500,
-[data-theme="light"] span.text-slate-400,
-[data-theme="light"] span.text-slate-300,
-[data-theme="light"] div.text-slate-400,
-[data-theme="light"] div.text-slate-300 {
-  color: rgb(75, 85, 99) !important;
 }
 
 /* 2. Target interaction badges specifically */
 [data-theme="light"] .bg-slate-700.text-slate-300,
 [data-theme="light"] [class*="bg-slate-700"][class*="text-slate-300"] {
   background-color: rgba(243, 244, 246, 0.8) !important;
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
   border: 1px solid rgba(209, 213, 219, 0.6) !important;
 }
 
@@ -2051,14 +2017,14 @@ body {
 [data-theme="light"] .space-y-3 div,
 [data-theme="light"] .bg-slate-800 span,
 [data-theme="light"] .bg-slate-800 div:not([class*="recharts"]) {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* 4. Target mobile-specific flex containers */
 [data-theme="light"] .flex.items-center.gap-2 span,
 [data-theme="light"] .flex.items-center.gap-2 div,
 [data-theme="light"] .flex.items-center.gap-2 .capitalize {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* 5. Override any remaining white text in CRM components */
@@ -2072,13 +2038,13 @@ body {
   [data-theme="light"] .card-enhanced div:not([class*="recharts"]),
   [data-theme="light"] .card-enhanced .text-slate-400,
   [data-theme="light"] .card-enhanced .text-slate-300 {
-    color: rgb(75, 85, 99) !important;
+    color: var(--light-text-dark) !important;
   }
 
   /* Nuclear override for all mobile CRM text */
   [data-theme="light"] [class*="bg-slate-"] span:not([class*="text-white"]),
   [data-theme="light"] [class*="bg-slate-"] div:not([class*="recharts"]):not([class*="text-white"]) {
-    color: rgb(75, 85, 99) !important;
+    color: var(--light-text-dark) !important;
   }
 }
 
@@ -2090,13 +2056,13 @@ body {
 [data-theme="light"] .space-y-1 .text-xs.text-slate-300,
 [data-theme="light"] .space-y-1 div.text-xs.text-slate-300,
 [data-theme="light"] [class*="sm:hidden"] .text-xs.text-slate-300 {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* 1b. Even more specific - target any div containing outcome text */
 [data-theme="light"] div[class="text-xs text-slate-300"],
 [data-theme="light"] div[class*="text-xs"][class*="text-slate-300"] {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* 2. Fix SVG icons inside ghost buttons - Edit and Delete icons */
@@ -2104,7 +2070,7 @@ body {
 [data-theme="light"] button[class*="text-slate-400"] .lucide,
 [data-theme="light"] button[class*="ghost"] svg,
 [data-theme="light"] button[class*="ghost"] .lucide {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
   stroke: rgb(75, 85, 99) !important;
 }
 
@@ -2112,14 +2078,14 @@ body {
 [data-theme="light"] button .lucide-pencil,
 [data-theme="light"] button .lucide-trash-2,
 [data-theme="light"] button svg[class*="lucide"] {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
   stroke: rgb(75, 85, 99) !important;
 }
 
 /* 4. Target h-7 w-7 button icons specifically */
 [data-theme="light"] button.h-7.w-7 svg,
 [data-theme="light"] button[class*="h-7"][class*="w-7"] svg {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
   stroke: rgb(75, 85, 99) !important;
 }
 
@@ -2140,10 +2106,10 @@ body {
 @media (max-width: 768px) {
   [data-theme="light"] button svg,
   [data-theme="light"] button .lucide {
-    color: rgb(75, 85, 99) !important;
+    color: var(--light-text-dark) !important;
     stroke: rgb(75, 85, 99) !important;
   }
-  
+
   [data-theme="light"] button:hover svg,
   [data-theme="light"] button:hover .lucide {
     color: rgb(55, 65, 81) !important;
@@ -2153,55 +2119,23 @@ body {
 
 /* GLOBAL APPLICATION-WIDE WHITE TEXT FIXES - All Pages */
 
-/* 1. COMPREHENSIVE text-slate overrides for ALL components */
-[data-theme="light"] .text-slate-50,
-[data-theme="light"] .text-slate-100,
-[data-theme="light"] .text-slate-200,
-[data-theme="light"] .text-slate-300,
-[data-theme="light"] .text-slate-400,
-[data-theme="light"] .text-slate-500 {
-  color: rgb(75, 85, 99) !important;
-}
-
 /* 2. Target ANY element that might contain white text in mobile views */
 @media (max-width: 768px) {
-  /* ALL mobile table content */
-  [data-theme="light"] [class*="mobile-table"] .text-slate-300,
-  [data-theme="light"] [class*="mobile-table"] .text-slate-400,
-  [data-theme="light"] .card-enhanced .text-slate-300,
-  [data-theme="light"] .card-enhanced .text-slate-400 {
-    color: rgb(75, 85, 99) !important;
-  }
-
-  /* ALL mobile expanded content */
-  [data-theme="light"] [class*="space-y-"] .text-slate-300,
-  [data-theme="light"] [class*="space-y-"] .text-slate-400,
-  [data-theme="light"] [class*="space-y-"] div.text-xs {
-    color: rgb(75, 85, 99) !important;
-  }
-
-  /* ALL mobile badges and labels */
-  [data-theme="light"] .text-xs.text-slate-400,
-  [data-theme="light"] .text-xs.text-slate-300,
-  [data-theme="light"] .text-sm.text-slate-400,
-  [data-theme="light"] .text-sm.text-slate-300 {
-    color: rgb(75, 85, 99) !important;
+  /* Mobile-specific text size combinations (not covered by consolidated rules) */
+  [data-theme="light"] .text-xs:not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]),
+  [data-theme="light"] .text-sm:not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]) {
+    color: var(--light-text-dark) !important;
   }
 }
 
-/* 3. Target ALL possible text containers in ALL components */
-[data-theme="light"] div[class*="text-slate-"],
-[data-theme="light"] span[class*="text-slate-"],
-[data-theme="light"] p[class*="text-slate-"] {
-  color: rgb(75, 85, 99) !important;
-}
+/* 3. Additional element targeting (specific patterns not covered above) */
 
 /* 4. Target specific patterns found in tables across all pages */
 [data-theme="light"] .font-medium.text-slate-400,
 [data-theme="light"] .font-medium.text-slate-300,
 [data-theme="light"] .capitalize.text-slate-400,
 [data-theme="light"] .capitalize.text-slate-300 {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* 5. ALL mobile card components - target ANY text that might be white */
@@ -2209,7 +2143,7 @@ body {
 [data-theme="light"] [class*="card-"] .text-slate-400,
 [data-theme="light"] [class*="bg-slate-"] .text-slate-300,
 [data-theme="light"] [class*="bg-slate-"] .text-slate-400 {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* 6. INVENTORY, MILEAGE, BOOKKEEPER pages - additional patterns */
@@ -2217,13 +2151,13 @@ body {
 [data-theme="light"] .table-enhanced .text-slate-400,
 [data-theme="light"] [class*="table"] .text-slate-300,
 [data-theme="light"] [class*="table"] .text-slate-400 {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* 7. TARGETED white text fixes - Only for problematic patterns */
 [data-theme="light"] .text-xs:not([class*="text-blue"]):not([class*="text-emerald"]):not([class*="text-red"]),
 [data-theme="light"] .text-sm:not([class*="text-blue"]):not([class*="text-emerald"]):not([class*="text-red"]) {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* 8. SPECIFIC FIXES for Description, Amount, Category fields across ALL pages */
@@ -2243,18 +2177,18 @@ body {
 [data-theme="light"] [class*="max-w-"] .truncate.block,
 [data-theme="light"] [class*="max-w-"] span.truncate,
 [data-theme="light"] .truncate.block {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* General max-w containers */
 [data-theme="light"] .font-medium[class*="max-w-"],
 [data-theme="light"] div[class*="max-w-"] {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* Additional amount field targeting - catch any overrides */
 [data-theme="light"] span.font-semibold.whitespace-nowrap:not(.text-green-400):not(.text-red-400) {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* Mobile table amount and category fixes */
@@ -2262,10 +2196,10 @@ body {
   [data-theme="light"] .font-semibold.whitespace-nowrap {
     color: inherit !important; /* Allow green/red to show through */
   }
-  
+
   [data-theme="light"] .truncate.block,
   [data-theme="light"] [class*="max-w-"] span {
-    color: rgb(75, 85, 99) !important;
+    color: var(--light-text-dark) !important;
   }
 }
 
@@ -2274,7 +2208,7 @@ body {
 [data-theme="light"] .text-slate-400,
 [data-theme="light"] .border-slate-600.text-slate-300,
 [data-theme="light"] .bg-slate-700.text-slate-300 {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* Table headers and cells - ALL tables */
@@ -2282,7 +2216,7 @@ body {
 [data-theme="light"] th.text-slate-300,
 [data-theme="light"] td.text-slate-300,
 [data-theme="light"] td.text-slate-400 {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* Mobile Table content - ALL pages using MobileTable */
@@ -2290,7 +2224,7 @@ body {
 [data-theme="light"] .break-words,
 [data-theme="light"] .whitespace-normal,
 [data-theme="light"] .truncate {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* Badge components - ALL pages */
@@ -2298,7 +2232,7 @@ body {
 [data-theme="light"] [class*="badge"],
 [data-theme="light"] .border-slate-600,
 [data-theme="light"] .bg-slate-800.px-2.py-1 {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* CRM Dialog content - Fix remaining white text */
@@ -2309,7 +2243,7 @@ body {
 /* Font mono text - SKU, amounts, etc. */
 [data-theme="light"] .font-mono,
 [data-theme="light"] .font-semibold.font-mono {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* Preserve important colored text - overrides for success/error/warning */
@@ -2325,8 +2259,7 @@ body {
 [data-theme="light"] .text-green-500,
 [data-theme="light"] .text-orange-400,
 [data-theme="light"] .text-orange-500 {
-  color: inherit !important; /* Keep original colors for status indicators */
-}
+  color: inherit !important;}
 
 /* FINAL COMPREHENSIVE WHITE TEXT FIXES - Catch All Remaining Issues */
 
@@ -2335,39 +2268,18 @@ body {
 [data-theme="light"] td div,
 [data-theme="light"] th span,
 [data-theme="light"] th div {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* 2. ALL mobile table and card content */
 [data-theme="light"] .card-enhanced span:not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]),
 [data-theme="light"] .card-enhanced div:not([class*="recharts"]):not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]) {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
 /* 3. ALL description, title, and content text patterns */
 [data-theme="light"] .font-medium:not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]):not([class*="text-amber"]),
 [data-theme="light"] .break-words:not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]) {
-  color: rgb(75, 85, 99) !important;
+  color: var(--light-text-dark) !important;
 }
 
-/* 4. ALL dialog and modal text content */
-[data-theme="light"] [role="dialog"] .text-slate-300,
-[data-theme="light"] [role="dialog"] .text-slate-400,
-[data-theme="light"] [role="dialog"] .text-white:not([class*="bg-blue"]):not([class*="bg-red"]):not([class*="bg-emerald"]) {
-  color: rgb(75, 85, 99) !important;
-}
-
-/* 5. Mobile-specific universal fix */
-@media (max-width: 768px) {
-  [data-theme="light"] span:not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]):not([class*="text-amber"]),
-  [data-theme="light"] div:not([class*="recharts"]):not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]):not([class*="text-amber"]):not([class*="bg-blue"]):not([class*="bg-green"]):not([class*="bg-red"]) {
-    color: rgb(75, 85, 99) !important;
-  }
-}
-
-/* 6. Force visibility for any remaining edge cases */
-[data-theme="light"] .text-slate-50:not([class*="bg-blue"]):not([class*="bg-green"]):not([class*="bg-red"]),
-[data-theme="light"] .text-slate-100:not([class*="bg-blue"]):not([class*="bg-green"]):not([class*="bg-red"]),
-[data-theme="light"] .text-slate-200:not([class*="bg-blue"]):not([class*="bg-green"]):not([class*="bg-red"]) {
-  color: rgb(75, 85, 99) !important;
-}
