@@ -32,7 +32,6 @@ export function Header({
   const handleSearch = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && searchValue.trim()) {
       // TODO: Implement search functionality
-      console.log('Searching for:', searchValue);
     }
   };
 
@@ -96,7 +95,6 @@ export function Header({
               className="md:hidden text-slate-400 hover:text-slate-200"
               onClick={() => {
                 // TODO: Open mobile search modal
-                console.log('Open mobile search');
               }}
             >
               <Search className="h-4 w-4" />
@@ -107,7 +105,7 @@ export function Header({
             variant="ghost" 
             size="icon" 
             className="text-slate-400 hover:text-slate-200 relative"
-            onClick={onNotifications || (() => console.log('Notifications clicked'))}
+            onClick={onNotifications}
           >
             <Bell className="h-4 w-4" />
             {/* Notification badge */}
@@ -118,7 +116,7 @@ export function Header({
             variant="ghost" 
             size="icon" 
             className="text-slate-400 hover:text-slate-200"
-            onClick={onHelp || (() => console.log('Help clicked'))}
+            onClick={onHelp}
           >
             <HelpCircle className="h-4 w-4" />
           </Button>
@@ -127,7 +125,7 @@ export function Header({
             variant="ghost" 
             size="icon" 
             className="text-slate-400 hover:text-slate-200"
-            onClick={onSettings || (() => console.log('Settings clicked'))}
+            onClick={onSettings}
           >
             <Settings className="h-4 w-4" />
           </Button>
