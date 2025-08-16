@@ -3,15 +3,15 @@
 import { useMemo } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell } from 'recharts';
 import { Interaction } from '@/types/interaction';
-import { MobileChart } from '@/components/ui/mobile-chart';
+import { Chart } from '@/components/ui/chart';
 
-// Modern color palette for interaction types
+// Professional color palette for interaction types
 const TYPE_COLORS: Record<string, string> = {
-    call: '#3b82f6',     // blue-500
-    email: '#10b981',    // emerald-500  
-    meeting: '#f59e0b',  // amber-500
-    'site visit': '#a855f7', // purple-500
-    other: '#64748b',    // slate-500
+    call: '#2563eb',     // blue-600
+    email: '#059669',    // emerald-600  
+    meeting: '#d97706',  // amber-600
+    'site visit': '#7c3aed', // violet-600
+    other: '#475569',    // slate-600
 };
 
 interface InteractionBucket {
@@ -77,35 +77,32 @@ export default function InteractionTypeBar({ interactions }: { interactions: Int
     };
 
     return (
-        <MobileChart
-            mobileHeight={200}
-            defaultHeight={350}
-            standalone={false}
-        >
+        <Chart height={280}>
             <BarChart 
                 data={data} 
-                margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
-                barCategoryGap="20%"
+                margin={{ top: 20, right: 20, left: 10, bottom: 5 }}
+                barCategoryGap="25%"
             >
                 <CartesianGrid 
-                    stroke="#475569" 
-                    strokeDasharray="3 3" 
+                    stroke="#334155" 
+                    strokeDasharray="1 3" 
                     horizontal={true}
                     vertical={false}
+                    opacity={0.2}
                 />
                 
                 <XAxis
                     dataKey="type"
-                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    tick={{ fill: '#94a3b8', fontSize: 13, fontWeight: 500 }}
                     axisLine={false}
                     tickLine={false}
                 />
                 
                 <YAxis
-                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    tick={{ fill: '#94a3b8', fontSize: 13, fontWeight: 500 }}
                     axisLine={false}
                     tickLine={false}
-                    width={40}
+                    width={60}
                 />
 
                 <CustomTooltip />
@@ -113,7 +110,7 @@ export default function InteractionTypeBar({ interactions }: { interactions: Int
                 <Bar 
                     dataKey="count" 
                     radius={[4, 4, 0, 0]}
-                    stroke="#1e293b"
+                    stroke="rgba(255, 255, 255, 0.1)"
                     strokeWidth={1}
                 >
                     {data.map((entry, index) => (
@@ -121,6 +118,6 @@ export default function InteractionTypeBar({ interactions }: { interactions: Int
                     ))}
                 </Bar>
             </BarChart>
-        </MobileChart>
+        </Chart>
     );
 }

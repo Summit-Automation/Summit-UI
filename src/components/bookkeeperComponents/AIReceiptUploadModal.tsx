@@ -125,7 +125,7 @@ export default function AIReceiptUploadModal({
             });
 
             // Send to Flowise AI agent
-            const response = await fetch('https://flowise.summitautomation.io/api/v1/prediction/a622964c-9a9c-4dec-8024-a1174779fa5c', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_FLOWISE_API_URL || 'https://flowise.summitautomation.io'}/api/v1/prediction/${process.env.NEXT_PUBLIC_FLOWISE_RECEIPT_ID || 'a622964c-9a9c-4dec-8024-a1174779fa5c'}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -291,7 +291,6 @@ export default function AIReceiptUploadModal({
             <DialogTrigger asChild>
                 <Button
                     variant="outline"
-                    className="bg-blue-600/10 border-blue-500/30 text-blue-400 hover:bg-blue-600/20 hover:border-blue-500/50 h-10"
                 >
                     <Brain className="h-4 w-4 mr-2" />
                     AI Receipt Upload

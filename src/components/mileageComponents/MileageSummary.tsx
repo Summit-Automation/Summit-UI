@@ -3,12 +3,13 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Car, MapPin, DollarSign } from 'lucide-react';
 import { MileageEntry } from '@/types/mileage';
 import { cn } from '@/lib/utils';
+import { GrowthIndicator } from '@/components/ui/growth-indicator';
 
 const cardStyles = `metric-enhanced card-enhanced data-appear`;
 const cardHeaders = `flex items-center justify-between pb-2`;
 const cardTitleStyles = `text-sm font-medium text-slate-300 uppercase tracking-wide`;
 const iconStyles = `h-4 w-4`;
-const iconContainerStyles = `p-2 bg-slate-800 rounded-lg transition-transform duration-200 ease-out group-hover:scale-105`;
+const iconContainerStyles = `p-2.5 rounded-xl transition-transform duration-200 ease-out group-hover:scale-110`;
 const cardContentStyles = `pt-0`;
 
 interface MetricCardProps {
@@ -21,13 +22,18 @@ interface MetricCardProps {
 }
 
 function MetricCard({ title, value, Icon, iconColorClass, subtitle, trend }: MetricCardProps) {
-    const isPositive = trend !== undefined ? trend >= 0 : undefined;
+    
+    // Determine background color based on icon color
+    const bgColorClass = iconColorClass.includes('sky') || iconColorClass.includes('blue') ? 'bg-blue-500/20 group-hover:bg-blue-500/30' :
+                        iconColorClass.includes('green') ? 'bg-emerald-500/20 group-hover:bg-emerald-500/30' :
+                        iconColorClass.includes('yellow') ? 'bg-amber-500/20 group-hover:bg-amber-500/30' :
+                        'bg-blue-500/20 group-hover:bg-blue-500/30';
     
     return (
-        <Card className={cardStyles}>
+        <Card className={`${cardStyles} group`}>
             <CardHeader className={cardHeaders}>
                 <CardTitle className={cardTitleStyles}>{title}</CardTitle>
-                <div className={iconContainerStyles}>
+                <div className={`${iconContainerStyles} ${bgColorClass}`}>
                     <Icon className={cn(iconStyles, iconColorClass, "icon-interactive")} />
                 </div>
             </CardHeader>
@@ -37,14 +43,7 @@ function MetricCard({ title, value, Icon, iconColorClass, subtitle, trend }: Met
                         {value}
                     </div>
                     {trend !== undefined && (
-                        <div className={cn(
-                            "text-xs px-2 py-1 rounded-full mb-0.5",
-                            isPositive 
-                                ? "text-green-400 bg-green-900 status-badge-enhanced status-success" 
-                                : "text-red-400 bg-red-900 status-badge-enhanced status-error"
-                        )}>
-                            {isPositive ? '+' : ''}{trend}%
-                        </div>
+                        <GrowthIndicator value={trend} className="mb-0.5" />
                     )}
                 </div>
                 {subtitle && (
@@ -103,7 +102,7 @@ export default function MileageSummary({ mileageEntries }: { mileageEntries: Mil
                 title="Total Miles"
                 value={`${formatMiles(totalMiles)} mi`}
                 Icon={Car}
-                iconColorClass="text-sky-400"
+                iconColorClass="text-blue-400"
                 subtitle={`${businessTrips} business trips`}
                 trend={businessPercentage > 70 ? 5 : businessPercentage > 50 ? 0 : -2}
             />
@@ -118,7 +117,7 @@ export default function MileageSummary({ mileageEntries }: { mileageEntries: Mil
                 title="Tax Deduction"
                 value={formatCurrency(potentialDeduction)}
                 Icon={DollarSign}
-                iconColorClass="text-yellow-400"
+                iconColorClass="text-amber-400"
                 subtitle={`@ $${standardMileageRate}/mile IRS rate`}
                 trend={potentialDeduction > 1000 ? 12 : potentialDeduction > 500 ? 5 : 0}
             />

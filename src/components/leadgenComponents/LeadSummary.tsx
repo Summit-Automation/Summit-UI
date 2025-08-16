@@ -15,28 +15,36 @@ function LeadSummary({ stats }: LeadSummaryProps) {
       title: "Total Leads",
       value: stats.total_leads.toLocaleString(),
       icon: Users,
-      gradient: "from-blue-400 to-blue-600",
+      color: "text-blue-400",
+      bgColor: "bg-blue-500/20",
+      hoverBgColor: "group-hover:bg-blue-500/30",
       description: "All time leads"
     },
     {
       title: "Qualified Leads",
       value: stats.qualified_leads.toLocaleString(),
       icon: Target,
-      gradient: "from-green-400 to-green-600",
+      color: "text-emerald-400",
+      bgColor: "bg-emerald-500/20",
+      hoverBgColor: "group-hover:bg-emerald-500/30",
       description: `${((stats.qualified_leads / stats.total_leads) * 100 || 0).toFixed(1)}% qualification rate`
     },
     {
       title: "Average Score",
       value: stats.average_score.toFixed(1),
       icon: Star,
-      gradient: "from-yellow-400 to-yellow-600",
+      color: "text-amber-400",
+      bgColor: "bg-amber-500/20",
+      hoverBgColor: "group-hover:bg-amber-500/30",
       description: "Lead quality score"
     },
     {
       title: "Conversion Rate",
       value: `${(stats.conversion_rate * 100).toFixed(1)}%`,
       icon: TrendingUp,
-      gradient: "from-purple-400 to-purple-600",
+      color: "text-purple-400",
+      bgColor: "bg-purple-500/20",
+      hoverBgColor: "group-hover:bg-purple-500/30",
       description: "Leads to customers"
     }
   ];
@@ -46,13 +54,13 @@ function LeadSummary({ stats }: LeadSummaryProps) {
       {summaryCards.map((card, index) => {
         const Icon = card.icon;
         return (
-          <Card key={index} className="card-enhanced metric-enhanced" data-appear>
+          <Card key={index} className="card-enhanced metric-enhanced group" data-appear>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 {card.title}
               </CardTitle>
-              <div className={`h-8 w-8 rounded-lg bg-gradient-to-r ${card.gradient} flex items-center justify-center`}>
-                <Icon className="h-4 w-4 text-white" />
+              <div className={`p-2.5 rounded-xl ${card.bgColor} transition-transform duration-200 ease-out hover:scale-110 ${card.hoverBgColor}`}>
+                <Icon className={`h-4 w-4 ${card.color} icon-interactive`} />
               </div>
             </CardHeader>
             <CardContent>

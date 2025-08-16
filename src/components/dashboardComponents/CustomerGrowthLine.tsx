@@ -4,7 +4,7 @@ import { useMemo, memo } from 'react';
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
 import { Customer } from '@/types/customer';
 import { format, parseISO } from 'date-fns';
-import { BaseChart, ChartTooltip } from '@/components/ui/base-chart';
+import { Chart } from '@/components/ui/chart';
 import { formatDate } from '@/utils/shared';
 
 type Bucket = { date: string; count: number };
@@ -34,18 +34,19 @@ const CustomerGrowthLine = memo(function CustomerGrowthLine({ customers }: { cus
     }
 
     return (
-        <BaseChart mobileHeight={200} height={350}>
-            <LineChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+        <Chart height={280}>
+            <LineChart data={data} margin={{ top: 20, right: 20, left: 10, bottom: 5 }}>
                 <CartesianGrid 
-                    stroke="#475569" 
-                    strokeDasharray="3 3" 
+                    stroke="#334155" 
+                    strokeDasharray="1 3" 
                     horizontal={true}
                     vertical={false}
+                    opacity={0.2}
                 />
                 
                 <XAxis
                     dataKey="date"
-                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    tick={{ fill: '#94a3b8', fontSize: 13, fontWeight: 500 }}
                     tickFormatter={formatDate}
                     axisLine={false}
                     tickLine={false}
@@ -53,27 +54,26 @@ const CustomerGrowthLine = memo(function CustomerGrowthLine({ customers }: { cus
                 />
                 
                 <YAxis
-                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    tick={{ fill: '#94a3b8', fontSize: 13, fontWeight: 500 }}
                     axisLine={false}
                     tickLine={false}
-                    width={40}
+                    width={60}
                 />
 
-                <ChartTooltip
-                    labelFormatter={formatDate}
-                    formatter={(value: unknown) => `${value as number} New Customers`}
-                />
 
                 <Line
                     type="monotone"
                     dataKey="count"
-                    stroke="#3b82f6"
-                    strokeWidth={2}
-                    dot={{ r: 4, fill: '#f8fafc', stroke: '#3b82f6', strokeWidth: 2 }}
-                    activeDot={{ r: 6, fill: '#ffffff', stroke: '#2563eb', strokeWidth: 3 }}
+                    stroke="#2563eb"
+                    strokeWidth={2.5}
+                    dot={{ r: 3, fill: '#ffffff', stroke: '#2563eb', strokeWidth: 2 }}
+                    activeDot={{ r: 6, fill: '#2563eb', stroke: '#ffffff', strokeWidth: 2 }}
+                    connectNulls={false}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                 />
             </LineChart>
-        </BaseChart>
+        </Chart>
     );
 });
 

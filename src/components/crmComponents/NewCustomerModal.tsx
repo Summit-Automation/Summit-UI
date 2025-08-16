@@ -44,8 +44,8 @@ export default function NewCustomerModal({onSuccess}: { onSuccess?: () => void }
     return (<Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button 
-                    variant="outline" 
-                    className="w-full sm:w-auto bg-emerald-600 border-emerald-600 text-white hover:bg-emerald-700 hover:border-emerald-700 transition-all duration-200"
+                    variant="outline"
+                    className="w-full sm:w-auto"
                 >
                     + New Customer
                 </Button>

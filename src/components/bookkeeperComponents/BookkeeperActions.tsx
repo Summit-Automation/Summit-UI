@@ -230,7 +230,7 @@ export default function BookkeeperActions() {
                 <Button
                     variant="outline"
                     onClick={handleImportCSV}
-                    className="w-full bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800 hover:border-slate-600 transition-all duration-200 h-10"
+                    className="w-full h-10"
                 >
                     <Upload className="h-4 w-4 mr-2 flex-shrink-0" />
                     <span className="truncate">Import CSV</span>
@@ -240,7 +240,7 @@ export default function BookkeeperActions() {
                 <Button
                     variant="outline"
                     onClick={handleExportTransactions}
-                    className="w-full bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800 hover:border-slate-600 transition-all duration-200 h-10"
+                    className="w-full h-10"
                 >
                     <Download className="h-4 w-4 mr-2 flex-shrink-0" />
                     <span className="truncate">Export CSV</span>

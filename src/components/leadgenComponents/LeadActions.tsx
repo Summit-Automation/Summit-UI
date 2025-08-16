@@ -24,7 +24,7 @@ function LeadActions({
       <div className="flex gap-3">
         <Button 
           onClick={onNewLead}
-          className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg transition-all duration-200"
+          variant="outline"
         >
           <Plus className="mr-2 h-4 w-4" />
           Add Lead
@@ -33,7 +33,6 @@ function LeadActions({
         <Button 
           onClick={onAIGenerate}
           variant="outline"
-          className="border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-300 transition-all duration-200"
         >
           <Bot className="mr-2 h-4 w-4" />
           AI Generate
@@ -46,7 +45,6 @@ function LeadActions({
             onClick={onRefresh}
             variant="outline"
             size="sm"
-            className="border-slate-200 hover:bg-slate-50"
           >
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh
@@ -58,7 +56,6 @@ function LeadActions({
             onClick={onFilter}
             variant="outline"
             size="sm"
-            className="border-slate-200 hover:bg-slate-50"
           >
             <Filter className="mr-2 h-4 w-4" />
             Filter
@@ -70,7 +67,6 @@ function LeadActions({
             onClick={onExport}
             variant="outline"
             size="sm"
-            className="border-slate-200 hover:bg-slate-50"
           >
             <Download className="mr-2 h-4 w-4" />
             Export

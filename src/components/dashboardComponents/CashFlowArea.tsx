@@ -4,8 +4,8 @@ import { useMemo, memo } from 'react';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { Transaction } from '@/types/transaction';
 import { format, parseISO } from 'date-fns';
-import { BaseChart, ChartTooltip } from '@/components/ui/base-chart';
-import { formatCurrency, formatDate } from '@/utils/shared';
+import { Chart } from '@/components/ui/chart';
+import { formatDate } from '@/utils/shared';
 
 type Bucket = { date: string; income: number; expense: number };
 
@@ -37,66 +37,74 @@ const CashFlowArea = memo(function CashFlowArea({ transactions }: { transactions
         );
     }
     return (
-        <BaseChart mobileHeight={200} height={350}>
-            <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+        <Chart height={280}>
+            <AreaChart data={data} margin={{ top: 20, right: 20, left: 10, bottom: 5 }}>
                 <defs>
                     <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
-                        <stop offset="95%" stopColor="#10b981" stopOpacity={0.2} />
+                        <stop offset="0%" stopColor="#059669" stopOpacity={0.3} />
+                        <stop offset="50%" stopColor="#059669" stopOpacity={0.15} />
+                        <stop offset="100%" stopColor="#059669" stopOpacity={0.05} />
                     </linearGradient>
                     <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8} />
-                        <stop offset="95%" stopColor="#ef4444" stopOpacity={0.2} />
+                        <stop offset="0%" stopColor="#dc2626" stopOpacity={0.3} />
+                        <stop offset="50%" stopColor="#dc2626" stopOpacity={0.15} />
+                        <stop offset="100%" stopColor="#dc2626" stopOpacity={0.05} />
                     </linearGradient>
                 </defs>
 
                 <CartesianGrid 
-                    stroke="#475569" 
-                    strokeDasharray="3 3" 
+                    stroke="#334155" 
+                    strokeDasharray="1 3" 
                     horizontal={true}
                     vertical={false}
+                    opacity={0.2}
                 />
                 
                 <XAxis
                     dataKey="date"
-                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    tick={{ fill: '#94a3b8', fontSize: 13, fontWeight: 500 }}
                     tickFormatter={formatDate}
                     axisLine={false}
                     tickLine={false}
                     interval="preserveStartEnd"
+                    height={40}
                 />
                 
                 <YAxis
-                    tick={{ fill: '#94a3b8', fontSize: 11 }}
-                    tickFormatter={(value) => `${value}`}
+                    tick={{ fill: '#94a3b8', fontSize: 13, fontWeight: 500 }}
+                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                     axisLine={false}
                     tickLine={false}
-                    width={50}
+                    width={60}
                 />
 
-                <ChartTooltip
-                    labelFormatter={formatDate}
-                    formatter={(value: unknown) => formatCurrency(value as number)}
-                />
 
                 <Area
                     type="monotone"
                     dataKey="income"
                     stackId="1"
-                    stroke="#10b981"
+                    stroke="#059669"
                     fill="url(#incomeGradient)"
                     strokeWidth={2}
+                    dot={false}
+                    activeDot={{ r: 5, stroke: '#059669', strokeWidth: 2, fill: '#ffffff' }}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                 />
                 <Area
                     type="monotone"
                     dataKey="expense"
                     stackId="1"
-                    stroke="#ef4444"
+                    stroke="#dc2626"
                     fill="url(#expenseGradient)"
                     strokeWidth={2}
+                    dot={false}
+                    activeDot={{ r: 5, stroke: '#dc2626', strokeWidth: 2, fill: '#ffffff' }}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                 />
             </AreaChart>
-        </BaseChart>
+        </Chart>
     );
 });
 

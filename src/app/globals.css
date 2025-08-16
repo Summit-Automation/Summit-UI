@@ -1,924 +1,1837 @@
 @import "tailwindcss";
 
-/* Professional Design System Variables */
+/* CSS Custom Properties - Common Light Mode Colors */
 :root {
-    /* Brand Colors */
-    --brand-primary: #3b82f6;
-    --brand-primary-hover: #2563eb;
-    --brand-primary-light: #60a5fa;
-    --brand-secondary: #1e40af;
-    
-    /* Background System */
-    --background: #020617;
-    --surface: #0f172a;
-    --surface-elevated: #1e293b;
-    --surface-hover: #334155;
-    --surface-glass: rgba(15, 23, 42, 0.8);
-    
-    /* Border System */
-    --border-primary: #334155;
-    --border-secondary: #475569;
-    --border-subtle: #1e293b;
-    --border-accent: rgba(59, 130, 246, 0.3);
-    
-    /* Text Hierarchy */
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
-    --text-accent: var(--brand-primary);
-    
-    /* Status Colors */
-    --success: #10b981;
-    --success-light: #34d399;
-    --warning: #f59e0b;
-    --warning-light: #fbbf24;
-    --error: #ef4444;
-    --error-light: #f87171;
-    --info: var(--brand-primary);
-    
-    /* Shadows & Effects */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
-    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15), 0 10px 10px rgba(0, 0, 0, 0.04);
-    --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
-    --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.3);
-    --shadow-premium: 0 32px 64px rgba(0, 0, 0, 0.35);
-    
-    /* Glass Effects */
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-bg: rgba(15, 23, 42, 0.7);
-    --glass-strong: rgba(30, 41, 59, 0.8);
-    
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-    --gradient-surface: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
-    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-    
-    /* Spacing Scale */
-    --space-xs: 0.25rem;
-    --space-sm: 0.5rem;
-    --space-md: 1rem;
-    --space-lg: 1.5rem;
-    --space-xl: 2rem;
-    --space-2xl: 3rem;
-    
-    /* Border Radius */
-    --radius-sm: 0.375rem;
-    --radius: 0.5rem;
-    --radius-lg: 0.75rem;
-    --radius-xl: 1rem;
-    
-    /* Animation Curves */
-    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-    --ease-out: cubic-bezier(0, 0, 0.2, 1);
-    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --light-bg-primary: rgba(255, 255, 255, 0.95);
+  --light-bg-secondary: rgba(255, 255, 255, 0.9);
+  --light-bg-muted: rgba(243, 244, 246, 0.95);
+  --light-bg-soft: rgba(243, 244, 246, 0.5);
+  --light-border-primary: rgba(209, 213, 219, 0.7);
+  --light-border-secondary: rgba(156, 163, 175, 0.8);
+  --light-text-gray: rgb(107, 114, 128);
+  --light-text-dark: rgb(75, 85, 99);
+  --light-border-gray: rgb(229, 231, 235);
 }
 
-/* Professional Base Styles */
-@layer base {
-    * { 
-        @apply border-slate-700; 
-        box-sizing: border-box;
-    }
-    
-    body { 
-        @apply bg-slate-950 text-slate-50 font-sans antialiased leading-relaxed; 
-        font-feature-settings: "rlig" 1, "calt" 1;
-    }
-    
-    /* Professional Typography Hierarchy */
-    h1, h2, h3, h4, h5, h6 { 
-        @apply text-slate-50 font-semibold tracking-tight; 
-        line-height: 1.2;
-    }
-    
-    h1 { 
-        @apply text-3xl lg:text-4xl; 
-        font-weight: 700;
-        letter-spacing: -0.025em;
-    }
-    
-    h2 { 
-        @apply text-2xl lg:text-3xl; 
-        font-weight: 600;
-        letter-spacing: -0.025em;
-    }
-    
-    h3 { 
-        @apply text-xl lg:text-2xl; 
-        font-weight: 600;
-    }
-    
-    h4 { 
-        @apply text-lg lg:text-xl; 
-        font-weight: 500;
-    }
-    
-    h5 { 
-        @apply text-base lg:text-lg; 
-        font-weight: 500;
-    }
-    
-    h6 { 
-        @apply text-sm lg:text-base; 
-        font-weight: 500;
-    }
-    
-    p { 
-        @apply leading-relaxed; 
-        max-width: 65ch;
-    }
-    
-    /* Professional Focus Styles */
-    *:focus-visible {
-        outline: 2px solid var(--brand-primary);
-        outline-offset: 2px;
-        border-radius: var(--radius-sm);
-    }
+/* Theme System - Light Mode Overrides */
+/* Dark mode is the default - no changes needed for existing classes */
+
+/* Light Theme - Override specific components when data-theme="light" */
+[data-theme="light"] {
+  /* Body and main backgrounds */
+  background-color: rgb(249, 250, 251);  color: rgb(17, 24, 39);}
+
+[data-theme="light"] body {
+  background-color: rgb(249, 250, 251) !important;  color: rgb(17, 24, 39) !important;}
+
+/* Light theme component overrides */
+[data-theme="light"] .sidebar-bg {
+  background-color: var(--light-bg-primary) !important;
+  border-color: rgba(229, 231, 235, 0.6) !important;
 }
 
-/* Component Styles - Consolidated with Feedback */
-@layer components {
-    .card-clean { @apply bg-slate-900 border border-slate-800 rounded-lg shadow-sm hover:border-slate-700 hover:shadow-md; }
-    .btn-clean { @apply px-4 py-2 rounded-lg font-medium transition-colors; }
-    .btn-primary { @apply bg-blue-600 text-white hover:bg-blue-700; }
-    .btn-secondary { @apply bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white; }
-    .nav-clean { @apply bg-slate-900/95 border-r border-slate-800; }
-    .metric-clean { @apply bg-slate-900 border border-slate-800 rounded-lg p-6; }
-    .metric-value { @apply text-2xl font-bold text-slate-50; }
-    .metric-label { @apply text-sm text-slate-400 uppercase tracking-wide; }
-    .table-clean { @apply bg-slate-900 border border-slate-800 rounded-lg overflow-hidden; }
-    .table-header { @apply bg-slate-800 text-slate-300 font-medium; }
-    .table-row { @apply border-b border-slate-800 hover:bg-slate-800/50; }
-    .input-clean { @apply bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20; }
-    .status-success { @apply bg-emerald-100/10 text-emerald-400 border border-emerald-500/20; }
-    .status-warning { @apply bg-amber-100/10 text-amber-400 border border-amber-500/20; }
-    .status-error { @apply bg-red-100/10 text-red-400 border border-red-500/20; }
-
-    /* Optimized Card Interactions */
-    .card-enhanced {
-        transition: all 0.2s var(--ease-in-out);
-    }
-
-    .card-enhanced:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-lg);
-        border-color: rgba(59, 130, 246, 0.3);
-    }
-
-    /* Optimized Metric Cards */
-    .metric-enhanced {
-        background: var(--gradient-surface);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(51, 65, 85, 0.8);
-        transition: all 0.2s var(--ease-in-out);
-    }
-
-    .metric-enhanced:hover {
-        box-shadow: var(--shadow-lg);
-    }
-
-    /* 3. Enhanced Status Badges with Glow Effects */
-    .status-badge-enhanced {
-        position: relative;
-        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
-        transition: all 0.3s ease;
-    }
-
-    .status-badge-enhanced.status-success {
-        box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
-    }
-
-    .status-badge-enhanced.status-warning {
-        box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
-    }
-
-    .status-badge-enhanced.status-error {
-        box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
-    }
-
-    .status-badge-enhanced.status-info {
-        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-    }
-
-    /* 4. Improved Data Table Styling */
-    .table-enhanced {
-        border-collapse: separate;
-        border-spacing: 0;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    .table-enhanced th {
-        background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.8) 100%);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        font-size: 0.75rem;
-        padding: 1rem;
-        border-bottom: 2px solid rgba(59, 130, 246, 0.2);
-    }
-
-    .table-enhanced tr {
-        transition: all 0.2s ease;
-    }
-
-    .table-enhanced tr:hover {
-        background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
-        transform: scale(1.01);
-    }
-
-    .table-enhanced td {
-        padding: 1rem;
-        border-bottom: 1px solid rgba(51, 65, 85, 0.5);
-    }
-
-    /* 5. Enhanced Sidebar with Better Visual Hierarchy */
-    .sidebar-enhanced {
-        background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
-        backdrop-filter: blur(20px);
-        border-right: 1px solid rgba(51, 65, 85, 0.6);
-    }
-
-    .sidebar-nav-item {
-        position: relative;
-        margin: 0.25rem 0;
-        border-radius: 8px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .sidebar-nav-item::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 3px;
-        background: linear-gradient(180deg, #3b82f6, #1d4ed8);
-        border-radius: 0 2px 2px 0;
-        transform: scaleY(0);
-        transition: transform 0.3s ease;
-    }
-
-    .sidebar-nav-item.active::before,
-    .sidebar-nav-item:hover::before {
-        transform: scaleY(1);
-    }
-
-    /* 6. Enhanced Charts with Better Styling */
-    .chart-container-enhanced {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
-        border: 1px solid rgba(51, 65, 85, 0.6);
-        border-radius: 16px;
-        padding: 1.5rem;
-        backdrop-filter: blur(20px);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .chart-container-enhanced::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), transparent);
-    }
-
-    /* 7. Improved Form Inputs with Better Focus States */
-    .input-enhanced {
-        background: rgba(15, 23, 42, 0.8);
-        border: 2px solid rgba(51, 65, 85, 0.6);
-        border-radius: 8px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-    }
-
-    .input-enhanced:focus {
-        border-color: rgba(59, 130, 246, 0.8);
-        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-        background: rgba(30, 41, 59, 0.8);
-        transform: translateY(-1px);
-    }
-
-    /* 8. Enhanced Button Styles */
-    .button-enhanced {
-        position: relative;
-        overflow: hidden;
-        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-        border: none;
-        border-radius: 8px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .button-enhanced::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.6s ease;
-    }
-
-    .button-enhanced:hover::before {
-        left: 100%;
-    }
-
-    .button-enhanced:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
-    }
-
-    /* 9. Enhanced Loading States */
-    .loading-enhanced {
-        background: linear-gradient(90deg, rgba(51, 65, 85, 0.8) 25%, rgba(71, 85, 105, 0.8) 50%, rgba(51, 65, 85, 0.8) 75%);
-        background-size: 200% 100%;
-        animation: loading-shimmer 2s infinite;
-        border-radius: 8px;
-    }
-
-    @keyframes loading-shimmer {
-        0% { background-position: -200% 0; }
-        100% { background-position: 200% 0; }
-    }
-
-    /* 10. Enhanced Modal Styling */
-    .modal-enhanced {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(51, 65, 85, 0.6);
-        border-radius: 16px;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-    }
-
-    /* 11. Subtle Data Animations */
-    .data-appear {
-        animation: data-fade-in 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    @keyframes data-fade-in {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* 12. Enhanced Scrollbars */
-    .custom-scrollbar {
-        scrollbar-width: thin;
-        scrollbar-color: rgba(71, 85, 105, 0.8) transparent;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, rgba(71, 85, 105, 0.8), rgba(51, 65, 85, 0.6));
-        border-radius: 3px;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, rgba(71, 85, 105, 1), rgba(51, 65, 85, 0.8));
-    }
-
-    /* 13. Enhanced Typography with Better Hierarchy */
-    .text-gradient {
-        background: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .text-accent-gradient {
-        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    /* Professional Button Feedback System */
-    .btn-feedback {
-        position: relative;
-        transform: translateZ(0);
-        transition: all 0.2s var(--ease-in-out);
-        will-change: transform, box-shadow;
-        isolation: isolate;
-    }
-
-    .btn-feedback:active {
-        transform: translateY(1px) scale(0.98);
-        transition-duration: 0.08s;
-    }
-
-    .btn-feedback:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-lg);
-    }
-
-    .btn-feedback:focus:not(:disabled) {
-        transform: translateY(-1px);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), var(--shadow-md);
-    }
-
-    /* Ripple effect for tactile feedback */
-    .btn-ripple {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .btn-ripple::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        transform: translate(-50%, -50%);
-        transition: width 0.6s, height 0.6s;
-        pointer-events: none;
-    }
-
-    .btn-ripple:active::before {
-        width: 300px;
-        height: 300px;
-        transition: width 0s, height 0s;
-    }
-
-    /* Gentle pulse for primary actions */
-    .btn-pulse:hover:not(:disabled) {
-        animation: gentle-pulse 1.5s infinite;
-    }
-
-    @keyframes gentle-pulse {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
-        50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
-    }
-
-    /* Professional Card Interactions */
-    .card-interactive {
-        transition: all 0.3s var(--ease-in-out);
-        will-change: transform, box-shadow;
-        isolation: isolate;
-    }
-
-    .card-interactive:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-xl);
-    }
-
-    .card-interactive:active {
-        transform: translateY(-1px);
-        transition-duration: 0.1s;
-        box-shadow: var(--shadow-lg);
-    }
-
-    .card-interactive:focus-within {
-        transform: translateY(-2px);
-        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3), var(--shadow-lg);
-    }
-
-    /* Table row feedback */
-    .table-row-interactive {
-        transition: all 0.15s ease;
-    }
-
-    .table-row-interactive:hover {
-        transform: translateX(2px);
-        background-color: rgba(71, 85, 105, 0.1);
-    }
-
-    .table-row-interactive:active {
-        transform: translateX(0px);
-        transition-duration: 0.05s;
-    }
-
-    /* Form input feedback */
-    .input-feedback {
-        transition: all 0.2s ease;
-    }
-
-    .input-feedback:focus {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-    }
-
-    /* Success/Error feedback */
-    .feedback-success {
-        animation: success-bounce 0.6s ease-out;
-    }
-
-    .feedback-error {
-        animation: error-shake 0.5s ease-out;
-    }
-
-    @keyframes success-bounce {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-    }
-
-    @keyframes error-shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-4px); }
-        75% { transform: translateX(4px); }
-    }
-
-    /* Icon interactions */
-    .icon-interactive {
-        transition: transform 0.2s ease;
-    }
-
-    .icon-interactive:hover {
-        transform: rotate(5deg) scale(1.1);
-    }
-
-    /* Focus Indicators for Better Accessibility */
-    .focus-enhanced:focus {
-        outline: 2px solid #3b82f6;
-        outline-offset: 2px;
-    }
-
-    /* Enhanced Drop Shadows */
-    .shadow-enhanced {
-        box-shadow: 
-            0 1px 3px rgba(0, 0, 0, 0.12),
-            0 1px 2px rgba(0, 0, 0, 0.24);
-    }
-
-    .shadow-enhanced-lg {
-        box-shadow: 
-            0 10px 15px -3px rgba(0, 0, 0, 0.3),
-            0 4px 6px -2px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Professional Glass Effects */
-    .glass {
-        background: var(--glass-bg);
-        backdrop-filter: blur(20px) saturate(180%);
-        border: 1px solid var(--glass-border);
-        box-shadow: var(--shadow-sm);
-    }
-
-    .glass-strong {
-        background: var(--glass-strong);
-        backdrop-filter: blur(24px) saturate(200%);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: var(--shadow-md);
-    }
-
-    .glass-enhanced {
-        background: var(--glass-bg);
-        backdrop-filter: blur(20px) saturate(180%);
-        border: 1px solid var(--glass-border);
-        box-shadow: var(--shadow-lg);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .glass-enhanced::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: var(--gradient-glass);
-        opacity: 0.6;
-    }
+[data-theme="light"] .sidebar-border {
+  border-color: var(--light-border-gray) !important;
 }
 
-/* Animations */
-.transition-smooth { transition: all 0.2s ease-in-out; }
-.fade-in { animation: fadeIn 0.3s ease-out; }
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+[data-theme="light"] .sidebar-text {
+  color: var(--light-text-gray) !important;
+}
+
+[data-theme="light"] .sidebar-text-secondary {
+  color: rgb(71, 85, 105) !important;
+}
+
+[data-theme="light"] .sidebar-text-muted {
+  color: rgb(156, 163, 175) !important;
+}
+
+/* Clean sidebar nav styles - COMPLETELY remove containers */
+[data-theme="light"] aside .sidebar-nav-item,
+[data-theme="light"] aside .sidebar-nav-item.text-slate-400,
+[data-theme="light"] aside .sidebar-nav-item.border-transparent,
+[data-theme="light"] aside nav .sidebar-nav-item {
+  color: var(--light-text-dark) !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] aside .sidebar-nav-item:hover,
+[data-theme="light"] aside .sidebar-nav-item:hover.text-slate-400,
+[data-theme="light"] aside .sidebar-nav-item:hover.border-transparent,
+[data-theme="light"] aside nav .sidebar-nav-item:hover,
+[data-theme="light"] aside .sidebar-nav-item.hover\:bg-slate-900\/60:hover,
+[data-theme="light"] aside .sidebar-nav-item.hover\:border-slate-700\/30:hover {
+  background-color: transparent !important;
+  color: #1E88E5 !important;
+  border: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  transform: translateX(4px) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+/* Override Tailwind hover classes specifically */
+[data-theme="light"] aside .sidebar-nav-item[class*="hover:bg-slate"]:hover,
+[data-theme="light"] aside .sidebar-nav-item[class*="hover:border-slate"]:hover {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+[data-theme="light"] .sidebar-nav-active {
+  background-color: rgb(30, 136, 229) !important;
+}
+
+[data-theme="light"] .sidebar-org-bg {
+  background-color: var(--light-bg-soft) !important;
+  border-color: rgba(209, 213, 219, 0.4) !important;
+}
+
+[data-theme="light"] .sidebar-org-bg:hover {
+  background-color: rgba(243, 244, 246, 0.7) !important;
+  border-color: rgba(209, 213, 219, 0.6) !important;
+}
+
+/* Organization display - fix Building2 icon visibility with MAXIMUM specificity */
+
+[data-theme="light"] .sidebar-org-bg .text-slate-300:not(.text-blue-400),
+[data-theme="light"] .sidebar-org-bg .text-slate-400:not(.text-blue-400),
+[data-theme="light"] .sidebar-org-bg .text-slate-500:not(.text-blue-400) {
+  color: var(--light-text-dark) !important;
+}
+
+[data-theme="light"] .sidebar-org-bg .text-blue-400,
+[data-theme="light"] .sidebar-org-bg svg.text-blue-400,
+[data-theme="light"] aside .sidebar-org-bg .text-blue-400 {
+  color: #1E88E5 !important;
+  fill: #1E88E5 !important;
+}
+
+/* Card styling consolidated below - enhanced version with shadows and blue accents */
+
+[data-theme="light"] .card-title {
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] .card-title-small {
+  color: var(--light-text-gray) !important;
+}
+
+[data-theme="light"] .card-description {
+  color: var(--light-text-gray) !important;
+}
+
+[data-theme="light"] .card-icon-bg {
+  background-color: rgba(243, 244, 246, 0.4) !important;
+}
+
+[data-theme="light"] .card-icon-bg:hover {
+  background-color: rgba(229, 231, 235, 0.5) !important;
+}
+
+[data-theme="light"] .card-value {
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] .hamburger-btn {
+  background-color: var(--light-bg-primary) !important;
+  border-color: var(--light-border-gray) !important;
+}
+
+[data-theme="light"] .hamburger-btn:hover {
+  background-color: rgb(243, 244, 246) !important;
+}
+
+
+/* Light theme - Aggressive but chart-safe overrides for actual Tailwind classes */
+
+/* CONSOLIDATED APPROACH - Using enhanced card styling below */
+
+/* Target ONLY specific card elements with card-bg class - avoid chart containers completely */
+[data-theme="light"] [role="dialog"] {
+  background-color: var(--light-bg-primary) !important;
+  border-color: rgba(209, 213, 219, 0.5) !important;
+}
+
+/* Sidebar specific - make sure it's not transparent */
+[data-theme="light"] aside[class*="bg-slate-950"] {
+  background-color: var(--light-bg-primary) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+/* Header/main backgrounds */
+[data-theme="light"] header[class*="bg-slate"],
+[data-theme="light"] main[class*="bg-slate"] {
+  background-color: rgb(249, 250, 251) !important;
+}
+
+/* Light theme - PROMINENT blue accents throughout */
+[data-theme="light"] .card-title {
+  color: #1E88E5 !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 2px rgba(30, 136, 229, 0.1) !important;
+}
+
+[data-theme="light"] h2,
+[data-theme="light"] h1 {
+  color: #1565C0 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6 {
+  color: #1E88E5 !important;
+  font-weight: 600 !important;
+}
+
+/* Light theme - Navigation active states - TARGET EXACT CLASSES */
+[data-theme="light"] .bg-blue-600.sidebar-nav-active {
+  background-color: #1E88E5 !important;
+  border: 2px solid #1E88E5 !important;
+  box-shadow: 0 4px 12px rgba(30, 136, 229, 0.4) !important;
+  transform: translateX(4px) !important;
+}
+
+[data-theme="light"] .bg-blue-600.sidebar-nav-active .text-white,
+[data-theme="light"] .bg-blue-600.sidebar-nav-active span,
+[data-theme="light"] .sidebar-nav-active.text-white {
+  color: white !important;
+  font-weight: 700 !important;
+}
+
+/* Sidebar nav styling consolidated below */
+
+/* Light theme - Aggressive text color overrides for actual Tailwind classes */
+
+/* CONSOLIDATED Text Color Overrides - All slate text colors for light mode */
+[data-theme="light"] *[class*="text-slate-50"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-purple"]):not([class*="bg-orange"]):not([class*="bg-amber"]):not([class*="bg-gradient"]),
+[data-theme="light"] *[class*="text-slate-100"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-purple"]):not([class*="bg-orange"]):not([class*="bg-amber"]):not([class*="bg-gradient"]) {
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] *[class*="text-slate-200"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-purple"]):not([class*="bg-orange"]):not([class*="bg-amber"]):not([class*="bg-gradient"]) {
+  color: rgb(55, 65, 81) !important;
+}
+
+[data-theme="light"] *[class*="text-slate-300"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-purple"]):not([class*="bg-orange"]):not([class*="bg-amber"]):not([class*="bg-gradient"]),
+[data-theme="light"] *[class*="text-slate-400"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-purple"]):not([class*="bg-orange"]):not([class*="bg-amber"]):not([class*="bg-gradient"]),
+[data-theme="light"] *[class*="text-slate-500"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-purple"]):not([class*="bg-orange"]):not([class*="bg-amber"]):not([class*="bg-gradient"]) {
+  color: var(--light-text-dark) !important;
+}
+
+[data-theme="light"] *[class*="text-slate-600"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-purple"]):not([class*="bg-orange"]):not([class*="bg-amber"]):not([class*="bg-gradient"]) {
+  color: rgb(17, 24, 39) !important;
+}
+
+/* Heading styling consolidated above with blue color scheme */
+
+/* Keep white text on blue/colored backgrounds - tabs only (exclude Dashboard gradient cards) */
+[data-theme="light"] *[class*="bg-gradient"]:not([class*="bg-gradient-to-br"]) *,
+[data-theme="light"] [role="tablist"] [data-state="active"] * {
+  color: white !important;
+}
+
+/* Light theme - Border overrides - more aggressive */
+[data-theme="light"] *[class*="border-slate-800"]:not(svg):not([class*="recharts"]) {
+  border-color: rgba(209, 213, 219, 0.6) !important;
+}
+
+[data-theme="light"] *[class*="border-slate-700"]:not(svg):not([class*="recharts"]) {
+  border-color: rgba(209, 213, 219, 0.7) !important;
+}
+
+[data-theme="light"] *[class*="border-slate-600"]:not(svg):not([class*="recharts"]) {
+  border-color: rgb(209, 213, 219) !important;
+}
+
+[data-theme="light"] *[class*="border-r"]:not(svg):not([class*="recharts"]) {
+  border-color: rgba(209, 213, 219, 0.6) !important;
+}
+
+[data-theme="light"] *[class*="border-t"]:not(svg):not([class*="recharts"]) {
+  border-color: rgba(209, 213, 219, 0.6) !important;
+}
+
+[data-theme="light"] *[class*="border-b"]:not(svg):not([class*="recharts"]) {
+  border-color: rgba(209, 213, 219, 0.6) !important;
+}
+
+/* Light theme - Logo override (exact accent blue match) */
+[data-theme="light"] img[alt="Summit Automation"] {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(93%) saturate(1352%) hue-rotate(195deg) brightness(98%) contrast(97%) !important;
+}
+
+/* Light theme - Tab overrides */
+[data-theme="light"] *[data-state="active"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+}
+
+/* Light theme - Input overrides */
+[data-theme="light"] input[class*="bg-slate-800"] {
+  background-color: rgb(255, 255, 255) !important;
+  border-color: rgb(209, 213, 219) !important;
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] input[class*="bg-slate-800"]:focus {
+  border-color: #1E88E5 !important;
+  box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1) !important;
+}
+
+/* Light theme - Select overrides */
+[data-theme="light"] *[class*="bg-slate-800"] select {
+  background-color: rgb(255, 255, 255) !important;
+  border-color: rgb(209, 213, 219) !important;
+  color: rgb(17, 24, 39) !important;
+}
+
+/* Light theme - Comprehensive table styling */
+[data-theme="light"] table {
+  background-color: rgb(255, 255, 255) !important;
+}
+
+[data-theme="light"] thead {
+  background-color: rgba(30, 136, 229, 0.05) !important; /* Light blue header */
+}
+
+[data-theme="light"] th {
+  color: #1565C0 !important; /* Blue table headers */
+  border-color: var(--light-border-gray) !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] td {
+  color: rgb(17, 24, 39) !important; /* Dark text for readability */
+  border-color: var(--light-border-gray) !important;
+}
+
+[data-theme="light"] tr:hover {
+  background-color: rgba(30, 136, 229, 0.03) !important; /* Subtle blue hover */
+}
+
+/* Light theme - Dropdown content and table cell text - force dark for readability */
+[data-theme="light"] td *,
+[data-theme="light"] td span,
+[data-theme="light"] td p,
+[data-theme="light"] td div {
+  color: rgb(17, 24, 39) !important;
+}
+
+/* Light theme - Table action buttons */
+[data-theme="light"] td button {
+  color: #1E88E5 !important;
+  border-color: rgba(30, 136, 229, 0.3) !important;
+}
+
+[data-theme="light"] td button:hover {
+  background-color: rgba(30, 136, 229, 0.1) !important;
+  color: #1565C0 !important;
+}
+
+/* Light theme - Modal and Dialog overrides */
+[data-theme="light"] *[class*="bg-slate-900"][role="dialog"],
+[data-theme="light"] *[class*="bg-slate-900"]:is([data-state="open"]) {
+  background-color: rgb(255, 255, 255) !important;
+  border-color: rgb(209, 213, 219) !important;
+}
+
+/* Light theme - Badge overrides */
+[data-theme="light"] *[class*="bg-slate-500"] {
+  background-color: rgb(229, 231, 235) !important;
+  color: rgb(55, 65, 81) !important;
+}
+
+/* Light theme - Strategic blue accents throughout */
+
+/* Icons and accent elements */
+[data-theme="light"] .card-icon-bg {
+  background-color: rgba(30, 136, 229, 0.15) !important; /* More prominent blue */
+}
+
+[data-theme="light"] .card-icon-bg svg,
+[data-theme="light"] .card-icon-bg .lucide {
+  color: #1E88E5 !important;
+}
+
+/* COMPREHENSIVE follow-up alerts conversion - amber to blue theme */
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] {
+  background: linear-gradient(to right, rgba(30, 136, 229, 0.1), rgba(30, 136, 229, 0.15)) !important;
+  border-color: #1E88E5 !important;
+  border-width: 1px !important;
+}
+
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] *[class*="text-amber"] {
+  color: #1E88E5 !important; /* Blue text instead of amber */
+}
+
+/* Follow-up alert badges and containers - HIGH SPECIFICITY to override general badge rules */
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] *[class*="bg-amber-500"] {
+  background-color: rgba(30, 136, 229, 0.25) !important; /* Blue background for icon container */
+}
+
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] .bg-amber-500\/25,
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] *[class*="bg-amber-500/25"] {
+  background-color: rgba(30, 136, 229, 0.25) !important; /* Blue background for badges */
+}
+
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] .text-amber-200,
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] .badge.text-amber-200 {
+  color: rgba(30, 136, 229, 0.9) !important; /* Blue text for badges */
+}
+
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] .border-amber-500\/40,
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] *[class*="border-amber-500/40"] {
+  border-color: rgba(30, 136, 229, 0.4) !important; /* Blue borders for badges */
+}
+
+/* Removed - amber backgrounds now handled by standardized icon rules above */
+
+/* Tab styling with blue accents */
+[data-theme="light"] [data-state="active"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+}
+
+/* More blue accents for interactive elements */
+[data-theme="light"] *[class*="text-blue-400"] {
+  color: #1E88E5 !important;
+}
+
+/* Dashboard section headers */
+[data-theme="light"] h2[class*="text-slate-50"] {
+  color: #1565C0 !important; /* Dark blue for section headers */
+}
+
+[data-theme="light"] p[class*="text-slate-400"] {
+  color: var(--light-text-dark) !important;}
+
+/* Form focus states */
+[data-theme="light"] input:focus,
+[data-theme="light"] select:focus,
+[data-theme="light"] textarea:focus {
+  border-color: #1E88E5 !important;
+  box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1) !important;
+}
+
+/* Badge and status indicators - blue theme only for non-specific badges */
+[data-theme="light"] .badge:not([class*="bg-amber"]):not([class*="bg-red"]):not([class*="bg-emerald"]):not([class*="bg-slate"]),
+[data-theme="light"] [class*="bg-blue-500"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+}
+
+/* Progress indicators and growth metrics */
+[data-theme="light"] [class*="text-emerald-"],
+[data-theme="light"] [class*="text-green-"] {
+  color: rgb(34, 197, 94) !important; /* Keep green for positive metrics */
+}
+
+[data-theme="light"] [class*="text-red-"] {
+  color: rgb(239, 68, 68) !important; /* Keep red for negative metrics */
+}
+
+[data-theme="light"] [class*="text-amber-"],
+[data-theme="light"] [class*="text-orange-"] {
+  color: rgb(245, 158, 11) !important; /* Keep amber/orange for warning metrics */
+}
+
+[data-theme="light"] [class*="text-purple-"] {
+  color: rgb(147, 51, 234) !important; /* Keep purple for category metrics */
+}
+
+/* Links and interactive text */
+[data-theme="light"] a,
+[data-theme="light"] [class*="text-blue-"] {
+  color: #1E88E5 !important;
+}
+
+[data-theme="light"] a:hover {
+  color: #1565C0 !important;
+}
+
+/* Clean outline buttons for all variants - More subtle styling */
+
+/* Outline buttons - subtle light mode styling */
+[data-theme="light"] button[class*="border-slate-"] {
+  background-color: transparent !important;
+  border-color: rgba(209, 213, 219, 0.4) !important;
+  color: var(--light-text-dark) !important;
+}
+
+[data-theme="light"] button[class*="border-slate-"]:hover {
+  background-color: rgba(30, 136, 229, 0.05) !important;
+  border-color: rgba(30, 136, 229, 0.3) !important;
+  color: #1E88E5 !important;
+}
+
+/* Secondary buttons (slate background) */
+/* Button variants now standardized - no custom overrides needed */
+
+/* Light theme - Mobile responsive fixes */
+@media (max-width: 768px) {
+  /* Mobile table improvements */
+  [data-theme="light"] table,
+  [data-theme="light"] tbody,
+  [data-theme="light"] tr,
+  [data-theme="light"] td {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(17, 24, 39) !important;
+  }
+
+  /* Mobile - ensure containers stay transparent */
+  [data-theme="light"] div[class*="flex"] {
+    background-color: transparent !important;
+  }
+}
+
+/* Light theme - HIGHLY SPECIFIC overrides for hardcoded Tailwind classes */
+
+/* Chart and Card containers - consolidated with rules below */
+
+[data-theme="light"] .border-slate-800 {
+  border-color: rgba(209, 213, 219, 0.6) !important;
+}
+
+/* Light theme layering with cleaner backgrounds and blue accents */
+[data-theme="light"] [class*="bg-slate-900"] {
+  background-color: rgb(249, 250, 251) !important; /* Very light cards */
+  border-color: rgba(30, 136, 229, 0.15) !important; /* Subtle blue borders */
+}
+
+[data-theme="light"] [class*="border-slate-800"] {
+  border-color: rgb(226, 232, 240) !important;
+}
+
+/* Specific opacity classes - /90 already covered by broader rule above */
+
+[data-theme="light"] .bg-slate-900\/60 {
+  background-color: rgba(30, 136, 229, 0.03) !important; /* Very subtle blue tint for tab lists */
+}
+
+[data-theme="light"] .border-slate-800,
+[data-theme="light"] .border-slate-800\/50,
+[data-theme="light"] .border-slate-800\/40 {
+  border-color: rgb(226, 232, 240) !important;
+}
+
+/* Removed - consolidated into broad selectors above */
+
+/* Consolidated text-slate rules - now handled by comprehensive selectors above */
+
+/* STANDARDIZED icon background overrides - consistent across ALL colors */
+[data-theme="light"] [class*="bg-blue-500"] {
+  background-color: rgba(30, 136, 229, 0.2) !important;
+  border: 1px solid rgba(30, 136, 229, 0.3) !important;
+}
+
+[data-theme="light"] [class*="bg-emerald-500"] {
+  background-color: rgba(34, 197, 94, 0.2) !important;
+  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+}
+
+[data-theme="light"] [class*="bg-purple-500"] {
+  background-color: rgba(147, 51, 234, 0.2) !important;
+  border: 1px solid rgba(147, 51, 234, 0.3) !important;
+}
+
+[data-theme="light"] [class*="bg-orange-500"] {
+  background-color: rgba(249, 115, 22, 0.2) !important;
+  border: 1px solid rgba(249, 115, 22, 0.3) !important;
+}
+
+[data-theme="light"] [class*="bg-amber-500"] {
+  background-color: rgba(245, 158, 11, 0.2) !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+}
+
+[data-theme="light"] [class*="bg-red-500"] {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+[data-theme="light"] [class*="bg-slate-800"] {
+  background-color: rgba(30, 136, 229, 0.1) !important; /* Light blue tint for icon backgrounds */
+  border: 1px solid rgba(30, 136, 229, 0.2) !important;
+}
+
+/* Add more blue throughout the interface */
+[data-theme="light"] .text-blue-400,
+[data-theme="light"] .text-blue-500 {
+  color: #1E88E5 !important;
+  font-weight: 600 !important;
+}
+
+/* Button styling now handled by standardized variants */
+
+/* Links and interactive elements */
+[data-theme="light"] a {
+  color: #1E88E5 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] a:hover {
+  color: #1565C0 !important;
+  text-decoration: underline !important;
+}
+
+/* Sidebar improvements */
+[data-theme="light"] .sidebar-bg {
+  background-color: rgb(248, 250, 252) !important; /* Light grey sidebar background */
+  border-color: rgb(226, 232, 240) !important;
+}
+
+/* Settings page improvements */
+[data-theme="light"] .bg-slate-900\/90.backdrop-blur-sm {
+  background-color: rgb(248, 250, 252) !important;
+  border-color: rgb(226, 232, 240) !important;
+}
+
+/* TabsList specific overrides */
+[data-theme="light"] [class*="bg-slate-900"].rounded-2xl {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(209, 213, 219, 0.5) !important;
+}
+
+/* Table container overrides */
+[data-theme="light"] [class*="bg-slate-"] table {
+  background-color: rgb(255, 255, 255) !important;
+}
+
+[data-theme="light"] [class*="bg-slate-"] tbody {
+  background-color: rgb(255, 255, 255) !important;
+}
+
+[data-theme="light"] [class*="bg-slate-"] tr {
+  background-color: rgb(255, 255, 255) !important;
+  border-color: rgba(229, 231, 235, 0.6) !important;
+}
+
+[data-theme="light"] [class*="bg-slate-"] td {
+  background-color: rgb(255, 255, 255) !important;
+  color: rgb(17, 24, 39) !important;
+  border-color: rgba(229, 231, 235, 0.6) !important;
+}
+
+/* Tab triggers - TARGET EXACT ACTIVE STATE CLASSES */
+[data-theme="light"] [data-state="active"].bg-slate-800,
+[data-theme="light"] .bg-slate-800[data-state="active"] {
+  background-color: #1E88E5 !important;
+  border: 2px solid #1E88E5 !important;
+  box-shadow: 0 3px 8px rgba(30, 136, 229, 0.3) !important;
+}
+
+/* Restrict to specific tab elements only */
+[data-theme="light"] [role="tablist"] [data-state="active"] .text-white,
+[data-theme="light"] [role="tablist"] [data-state="active"] span {
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+/* Tab list background with blue accents */
+[data-theme="light"] [class*="bg-slate-900"].rounded-2xl {
+  background-color: rgba(30, 136, 229, 0.05) !important; /* Very subtle blue tint */
+  border: 2px solid rgba(30, 136, 229, 0.2) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* Non-active tab states with blue accents */
+[data-theme="light"] [class*="text-slate-400"] {
+  color: rgb(100, 116, 139) !important;
+}
+
+[data-theme="light"] [class*="hover:text-slate-300"]:hover {
+  color: #1E88E5 !important;
+  background-color: rgba(30, 136, 229, 0.1) !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+}
+
+/* Mobile button container fixes - prevent containers from getting blue backgrounds */
+[data-theme="light"] div[class*="flex"] {
+  background-color: transparent !important;
+}
+
+[data-theme="light"] div[class*="grid"] {
+  background-color: transparent !important;
+}
+
+/* Only style actual buttons, not containers - More subtle approach */
+[data-theme="light"] button[class*="bg-slate-"] {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  border-color: rgba(209, 213, 219, 0.3) !important;
+  color: var(--light-text-dark) !important;
+}
+
+[data-theme="light"] button[class*="bg-slate-"]:hover {
+  background-color: rgba(30, 136, 229, 0.08) !important;
+  border-color: rgba(30, 136, 229, 0.4) !important;
+  color: #1E88E5 !important;
+}
+
+/* Clean dashboard card styling with blue accents */
+[data-theme="light"] .card-bg {
+  background-color: rgb(249, 250, 251) !important; /* Very light cards */
+  border-color: rgba(30, 136, 229, 0.2) !important; /* Subtle blue borders */
+  box-shadow: 0 1px 3px 0 rgba(30, 136, 229, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .card-bg:hover {
+  background-color: rgba(30, 136, 229, 0.02) !important; /* Very subtle blue tint on hover */
+  border-color: #1E88E5 !important;
+  box-shadow: 0 4px 12px -2px rgba(30, 136, 229, 0.15), 0 2px 6px -1px rgba(30, 136, 229, 0.1) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Hover states for all cards with light grey layering */
+[data-theme="light"] [class*="bg-slate-"]:hover {
+  background-color: rgb(241, 245, 249) !important; /* Slightly darker grey on hover */
+  border-color: rgba(30, 136, 229, 0.4) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+/* === COMPREHENSIVE CHART PROTECTION SYSTEM === */
+[data-theme="light"] [class*="recharts"],
+[data-theme="light"] .recharts-wrapper,
+[data-theme="light"] .recharts-responsive-container,
+[data-theme="light"] .recharts-surface,
+[data-theme="light"] svg[class*="recharts"] {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+/* Enhanced chart rendering */
+.recharts-responsive-container {
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+
+/* Light theme - Additional blue accents for better visual hierarchy */
+[data-theme="light"] .card-title {
+  color: #1565C0 !important; /* Darker blue for card titles */
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] *[class*="text-slate-600"] {
+  color: var(--light-text-dark) !important; /* Darker gray for better contrast */
+}
+
+/* Light theme - Ensure growth indicators remain visible */
+[data-theme="light"] *[class*="text-emerald-400"] {
+  color: rgb(34, 197, 94) !important; /* Keep green bright for positive metrics */
+}
+
+[data-theme="light"] *[class*="text-red-400"] {
+  color: rgb(239, 68, 68) !important; /* Keep red bright for negative metrics */
+}
+
+/* Light theme - Navigation improvements */
+/* Sidebar nav styling handled above - no duplicates */
+
+/* Light theme - Comprehensive component fixes */
+
+/* NO broad div targeting - this was causing chart container issues */
+/* Instead, we'll only style elements we add specific classes to */
+
+/* TabsList and Tab components */
+[data-theme="light"] *[role="tablist"] {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(209, 213, 219, 0.4) !important;
+}
+
+/* Input and form elements */
+[data-theme="light"] input[class*="bg-slate-"],
+[data-theme="light"] select[class*="bg-slate-"],
+[data-theme="light"] textarea[class*="bg-slate-"] {
+  background-color: rgb(255, 255, 255) !important;
+  border-color: rgb(209, 213, 219) !important;
+  color: rgb(17, 24, 39) !important;
+}
+
+/* Button hover states for non-blue buttons */
+[data-theme="light"] button[class*="hover:bg-slate-"]:hover:not([class*="bg-blue"]):not([class*="recharts"]) {
+  background-color: rgba(243, 244, 246, 0.8) !important;
+  color: rgb(17, 24, 39) !important;
+}
+
+/* REMOVED broad selectors - they were causing chart container issues */
+
+/* Chart styling maintained by comprehensive protection system above */
+
+/* Force text readability in common elements only - EXCLUDE blue text elements */
+[data-theme="light"] p:not([class*="text-blue"]), 
+[data-theme="light"] span:not([class*="text-blue"]), 
+[data-theme="light"] div:not([class*="recharts"]):not(svg):not([class*="text-blue"]),
+[data-theme="light"] label:not([class*="text-blue"]), 
+[data-theme="light"] td:not([class*="text-blue"]), 
+[data-theme="light"] th:not([class*="text-blue"]) {
+  color: rgb(17, 24, 39) !important;
+}
+
+/* MAXIMUM SPECIFICITY Building2 icon fix - place after broad rules */
+[data-theme="light"] .sidebar-org-bg .text-blue-400,
+[data-theme="light"] .sidebar-org-bg svg.text-blue-400,
+[data-theme="light"] aside .sidebar-org-bg .text-blue-400,
+[data-theme="light"] aside div.sidebar-org-bg svg.text-blue-400 {
+  color: #1E88E5 !important;
+  fill: #1E88E5 !important;
+}
+
+/* Note: Special colors for metrics and states keep their original colors in light theme */
+
+/* Final light mode improvements - Perfect text contrast and spacing */
+/* Removed duplicates - consolidated into broad selectors above */
+
+/* Removed conflicting button text rules */
+
+/* Additional targeting for sidebar active states - belt and suspenders approach */
+[data-theme="light"] aside .bg-blue-600 {
+  background-color: #1E88E5 !important;
+}
+
+[data-theme="light"] aside .text-white {
+  color: white !important;
+}
+
+[data-theme="light"] nav .bg-blue-600 {
+  background-color: #1E88E5 !important;
+}
+
+[data-theme="light"] nav .text-white {
+  color: white !important;
+}
+
+/* Additional targeting for mobile tabs */
+[data-theme="light"] [role="tablist"] [data-state="active"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+  border: 2px solid #1E88E5 !important;
+}
+
+/* Legacy button text rules - now covered by consolidated rules above */
+
+/* Fix button hover states that turn text white in light mode */
+[data-theme="light"] button[class*="hover:text-white"]:hover {
+  color: var(--light-text-dark) !important;
+}
+
+/* Enhanced readability and spacing */
+[data-theme="light"] p {
+  line-height: 1.6 !important;
+  color: rgb(55, 65, 81) !important;
+}
+
+[data-theme="light"] .text-slate-400 {
+  color: var(--light-text-gray) !important;
+  font-weight: 500 !important;
+}
+
+/* Clean focus states */
+[data-theme="light"] *:focus-visible {
+  outline: 2px solid #1E88E5 !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.1) !important;
+}
+
+/* Improved table styling for light mode */
+[data-theme="light"] table {
+  background-color: rgb(252, 253, 254) !important; /* Almost white tables */
+}
+
+[data-theme="light"] thead {
+  background-color: rgba(30, 136, 229, 0.08) !important; /* Light blue header */
+  border-bottom: 2px solid rgba(30, 136, 229, 0.2) !important;
+}
+
+[data-theme="light"] th {
+  color: #1565C0 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] tr:hover {
+  background-color: rgba(30, 136, 229, 0.04) !important;
+}
+
+/* Body and main container improvements - Much cleaner and easier on eyes */
+[data-theme="light"] body {
+  background-color: rgb(252, 253, 254) !important; /* Almost white body for clean look */
+}
+
+/* REDESIGNED Light mode layering hierarchy - Cleaner and more blue accents */
+/* Level 1: Body background - rgb(252, 253, 254) - almost white */
+/* Level 2: Card backgrounds - rgb(249, 250, 251) - very light cards */
+/* Level 3: Interactive elements - rgb(241, 245, 249) - subtle interactions */
+/* Level 4: Active elements - #1E88E5 - strong blue presence */
+/* Level 5: Hover accents - rgba(30, 136, 229, 0.1) - blue tinted backgrounds */
+
+/* Ensure consistent layering for all slate backgrounds - Cleaner greys */
+[data-theme="light"] [class*="bg-slate-950"],
+[data-theme="light"] [class*="bg-slate-900"],
+[data-theme="light"] [class*="bg-slate-800"] {
+  background-color: rgb(249, 250, 251) !important; /* Very light cards */
+}
+
+/* Lighter elements for secondary containers with blue tints */
+[data-theme="light"] [class*="bg-slate-800\/40"],
+[data-theme="light"] [class*="bg-slate-800\/30"] {
+  background-color: rgba(30, 136, 229, 0.03) !important; /* Very subtle blue tint */
+}
+
+/* More prominent blue accents for headings and titles ONLY - exclude card content */
+[data-theme="light"] h1.text-slate-50,
+[data-theme="light"] h2.text-slate-50,
+[data-theme="light"] h3.text-slate-50,
+[data-theme="light"] h1.text-white,
+[data-theme="light"] h2.text-white,
+[data-theme="light"] h3.text-white {
+  color: #1565C0 !important; /* Strong blue for headings only */
+}
+
+[data-theme="light"] h4.text-slate-100,
+[data-theme="light"] h5.text-slate-100,
+[data-theme="light"] h6.text-slate-100 {
+  color: #1E88E5 !important; /* Medium blue for secondary headings */
+}
+
+/* Sidebar improvements with blue accents */
+[data-theme="light"] .sidebar-bg {
+  background-color: rgba(30, 136, 229, 0.02) !important; /* Very subtle blue tint */
+  border-color: rgba(30, 136, 229, 0.2) !important;
+  box-shadow: 2px 0 8px rgba(30, 136, 229, 0.08) !important;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Professional Focus Styles */
+*:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 0.375rem;
 }
 
 /* Mobile Optimizations */
 @media (max-width: 768px) {
-    .btn-feedback:active {
-        transform: translateY(0.5px) scale(0.99);
-    }
-    
-    .btn-feedback:hover:not(:disabled) {
-        transform: none; /* Disable hover effects on mobile */
-        box-shadow: none;
-    }
-    
-    .card-interactive:hover,
-    .card-enhanced:hover {
-        transform: none;
-        box-shadow: none;
-    }
-    
-    .table-enhanced tr:hover {
-        transform: none; /* Disable transform on mobile */
-    }
-    
-    .mobile-optimized { padding: 0.5rem; font-size: 0.875rem; }
-    .touch-target, button { min-height: 44px; min-width: 44px; }
-    .mobile-card { margin: 0 0.5rem; border-radius: 12px; }
-    .mobile-form-grid { grid-template-columns: 1fr; gap: 1rem; }
-    
-    [data-radix-dialog-content] {
-        width: calc(100vw - 2rem) !important;
-        max-width: none !important;
-        max-height: calc(100vh - 4rem) !important;
-        margin: 0 !important;
-    }
-    
-    .mobile-table-wrapper {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
+  .touch-target, button {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }
 
-/* Accessibility Improvements */
-@media (prefers-reduced-motion: reduce) {
-    .card-enhanced,
-    .metric-enhanced,
-    .button-enhanced,
-    .sidebar-nav-item,
-    .input-enhanced,
-    .btn-feedback,
-    .card-interactive,
-    .input-feedback {
-        transition: none;
-        animation: none;
-    }
-    
-    .card-enhanced:hover,
-    .button-enhanced:hover,
-    .input-enhanced:focus,
-    .btn-feedback:active {
-        transform: none;
-    }
-    
-    .btn-pulse:hover:not(:disabled) {
-        animation: none;
-    }
+
+/* Radix UI Component Fixes - Theme Aware */
+[data-radix-select-content],
+[data-radix-dialog-content] {
+  background-color: rgb(var(--color-background-secondary)) !important;
+  border: 1px solid rgb(var(--color-border)) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Radix UI Component Fixes - Consolidated */
-[data-radix-select-content], [data-radix-dialog-content] {
-    background-color: rgb(15 23 42) !important;
-    border: 1px solid rgb(51 65 85) !important;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4) !important;
+[data-theme="light"] [data-radix-select-content],
+[data-theme="light"] [data-radix-dialog-content] {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
-[data-radix-select-item], [data-radix-select-item]:hover, [data-radix-select-item][data-highlighted] {
-    color: rgb(248 250 252) !important;
-    background-color: transparent !important;
-    padding: 0.5rem 0.75rem !important;
+[data-radix-select-item] {
+  color: rgb(var(--color-text-primary)) !important;
+  background-color: transparent !important;
+  padding: 0.5rem 0.75rem !important;
 }
 
-[data-radix-select-item]:hover, [data-radix-select-item][data-highlighted] {
-    background-color: rgb(30 41 59) !important;
+[data-radix-select-item]:hover,
+[data-radix-select-item][data-highlighted] {
+  background-color: rgb(var(--color-background-tertiary)) !important;
 }
 
 [data-radix-select-item][data-state="checked"] {
-    background-color: rgb(59 130 246) !important;
-    color: white !important;
+  background-color: rgb(var(--color-primary)) !important;
+  color: white !important;
 }
 
-[data-radix-select-trigger], [data-radix-dialog-overlay] {
-    background-color: rgb(15 23 42) !important;
-    border: 1px solid rgb(51 65 85) !important;
-    color: rgb(248 250 252) !important;
+/* Light theme - Select dropdown overrides - More specific selectors */
+[data-theme="light"] [data-slot="select-content"].bg-slate-900 {
+  background-color: rgb(255, 255, 255) !important;
+  border-color: rgb(209, 213, 219) !important;
+  color: rgb(17, 24, 39) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
-[data-radix-select-trigger]:hover, [data-radix-select-trigger]:focus {
-    background-color: rgb(30 41 59) !important;
-    border-color: rgb(71 85 105) !important;
+[data-theme="light"] [data-slot="select-item"].text-slate-200 {
+  color: rgb(17, 24, 39) !important;
 }
 
-[data-radix-dialog-overlay] {
-    background-color: rgba(0, 0, 0, 0.75) !important;
-    backdrop-filter: blur(8px) !important;
+[data-theme="light"] [data-slot="select-item"].text-slate-200:hover,
+[data-theme="light"] [data-slot="select-item"][data-highlighted] {
+  background-color: rgb(243, 244, 246) !important;
+  color: rgb(17, 24, 39) !important;
 }
 
-/* Button Consistency */
-.btn-outline, button[class*="outline"] {
-    background-color: rgb(15 23 42) !important;
-    border: 1px solid rgb(51 65 85) !important;
-    color: rgb(248 250 252) !important;
-    min-height: 2.5rem !important;
+[data-theme="light"] [data-slot="select-item"][data-state="checked"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
 }
 
-.btn-outline:hover, button[class*="outline"]:hover {
-    background-color: rgb(30 41 59) !important;
-    border-color: rgb(71 85 105) !important;
+/* Dark theme - Ensure select dropdowns have proper opacity in dark mode */
+[data-slot="select-content"].bg-slate-900 {
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
 }
 
-/* Input Consistency */
-input[class*="bg-slate-"], textarea[class*="bg-slate-"], select[class*="bg-slate-"] {
-    background-color: rgb(15 23 42) !important;
-    border: 1px solid rgb(51 65 85) !important;
-    color: rgb(248 250 252) !important;
+/* Additional specificity for Radix Select components */
+[data-theme="light"] .bg-slate-900[data-slot="select-content"] {
+  background-color: var(--light-bg-primary) !important;
+  border: 1px solid rgba(209, 213, 219, 0.8) !important;
+  color: rgb(17, 24, 39) !important;
+  backdrop-filter: blur(12px) !important;
 }
 
-input[class*="bg-slate-"]:focus, textarea[class*="bg-slate-"]:focus, select[class*="bg-slate-"]:focus {
-    border-color: rgb(59 130 246) !important;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+/* Dark mode - Fix select component text visibility in tables */
+[data-slot="select-trigger"].bg-transparent {
+  color: rgb(148, 163, 184) !important;
 }
 
-/* Checkbox Styling - Force square dimensions */
-[data-slot="checkbox"], 
-[data-radix-checkbox-root], 
-button[role="checkbox"] {
-    width: 1rem !important;
-    height: 1rem !important;
-    min-width: 1rem !important;
-    min-height: 1rem !important;
-    max-width: 1rem !important;
-    max-height: 1rem !important;
-    background-color: rgb(15 23 42) !important;
-    border: 1px solid rgb(51 65 85) !important;
-    border-radius: 4px !important;
-    flex-shrink: 0 !important;
-    aspect-ratio: 1 / 1 !important;
-    box-sizing: border-box !important;
+[data-slot="select-trigger"].bg-transparent .text-slate-100 {
+  color: rgb(148, 163, 184) !important;
 }
 
-[data-slot="checkbox"]:hover,
-[data-radix-checkbox-root]:hover, 
-button[role="checkbox"]:hover {
-    border-color: rgb(71 85 105) !important;
-    background-color: rgb(30 41 59) !important;
+/* Dark mode - Ensure select triggers are visible */
+.bg-slate-800[data-slot="select-trigger"] {
+  background-color: rgba(30, 41, 59, 0.8) !important;
+  border-color: rgba(100, 116, 139, 0.5) !important;
+  color: rgb(226, 232, 240) !important;
 }
 
-[data-slot="checkbox"][data-state="checked"],
-[data-radix-checkbox-root][data-state="checked"], 
-button[role="checkbox"][data-state="checked"] {
-    background-color: rgb(59 130 246) !important;
-    border-color: rgb(59 130 246) !important;
-    color: white !important;
+.bg-slate-800[data-slot="select-trigger"]:hover {
+  background-color: rgba(30, 41, 59, 0.9) !important;
+  border-color: rgba(100, 116, 139, 0.7) !important;
 }
 
-/* Checkbox indicator styling */
-[data-slot="checkbox-indicator"],
-[data-radix-checkbox-indicator] {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 100% !important;
-    height: 100% !important;
+[data-theme="light"] .text-slate-200[data-slot="select-item"] {
+  color: rgb(17, 24, 39) !important;
+  background-color: transparent !important;
 }
 
-[data-slot="checkbox-indicator"] svg,
-[data-radix-checkbox-indicator] svg {
-    width: 0.875rem !important;
-    height: 0.875rem !important;
-    flex-shrink: 0 !important;
+[data-theme="light"] .text-slate-200[data-slot="select-item"]:hover {
+  background-color: rgb(243, 244, 246) !important;
+  color: rgb(17, 24, 39) !important;
 }
 
-/* Chart Text Colors */
-.recharts-cartesian-axis-tick-value, .recharts-legend-item-text {
-    fill: #94a3b8 !important;
-    color: #cbd5e1 !important;
+/* CONSOLIDATED MOBILE TEXT FIXES - Light Mode Issues */
+
+/* 1. All button text visibility - Comprehensive fix */
+[data-theme="light"] button[class*="text-slate-300"],
+[data-theme="light"] button[class*="text-slate-400"],
+[data-theme="light"] button span[class*="text-slate-300"],
+[data-theme="light"] button span[class*="text-slate-400"],
+[data-theme="light"] button .text-slate-300,
+[data-theme="light"] button .text-slate-400,
+[data-theme="light"] .hamburger-btn .text-slate-300,
+[data-theme="light"] .hamburger-btn .text-slate-400 {
+  color: var(--light-text-dark) !important;
+  font-weight: 500 !important;
 }
 
-.recharts-tooltip-wrapper .recharts-default-tooltip {
-    background-color: #1e293b !important;
-    border: 1px solid #475569 !important;
-    border-radius: 8px !important;
+[data-theme="light"] button[class*="text-slate-300"]:hover,
+[data-theme="light"] button[class*="text-slate-400"]:hover,
+[data-theme="light"] .hamburger-btn:hover .text-slate-300,
+[data-theme="light"] .hamburger-btn:hover .text-slate-400 {
+  color: #1E88E5 !important;
 }
 
-.recharts-line-dot {
-    fill: #f8fafc !important;
-    stroke: #3b82f6 !important;
-    stroke-width: 2px !important;
-    r: 4 !important;
+/* 2. Mobile tab active states - Fix white highlighting issue */
+[data-theme="light"] *[data-state="active"][class*="bg-slate-800"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+  border: 2px solid #1E88E5 !important;
+  box-shadow: 0 3px 8px rgba(30, 136, 229, 0.3) !important;
 }
 
-.recharts-line-dot:hover, .recharts-active-dot {
-    fill: #ffffff !important;
-    stroke: #2563eb !important;
-    stroke-width: 3px !important;
-    r: 5 !important;
+[data-theme="light"] *[data-state="active"][class*="text-white"] {
+  color: white !important;
+  font-weight: 600 !important;
 }
 
-/* Chart Specific Optimizations */
-.chart-clean { @apply bg-slate-900 border border-slate-800 rounded-lg p-6; }
-.chart-title { @apply text-lg font-semibold text-slate-50 mb-2; }
-.chart-subtitle { @apply text-sm text-slate-400 mb-4; }
+/* Removed overly broad active state rule */
 
-/* Cash Flow Chart Colors */
-.recharts-area[data-key="income"] { fill: url(#incomeGradient) !important; stroke: #10b981 !important; }
-.recharts-area[data-key="expense"] { fill: url(#expenseGradient) !important; stroke: #ef4444 !important; }
-
-/* Scrollbar Styling */
-.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-.scrollbar-hide::-webkit-scrollbar { display: none; }
-
-/* Loading States */
-.mobile-skeleton {
-    background: linear-gradient(90deg, rgba(15, 23, 42, 0.8) 25%, rgba(30, 41, 59, 0.8) 50%, rgba(15, 23, 42, 0.8) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.8s infinite;
-    border-radius: 6px;
+/* 3. Mobile table text - Fix white text in tables */
+[data-theme="light"] table td:not([class*="text-blue"]),
+[data-theme="light"] table th:not([class*="text-blue"]),
+[data-theme="light"] table td *:not([class*="text-blue"]),
+[data-theme="light"] table th *:not([class*="text-blue"]),
+[data-theme="light"] table span:not([class*="text-blue"]),
+[data-theme="light"] table p:not([class*="text-blue"]),
+[data-theme="light"] table div:not([class*="recharts"]):not([class*="text-blue"]) {
+  color: rgb(17, 24, 39) !important;
+  background-color: transparent !important;
 }
 
-@keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+[data-theme="light"] tbody td {
+  color: rgb(17, 24, 39) !important;
 }
 
-/* Professional Utility Classes */
-.mobile-only { display: none; }
-
-/* Professional Spacing System */
-.space-section { margin-bottom: var(--space-2xl); }
-.space-content { margin-bottom: var(--space-xl); }
-.space-group { margin-bottom: var(--space-lg); }
-.space-item { margin-bottom: var(--space-md); }
-
-/* Professional Layout Utilities */
-.container-professional { 
-    max-width: 1400px; 
-    margin: 0 auto; 
-    padding: 0 var(--space-lg);
+[data-theme="light"] thead th {
+  color: #1565C0 !important;
+  font-weight: 700 !important;
 }
 
-.grid-professional { 
-    display: grid; 
-    gap: var(--space-lg);
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-}
-
-.flex-professional { 
-    display: flex; 
-    gap: var(--space-md);
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-/* Professional Status Indicators */
-.indicator-online { 
-    position: relative;
-}
-
-.indicator-online::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 8px;
-    height: 8px;
-    background: var(--success);
-    border-radius: 50%;
-    box-shadow: 0 0 0 2px var(--surface);
-}
-
-/* Loading States */
-.skeleton-professional {
-    background: linear-gradient(90deg, 
-        rgba(51, 65, 85, 0.8) 25%, 
-        rgba(71, 85, 105, 0.8) 50%, 
-        rgba(51, 65, 85, 0.8) 75%
-    );
-    background-size: 200% 100%;
-    animation: skeleton-shimmer 2s infinite;
-    border-radius: var(--radius);
-}
-
-@keyframes skeleton-shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-}
-
+/* 4. Additional mobile fixes - Ensure all text is readable - Subtle approach */
 @media (max-width: 768px) {
-    .mobile-only { display: block; }
-    .mobile-hidden { display: none; }
-    .mobile-flex { display: flex; }
-    .mobile-grid { display: grid; }
-    
-    .container-professional { 
-        padding: 0 var(--space-md);
-    }
-    
-    .grid-professional { 
-        grid-template-columns: 1fr;
-        gap: var(--space-md);
-    }
-    
-    .flex-professional { 
-        gap: var(--space-sm);
-    }
+  [data-theme="light"] button[class*="bg-slate-"],
+  [data-theme="light"] .bg-slate-900 button,
+  [data-theme="light"] .bg-slate-800 button {
+    background-color: rgba(255, 255, 255, 0.6) !important;
+    border-color: rgba(209, 213, 219, 0.3) !important;
+    color: var(--light-text-dark) !important;
+  }
+
+  [data-theme="light"] button[class*="bg-slate-"]:hover,
+  [data-theme="light"] .bg-slate-900 button:hover,
+  [data-theme="light"] .bg-slate-800 button:hover {
+    background-color: rgba(30, 136, 229, 0.08) !important;
+    border-color: rgba(30, 136, 229, 0.4) !important;
+    color: #1E88E5 !important;
+  }
+
+  /* Mobile-specific tab fixes */
+  [data-theme="light"] [role="tablist"] [data-state="active"] {
+    background-color: #1E88E5 !important;
+    color: white !important;
+    border: 2px solid #1E88E5 !important;
+    box-shadow: 0 3px 8px rgba(30, 136, 229, 0.3) !important;
+  }
+
+  [data-theme="light"] [role="tablist"] [data-state="active"] span,
+  [data-theme="light"] [role="tablist"] [data-state="active"] svg {
+    color: white !important;
+  }
+
+  /* Mobile table improvements */
+  [data-theme="light"] table,
+  [data-theme="light"] tbody,
+  [data-theme="light"] tr,
+  [data-theme="light"] td,
+  [data-theme="light"] th {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(17, 24, 39) !important;
+  }
+}
+
+/* 5. Belt and suspenders - Override any remaining white text issues */
+[data-theme="light"] *[class*="text-white"]:not([data-state="active"]):not(.sidebar-nav-active):not([class*="bg-blue"]) {
+  color: rgb(17, 24, 39) !important;
+}
+
+[data-theme="light"] button *[class*="text-white"]:not([data-state="active"]) {
+  color: #1E88E5 !important;
+}
+
+
+
+
+/* 5. MOBILE TAB ACTIVE STATES - More Specific Targeting */
+
+/* Mobile tab triggers - SUPER SPECIFIC TARGETING */
+[data-theme="light"] [role="tablist"] [class*="data-[state=active]:bg-slate-800"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+  border: 2px solid #1E88E5 !important;
+}
+
+[data-theme="light"] [data-state="active"][class*="bg-slate-800"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+  border: 2px solid #1E88E5 !important;
+  box-shadow: 0 3px 8px rgba(30, 136, 229, 0.3) !important;
+}
+
+[data-theme="light"] [data-state="active"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+}
+
+/* Removed another overly broad active state rule */
+
+/* 6. Belt and suspenders - Target exact TabsTrigger classes from the components */
+[data-theme="light"] .grid.w-full.grid-cols-2 [data-state="active"],
+[data-theme="light"] .grid.w-full.grid-cols-3 [data-state="active"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+  border: 2px solid #1E88E5 !important;
+  box-shadow: 0 3px 8px rgba(30, 136, 229, 0.3) !important;
+}
+
+/* Mobile tab active states only - keep essential tab functionality */
+@media (max-width: 768px) {
+  [data-theme="light"] [role="tablist"] [data-state="active"] {
+    background-color: #1E88E5 !important;
+    color: white !important;
+    border: 2px solid #1E88E5 !important;
+    box-shadow: 0 3px 8px rgba(30, 136, 229, 0.3) !important;
+  }
+
+  [data-theme="light"] [role="tablist"] [data-state="active"] span,
+  [data-theme="light"] [role="tablist"] [data-state="active"] svg {
+    color: white !important;
+  }
+}
+
+
+
+/* MOBILE CRM INTERACTION TEXT FIXES - Fix White Text in Light Mode */
+
+/* 1. Interaction date text - Fix "call•Jul 20, 2025 Outcome" white text issue */
+[data-theme="light"] .text-slate-400 {
+  color: var(--light-text-dark) !important;}
+
+[data-theme="light"] .text-slate-300 {
+  color: rgb(55, 65, 81) !important;}
+
+/* 2. Mobile interaction cards - Target nested text elements specifically */
+[data-theme="light"] .bg-slate-800 .text-slate-400,
+[data-theme="light"] .bg-slate-800 .text-slate-300 {
+  color: var(--light-text-dark) !important;
+}
+
+/* 3. Mobile table interaction text - Target mobile layout specifically */
+@media (max-width: 639px) {
+  [data-theme="light"] .text-slate-400,
+  [data-theme="light"] .text-slate-300 {
+    color: var(--light-text-dark) !important;
+  }
+}
+
+/* 4. Badge and interaction type text in mobile view */
+[data-theme="light"] .badge[class*="text-slate-300"],
+[data-theme="light"] .capitalize.text-slate-400 {
+  color: var(--light-text-dark) !important;
+}
+
+/* 5. Mobile table "Show More/Show Less" button text */
+[data-theme="light"] button[class*="text-slate-400"] {
+  color: var(--light-text-dark) !important;
+}
+
+[data-theme="light"] button[class*="text-slate-400"]:hover {
+  color: rgb(55, 65, 81) !important;
+}
+
+/* MOBILE CRM TABLE BADGE FIXES - Status and Follow-up Text Visibility */
+
+/* 6. Status badges - Fix light text colors (text-*-100) that appear white */
+[data-theme="light"] .badge[class*="text-sky-100"],
+[data-theme="light"] [class*="text-sky-100"] {
+  color: #0369a1 !important; /* sky-700 for better contrast */
+}
+
+[data-theme="light"] .badge[class*="text-yellow-100"],
+[data-theme="light"] [class*="text-yellow-100"] {
+  color: #a16207 !important; /* yellow-700 */
+}
+
+[data-theme="light"] .badge[class*="text-purple-100"],
+[data-theme="light"] [class*="text-purple-100"] {
+  color: #7c3aed !important; /* violet-600 */
+}
+
+[data-theme="light"] .badge[class*="text-orange-100"],
+[data-theme="light"] [class*="text-orange-100"] {
+  color: #c2410c !important; /* orange-700 */
+}
+
+[data-theme="light"] .badge[class*="text-indigo-100"],
+[data-theme="light"] [class*="text-indigo-100"] {
+  color: #4338ca !important; /* indigo-600 */
+}
+
+[data-theme="light"] .badge[class*="text-emerald-100"],
+[data-theme="light"] [class*="text-emerald-100"] {
+  color: #059669 !important; /* emerald-600 */
+}
+
+[data-theme="light"] .badge[class*="text-red-100"],
+[data-theme="light"] [class*="text-red-100"] {
+  color: #dc2626 !important; /* red-600 */
+}
+
+[data-theme="light"] .badge[class*="text-slate-100"],
+[data-theme="light"] [class*="text-slate-100"] {
+  color: rgb(51, 65, 85) !important; /* slate-700 */
+}
+
+/* 2. Follow-up badges - Improve red text visibility */
+[data-theme="light"] .badge[class*="text-red-400"],
+[data-theme="light"] [class*="text-red-400"] {
+  color: #dc2626 !important; /* red-600 for better contrast */
+}
+
+/* 3. Mobile-specific badges - Fix slate text */
+[data-theme="light"] .badge[class*="text-slate-300"],
+[data-theme="light"] [class*="text-slate-300"] {
+  color: rgb(51, 65, 85) !important; /* slate-700 */
+}
+
+/* 4. Mobile-only targeting for CRM table badges */
+@media (max-width: 768px) {
+  /* Status badges in mobile table */
+  [data-theme="light"] [class*="bg-sky-600"] {
+    background-color: rgba(2, 132, 199, 0.15) !important; /* sky-600 with opacity */
+    border: 1px solid #0369a1 !important;
+  }
+
+  [data-theme="light"] [class*="bg-yellow-600"] {
+    background-color: rgba(202, 138, 4, 0.15) !important;
+    border: 1px solid #a16207 !important;
+  }
+
+  [data-theme="light"] [class*="bg-purple-600"] {
+    background-color: rgba(124, 58, 237, 0.15) !important;
+    border: 1px solid #7c3aed !important;
+  }
+
+  [data-theme="light"] [class*="bg-orange-600"] {
+    background-color: rgba(234, 88, 12, 0.15) !important;
+    border: 1px solid #c2410c !important;
+  }
+
+  [data-theme="light"] [class*="bg-indigo-600"] {
+    background-color: rgba(67, 56, 202, 0.15) !important;
+    border: 1px solid #4338ca !important;
+  }
+
+  [data-theme="light"] [class*="bg-emerald-600"] {
+    background-color: rgba(5, 150, 105, 0.15) !important;
+    border: 1px solid #059669 !important;
+  }
+
+  [data-theme="light"] [class*="bg-red-600"] {
+    background-color: rgba(220, 38, 38, 0.15) !important;
+    border: 1px solid #dc2626 !important;
+  }
+
+  [data-theme="light"] [class*="bg-slate-600"] {
+    background-color: rgba(71, 85, 105, 0.15) !important;
+    border: 1px solid rgb(51, 65, 85) !important;
+  }
+
+  /* Follow-up badges mobile fixes */
+  [data-theme="light"] [class*="bg-red-500/10"][class*="text-red-400"] {
+    background-color: rgba(220, 38, 38, 0.1) !important;
+    border-color: rgba(220, 38, 38, 0.3) !important;
+    color: #dc2626 !important;
+  }
+
+  /* Mobile interaction type badges */
+  [data-theme="light"] [class*="bg-slate-700"][class*="text-slate-300"] {
+    background-color: rgba(71, 85, 105, 0.15) !important;
+    border: 1px solid rgb(51, 65, 85) !important;
+    color: rgb(51, 65, 85) !important;
+  }
+}
+
+/* 5. Target Badge component specifically */
+[data-theme="light"] [data-slot="badge"] {
+  color: inherit !important;
+}
+
+[data-theme="light"] [data-slot="badge"][class*="text-"] {
+  color: inherit !important;
+}
+
+/* MOBILE ACTION BUTTON FIXES - Edit/Delete Buttons in Expanded Tables */
+
+/* 1. Ghost variant buttons - Fix invisible buttons in mobile expanded views */
+[data-theme="light"] button[variant="ghost"] {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(209, 213, 219, 0.6) !important;
+  color: var(--light-text-dark) !important;
+}
+
+[data-theme="light"] button[variant="ghost"]:hover {
+  background-color: rgba(243, 244, 246, 0.9) !important;
+  border-color: rgba(156, 163, 175, 0.8) !important;
+  color: rgb(55, 65, 81) !important;
+}
+
+/* 2. Icon-only action buttons - Fix edit/delete button visibility */
+[data-theme="light"] button[class*="h-7"][class*="w-7"][class*="p-0"] {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(209, 213, 219, 0.7) !important;
+  color: var(--light-text-dark) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] button[class*="h-7"][class*="w-7"][class*="p-0"]:hover {
+  background-color: rgba(243, 244, 246, 0.95) !important;
+  border-color: rgba(156, 163, 175, 0.8) !important;
+  color: rgb(55, 65, 81) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 3. Delete button specific styling - Red hover states */
+[data-theme="light"] button[class*="hover:text-red-400"] {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(209, 213, 219, 0.7) !important;
+  color: var(--light-text-dark) !important;
+}
+
+[data-theme="light"] button[class*="hover:text-red-400"]:hover {
+  background-color: rgba(254, 242, 242, 0.9) !important;
+  border-color: rgba(248, 113, 113, 0.5) !important;
+  color: #dc2626 !important;
+}
+
+/* 4. Icons inside buttons - Ensure visibility */
+[data-theme="light"] button svg,
+[data-theme="light"] button .lucide {
+  color: inherit !important;
+}
+
+[data-theme="light"] button[class*="text-slate-400"] svg,
+[data-theme="light"] button[class*="text-slate-400"] .lucide {
+  color: var(--light-text-dark) !important;
+}
+
+
+
+
+
+
+
+
+/* 2. Target interaction badges specifically */
+[data-theme="light"] .bg-slate-700.text-slate-300,
+[data-theme="light"] [class*="bg-slate-700"][class*="text-slate-300"] {
+  background-color: rgba(243, 244, 246, 0.8) !important;
+  color: var(--light-text-dark) !important;
+  border: 1px solid rgba(209, 213, 219, 0.6) !important;
+}
+
+/* 3. Force all interaction-related text to be dark */
+[data-theme="light"] .space-y-3 span,
+[data-theme="light"] .space-y-3 div,
+[data-theme="light"] .bg-slate-800 span,
+[data-theme="light"] .bg-slate-800 div:not([class*="recharts"]) {
+  color: var(--light-text-dark) !important;
+}
+
+/* 4. Target mobile-specific flex containers */
+[data-theme="light"] .flex.items-center.gap-2 span,
+[data-theme="light"] .flex.items-center.gap-2 div,
+[data-theme="light"] .flex.items-center.gap-2 .capitalize {
+  color: var(--light-text-dark) !important;
+}
+
+/* 5. Override any remaining white text in CRM components */
+[data-theme="light"] .text-white:not([data-state="active"]):not(.sidebar-nav-active):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]) {
+  color: rgb(17, 24, 39) !important;
+}
+
+/* 6. Mobile table content - force dark text */
+@media (max-width: 768px) {
+  [data-theme="light"] .card-enhanced span,
+  [data-theme="light"] .card-enhanced div:not([class*="recharts"]),
+  [data-theme="light"] .card-enhanced .text-slate-400,
+  [data-theme="light"] .card-enhanced .text-slate-300 {
+    color: var(--light-text-dark) !important;
+  }
+
+  /* Nuclear override for all mobile CRM text */
+  [data-theme="light"] [class*="bg-slate-"] span:not([class*="text-white"]),
+  [data-theme="light"] [class*="bg-slate-"] div:not([class*="recharts"]):not([class*="text-white"]) {
+    color: var(--light-text-dark) !important;
+  }
+}
+
+/* FINAL SPECIFIC FIXES - Target Exact Remaining White Elements */
+
+/* 1. Fix "Outcome" text specifically - ULTRA AGGRESSIVE targeting */
+[data-theme="light"] .text-xs.text-slate-300,
+[data-theme="light"] div.text-xs.text-slate-300,
+[data-theme="light"] .space-y-1 .text-xs.text-slate-300,
+[data-theme="light"] .space-y-1 div.text-xs.text-slate-300,
+[data-theme="light"] [class*="sm:hidden"] .text-xs.text-slate-300 {
+  color: var(--light-text-dark) !important;
+}
+
+/* 1b. Even more specific - target any div containing outcome text */
+[data-theme="light"] div[class="text-xs text-slate-300"],
+[data-theme="light"] div[class*="text-xs"][class*="text-slate-300"] {
+  color: var(--light-text-dark) !important;
+}
+
+/* 2. Fix SVG icons inside ghost buttons - Edit and Delete icons */
+[data-theme="light"] button[class*="text-slate-400"] svg,
+[data-theme="light"] button[class*="text-slate-400"] .lucide,
+[data-theme="light"] button[class*="ghost"] svg,
+[data-theme="light"] button[class*="ghost"] .lucide {
+  color: var(--light-text-dark) !important;
+  stroke: rgb(75, 85, 99) !important;
+}
+
+/* 3. Specific targeting for Pencil and Trash2 icons */
+[data-theme="light"] button .lucide-pencil,
+[data-theme="light"] button .lucide-trash-2,
+[data-theme="light"] button svg[class*="lucide"] {
+  color: var(--light-text-dark) !important;
+  stroke: rgb(75, 85, 99) !important;
+}
+
+/* 4. Target h-7 w-7 button icons specifically */
+[data-theme="light"] button.h-7.w-7 svg,
+[data-theme="light"] button[class*="h-7"][class*="w-7"] svg {
+  color: var(--light-text-dark) !important;
+  stroke: rgb(75, 85, 99) !important;
+}
+
+/* 5. Hover states for icon buttons */
+[data-theme="light"] button[class*="text-slate-400"]:hover svg,
+[data-theme="light"] button[class*="ghost"]:hover svg {
+  color: rgb(55, 65, 81) !important;
+  stroke: rgb(55, 65, 81) !important;
+}
+
+/* 6. Red hover state for delete buttons */
+[data-theme="light"] button[class*="hover:text-red-400"]:hover svg {
+  color: #dc2626 !important;
+  stroke: #dc2626 !important;
+}
+
+/* 7. Mobile-specific icon fixes */
+@media (max-width: 768px) {
+  [data-theme="light"] button svg,
+  [data-theme="light"] button .lucide {
+    color: var(--light-text-dark) !important;
+    stroke: rgb(75, 85, 99) !important;
+  }
+
+  [data-theme="light"] button:hover svg,
+  [data-theme="light"] button:hover .lucide {
+    color: rgb(55, 65, 81) !important;
+    stroke: rgb(55, 65, 81) !important;
+  }
+}
+
+/* GLOBAL APPLICATION-WIDE WHITE TEXT FIXES - All Pages */
+
+/* 2. Target ANY element that might contain white text in mobile views */
+@media (max-width: 768px) {
+  /* Mobile-specific text size combinations (not covered by consolidated rules) */
+  [data-theme="light"] .text-xs:not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]),
+  [data-theme="light"] .text-sm:not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]) {
+    color: var(--light-text-dark) !important;
+  }
+}
+
+/* 3. Additional element targeting (specific patterns not covered above) */
+
+/* 4. Target specific patterns found in tables across all pages */
+[data-theme="light"] .font-medium.text-slate-400,
+[data-theme="light"] .font-medium.text-slate-300,
+[data-theme="light"] .capitalize.text-slate-400,
+[data-theme="light"] .capitalize.text-slate-300 {
+  color: var(--light-text-dark) !important;
+}
+
+/* 5. ALL mobile card components - target ANY text that might be white */
+[data-theme="light"] [class*="card-"] .text-slate-300,
+[data-theme="light"] [class*="card-"] .text-slate-400,
+[data-theme="light"] [class*="bg-slate-"] .text-slate-300,
+[data-theme="light"] [class*="bg-slate-"] .text-slate-400 {
+  color: var(--light-text-dark) !important;
+}
+
+/* 6. INVENTORY, MILEAGE, BOOKKEEPER pages - additional patterns */
+[data-theme="light"] .table-enhanced .text-slate-300,
+[data-theme="light"] .table-enhanced .text-slate-400,
+[data-theme="light"] [class*="table"] .text-slate-300,
+[data-theme="light"] [class*="table"] .text-slate-400 {
+  color: var(--light-text-dark) !important;
+}
+
+/* 7. TARGETED white text fixes - Only for problematic patterns */
+[data-theme="light"] .text-xs:not([class*="text-blue"]):not([class*="text-emerald"]):not([class*="text-red"]),
+[data-theme="light"] .text-sm:not([class*="text-blue"]):not([class*="text-emerald"]):not([class*="text-red"]) {
+  color: var(--light-text-dark) !important;
+}
+
+/* 8. SPECIFIC FIXES for Description, Amount, Category fields across ALL pages */
+
+/* Transaction Table - Bookkeeper Page - EXACT CLASS TARGETING */
+
+/* Amount field - FORCE green/red colors to show properly */
+[data-theme="light"] .font-semibold.whitespace-nowrap.text-green-400 {
+  color: #22c55e !important; /* Keep green for income */
+}
+
+[data-theme="light"] .font-semibold.whitespace-nowrap.text-red-400 {
+  color: #ef4444 !important; /* Keep red for expenses */
+}
+
+/* Category field - Fix truncate block span inside max-w div */
+[data-theme="light"] [class*="max-w-"] .truncate.block,
+[data-theme="light"] [class*="max-w-"] span.truncate,
+[data-theme="light"] .truncate.block {
+  color: var(--light-text-dark) !important;
+}
+
+/* General max-w containers */
+[data-theme="light"] .font-medium[class*="max-w-"],
+[data-theme="light"] div[class*="max-w-"] {
+  color: var(--light-text-dark) !important;
+}
+
+/* Additional amount field targeting - catch any overrides */
+[data-theme="light"] span.font-semibold.whitespace-nowrap:not(.text-green-400):not(.text-red-400) {
+  color: var(--light-text-dark) !important;
+}
+
+/* Mobile table amount and category fixes */
+@media (max-width: 768px) {
+  [data-theme="light"] .font-semibold.whitespace-nowrap {
+    color: inherit !important; /* Allow green/red to show through */
+  }
+
+  [data-theme="light"] .truncate.block,
+  [data-theme="light"] [class*="max-w-"] span {
+    color: var(--light-text-dark) !important;
+  }
+}
+
+/* Inventory Table - Category badges and text */
+[data-theme="light"] .text-slate-300,
+[data-theme="light"] .text-slate-400,
+[data-theme="light"] .border-slate-600.text-slate-300,
+[data-theme="light"] .bg-slate-700.text-slate-300 {
+  color: var(--light-text-dark) !important;
+}
+
+/* Table headers and cells - ALL tables */
+[data-theme="light"] .text-slate-300.cursor-pointer,
+[data-theme="light"] th.text-slate-300,
+[data-theme="light"] td.text-slate-300,
+[data-theme="light"] td.text-slate-400 {
+  color: var(--light-text-dark) !important;
+}
+
+/* Mobile Table content - ALL pages using MobileTable */
+[data-theme="light"] .font-medium span,
+[data-theme="light"] .break-words,
+[data-theme="light"] .whitespace-normal,
+[data-theme="light"] .truncate {
+  color: var(--light-text-dark) !important;
+}
+
+/* Badge components - ALL pages */
+[data-theme="light"] .badge,
+[data-theme="light"] [class*="badge"],
+[data-theme="light"] .border-slate-600,
+[data-theme="light"] .bg-slate-800.px-2.py-1 {
+  color: var(--light-text-dark) !important;
+}
+
+/* CRM Dialog content - Fix remaining white text */
+[data-theme="light"] .text-white:not([data-state="active"]):not(.sidebar-nav-active):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-gradient"]) {
+  color: rgb(17, 24, 39) !important;
+}
+
+/* Font mono text - SKU, amounts, etc. */
+[data-theme="light"] .font-mono,
+[data-theme="light"] .font-semibold.font-mono {
+  color: var(--light-text-dark) !important;
+}
+
+/* Removed conflicting color: inherit rule that was overriding specific colors */
+
+/* FINAL COMPREHENSIVE WHITE TEXT FIXES - Catch All Remaining Issues */
+
+/* 1. ALL table cell content across the entire application */
+[data-theme="light"] td span,
+[data-theme="light"] td div,
+[data-theme="light"] th span,
+[data-theme="light"] th div {
+  color: var(--light-text-dark) !important;
+}
+
+/* 2. ALL mobile table and card content */
+[data-theme="light"] .card-enhanced span:not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]),
+[data-theme="light"] .card-enhanced div:not([class*="recharts"]):not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]) {
+  color: var(--light-text-dark) !important;
+}
+
+/* 3. ALL description, title, and content text patterns */
+[data-theme="light"] .font-medium:not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]):not([class*="text-amber"]),
+[data-theme="light"] .break-words:not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-red"]) {
+  color: var(--light-text-dark) !important;
+}
+
+/* Enhanced styling light mode overrides */
+
+/* Gradient card backgrounds for light mode */
+[data-theme="light"] [class*="bg-gradient-to-br"] {
+  background: rgb(255, 255, 255) !important;
+  border-color: rgba(209, 213, 219, 0.5) !important;
+}
+
+/* COMPREHENSIVE STANDARDIZED percentage/growth indicators - ALL pages now use unified GrowthIndicator */
+[data-theme="light"] *[class*="bg-emerald-400/10"] {
+  background-color: rgba(34, 197, 94, 0.3) !important;
+  border: 1px solid rgba(34, 197, 94, 0.4) !important;
+}
+
+[data-theme="light"] *[class*="bg-red-400/10"] {
+  background-color: rgba(239, 68, 68, 0.3) !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+}
+
+[data-theme="light"] *[class*="bg-slate-400/10"] {
+  background-color: rgba(156, 163, 175, 0.3) !important;
+  border: 1px solid rgba(156, 163, 175, 0.4) !important;
+}
+
+/* ELIMINATED BLOAT - removed old inconsistent indicator styles (bg-green-900, bg-red-900, status-badge-* classes no longer needed) */
+
+/* Dashboard card content - now handled by standardized broad selectors above */
+
+/* Enhanced header styling */
+[data-theme="light"] header[class*="bg-slate-950"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(209, 213, 219, 0.5) !important;
+}
+
+/* Enhanced sidebar styling */
+[data-theme="light"] aside[class*="bg-slate-950"] {
+  background-color: rgba(248, 250, 252, 0.98) !important;
+  border-color: rgba(209, 213, 219, 0.4) !important;
+}
+
+/* Enhanced card rounded corners and shadows */
+[data-theme="light"] [class*="rounded-3xl"] {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Enhanced alert styling */
+[data-theme="light"] [class*="from-amber-500"] {
+  background: linear-gradient(to right, rgba(245, 158, 11, 0.1), rgba(249, 115, 22, 0.1)) !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+/* Tab list enhancements */
+[data-theme="light"] [class*="bg-slate-900"][class*="rounded-2xl"] {
+  background-color: rgba(248, 250, 252, 0.7) !important;
+  border-color: rgba(209, 213, 219, 0.5) !important;
+}
+
+/* Enhanced button styling for active tabs */
+[data-theme="light"] [data-state="active"][class*="bg-blue-600"] {
+  background-color: #1E88E5 !important;
+  color: white !important;
+}
+
+/* Enhanced sidebar navigation active state */
+[data-theme="light"] [class*="from-blue-600"] {
+  background: linear-gradient(to right, #1E88E5, #1976D2) !important;
+  color: white !important;
+}
+
+/* === CLEAN CHART STYLING === */
+.chart-container {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+.recharts-responsive-container {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.recharts-wrapper {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Legend spacing fix */
+.recharts-legend-wrapper {
+  margin: 0 !important;
+  padding-top: 2px !important;
+  padding-bottom: 0 !important;
+}
+
+/* Eliminate all bottom spacing */
+.recharts-surface,
+.recharts-cartesian-grid,
+.recharts-cartesian-axis,
+[class*="recharts"] {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Simple typography */
+.recharts-cartesian-axis-tick-value,
+.recharts-legend-item-text {
+  font-size: 12px;
+  fill: #94a3b8;
+}
+
+[data-theme="light"] .recharts-cartesian-axis-tick-value,
+[data-theme="light"] .recharts-legend-item-text {
+  fill: #4b5563;
+}
+
+/* Simple grid */
+.recharts-cartesian-grid line {
+  stroke: #374151;
+  stroke-width: 0.5;
+  opacity: 0.3;
+}
+
+[data-theme="light"] .recharts-cartesian-grid line {
+  stroke: #d1d5db;
+  opacity: 0.5;
+}
+
+/* Simple tooltips */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: rgba(30, 41, 59, 0.95) !important;
+  border: 1px solid #475569 !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+}
+
+[data-theme="light"] .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: #d1d5db !important;
+  color: #1f2937 !important;
+}
+
+/* Simple legend */
+.recharts-default-legend {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.recharts-legend-item {
+  font-size: 12px !important;
+  padding: 4px 8px !important;
+  margin: 0 !important;
 }
