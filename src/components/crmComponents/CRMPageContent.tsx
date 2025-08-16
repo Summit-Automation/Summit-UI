@@ -53,7 +53,7 @@ export default function CRMPageContent({ customers, interactions }: CRMPageConte
                     <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 backdrop-blur-sm p-6">
                         <CardHeader className="pb-6">
                             <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
-                                <div className="p-2.5 bg-blue-500/20 rounded-xl">
+                                <div className="p-2.5 bg-blue-500/20 rounded-xl group-hover:bg-blue-500/30 transition-all duration-300">
                                     <PieChart className="h-5 w-5 text-blue-400"/>
                                 </div>
                                 Customer Status Distribution
@@ -63,7 +63,7 @@ export default function CRMPageContent({ customers, interactions }: CRMPageConte
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="p-0">
-                            <div className="h-64 lg:h-80 rounded-xl overflow-hidden">
+                            <div className="rounded-xl overflow-hidden">
                                 <CustomerStatusPie customers={customers} size="md"/>
                             </div>
                         </CardContent>
@@ -72,7 +72,7 @@ export default function CRMPageContent({ customers, interactions }: CRMPageConte
                     <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 backdrop-blur-sm p-6">
                         <CardHeader className="pb-6">
                             <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
-                                <div className="p-2.5 bg-amber-500/20 rounded-xl">
+                                <div className="p-2.5 bg-amber-500/20 rounded-xl group-hover:bg-amber-500/30 transition-all duration-300">
                                     <PieChart className="h-5 w-5 text-amber-400"/>
                                 </div>
                                 Follow-Up Requirements
@@ -82,7 +82,7 @@ export default function CRMPageContent({ customers, interactions }: CRMPageConte
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="p-0">
-                            <div className="h-64 lg:h-80 rounded-xl overflow-hidden">
+                            <div className="rounded-xl overflow-hidden">
                                 <FollowUpPie interactions={interactions}/>
                             </div>
                         </CardContent>
@@ -93,10 +93,10 @@ export default function CRMPageContent({ customers, interactions }: CRMPageConte
                 <CRMActions customers={customers}/>
 
                 {/* Table - Desktop */}
-                <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
+                <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6 group">
                     <CardHeader className="pb-6">
                         <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
-                            <div className="p-2.5 bg-purple-500/20 rounded-xl">
+                            <div className="p-2.5 bg-purple-500/20 rounded-xl group-hover:bg-purple-500/30 transition-all duration-300">
                                 <Users className="h-5 w-5 text-purple-400"/>
                             </div>
                             Customer Overview
@@ -134,7 +134,7 @@ export default function CRMPageContent({ customers, interactions }: CRMPageConte
                     <TabsContent value="customers" className="mt-4 space-y-4">
                         <CRMActions customers={customers}/>
                         
-                        <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
+                        <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6 group">
                             <CardHeader className="pb-6">
                                 <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
                                     <div className="p-2.5 bg-purple-500/20 rounded-xl">
@@ -153,7 +153,7 @@ export default function CRMPageContent({ customers, interactions }: CRMPageConte
                     </TabsContent>
 
                     <TabsContent value="charts" className="mt-4 space-y-4">
-                        <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
+                        <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6 group">
                             <CardHeader className="pb-6">
                                 <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
                                     <div className="p-2.5 bg-blue-500/20 rounded-xl">
@@ -172,7 +172,7 @@ export default function CRMPageContent({ customers, interactions }: CRMPageConte
                             </CardContent>
                         </Card>
 
-                        <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
+                        <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6 group">
                             <CardHeader className="pb-6">
                                 <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
                                     <div className="p-2.5 bg-amber-500/20 rounded-xl">

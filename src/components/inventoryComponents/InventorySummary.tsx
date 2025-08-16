@@ -50,15 +50,15 @@ export default function InventorySummary({ items, alerts }: InventorySummaryProp
             description: 'Active inventory items',
             icon: Package,
             color: 'text-blue-400',
-            bgColor: 'bg-blue-400/10',
+            bgColor: 'bg-blue-500/20 group-hover:bg-blue-500/30',
         },
         {
             title: 'Total Value',
             value: `$${calculations.totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
             description: 'Current inventory value',
             icon: DollarSign,
-            color: 'text-green-400',
-            bgColor: 'bg-green-400/10',
+            color: 'text-emerald-400',
+            bgColor: 'bg-emerald-500/20 group-hover:bg-emerald-500/30',
         },
         {
             title: 'Low Stock',
@@ -66,7 +66,7 @@ export default function InventorySummary({ items, alerts }: InventorySummaryProp
             description: 'Items below threshold',
             icon: TrendingDown,
             color: 'text-orange-400',
-            bgColor: 'bg-orange-400/10',
+            bgColor: 'bg-orange-500/20 group-hover:bg-orange-500/30',
         },
         {
             title: 'Out of Stock',
@@ -74,7 +74,7 @@ export default function InventorySummary({ items, alerts }: InventorySummaryProp
             description: 'Items need restocking',
             icon: AlertTriangle,
             color: 'text-red-400',
-            bgColor: 'bg-red-400/10',
+            bgColor: 'bg-red-500/20 group-hover:bg-red-500/30',
         },
         {
             title: 'Critical Alerts',
@@ -82,7 +82,7 @@ export default function InventorySummary({ items, alerts }: InventorySummaryProp
             description: 'High priority notifications',
             icon: AlertTriangle,
             color: 'text-red-400',
-            bgColor: 'bg-red-400/10',
+            bgColor: 'bg-red-500/20 group-hover:bg-red-500/30',
         },
         {
             title: 'Categories',
@@ -90,7 +90,7 @@ export default function InventorySummary({ items, alerts }: InventorySummaryProp
             description: 'Unique item categories',
             icon: Warehouse,
             color: 'text-purple-400',
-            bgColor: 'bg-purple-400/10',
+            bgColor: 'bg-purple-500/20 group-hover:bg-purple-500/30',
         },
     ];
 
@@ -99,12 +99,12 @@ export default function InventorySummary({ items, alerts }: InventorySummaryProp
             {summaryCards.map((card, index) => {
                 const IconComponent = card.icon;
                 return (
-                    <Card key={card.title} className={`card-enhanced data-appear transition-transform duration-200 ease-out hover:scale-[1.02]`} style={{ animationDelay: `${index * 100}ms` }}>
+                    <Card key={card.title} className={`card-enhanced data-appear group transition-transform duration-200 ease-out hover:scale-[1.02]`} style={{ animationDelay: `${index * 100}ms` }}>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium text-slate-300">
                                 {card.title}
                             </CardTitle>
-                            <div className={`p-2 rounded-lg ${card.bgColor} transition-transform duration-200 ease-out hover:scale-105`}>
+                            <div className={`p-2.5 rounded-xl ${card.bgColor} transition-transform duration-200 ease-out hover:scale-110`}>
                                 <IconComponent className={`h-4 w-4 ${card.color} icon-interactive`} />
                             </div>
                         </CardHeader>

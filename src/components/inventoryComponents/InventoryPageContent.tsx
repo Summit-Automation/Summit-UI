@@ -27,7 +27,7 @@ export default function InventoryPageContent({ initialItems, initialAlerts }: In
                 onHelp={handleHelp}
             />
 
-            <div className="px-4 lg:px-6">
+            <div className="px-4 lg:px-6 space-y-6">
                 {/* Pass initial data to client wrapper for filtering and state management */}
                 <InventoryClientWrapper initialItems={initialItems} initialAlerts={initialAlerts} />
             </div>

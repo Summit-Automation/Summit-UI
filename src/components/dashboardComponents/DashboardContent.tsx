@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import { Users, DollarSign, TrendingUp, MessageSquare, Calendar, Activity, PieChart, HelpCircle } from "lucide-react";
+import { GrowthIndicator } from '@/components/ui/growth-indicator';
 
 import type { Customer } from '@/types/customer';
 import type { Interaction } from '@/types/interaction';
@@ -57,25 +58,7 @@ export function DashboardContent({
     // Help handler
     const handleHelp = () => setShowHelp(true);
     
-    function GrowthIndicator({ value }: { value: number }) {
-        const isPositive = value > 0;
-        const isNeutral = value === 0;
-        
-        return (
-            <div className={`flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${
-                isNeutral 
-                    ? 'text-slate-400 bg-slate-400/10' 
-                    : isPositive 
-                        ? 'text-emerald-400 bg-emerald-400/10' 
-                        : 'text-red-400 bg-red-400/10'
-            }`}>
-                <span className={isNeutral ? '' : isPositive ? '↗' : '↘'}>
-                    {isNeutral ? '→' : ''}
-                </span>
-                <span>{Math.abs(value).toFixed(1)}%</span>
-            </div>
-        );
-    }
+    // Removed - now using centralized GrowthIndicator component
 
 
     return (
@@ -258,7 +241,7 @@ export function DashboardContent({
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="p-0">
-                                    <div className="min-h-80 lg:min-h-96 rounded-2xl">
+                                    <div className="rounded-2xl">
                                         <CustomerGrowthLine customers={customers} />
                                     </div>
                                 </CardContent>
@@ -277,7 +260,7 @@ export function DashboardContent({
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="p-0">
-                                    <div className="min-h-80 lg:min-h-96 rounded-2xl">
+                                    <div className="rounded-2xl">
                                         <CashFlowArea transactions={transactions} />
                                     </div>
                                 </CardContent>
@@ -298,7 +281,7 @@ export function DashboardContent({
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <div className="min-h-80 lg:min-h-96 rounded-2xl">
+                                <div className="rounded-2xl">
                                     <InteractionTypeBar interactions={interactions} />
                                 </div>
                             </CardContent>
@@ -320,7 +303,7 @@ export function DashboardContent({
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <div className="min-h-64 lg:min-h-80 rounded-xl">
+                                <div className="rounded-xl">
                                     <CustomerStatusPie customers={customers} size="lg" />
                                 </div>
                             </CardContent>
@@ -339,7 +322,7 @@ export function DashboardContent({
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <div className="min-h-64 lg:min-h-80 rounded-xl">
+                                <div className="rounded-xl">
                                     <FollowUpPie interactions={interactions} />
                                 </div>
                             </CardContent>
@@ -362,7 +345,7 @@ export function DashboardContent({
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <div className="min-h-64 lg:min-h-80 rounded-xl">
+                                <div className="rounded-xl">
                                     <ExpenseCategoryPie transactions={transactions} />
                                 </div>
                             </CardContent>
@@ -381,7 +364,7 @@ export function DashboardContent({
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <div className="min-h-64 lg:min-h-80 rounded-xl">
+                                <div className="rounded-xl">
                                     <CashFlowArea transactions={transactions} />
                                 </div>
                             </CardContent>

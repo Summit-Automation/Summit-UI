@@ -55,7 +55,7 @@ export default function MileagePageContent({ mileageEntries }: MileagePageConten
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-0">
-                        <div className="h-64 lg:h-80 rounded-xl overflow-hidden">
+                        <div className="rounded-xl overflow-hidden">
                             <MileageChart mileageEntries={mileageEntries} />
                         </div>
                     </CardContent>
@@ -138,7 +138,7 @@ export default function MileagePageContent({ mileageEntries }: MileagePageConten
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <div className="h-64 rounded-xl overflow-hidden">
+                                <div className="rounded-xl overflow-hidden">
                                     <MileageChart mileageEntries={mileageEntries} />
                                 </div>
                             </CardContent>

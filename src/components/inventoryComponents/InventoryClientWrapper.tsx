@@ -106,8 +106,8 @@ export default function InventoryClientWrapper({ initialItems, initialAlerts }: 
                                 Stock levels and movement over time
                             </CardDescription>
                         </CardHeader>
-                        <CardContent className="p-0">
-                            <div className="h-64 lg:h-80 rounded-xl overflow-hidden">
+                        <CardContent className="p-0 pt-2">
+                            <div className="rounded-xl overflow-hidden">
                                 <InventoryChart items={filteredItems} />
                             </div>
                         </CardContent>
@@ -125,8 +125,8 @@ export default function InventoryClientWrapper({ initialItems, initialAlerts }: 
                                 Low stock warnings and critical notifications
                             </CardDescription>
                         </CardHeader>
-                        <CardContent className="p-0">
-                            <div className="max-h-80 rounded-xl overflow-hidden">
+                        <CardContent className="p-0 pt-2">
+                            <div className="rounded-xl overflow-hidden">
                                 <InventoryAlerts alerts={alerts} />
                             </div>
                         </CardContent>
@@ -213,7 +213,7 @@ export default function InventoryClientWrapper({ initialItems, initialAlerts }: 
                         </Card>
                     </TabsContent>
 
-                    <TabsContent value="alerts" className="mt-4">
+                    <TabsContent value="alerts" className="mt-4 space-y-4">
                         <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
                             <CardHeader className="pb-6">
                                 <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
@@ -227,14 +227,14 @@ export default function InventoryClientWrapper({ initialItems, initialAlerts }: 
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <div className="h-64 rounded-xl overflow-hidden">
+                                <div className="rounded-xl overflow-hidden">
                                     <InventoryAlerts alerts={alerts} />
                                 </div>
                             </CardContent>
                         </Card>
                     </TabsContent>
 
-                    <TabsContent value="analytics" className="mt-4">
+                    <TabsContent value="analytics" className="mt-4 space-y-4">
                         <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
                             <CardHeader className="pb-6">
                                 <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
@@ -247,8 +247,8 @@ export default function InventoryClientWrapper({ initialItems, initialAlerts }: 
                                     Stock levels and movement over time
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent className="p-0">
-                                <div className="h-64 rounded-xl overflow-hidden">
+                            <CardContent className="p-0 pt-2">
+                                <div className="rounded-xl overflow-hidden">
                                     <InventoryChart items={filteredItems} />
                                 </div>
                             </CardContent>

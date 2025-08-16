@@ -208,29 +208,29 @@
 /* Light theme - Aggressive text color overrides for actual Tailwind classes */
 
 /* CONSOLIDATED Text Color Overrides - All slate text colors for light mode */
-[data-theme="light"] *[class*="text-slate-50"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]),
-[data-theme="light"] *[class*="text-slate-100"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]) {
+[data-theme="light"] *[class*="text-slate-50"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-purple"]):not([class*="bg-orange"]):not([class*="bg-amber"]):not([class*="bg-gradient"]),
+[data-theme="light"] *[class*="text-slate-100"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-purple"]):not([class*="bg-orange"]):not([class*="bg-amber"]):not([class*="bg-gradient"]) {
   color: rgb(17, 24, 39) !important;
 }
 
-[data-theme="light"] *[class*="text-slate-200"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]) {
+[data-theme="light"] *[class*="text-slate-200"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-purple"]):not([class*="bg-orange"]):not([class*="bg-amber"]):not([class*="bg-gradient"]) {
   color: rgb(55, 65, 81) !important;
 }
 
-[data-theme="light"] *[class*="text-slate-300"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]),
-[data-theme="light"] *[class*="text-slate-400"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]),
-[data-theme="light"] *[class*="text-slate-500"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]) {
+[data-theme="light"] *[class*="text-slate-300"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-purple"]):not([class*="bg-orange"]):not([class*="bg-amber"]):not([class*="bg-gradient"]),
+[data-theme="light"] *[class*="text-slate-400"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-purple"]):not([class*="bg-orange"]):not([class*="bg-amber"]):not([class*="bg-gradient"]),
+[data-theme="light"] *[class*="text-slate-500"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-purple"]):not([class*="bg-orange"]):not([class*="bg-amber"]):not([class*="bg-gradient"]) {
   color: var(--light-text-dark) !important;
 }
 
-[data-theme="light"] *[class*="text-slate-600"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]) {
+[data-theme="light"] *[class*="text-slate-600"]:not(svg):not([class*="recharts"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-purple"]):not([class*="bg-orange"]):not([class*="bg-amber"]):not([class*="bg-gradient"]) {
   color: rgb(17, 24, 39) !important;
 }
 
 /* Heading styling consolidated above with blue color scheme */
 
-/* Keep white text on blue/colored backgrounds - tabs only */
-[data-theme="light"] *[class*="bg-gradient"] *,
+/* Keep white text on blue/colored backgrounds - tabs only (exclude Dashboard gradient cards) */
+[data-theme="light"] *[class*="bg-gradient"]:not([class*="bg-gradient-to-br"]) *,
 [data-theme="light"] [role="tablist"] [data-state="active"] * {
   color: white !important;
 }
@@ -358,7 +358,7 @@
   color: #1E88E5 !important;
 }
 
-/* Follow-up alerts - make them much more visible */
+/* COMPREHENSIVE follow-up alerts conversion - amber to blue theme */
 [data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] {
   background: linear-gradient(to right, rgba(30, 136, 229, 0.1), rgba(30, 136, 229, 0.15)) !important;
   border-color: #1E88E5 !important;
@@ -369,10 +369,27 @@
   color: #1E88E5 !important; /* Blue text instead of amber */
 }
 
-[data-theme="light"] *[class*="bg-amber-500"] {
-  background-color: rgba(30, 136, 229, 0.2) !important; /* Blue background for amber badges */
-  color: #1565C0 !important; /* Dark blue text */
+/* Follow-up alert badges and containers - HIGH SPECIFICITY to override general badge rules */
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] *[class*="bg-amber-500"] {
+  background-color: rgba(30, 136, 229, 0.25) !important; /* Blue background for icon container */
 }
+
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] .bg-amber-500\/25,
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] *[class*="bg-amber-500/25"] {
+  background-color: rgba(30, 136, 229, 0.25) !important; /* Blue background for badges */
+}
+
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] .text-amber-200,
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] .badge.text-amber-200 {
+  color: rgba(30, 136, 229, 0.9) !important; /* Blue text for badges */
+}
+
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] .border-amber-500\/40,
+[data-theme="light"] *[class*="bg-gradient-to-r"][class*="from-amber"] *[class*="border-amber-500/40"] {
+  border-color: rgba(30, 136, 229, 0.4) !important; /* Blue borders for badges */
+}
+
+/* Removed - amber backgrounds now handled by standardized icon rules above */
 
 /* Tab styling with blue accents */
 [data-theme="light"] [data-state="active"] {
@@ -401,8 +418,8 @@
   box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1) !important;
 }
 
-/* Badge and status indicators */
-[data-theme="light"] .badge,
+/* Badge and status indicators - blue theme only for non-specific badges */
+[data-theme="light"] .badge:not([class*="bg-amber"]):not([class*="bg-red"]):not([class*="bg-emerald"]):not([class*="bg-slate"]),
 [data-theme="light"] [class*="bg-blue-500"] {
   background-color: #1E88E5 !important;
   color: white !important;
@@ -416,6 +433,15 @@
 
 [data-theme="light"] [class*="text-red-"] {
   color: rgb(239, 68, 68) !important; /* Keep red for negative metrics */
+}
+
+[data-theme="light"] [class*="text-amber-"],
+[data-theme="light"] [class*="text-orange-"] {
+  color: rgb(245, 158, 11) !important; /* Keep amber/orange for warning metrics */
+}
+
+[data-theme="light"] [class*="text-purple-"] {
+  color: rgb(147, 51, 234) !important; /* Keep purple for category metrics */
 }
 
 /* Links and interactive text */
@@ -493,25 +519,39 @@
   border-color: rgb(226, 232, 240) !important;
 }
 
-/* Text color overrides for cards */
-[data-theme="light"] .text-slate-50 {
-  color: rgb(17, 24, 39) !important;
-}
+/* Removed - consolidated into broad selectors above */
 
 /* Consolidated text-slate rules - now handled by comprehensive selectors above */
 
-/* Icon background overrides with strong blue presence */
+/* STANDARDIZED icon background overrides - consistent across ALL colors */
 [data-theme="light"] [class*="bg-blue-500"] {
   background-color: rgba(30, 136, 229, 0.2) !important;
   border: 1px solid rgba(30, 136, 229, 0.3) !important;
 }
 
 [data-theme="light"] [class*="bg-emerald-500"] {
-  background-color: rgba(34, 197, 94, 0.15) !important;
+  background-color: rgba(34, 197, 94, 0.2) !important;
+  border: 1px solid rgba(34, 197, 94, 0.3) !important;
 }
 
 [data-theme="light"] [class*="bg-purple-500"] {
-  background-color: rgba(147, 51, 234, 0.15) !important;
+  background-color: rgba(147, 51, 234, 0.2) !important;
+  border: 1px solid rgba(147, 51, 234, 0.3) !important;
+}
+
+[data-theme="light"] [class*="bg-orange-500"] {
+  background-color: rgba(249, 115, 22, 0.2) !important;
+  border: 1px solid rgba(249, 115, 22, 0.3) !important;
+}
+
+[data-theme="light"] [class*="bg-amber-500"] {
+  background-color: rgba(245, 158, 11, 0.2) !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+}
+
+[data-theme="light"] [class*="bg-red-500"] {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
 }
 
 [data-theme="light"] [class*="bg-slate-800"] {
@@ -744,11 +784,7 @@
 /* Note: Special colors for metrics and states keep their original colors in light theme */
 
 /* Final light mode improvements - Perfect text contrast and spacing */
-/* Removed duplicate text-slate-300 rule */
-
-[data-theme="light"] .text-slate-500 {
-  color: rgb(71, 85, 105) !important;
-}
+/* Removed duplicates - consolidated into broad selectors above */
 
 /* Removed conflicting button text rules */
 
@@ -845,14 +881,20 @@
   background-color: rgba(30, 136, 229, 0.03) !important; /* Very subtle blue tint */
 }
 
-/* More prominent blue accents for headings and titles */
-[data-theme="light"] .text-slate-50,
-[data-theme="light"] .text-white {
-  color: #1565C0 !important; /* Strong blue for main text */
+/* More prominent blue accents for headings and titles ONLY - exclude card content */
+[data-theme="light"] h1.text-slate-50,
+[data-theme="light"] h2.text-slate-50,
+[data-theme="light"] h3.text-slate-50,
+[data-theme="light"] h1.text-white,
+[data-theme="light"] h2.text-white,
+[data-theme="light"] h3.text-white {
+  color: #1565C0 !important; /* Strong blue for headings only */
 }
 
-[data-theme="light"] .text-slate-100 {
-  color: #1E88E5 !important; /* Medium blue for secondary text */
+[data-theme="light"] h4.text-slate-100,
+[data-theme="light"] h5.text-slate-100,
+[data-theme="light"] h6.text-slate-100 {
+  color: #1E88E5 !important; /* Medium blue for secondary headings */
 }
 
 /* Sidebar improvements with blue accents */
@@ -1640,6 +1682,26 @@ body {
   background: rgb(255, 255, 255) !important;
   border-color: rgba(209, 213, 219, 0.5) !important;
 }
+
+/* COMPREHENSIVE STANDARDIZED percentage/growth indicators - ALL pages now use unified GrowthIndicator */
+[data-theme="light"] *[class*="bg-emerald-400/10"] {
+  background-color: rgba(34, 197, 94, 0.3) !important;
+  border: 1px solid rgba(34, 197, 94, 0.4) !important;
+}
+
+[data-theme="light"] *[class*="bg-red-400/10"] {
+  background-color: rgba(239, 68, 68, 0.3) !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+}
+
+[data-theme="light"] *[class*="bg-slate-400/10"] {
+  background-color: rgba(156, 163, 175, 0.3) !important;
+  border: 1px solid rgba(156, 163, 175, 0.4) !important;
+}
+
+/* ELIMINATED BLOAT - removed old inconsistent indicator styles (bg-green-900, bg-red-900, status-badge-* classes no longer needed) */
+
+/* Dashboard card content - now handled by standardized broad selectors above */
 
 /* Enhanced header styling */
 [data-theme="light"] header[class*="bg-slate-950"] {

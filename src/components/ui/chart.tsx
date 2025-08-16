@@ -12,8 +12,8 @@ interface ChartProps {
 
 export function Chart({
   children,
-  height = 260,
-  mobileHeight = 180,
+  height = 280,
+  mobileHeight = 200,
   className = ''
 }: ChartProps) {
   const [isMobile, setIsMobile] = React.useState(false);
