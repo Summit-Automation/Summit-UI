@@ -118,7 +118,7 @@ Return the results in the structured JSON format as specified in your system pro
 
     try {
       // Call the Flowise API directly
-      const response = await fetch('https://flowise.summitautomation.io/api/v1/prediction/a946d803-c141-4ccb-8184-744e45608dc0', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_FLOWISE_API_URL || 'https://flowise.summitautomation.io'}/api/v1/prediction/${process.env.NEXT_PUBLIC_FLOWISE_LEADGEN_ID || 'a946d803-c141-4ccb-8184-744e45608dc0'}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

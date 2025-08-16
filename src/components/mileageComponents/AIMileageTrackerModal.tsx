@@ -64,7 +64,7 @@ export default function AIMileageTrackerModal({
 
         try {
             // Call your Flowise AI agent
-            const response = await fetch('https://flowise.summitautomation.io/api/v1/prediction/5dff09da-5fca-4b84-a017-bdac5e412107', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_FLOWISE_API_URL || 'https://flowise.summitautomation.io'}/api/v1/prediction/${process.env.NEXT_PUBLIC_FLOWISE_MILEAGE_ID || '5dff09da-5fca-4b84-a017-bdac5e412107'}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -5,7 +5,7 @@ import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { Transaction } from '@/types/transaction';
 import { format, parseISO } from 'date-fns';
 import { Chart } from '@/components/ui/chart';
-import { formatCurrency, formatDate } from '@/utils/shared';
+import { formatDate } from '@/utils/shared';
 
 type Bucket = { date: string; income: number; expense: number };
 

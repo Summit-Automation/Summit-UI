@@ -9,8 +9,10 @@ interface GrowthIndicatorProps {
 }
 
 export function GrowthIndicator({ value, showArrow = true, className }: GrowthIndicatorProps) {
-  const isPositive = value > 0;
-  const isNeutral = value === 0;
+  // Handle edge cases for production safety
+  const safeValue = typeof value === 'number' && !isNaN(value) ? value : 0;
+  const isPositive = safeValue > 0;
+  const isNeutral = safeValue === 0;
   
   return (
     <div className={cn(
@@ -27,7 +29,7 @@ export function GrowthIndicator({ value, showArrow = true, className }: GrowthIn
           {isNeutral ? '→' : ''}
         </span>
       )}
-      <span>{isPositive ? '+' : ''}{Math.abs(value).toFixed(1)}%</span>
+      <span>{isPositive ? '+' : ''}{Math.abs(safeValue).toFixed(1)}%</span>
     </div>
   );
 }
