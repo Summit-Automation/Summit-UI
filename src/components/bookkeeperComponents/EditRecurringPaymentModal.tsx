@@ -36,14 +36,20 @@ export default function EditRecurringPaymentModal({
     interactions,
     onSuccess,
     children,
+    open,
+    onOpenChange,
 }: {
     payment: RecurringPayment;
     customers: Customer[];
     interactions: Interaction[];
     onSuccess?: () => void;
     children: React.ReactNode;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }) {
-    const [open, setOpen] = React.useState(false);
+    const [internalOpen, setInternalOpen] = React.useState(false);
+    const isOpen = open !== undefined ? open : internalOpen;
+    const setIsOpen = onOpenChange || setInternalOpen;
 
     const form = useForm<FormValues>({
         defaultValues: {
@@ -118,7 +124,7 @@ export default function EditRecurringPaymentModal({
 
         if (result.success) {
             form.reset();
-            setOpen(false);
+            setIsOpen(false);
             onSuccess?.();
         } else {
             form.setError('category', {message: result.error || 'Failed to update recurring payment'});
@@ -126,8 +132,11 @@ export default function EditRecurringPaymentModal({
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <div onClick={() => setOpen(true)} className="cursor-pointer">
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <div 
+                onClick={open === undefined ? () => setIsOpen(true) : undefined} 
+                className={open === undefined ? "cursor-pointer" : ""}
+            >
                 {children}
             </div>
             

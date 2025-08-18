@@ -26,14 +26,18 @@ type FormValues = {
 };
 
 export default function NewMileageEntryModal({
-    customers, onSuccess, triggerContent, triggerClassName,
+    customers, onSuccess, triggerContent, triggerClassName, open, onOpenChange,
 }: {
     customers: Customer[];
     onSuccess?: () => void;
     triggerContent?: React.ReactNode;
     triggerClassName?: string;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }) {
-    const [open, setOpen] = React.useState(false);
+    const [internalOpen, setInternalOpen] = React.useState(false);
+    const isOpen = open !== undefined ? open : internalOpen;
+    const setIsOpen = onOpenChange || setInternalOpen;
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
     const form = useForm<FormValues>({
@@ -72,7 +76,7 @@ export default function NewMileageEntryModal({
                     customer_id: '',
                     notes: '',
                 });
-                setOpen(false);
+                setIsOpen(false);
                 onSuccess?.();
             } else {
                 form.setError('miles', { message: 'Failed to create mileage entry' });
@@ -103,14 +107,16 @@ export default function NewMileageEntryModal({
     }, [open, form]);
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                {triggerContent || (
-                    <Button variant="success" className={triggerClassName}>
-                        + Add Mileage
-                    </Button>
-                )}
-            </DialogTrigger>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            {open === undefined && (
+                <DialogTrigger asChild>
+                    {triggerContent || (
+                        <Button variant="success" className={triggerClassName}>
+                            + Add Mileage
+                        </Button>
+                    )}
+                </DialogTrigger>
+            )}
             <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto bg-slate-900 border border-slate-700 rounded-xl shadow-2xl">
                 <DialogHeader>
                     <DialogTitle className="text-white">Add Mileage Entry</DialogTitle>

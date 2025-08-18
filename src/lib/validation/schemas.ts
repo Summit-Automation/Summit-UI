@@ -38,10 +38,10 @@ export const createTransactionSchema = z.object({
 
 export const updateTransactionSchema = z.object({
   id: uuidSchema,
-  type: transactionTypeSchema.optional(),
-  category: optionalString,
-  description: optionalString,
-  amount: decimalString.optional(),
+  type: transactionTypeSchema,
+  category: nonEmptyString,
+  description: nonEmptyString,
+  amount: decimalString,
   customer_id: optionalUuidSchema,
   interaction_id: optionalUuidSchema,
 });
