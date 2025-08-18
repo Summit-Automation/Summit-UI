@@ -1,14 +1,7 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import React, { useState } from 'react';
+import { SimpleTable } from '@/components/ui/simple-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -40,36 +33,8 @@ interface InventoryTableProps {
 }
 
 const InventoryTable = React.memo(function InventoryTable({ items, onItemsChange }: InventoryTableProps) {
-    const [sortField, setSortField] = useState<keyof InventoryItem>('name');
-    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
     const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
     const [showEditModal, setShowEditModal] = useState(false);
-
-    const handleSort = (field: keyof InventoryItem) => {
-        if (field === sortField) {
-            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-        } else {
-            setSortField(field);
-            setSortDirection('asc');
-        }
-    };
-
-    const sortedItems = useMemo(() => [...items].sort((a, b) => {
-        const aValue = a[sortField];
-        const bValue = b[sortField];
-        
-        if (typeof aValue === 'string' && typeof bValue === 'string') {
-            return sortDirection === 'asc' 
-                ? aValue.localeCompare(bValue)
-                : bValue.localeCompare(aValue);
-        }
-        
-        if (typeof aValue === 'number' && typeof bValue === 'number') {
-            return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
-        }
-        
-        return 0;
-    }), [items, sortField, sortDirection]);
 
     const getStockStatus = (current: number, minimum: number) => {
         if (current === 0) {
@@ -125,186 +90,179 @@ const InventoryTable = React.memo(function InventoryTable({ items, onItemsChange
         setEditingItem(null);
     };
 
-    if (items.length === 0) {
-        return (
-            <div className="text-center py-12">
-                <Package className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-slate-300 mb-2">No inventory items</h3>
-                <p className="text-slate-400">Use the &quot;Add Item&quot; button above to get started</p>
-            </div>
-        );
-    }
+    const columns = [
+        {
+            key: 'name',
+            label: 'Item Name',
+            sortable: true,
+            render: (value: unknown) => (
+                <div className="flex items-center gap-2">
+                    <Package className="h-4 w-4 text-muted-foreground" />
+                    <span className="font-medium">{value as string}</span>
+                </div>
+            )
+        },
+        {
+            key: 'sku',
+            label: 'SKU',
+            render: (value: unknown) => (
+                value ? (
+                    <span className="bg-muted px-2 py-1 rounded text-xs border font-mono">
+                        {value as string}
+                    </span>
+                ) : (
+                    <span className="text-muted-foreground italic">No SKU</span>
+                )
+            )
+        },
+        {
+            key: 'category',
+            label: 'Category',
+            sortable: true,
+            render: (value: unknown) => (
+                <Badge variant="outline">
+                    {value as string}
+                </Badge>
+            )
+        },
+        {
+            key: 'current_quantity',
+            label: 'Stock',
+            sortable: true,
+            className: "text-right",
+            render: (value: unknown, item: InventoryItem) => (
+                <span className={`font-semibold ${
+                    item.current_quantity === 0 ? 'text-red-600' :
+                    item.current_quantity <= item.minimum_threshold ? 'text-orange-600' :
+                    'text-green-600'
+                }`}>
+                    {value as number}
+                </span>
+            )
+        },
+        {
+            key: 'unit_of_measurement',
+            label: 'Units',
+            render: (value: unknown) => (
+                <Badge variant="secondary">
+                    {value as string}
+                </Badge>
+            )
+        },
+        {
+            key: 'status',
+            label: 'Status',
+            render: (_: unknown, item: InventoryItem) => {
+                const stockStatus = getStockStatus(item.current_quantity, item.minimum_threshold);
+                const StatusIcon = stockStatus.icon;
+                return (
+                    <Badge variant={stockStatus.color} className="flex items-center gap-1 w-fit">
+                        <StatusIcon className="h-3 w-3" />
+                        {stockStatus.label}
+                    </Badge>
+                );
+            }
+        },
+        {
+            key: 'unit_cost',
+            label: 'Unit Cost',
+            sortable: true,
+            className: "text-right",
+            render: (value: unknown) => (
+                <span>${(value as number).toFixed(2)}</span>
+            )
+        },
+        {
+            key: 'unit_price',
+            label: 'Unit Price',
+            sortable: true,
+            className: "text-right",
+            render: (value: unknown) => (
+                <span>${(value as number).toFixed(2)}</span>
+            )
+        },
+        {
+            key: 'location',
+            label: 'Location',
+            render: (value: unknown) => (
+                <span>{(value as string) || '-'}</span>
+            )
+        },
+        {
+            key: 'actions',
+            label: 'Actions',
+            render: (_: unknown, item: InventoryItem) => (
+                <div className="flex items-center gap-1">
+                    <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleEdit(item)}
+                        className="h-8 w-8 p-0"
+                        title="Edit Item"
+                    >
+                        <Edit className="h-3 w-3" />
+                    </Button>
+                    <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleQRCode(item)}
+                        className="h-8 w-8 p-0"
+                        title="View QR Code"
+                    >
+                        <QrCode className="h-3 w-3" />
+                    </Button>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button 
+                                variant="ghost" 
+                                size="sm"
+                                className="h-8 w-8 p-0"
+                                title="Delete"
+                            >
+                                <Trash2 className="h-3 w-3" />
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Confirm deletion</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Are you sure you want to permanently delete &quot;{item.name}&quot;? This action cannot be undone.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <div className="flex justify-end space-x-2 pt-4">
+                                <AlertDialogCancel asChild>
+                                    <Button variant="outline">Cancel</Button>
+                                </AlertDialogCancel>
+                                <AlertDialogAction asChild>
+                                    <Button variant="destructive" onClick={() => handleDelete(item)}>
+                                        Yes, delete
+                                    </Button>
+                                </AlertDialogAction>
+                            </div>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </div>
+            )
+        }
+    ];
 
     return (
-        <div className="border border-slate-700 rounded-lg overflow-hidden">
-            <Table>
-                <TableHeader>
-                    <TableRow className="border-slate-700 hover:bg-slate-800">
-                        <TableHead 
-                            className="text-slate-300 cursor-pointer hover:text-blue-400 transition-colors"
-                            onClick={() => handleSort('name')}
-                        >
-                            Item Name
-                            {sortField === 'name' && (
-                                <span className="ml-1">{sortDirection === 'asc' ? '↑' : '↓'}</span>
-                            )}
-                        </TableHead>
-                        <TableHead className="text-slate-300">SKU</TableHead>
-                        <TableHead 
-                            className="text-slate-300 cursor-pointer hover:text-blue-400 transition-colors"
-                            onClick={() => handleSort('category')}
-                        >
-                            Category
-                        </TableHead>
-                        <TableHead 
-                            className="text-slate-300 cursor-pointer hover:text-blue-400 transition-colors text-right"
-                            onClick={() => handleSort('current_quantity')}
-                        >
-                            Stock
-                        </TableHead>
-                        <TableHead className="text-slate-300">Units</TableHead>
-                        <TableHead className="text-slate-300">Status</TableHead>
-                        <TableHead 
-                            className="text-slate-300 cursor-pointer hover:text-blue-400 transition-colors text-right"
-                            onClick={() => handleSort('unit_cost')}
-                        >
-                            Unit Cost
-                        </TableHead>
-                        <TableHead 
-                            className="text-slate-300 cursor-pointer hover:text-blue-400 transition-colors text-right"
-                            onClick={() => handleSort('unit_price')}
-                        >
-                            Unit Price
-                        </TableHead>
-                        <TableHead className="text-slate-300">Location</TableHead>
-                        <TableHead className="text-slate-300 w-12"></TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {sortedItems.map((item) => {
-                        const stockStatus = getStockStatus(item.current_quantity, item.minimum_threshold);
-                        const StatusIcon = stockStatus.icon;
-                        
-                        return (
-                            <TableRow 
-                                key={item.id} 
-                                className="border-slate-700 hover:bg-slate-800 transition-colors"
-                            >
-                                <TableCell className="font-medium text-slate-200">
-                                    <div className="flex items-center gap-2">
-                                        <Package className="h-4 w-4 text-slate-400" />
-                                        {item.name}
-                                    </div>
-                                </TableCell>
-                                <TableCell className="text-slate-400 font-mono text-sm">
-                                    {item.sku ? (
-                                        <span className="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700">
-                                            {item.sku}
-                                        </span>
-                                    ) : (
-                                        <span className="text-slate-500 italic">No SKU</span>
-                                    )}
-                                </TableCell>
-                                <TableCell className="text-slate-300">
-                                    <Badge variant="outline" className="border-slate-600 text-slate-300">
-                                        {item.category}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <span className={`font-semibold ${
-                                        item.current_quantity === 0 ? 'text-red-400' :
-                                        item.current_quantity <= item.minimum_threshold ? 'text-orange-400' :
-                                        'text-green-400'
-                                    }`}>
-                                        {item.current_quantity}
-                                    </span>
-                                </TableCell>
-                                <TableCell className="text-slate-300">
-                                    <Badge variant="secondary" className="bg-slate-700 text-slate-300 border-slate-600">
-                                        {item.unit_of_measurement}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell>
-                                    <Badge variant={stockStatus.color} className="flex items-center gap-1 w-fit">
-                                        <StatusIcon className="h-3 w-3" />
-                                        {stockStatus.label}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell className="text-right text-slate-300">
-                                    ${item.unit_cost.toFixed(2)}
-                                </TableCell>
-                                <TableCell className="text-right text-slate-300">
-                                    ${item.unit_price.toFixed(2)}
-                                </TableCell>
-                                <TableCell className="text-slate-400">
-                                    {item.location || '-'}
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex items-center gap-1">
-                                        <Button 
-                                            variant="ghost" 
-                                            size="sm"
-                                            onClick={() => handleEdit(item)}
-                                            className="h-8 w-8 p-0 text-slate-400 hover:text-blue-400 hover:bg-blue-500"
-                                            title="Edit Item"
-                                        >
-                                            <Edit className="h-3 w-3" />
-                                        </Button>
-                                        <Button 
-                                            variant="ghost" 
-                                            size="sm"
-                                            onClick={() => handleQRCode(item)}
-                                            className="h-8 w-8 p-0 text-slate-400 hover:text-orange-400 hover:bg-orange-500"
-                                            title="View QR Code"
-                                        >
-                                            <QrCode className="h-3 w-3" />
-                                        </Button>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Button 
-                                                    variant="ghost" 
-                                                    size="sm"
-                                                    className="h-8 w-8 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/10"
-                                                    title="Delete"
-                                                >
-                                                    <Trash2 className="h-3 w-3" />
-                                                </Button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent className="bg-slate-900 border-slate-700">
-                                                <AlertDialogHeader>
-                                                    <AlertDialogTitle className="text-white">Confirm deletion</AlertDialogTitle>
-                                                    <AlertDialogDescription className="text-slate-300">
-                                                        Are you sure you want to permanently delete &quot;{item.name}&quot;? This action cannot be undone.
-                                                    </AlertDialogDescription>
-                                                </AlertDialogHeader>
-                                                <div className="flex justify-end space-x-2 pt-4">
-                                                    <AlertDialogCancel asChild>
-                                                        <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800">Cancel</Button>
-                                                    </AlertDialogCancel>
-                                                    <AlertDialogAction asChild>
-                                                        <Button variant="destructive" onClick={() => handleDelete(item)}>
-                                                            Yes, delete
-                                                        </Button>
-                                                    </AlertDialogAction>
-                                                </div>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        );
-                    })}
-                </TableBody>
-            </Table>
+        <>
+            <SimpleTable
+                data={items}
+                columns={columns}
+                keyExtractor={(item) => item.id}
+                emptyMessage="No inventory items found"
+                striped
+            />
 
-            {/* Edit Modal */}
             <EditItemModal
                 isOpen={showEditModal}
                 onClose={handleEditClose}
                 onSubmit={handleEditSubmit}
                 item={editingItem}
             />
-        </div>
+        </>
     );
 });
 

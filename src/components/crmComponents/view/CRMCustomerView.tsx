@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { MobileTable } from '@/components/ui/mobile-table';
+import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -87,8 +87,9 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
             key: 'full_name',
             label: 'Name',
             primary: true,
+            sortable: true,
             render: (value: unknown) => (
-                <span className="font-semibold text-white">
+                <span className="font-semibold text-foreground">
                     {(value as string) || 'Not Specified'}
                 </span>
             )
@@ -97,6 +98,7 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
             key: 'status',
             label: 'Status',
             primary: true,
+            sortable: true,
             render: (value: unknown) => (
                 <Badge className={`${statusColor(value as string)} px-3 py-0.5 rounded-full text-xs`}>
                     {value as string}
@@ -110,21 +112,22 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
             render: (_: unknown, customer: Customer) => {
                 const needsFollowUp = hasFollowUpRequired(customer.id);
                 return needsFollowUp ? (
-                    <Badge className="bg-red-500/10 text-red-400 border-red-500/20 px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1 w-fit">
+                    <Badge variant="destructive" className="px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1 w-fit">
                         <AlertCircle className="h-3 w-3" />
                         Follow-up Needed
                     </Badge>
                 ) : (
-                    <span className="text-slate-500 text-xs">—</span>
+                    <span className="text-muted-foreground text-xs">—</span>
                 );
             }
         },
         {
             key: 'business',
             label: 'Business',
+            sortable: true,
             render: (value: unknown) => (
-                <span className="text-slate-200">
-                    {(value as string) || <span className="text-slate-500 italic">None</span>}
+                <span className="text-foreground">
+                    {(value as string) || <span className="text-muted-foreground italic">None</span>}
                 </span>
             )
         },
@@ -132,8 +135,9 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
             key: 'email',
             label: 'Email',
             hideOnMobile: true,
+            sortable: true,
             render: (value: unknown) => (
-                <span className="text-slate-200 truncate block max-w-xs">
+                <span className="text-foreground truncate block max-w-xs">
                     {value as string}
                 </span>
             )
@@ -142,16 +146,18 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
             key: 'phone',
             label: 'Phone',
             hideOnMobile: true,
+            sortable: true,
             render: (value: unknown) => (
-                <span className="text-slate-200">{value as string}</span>
+                <span className="text-foreground">{value as string}</span>
             )
         },
         {
             key: 'created_at',
             label: 'Created',
             hideOnMobile: true,
+            sortable: true,
             render: (value: unknown) => (
-                <div className="flex items-center gap-1 text-sm text-slate-400">
+                <div className="flex items-center gap-1 text-sm text-muted-foreground">
                     <Calendar className="w-4 h-4" />
                     {formatDate(value as string)}
                 </div>
@@ -468,12 +474,12 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
 
             {/* Results Count */}
             {searchTerm && (
-                <div className="text-sm text-slate-400">
+                <div className="text-sm text-muted-foreground">
                     {filteredCustomers.length} of {customers.length} customers {filteredCustomers.length === 1 ? 'matches' : 'match'} your search
                 </div>
             )}
 
-            <MobileTable
+            <DataTable
                 data={filteredCustomers}
                 columns={columns}
                 renderExpanded={renderCustomerExpanded}
