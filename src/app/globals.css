@@ -11,6 +11,27 @@
   --light-text-gray: rgb(107, 114, 128);
   --light-text-dark: rgb(75, 85, 99);
   --light-border-gray: rgb(229, 231, 235);
+
+  /* Dark theme - semantic color tokens (default) */
+  --background: 210 40% 2%;
+  --foreground: 213 31% 91%;
+  --muted: 210 40% 11%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --border: 210 40% 11%;
+  --card: 210 40% 7%;
+  --card-foreground: 213 31% 91%;
+  --primary: 210 40% 11%;
+  --primary-foreground: 213 31% 91%;
+  --secondary: 210 40% 11%;
+  --secondary-foreground: 213 31% 91%;
+  --accent: 210 40% 11%;
+  --accent-foreground: 213 31% 91%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --ring: 210 40% 11%;
+  --input: 210 40% 11%;
+  --popover: 210 40% 7%;
+  --popover-foreground: 213 31% 91%;
 }
 
 /* Theme System - Light Mode Overrides */
@@ -19,7 +40,29 @@
 /* Light Theme - Override specific components when data-theme="light" */
 [data-theme="light"] {
   /* Body and main backgrounds */
-  background-color: rgb(249, 250, 251);  color: rgb(17, 24, 39);}
+  background-color: rgb(249, 250, 251);  color: rgb(17, 24, 39);
+
+  /* Light theme - semantic color tokens */
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --border: 240 5.9% 90%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 240 5% 64.9%;
+  --input: 240 5.9% 90%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+}
 
 [data-theme="light"] body {
   background-color: rgb(249, 250, 251) !important;  color: rgb(17, 24, 39) !important;}
@@ -290,31 +333,7 @@
   color: rgb(17, 24, 39) !important;
 }
 
-/* Light theme - Comprehensive table styling */
-[data-theme="light"] table {
-  background-color: rgb(255, 255, 255) !important;
-}
-
-[data-theme="light"] thead {
-  background-color: rgba(30, 136, 229, 0.05) !important; /* Light blue header */
-}
-
-[data-theme="light"] th {
-  color: #1565C0 !important; /* Blue table headers */
-  border-color: var(--light-border-gray) !important;
-  font-weight: 600 !important;
-}
-
-[data-theme="light"] td {
-  color: rgb(17, 24, 39) !important; /* Dark text for readability */
-  border-color: var(--light-border-gray) !important;
-}
-
-[data-theme="light"] tr:hover {
-  background-color: rgba(30, 136, 229, 0.03) !important; /* Subtle blue hover */
-}
-
-/* Light theme - Dropdown content and table cell text - force dark for readability */
+/* Light theme - Dropdown content - force dark for readability */
 [data-theme="light"] td *,
 [data-theme="light"] td span,
 [data-theme="light"] td p,
@@ -474,14 +493,6 @@
 
 /* Light theme - Mobile responsive fixes */
 @media (max-width: 768px) {
-  /* Mobile table improvements */
-  [data-theme="light"] table,
-  [data-theme="light"] tbody,
-  [data-theme="light"] tr,
-  [data-theme="light"] td {
-    background-color: rgb(255, 255, 255) !important;
-    color: rgb(17, 24, 39) !important;
-  }
 
   /* Mobile - ensure containers stay transparent */
   [data-theme="light"] div[class*="flex"] {
@@ -597,25 +608,6 @@
   border-color: rgba(209, 213, 219, 0.5) !important;
 }
 
-/* Table container overrides */
-[data-theme="light"] [class*="bg-slate-"] table {
-  background-color: rgb(255, 255, 255) !important;
-}
-
-[data-theme="light"] [class*="bg-slate-"] tbody {
-  background-color: rgb(255, 255, 255) !important;
-}
-
-[data-theme="light"] [class*="bg-slate-"] tr {
-  background-color: rgb(255, 255, 255) !important;
-  border-color: rgba(229, 231, 235, 0.6) !important;
-}
-
-[data-theme="light"] [class*="bg-slate-"] td {
-  background-color: rgb(255, 255, 255) !important;
-  color: rgb(17, 24, 39) !important;
-  border-color: rgba(229, 231, 235, 0.6) !important;
-}
 
 /* Tab triggers - TARGET EXACT ACTIVE STATE CLASSES */
 [data-theme="light"] [data-state="active"].bg-slate-800,
@@ -837,25 +829,6 @@
   box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.1) !important;
 }
 
-/* Improved table styling for light mode */
-[data-theme="light"] table {
-  background-color: rgb(252, 253, 254) !important; /* Almost white tables */
-}
-
-[data-theme="light"] thead {
-  background-color: rgba(30, 136, 229, 0.08) !important; /* Light blue header */
-  border-bottom: 2px solid rgba(30, 136, 229, 0.2) !important;
-}
-
-[data-theme="light"] th {
-  color: #1565C0 !important;
-  font-weight: 700 !important;
-}
-
-[data-theme="light"] tr:hover {
-  background-color: rgba(30, 136, 229, 0.04) !important;
-}
-
 /* Body and main container improvements - Much cleaner and easier on eyes */
 [data-theme="light"] body {
   background-color: rgb(252, 253, 254) !important; /* Almost white body for clean look */
@@ -1063,17 +1036,6 @@ body {
 
 /* Removed overly broad active state rule */
 
-/* 3. Mobile table text - Fix white text in tables */
-[data-theme="light"] table td:not([class*="text-blue"]),
-[data-theme="light"] table th:not([class*="text-blue"]),
-[data-theme="light"] table td *:not([class*="text-blue"]),
-[data-theme="light"] table th *:not([class*="text-blue"]),
-[data-theme="light"] table span:not([class*="text-blue"]),
-[data-theme="light"] table p:not([class*="text-blue"]),
-[data-theme="light"] table div:not([class*="recharts"]):not([class*="text-blue"]) {
-  color: rgb(17, 24, 39) !important;
-  background-color: transparent !important;
-}
 
 [data-theme="light"] tbody td {
   color: rgb(17, 24, 39) !important;
@@ -1115,15 +1077,6 @@ body {
     color: white !important;
   }
 
-  /* Mobile table improvements */
-  [data-theme="light"] table,
-  [data-theme="light"] tbody,
-  [data-theme="light"] tr,
-  [data-theme="light"] td,
-  [data-theme="light"] th {
-    background-color: rgb(255, 255, 255) !important;
-    color: rgb(17, 24, 39) !important;
-  }
 }
 
 /* 5. Belt and suspenders - Override any remaining white text issues */
@@ -1551,13 +1504,6 @@ body {
   color: var(--light-text-dark) !important;
 }
 
-/* 6. INVENTORY, MILEAGE, BOOKKEEPER pages - additional patterns */
-[data-theme="light"] .table-enhanced .text-slate-300,
-[data-theme="light"] .table-enhanced .text-slate-400,
-[data-theme="light"] [class*="table"] .text-slate-300,
-[data-theme="light"] [class*="table"] .text-slate-400 {
-  color: var(--light-text-dark) !important;
-}
 
 /* 7. TARGETED white text fixes - Only for problematic patterns */
 [data-theme="light"] .text-xs:not([class*="text-blue"]):not([class*="text-emerald"]):not([class*="text-red"]),
@@ -1608,21 +1554,7 @@ body {
   }
 }
 
-/* Inventory Table - Category badges and text */
-[data-theme="light"] .text-slate-300,
-[data-theme="light"] .text-slate-400,
-[data-theme="light"] .border-slate-600.text-slate-300,
-[data-theme="light"] .bg-slate-700.text-slate-300 {
-  color: var(--light-text-dark) !important;
-}
 
-/* Table headers and cells - ALL tables */
-[data-theme="light"] .text-slate-300.cursor-pointer,
-[data-theme="light"] th.text-slate-300,
-[data-theme="light"] td.text-slate-300,
-[data-theme="light"] td.text-slate-400 {
-  color: var(--light-text-dark) !important;
-}
 
 /* Mobile Table content - ALL pages using MobileTable */
 [data-theme="light"] .font-medium span,

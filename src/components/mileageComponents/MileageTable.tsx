@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { MileageEntry } from '@/types/mileage';
-import { MobileTable } from '@/components/ui/mobile-table';
+import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MapPin, Trash2, Car, DollarSign } from 'lucide-react';
@@ -19,7 +19,6 @@ import {
 import UpdateMileageEntryModal from '@/components/mileageComponents/UpdateMileageEntryModal';
 import { deleteMileageEntry } from '@/app/lib/services/mileageServices/deleteMileageEntry';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
 
 export default function MileageTable({ mileageEntries }: { mileageEntries: MileageEntry[] }) {
     const router = useRouter();
@@ -71,12 +70,14 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
             key: 'date',
             label: 'Date',
             primary: true,
+            sortable: true,
             render: (value: unknown) => formatDate(value as string)
         },
         {
             key: 'purpose',
             label: 'Purpose',
             primary: true,
+            sortable: true,
             render: (value: unknown) => (
                 <div className="font-medium max-w-[200px] md:max-w-[300px]" title={value as string}>
                     <span className="truncate block md:inline">{value as string}</span>
@@ -87,8 +88,10 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
             key: 'miles',
             label: 'Miles',
             primary: true,
+            sortable: true,
+            className: "text-right",
             render: (value: unknown) => (
-                <span className="font-mono font-semibold text-blue-400 whitespace-nowrap">
+                <span className="font-mono font-semibold text-primary whitespace-nowrap">
                     {formatMiles(value as number)} mi
                 </span>
             )
@@ -96,13 +99,9 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
         {
             key: 'is_business',
             label: 'Type',
+            sortable: true,
             render: (value: unknown) => (
-                <Badge className={cn(
-                    'capitalize text-xs whitespace-nowrap',
-                    (value as boolean) 
-                        ? 'bg-green-600 text-green-100' 
-                        : 'bg-blue-600 text-blue-100'
-                )}>
+                <Badge variant={(value as boolean) ? 'default' : 'secondary'} className="capitalize">
                     {(value as boolean) ? 'Business' : 'Personal'}
                 </Badge>
             )
@@ -111,10 +110,11 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
             key: 'start_location',
             label: 'From',
             hideOnMobile: true,
+            sortable: true,
             render: (value: unknown) => (
                 <div className="max-w-[150px]" title={(value as string | null) || 'Not specified'}>
                     <span className="truncate block">
-                        {(value as string | null) || <span className="text-slate-500 italic">Not specified</span>}
+                        {(value as string | null) || <span className="text-muted-foreground italic">Not specified</span>}
                     </span>
                 </div>
             )
@@ -123,10 +123,11 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
             key: 'end_location',
             label: 'To',
             hideOnMobile: true,
+            sortable: true,
             render: (value: unknown) => (
                 <div className="max-w-[150px]" title={(value as string | null) || 'Not specified'}>
                     <span className="truncate block">
-                        {(value as string | null) || <span className="text-slate-500 italic">Not specified</span>}
+                        {(value as string | null) || <span className="text-muted-foreground italic">Not specified</span>}
                     </span>
                 </div>
             )
@@ -135,6 +136,7 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
             key: 'customer_name',
             label: 'Customer',
             hideOnMobile: true,
+            sortable: true,
             render: (value: unknown) => (
                 <div className="max-w-[120px]" title={(value as string | null) || 'N/A'}>
                     <span className="truncate block">{(value as string | null) || 'N/A'}</span>
@@ -152,10 +154,10 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Exact Miles Display */}
                     <div className="flex items-start space-x-2">
-                        <Car className="h-4 w-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                        <Car className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                         <div className="min-w-0 flex-1">
-                            <div className="text-xs text-slate-400 uppercase">Exact Distance</div>
-                            <div className="text-lg font-mono font-bold text-white">
+                            <div className="text-xs text-muted-foreground uppercase">Exact Distance</div>
+                            <div className="text-lg font-mono font-bold text-foreground">
                                 {formatMiles(mileageEntry.miles)} miles
                             </div>
                         </div>
@@ -163,19 +165,19 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
 
                     {/* Tax Deduction */}
                     <div className="flex items-start space-x-2">
-                        <DollarSign className="h-4 w-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                        <DollarSign className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                         <div className="min-w-0 flex-1">
-                            <div className="text-xs text-slate-400 uppercase">
+                            <div className="text-xs text-muted-foreground uppercase">
                                 Tax Deduction (${standardMileageRate}/mile)
                             </div>
-                            <div className="text-lg font-mono font-bold text-white">
+                            <div className="text-lg font-mono font-bold text-foreground">
                                 {mileageEntry.is_business 
                                     ? formatCurrency(potentialDeduction)
                                     : 'Not deductible'
                                 }
                             </div>
                             {mileageEntry.is_business && (
-                                <div className="text-xs text-slate-400 mt-1">
+                                <div className="text-xs text-muted-foreground mt-1">
                                     {formatMiles(mileageEntry.miles)} × ${standardMileageRate} = {formatCurrency(potentialDeduction)}
                                 </div>
                             )}
@@ -184,31 +186,31 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
                 </div>
 
                 {/* Purpose - Full Text */}
-                <div className="border-t border-slate-700 pt-4">
-                    <div className="text-xs text-slate-400 uppercase mb-2">Full Purpose</div>
-                    <div className="text-sm text-white p-3 bg-slate-800 rounded-lg break-words">
+                <div className="border-t border-border pt-4">
+                    <div className="text-xs text-muted-foreground uppercase mb-2">Full Purpose</div>
+                    <div className="text-sm text-foreground p-3 bg-muted rounded-lg break-words">
                         {mileageEntry.purpose}
                     </div>
                 </div>
 
                 {/* Route Details */}
                 {(mileageEntry.start_location || mileageEntry.end_location) && (
-                    <div className="border-t border-slate-700 pt-4">
+                    <div className="border-t border-border pt-4">
                         <div className="flex items-center gap-2 mb-3">
-                            <MapPin className="w-4 h-4 text-slate-400" />
-                            <span className="text-sm font-medium text-slate-300">Route Details</span>
+                            <MapPin className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-sm font-medium text-foreground">Route Details</span>
                         </div>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                             <div>
-                                <div className="text-xs text-slate-400 uppercase mb-1">From</div>
-                                <div className="text-slate-200 break-words p-2 bg-slate-800 rounded">
+                                <div className="text-xs text-muted-foreground uppercase mb-1">From</div>
+                                <div className="text-foreground break-words p-2 bg-muted rounded">
                                     {mileageEntry.start_location || 'Not specified'}
                                 </div>
                             </div>
                             <div>
-                                <div className="text-xs text-slate-400 uppercase mb-1">To</div>
-                                <div className="text-slate-200 break-words p-2 bg-slate-800 rounded">
+                                <div className="text-xs text-muted-foreground uppercase mb-1">To</div>
+                                <div className="text-foreground break-words p-2 bg-muted rounded">
                                     {mileageEntry.end_location || 'Not specified'}
                                 </div>
                             </div>
@@ -217,23 +219,23 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
                 )}
 
                 {/* Customer & Notes */}
-                <div className="border-t border-slate-700 pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="border-t border-border pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <div className="text-xs text-slate-400 uppercase mb-1">Customer</div>
-                        <div className="text-sm text-slate-200 break-words">
+                        <div className="text-xs text-muted-foreground uppercase mb-1">Customer</div>
+                        <div className="text-sm text-foreground break-words">
                             {mileageEntry.customer_name || 'No customer assigned'}
                         </div>
                     </div>
                     <div>
-                        <div className="text-xs text-slate-400 uppercase mb-1">Notes</div>
-                        <div className="text-sm text-slate-200 break-words">
+                        <div className="text-xs text-muted-foreground uppercase mb-1">Notes</div>
+                        <div className="text-sm text-foreground break-words">
                             {mileageEntry.notes || 'No additional notes'}
                         </div>
                     </div>
                 </div>
 
                 {/* Action buttons */}
-                <div className="flex flex-col sm:flex-row gap-2 pt-3 border-t border-slate-700">
+                <div className="flex flex-col sm:flex-row gap-2 pt-3 border-t border-border">
                     <UpdateMileageEntryModal
                         mileageEntry={mileageEntry}
                         onSuccess={() => router.refresh()}
@@ -250,17 +252,17 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
                                 <span>Delete</span>
                             </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="bg-slate-900 border-slate-700">
+                        <AlertDialogContent>
                             <AlertDialogHeader>
-                                <AlertDialogTitle className="text-white">Confirm deletion</AlertDialogTitle>
-                                <AlertDialogDescription className="text-slate-300">
+                                <AlertDialogTitle>Confirm deletion</AlertDialogTitle>
+                                <AlertDialogDescription>
                                     Are you sure you want to permanently delete this mileage entry for {formatMiles(mileageEntry.miles)} miles? 
                                     This action cannot be undone.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <div className="flex flex-col-reverse sm:flex-row justify-end space-y-2 space-y-reverse sm:space-y-0 sm:space-x-2 pt-4">
                                 <AlertDialogCancel asChild>
-                                    <Button variant="outline" className="w-full sm:w-auto border-slate-600 text-slate-300 hover:bg-slate-800">Cancel</Button>
+                                    <Button variant="outline" className="w-full sm:w-auto">Cancel</Button>
                                 </AlertDialogCancel>
                                 <AlertDialogAction asChild>
                                     <Button 
@@ -279,16 +281,8 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
         );
     };
 
-    if (sortedEntries.length === 0) {
-        return (
-            <div className="text-center py-8 text-slate-400">
-                No mileage entries recorded yet.
-            </div>
-        );
-    }
-
     return (
-        <MobileTable
+        <DataTable
             data={sortedEntries}
             columns={columns}
             renderExpanded={renderExpanded}

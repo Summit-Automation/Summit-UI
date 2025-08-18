@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { Transaction } from '@/types/transaction';
-import { MobileTable } from '@/components/ui/mobile-table';
+import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Trash2, User, Clipboard, CheckCircle } from 'lucide-react';
@@ -54,12 +54,14 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
             key: 'timestamp',
             label: 'Date',
             primary: true,
+            sortable: true,
             render: (value: unknown) => new Date(value as string).toLocaleDateString()
         },
         {
             key: 'description',
             label: 'Description',
             primary: true,
+            sortable: true,
             render: (value: unknown) => (
                 <div className="font-medium max-w-[200px] md:max-w-[300px]" title={value as string}>
                     <span className="break-words whitespace-normal leading-tight">{value as string}</span>
@@ -70,10 +72,12 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
             key: 'amount',
             label: 'Amount',
             primary: true,
+            sortable: true,
+            className: "text-right",
             render: (value: unknown, transaction: Transaction) => (
                 <span className={cn(
                     "font-semibold whitespace-nowrap",
-                    transaction.type === 'income' ? 'text-green-400' : 'text-red-400'
+                    transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
                 )}>
                     {formatCurrency(value as string)}
                 </span>
@@ -82,6 +86,7 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
         {
             key: 'category',
             label: 'Category',
+            sortable: true,
             render: (value: unknown) => (
                 <div className="max-w-[150px]" title={value as string}>
                     <span className="truncate block">{value as string}</span>
@@ -91,13 +96,9 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
         {
             key: 'type',
             label: 'Type',
+            sortable: true,
             render: (value: unknown) => (
-                <Badge className={cn(
-                    'capitalize text-xs whitespace-nowrap',
-                    (value as string) === 'income' 
-                        ? 'bg-green-600 text-green-100' 
-                        : 'bg-red-600 text-red-100'
-                )}>
+                <Badge variant={(value as string) === 'income' ? 'default' : 'destructive'} className="capitalize">
                     {value as string}
                 </Badge>
             )
@@ -106,8 +107,9 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
             key: 'source',
             label: 'Source',
             hideOnMobile: true,
+            sortable: true,
             render: (value: unknown) => (
-                <span className="capitalize text-xs whitespace-nowrap">{value as string}</span>
+                <span className="capitalize text-sm">{value as string}</span>
             )
         }
     ];
@@ -118,10 +120,10 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Customer */}
                 <div className="flex items-start space-x-2">
-                    <User className="h-4 w-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                    <User className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                     <div className="min-w-0 flex-1">
-                        <div className="text-xs text-slate-400 uppercase">Customer</div>
-                        <div className="text-sm text-white break-words">
+                        <div className="text-xs text-muted-foreground uppercase">Customer</div>
+                        <div className="text-sm text-foreground break-words">
                             {transaction.customer_name || 'N/A'}
                         </div>
                     </div>
@@ -129,10 +131,10 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
 
                 {/* Interaction */}
                 <div className="flex items-start space-x-2">
-                    <Clipboard className="h-4 w-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                    <Clipboard className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                     <div className="min-w-0 flex-1">
-                        <div className="text-xs text-slate-400 uppercase">Interaction</div>
-                        <div className="text-sm text-white break-words">
+                        <div className="text-xs text-muted-foreground uppercase">Interaction</div>
+                        <div className="text-sm text-foreground break-words">
                             {transaction.interaction_title || 'N/A'}
                         </div>
                     </div>
@@ -140,10 +142,10 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
 
                 {/* Outcome */}
                 <div className="flex items-start space-x-2">
-                    <CheckCircle className="h-4 w-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                     <div className="min-w-0 flex-1">
-                        <div className="text-xs text-slate-400 uppercase">Outcome</div>
-                        <div className="text-sm text-white break-words">
+                        <div className="text-xs text-muted-foreground uppercase">Outcome</div>
+                        <div className="text-sm text-foreground break-words">
                             {transaction.interaction_outcome || 'None recorded'}
                         </div>
                     </div>
@@ -151,15 +153,15 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
             </div>
 
             {/* Full Description */}
-            <div className="border-t border-slate-700 pt-4">
-                <div className="text-xs text-slate-400 uppercase mb-2">Full Description</div>
-                <div className="text-sm text-white p-3 bg-slate-800 rounded-lg break-words whitespace-pre-wrap">
+            <div className="border-t border-border pt-4">
+                <div className="text-xs text-muted-foreground uppercase mb-2">Full Description</div>
+                <div className="text-sm text-foreground p-3 bg-muted rounded-lg break-words whitespace-pre-wrap">
                     {transaction.description}
                 </div>
             </div>
 
             {/* Action buttons */}
-            <div className="flex flex-col sm:flex-row gap-2 pt-3 border-t border-slate-700">
+            <div className="flex flex-col sm:flex-row gap-2 pt-3 border-t border-border">
                 <UpdateTransactionModal
                     transaction={transaction}
                     onSuccess={() => router.refresh()}
@@ -176,17 +178,17 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
                             <span>Delete</span>
                         </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent className="bg-slate-900 border-slate-700">
+                    <AlertDialogContent>
                         <AlertDialogHeader>
-                            <AlertDialogTitle className="text-white">Confirm deletion</AlertDialogTitle>
-                            <AlertDialogDescription className="text-slate-300">
+                            <AlertDialogTitle>Confirm deletion</AlertDialogTitle>
+                            <AlertDialogDescription>
                                 Are you sure you want to permanently delete this transaction? This action
                                 cannot be undone.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <div className="flex flex-col-reverse sm:flex-row justify-end space-y-2 space-y-reverse sm:space-y-0 sm:space-x-2 pt-4">
                             <AlertDialogCancel asChild>
-                                <Button variant="outline" className="w-full sm:w-auto border-slate-600 text-slate-300 hover:bg-slate-800">Cancel</Button>
+                                <Button variant="outline" className="w-full sm:w-auto">Cancel</Button>
                             </AlertDialogCancel>
                             <AlertDialogAction asChild>
                                 <Button 
@@ -204,16 +206,8 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
         </div>
     );
 
-    if (sortedTransactions.length === 0) {
-        return (
-            <div className="text-center py-8 text-slate-400">
-                No transactions recorded yet.
-            </div>
-        );
-    }
-
     return (
-        <MobileTable
+        <DataTable
             data={sortedTransactions}
             columns={columns}
             renderExpanded={renderExpanded}
