@@ -60,25 +60,31 @@ export default function UpdateTransactionModal({
     const customerInteractions = interactions.filter((i) => i.customer_id === selectedCustomer);
 
     const onSubmit = async (values: FormValues) => {
-        const ok = await updateTransaction({
+        // Validate amount is not empty
+        if (!values.amount || parseFloat(values.amount) <= 0) {
+            setError('amount', {message: 'Amount must be greater than 0'});
+            return;
+        }
+
+        const result = await updateTransaction({
             id: transaction.id,
             type: values.type,
             category: values.category,
             description: values.description,
             amount: values.amount.toString(),
-            customer_id: values.customer_id || null,
-            interaction_id: values.interaction_id || null,
+            customer_id: values.customer_id || '',
+            interaction_id: values.interaction_id || '',
             customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
             interaction_title: interactions.find((i) => i.id === values.interaction_id)?.title || null,
             interaction_outcome: interactions.find((i) => i.id === values.interaction_id)?.outcome || null
         });
 
-        if (ok) {
+        if (result.success) {
             form.reset();
             setOpen(false);
             onSuccess?.();
         } else {
-            setError('category', {message: 'Failed to update transaction'});
+            setError('category', {message: result.error || 'Failed to update transaction'});
         }
     };
 

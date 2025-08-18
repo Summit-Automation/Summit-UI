@@ -21,6 +21,7 @@ export default function EditRecurringPaymentClientWrapper({
     const [interactions, setInteractions] = useState<Interaction[]>([]);
     const [dataLoaded, setDataLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const loadData = useCallback(async () => {
         if (dataLoaded || isLoading) return;
@@ -38,11 +39,21 @@ export default function EditRecurringPaymentClientWrapper({
         }
     }, [dataLoaded, isLoading]);
 
+    const handleButtonClick = useCallback(async () => {
+        if (!dataLoaded) {
+            await loadData();
+            // After data loads, automatically open the modal
+            setModalOpen(true);
+        } else {
+            setModalOpen(true);
+        }
+    }, [dataLoaded, loadData]);
+
     const triggerButton = (
         <Button 
             variant="ghost" 
             size="sm"
-            onClick={loadData}
+            onClick={handleButtonClick}
             disabled={isLoading}
             className={isLoading ? "text-slate-400 px-3 py-1" : "text-blue-400 hover:text-blue-300 hover:bg-blue-400/10 px-3 py-1"}
         >
@@ -60,7 +71,12 @@ export default function EditRecurringPaymentClientWrapper({
             payment={payment}
             customers={customers}
             interactions={interactions}
-            onSuccess={onSuccess}
+            open={modalOpen}
+            onOpenChange={setModalOpen}
+            onSuccess={() => {
+                setModalOpen(false);
+                onSuccess?.();
+            }}
         >
             {triggerButton}
         </EditRecurringPaymentModal>

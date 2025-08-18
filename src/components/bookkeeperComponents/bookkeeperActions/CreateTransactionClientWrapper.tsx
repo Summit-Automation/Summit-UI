@@ -15,6 +15,7 @@ export default function CreateTransactionClientWrapper() {
     const [interactions, setInteractions] = useState<Interaction[]>([]);
     const [dataLoaded, setDataLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const loadData = useCallback(async () => {
         if (dataLoaded || isLoading) return;
@@ -32,14 +33,24 @@ export default function CreateTransactionClientWrapper() {
         }
     }, [dataLoaded, isLoading]);
 
+    const handleButtonClick = useCallback(async () => {
+        if (!dataLoaded) {
+            await loadData();
+            // After data loads, automatically open the modal
+            setModalOpen(true);
+        } else {
+            setModalOpen(true);
+        }
+    }, [dataLoaded, loadData]);
+
     const triggerButton = (
         <Button 
             variant="outline" 
-            onClick={loadData}
+            onClick={handleButtonClick}
             disabled={isLoading}
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto bg-emerald-600 border-emerald-600 text-white hover:bg-emerald-700 hover:border-emerald-700 transition-all duration-200"
         >
-            {isLoading ? 'Loading...' : 'Add Transaction'}
+            {isLoading ? 'Loading...' : '+ Add Transaction'}
         </Button>
     );
 
@@ -48,14 +59,19 @@ export default function CreateTransactionClientWrapper() {
     }
 
     return (
-        <NewTransactionModal
-            customers={customers}
-            interactions={interactions}
-            triggerContent={triggerButton}
-            onSuccess={() => {
-                router.refresh();
-                window.dispatchEvent(new CustomEvent('recurringPaymentsUpdate'));
-            }}
-        />
+        <>
+            {triggerButton}
+            <NewTransactionModal
+                customers={customers}
+                interactions={interactions}
+                open={modalOpen}
+                onOpenChange={setModalOpen}
+                onSuccess={() => {
+                    setModalOpen(false);
+                    router.refresh();
+                    window.dispatchEvent(new CustomEvent('recurringPaymentsUpdate'));
+                }}
+            />
+        </>
     );
 }

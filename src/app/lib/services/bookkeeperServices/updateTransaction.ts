@@ -33,9 +33,9 @@ export async function updateTransaction(input: unknown): Promise<Result<boolean,
             p_type: validatedInput.type,
             p_category: validatedInput.category,
             p_description: validatedInput.description,
-            p_amount: validatedInput.amount,
-            p_customer_id: validatedInput.customer_id,
-            p_interaction_id: validatedInput.interaction_id,
+            p_amount: parseFloat(validatedInput.amount),
+            p_customer_id: validatedInput.customer_id || null,
+            p_interaction_id: validatedInput.interaction_id || null,
         });
 
         if (error) {

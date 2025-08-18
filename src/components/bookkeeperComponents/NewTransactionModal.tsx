@@ -36,11 +36,13 @@ const transactionFormSchema = createTransactionSchema.extend({
 type FormValues = z.infer<typeof transactionFormSchema>;
 
 export default function NewTransactionModal({
-                                                customers, interactions, onSuccess, triggerContent, triggerClassName,
+                                                customers, interactions, onSuccess, triggerContent, triggerClassName, open, onOpenChange,
                                             }: {
-    customers: Customer[]; interactions: Interaction[]; onSuccess?: () => void; triggerContent?: React.ReactNode; triggerClassName?: string;
+    customers: Customer[]; interactions: Interaction[]; onSuccess?: () => void; triggerContent?: React.ReactNode; triggerClassName?: string; open?: boolean; onOpenChange?: (open: boolean) => void;
 }) {
-    const [open, setOpen] = React.useState(false);
+    const [internalOpen, setInternalOpen] = React.useState(false);
+    const isOpen = open !== undefined ? open : internalOpen;
+    const setIsOpen = onOpenChange || setInternalOpen;
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [submitError, setSubmitError] = React.useState<string | null>(null);
     const validationState = createValidationState();
@@ -101,7 +103,7 @@ export default function NewTransactionModal({
                 
                 if (result.success) {
                     form.reset();
-                    setOpen(false);
+                    setIsOpen(false);
                     onSuccess?.();
                 } else {
                     setSubmitError(result.error || 'Failed to create recurring payment');
@@ -121,7 +123,7 @@ export default function NewTransactionModal({
 
                 if (result.success) {
                     form.reset();
-                    setOpen(false);
+                    setIsOpen(false);
                     onSuccess?.();
                 } else {
                     setSubmitError(result.error || 'Failed to create transaction');
@@ -135,17 +137,19 @@ export default function NewTransactionModal({
         }
     };
 
-    return (<Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-            {triggerContent || (
-                <Button 
-                    variant="outline"
-                    className={triggerClassName || "w-full sm:w-auto bg-emerald-600 border-emerald-600 text-white hover:bg-emerald-700 hover:border-emerald-700 transition-all duration-200"}
-                >
-                    + Add Transaction
-                </Button>
-            )}
-        </DialogTrigger>
+    return (<Dialog open={isOpen} onOpenChange={setIsOpen}>
+        {open === undefined && (
+            <DialogTrigger asChild>
+                {triggerContent || (
+                    <Button 
+                        variant="outline"
+                        className={triggerClassName || "w-full sm:w-auto bg-emerald-600 border-emerald-600 text-white hover:bg-emerald-700 hover:border-emerald-700 transition-all duration-200"}
+                    >
+                        + Add Transaction
+                    </Button>
+                )}
+            </DialogTrigger>
+        )}
         <DialogContent className="max-w-xl max-h-[90vh] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl">
             <DialogHeader>
                 <DialogTitle className="text-white">Add New Transaction</DialogTitle>

@@ -116,7 +116,10 @@ export default function SettingsContent() {
                         ...defaultSettings
                     }]);
 
-                if (error) console.error('Error creating user settings:', error);
+                if (error) {
+                    console.error('Error creating user settings:', error);
+                    toast.error(`Error creating user settings: ${error.message || JSON.stringify(error)}`);
+                }
                 originalSettingsRef.current = defaultSettings;
             }
         } catch (error) {
@@ -173,7 +176,7 @@ export default function SettingsContent() {
         } catch (error) {
             console.error('Error saving settings:', error);
             if (showToast) {
-                toast.error('Failed to save settings');
+                toast.error(`Failed to save settings: ${error instanceof Error ? error.message : JSON.stringify(error)}`);
             }
         } finally {
             setSaving(false);

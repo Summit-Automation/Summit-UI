@@ -12,6 +12,7 @@ export default function CreateMileageEntryClientWrapper() {
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [dataLoaded, setDataLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const loadData = useCallback(async () => {
         if (dataLoaded || isLoading) return;
@@ -28,10 +29,20 @@ export default function CreateMileageEntryClientWrapper() {
         }
     }, [dataLoaded, isLoading]);
 
+    const handleButtonClick = useCallback(async () => {
+        if (!dataLoaded) {
+            await loadData();
+            // After data loads, automatically open the modal
+            setModalOpen(true);
+        } else {
+            setModalOpen(true);
+        }
+    }, [dataLoaded, loadData]);
+
     const triggerButton = (
         <Button 
             variant="outline" 
-            onClick={loadData}
+            onClick={handleButtonClick}
             disabled={isLoading}
             className="w-full sm:w-auto"
         >
@@ -44,10 +55,17 @@ export default function CreateMileageEntryClientWrapper() {
     }
 
     return (
-        <NewMileageEntryModal
-            customers={customers}
-            triggerContent={triggerButton}
-            onSuccess={() => router.refresh()}
-        />
+        <>
+            {triggerButton}
+            <NewMileageEntryModal
+                customers={customers}
+                open={modalOpen}
+                onOpenChange={setModalOpen}
+                onSuccess={() => {
+                    setModalOpen(false);
+                    router.refresh();
+                }}
+            />
+        </>
     );
 }
