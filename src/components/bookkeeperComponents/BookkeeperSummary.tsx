@@ -5,6 +5,7 @@ import { Transaction } from '@/types/transaction';
 import { summarizeTransactions } from '@/utils/finance/summarizeTransactions';
 import { cn } from '@/lib/utils';
 import { GrowthIndicator } from '@/components/ui/growth-indicator';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 const cardStyles = `metric-enhanced card-enhanced data-appear`;
 const cardHeaders = `flex items-center justify-between pb-2`;
@@ -55,6 +56,8 @@ function MetricCard({ title, value, Icon, iconColorClass, trend, subtitle }: Met
 }
 
 const BookkeeperSummary = React.memo(function BookkeeperSummary({ transactions }: { transactions: Transaction[] }) {
+    const { formatAmount } = useCurrency();
+    
     // Calculate metrics with proper fallbacks for empty data and memoize
     const { totalIncome, totalExpenses, netBalance } = useMemo(() => 
         !transactions || transactions.length === 0 
@@ -62,20 +65,10 @@ const BookkeeperSummary = React.memo(function BookkeeperSummary({ transactions }
             : summarizeTransactions(transactions),
         [transactions]
     );
-    
-    // Format currency with exact amounts for financial precision
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }).format(amount);
-    };
 
-    const formattedIncome = formatCurrency(totalIncome);
-    const formattedExpenses = formatCurrency(totalExpenses);
-    const formattedNet = formatCurrency(netBalance);
+    const formattedIncome = formatAmount(totalIncome);
+    const formattedExpenses = formatAmount(totalExpenses);
+    const formattedNet = formatAmount(netBalance);
 
     // Calculate trend (placeholder - you could add actual trend calculation)
     const profitMargin = totalIncome > 0 ? ((netBalance / totalIncome) * 100) : 0;

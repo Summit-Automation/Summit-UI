@@ -7,6 +7,7 @@ import {deleteRecurringPayment} from '@/app/lib/services/bookkeeperServices/dele
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {Badge} from '@/components/ui/badge';
 import EditRecurringPaymentClientWrapper from './EditRecurringPaymentClientWrapper';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 export default function RecurringPaymentsTable({
     recurringPayments,
@@ -16,7 +17,7 @@ export default function RecurringPaymentsTable({
     onUpdate?: () => void;
 }) {
     const [loadingStates, setLoadingStates] = React.useState<Record<string, boolean>>({});
-
+    const { formatAmount } = useCurrency();
 
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this recurring payment?')) return;
@@ -42,13 +43,6 @@ export default function RecurringPaymentsTable({
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString();
-    };
-
-    const formatAmount = (amount: string) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-        }).format(parseFloat(amount));
     };
 
     const getFrequencyLabel = (frequency: string) => {
@@ -126,7 +120,7 @@ export default function RecurringPaymentsTable({
                                     <div className={`text-xl font-bold ${
                                         payment.type === 'income' ? 'text-green-400' : 'text-red-400'
                                     }`}>
-                                        {payment.type === 'income' ? '+' : '-'}{formatAmount(payment.amount)}
+                                        {payment.type === 'income' ? '+' : '-'}{formatAmount(parseFloat(payment.amount))}
                                     </div>
                                     <div className="text-slate-400 text-sm">
                                         Next: {formatDate(payment.next_payment_date)}
