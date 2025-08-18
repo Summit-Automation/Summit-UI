@@ -6,6 +6,7 @@ import { Transaction } from '@/types/transaction';
 import { format, parseISO } from 'date-fns';
 import { Chart } from '@/components/ui/chart';
 import { formatDate } from '@/utils/shared';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 type Bucket = { date: string; income: number; expense: number };
 
@@ -27,6 +28,7 @@ function groupCashFlow(transactions: Transaction[]): Bucket[] {
 
 
 const CashFlowArea = memo(function CashFlowArea({ transactions }: { transactions: Transaction[] }) {
+    const { getCurrencySymbol } = useCurrency();
     const data = useMemo(() => groupCashFlow(transactions), [transactions]);
 
     if (data.length === 0) {
@@ -72,7 +74,7 @@ const CashFlowArea = memo(function CashFlowArea({ transactions }: { transactions
                 
                 <YAxis
                     tick={{ fill: '#94a3b8', fontSize: 13, fontWeight: 500 }}
-                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                    tickFormatter={(value) => `${getCurrencySymbol()}${(value / 1000).toFixed(0)}k`}
                     axisLine={false}
                     tickLine={false}
                     width={60}

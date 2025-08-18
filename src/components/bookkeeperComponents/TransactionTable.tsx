@@ -6,6 +6,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Trash2, User, Clipboard, CheckCircle } from 'lucide-react';
+import { useCurrency } from '@/contexts/CurrencyContext';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -23,6 +24,7 @@ import { cn } from '@/lib/utils';
 
 const TransactionTable = React.memo(function TransactionTable({ transactions }: { transactions: Transaction[] }) {
     const router = useRouter();
+    const { formatAmount } = useCurrency();
     
     const sortedTransactions = useMemo(() => 
         [...transactions].sort((a, b) => 
@@ -38,15 +40,6 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
         } catch (error) {
             console.error('Failed to delete transaction:', error);
         }
-    };
-
-    const formatCurrency = (amount: string) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }).format(parseFloat(amount));
     };
 
     const columns = [
@@ -79,7 +72,7 @@ const TransactionTable = React.memo(function TransactionTable({ transactions }: 
                     "font-semibold whitespace-nowrap",
                     transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
                 )}>
-                    {formatCurrency(value as string)}
+                    {formatAmount(parseFloat(value as string))}
                 </span>
             )
         },

@@ -4,6 +4,7 @@ import { Car, MapPin, DollarSign } from 'lucide-react';
 import { MileageEntry } from '@/types/mileage';
 import { cn } from '@/lib/utils';
 import { GrowthIndicator } from '@/components/ui/growth-indicator';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 const cardStyles = `metric-enhanced card-enhanced data-appear`;
 const cardHeaders = `flex items-center justify-between pb-2`;
@@ -55,6 +56,8 @@ function MetricCard({ title, value, Icon, iconColorClass, subtitle, trend }: Met
 }
 
 export default function MileageSummary({ mileageEntries }: { mileageEntries: MileageEntry[] }) {
+    const { formatAmount } = useCurrency();
+    
     // Calculate metrics with proper fallbacks for empty data
     const businessMiles = !mileageEntries || mileageEntries.length === 0 
         ? 0 
@@ -86,16 +89,6 @@ export default function MileageSummary({ mileageEntries }: { mileageEntries: Mil
         return miles % 1 === 0 ? miles.toFixed(0) : miles.toFixed(1);
     };
 
-    // Format currency with exact amounts for financial precision
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }).format(amount);
-    };
-
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <MetricCard
@@ -115,7 +108,7 @@ export default function MileageSummary({ mileageEntries }: { mileageEntries: Mil
             />
             <MetricCard
                 title="Tax Deduction"
-                value={formatCurrency(potentialDeduction)}
+                value={formatAmount(potentialDeduction)}
                 Icon={DollarSign}
                 iconColorClass="text-amber-400"
                 subtitle={`@ $${standardMileageRate}/mile IRS rate`}

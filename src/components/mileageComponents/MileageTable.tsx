@@ -6,6 +6,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MapPin, Trash2, Car, DollarSign } from 'lucide-react';
+import { useCurrency } from '@/contexts/CurrencyContext';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -22,6 +23,7 @@ import { useRouter } from 'next/navigation';
 
 export default function MileageTable({ mileageEntries }: { mileageEntries: MileageEntry[] }) {
     const router = useRouter();
+    const { formatAmount } = useCurrency();
     
     const sortedEntries = useMemo(() => 
         [...mileageEntries].sort((a, b) => 
@@ -46,16 +48,6 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
 
     // IRS standard mileage rate for 2025
     const standardMileageRate = 0.67;
-
-    // Format currency with exact precision
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }).format(amount);
-    };
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -172,13 +164,13 @@ export default function MileageTable({ mileageEntries }: { mileageEntries: Milea
                             </div>
                             <div className="text-lg font-mono font-bold text-foreground">
                                 {mileageEntry.is_business 
-                                    ? formatCurrency(potentialDeduction)
+                                    ? formatAmount(potentialDeduction)
                                     : 'Not deductible'
                                 }
                             </div>
                             {mileageEntry.is_business && (
                                 <div className="text-xs text-muted-foreground mt-1">
-                                    {formatMiles(mileageEntry.miles)} × ${standardMileageRate} = {formatCurrency(potentialDeduction)}
+                                    {formatMiles(mileageEntry.miles)} × ${standardMileageRate} = {formatAmount(potentialDeduction)}
                                 </div>
                             )}
                         </div>
