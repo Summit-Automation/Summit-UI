@@ -91,24 +91,15 @@ function AILeadGenerationModal({ isOpen, onClose }: AILeadGenerationModalProps) 
   }, [isOpen]);
 
   const generateLeadsWithAI = useCallback(async (data: AIGenerationFormData) => {
-    // Construct the prompt for the AI agent
-    const prompt = `Generate 1 high-quality small business lead based on the following criteria:
+    // Simple request - let the AI agent handle comprehensive research with its configured prompt
+    const prompt = `Generate 1 high-quality small business lead:
 
 Profession/Service: ${data.profession}
 Target Location: ${data.target_location}
 Search Radius: ${data.search_radius} miles
 Industry Focus: ${data.industry_focus || 'Any relevant industry'}
 
-Please find an active lesser-known small business that would benefit from ${data.profession} services. Prioritize businesses that are not widely recognized or well-known companies, focusing on genuine prospects rather than obvious large corporations. For the lead, provide:
-- Company name and industry
-- Contact person (first name, last name, job title)
-- Contact information (email, phone)
-- Business address
-- Lead score (0-100)
-- Estimated value
-- Pain points and automation opportunities
-
-Return the results in the structured JSON format as specified in your system prompt.`;
+Use your comprehensive lead generation system to find and research 1 lesser-known business prospect.`;
 
     setStatus({
       stage: 'processing',
@@ -135,7 +126,10 @@ Return the results in the structured JSON format as specified in your system pro
       }));
 
       if (!response.ok) {
-        throw new Error('Failed to generate leads');
+        const errorText = await response.text();
+        console.error('API Error Status:', response.status);
+        console.error('API Error Response:', errorText);
+        throw new Error(`API Error ${response.status}: ${errorText || 'Failed to generate leads'}`);
       }
 
       const aiResponse = await response.json();
@@ -240,7 +234,9 @@ Return the results in the structured JSON format as specified in your system pro
               leadsQualified: leadsToProcess.filter((lead: { lead_score?: number }) => (lead.lead_score || 0) >= 70).length,
             });
           } else {
-            throw new Error('Failed to save leads to database');
+            const errorMessage = (result as { error?: string }).error || 'Failed to save leads to database';
+            console.error('Database save failed:', errorMessage);
+            throw new Error(`Database error: ${errorMessage}`);
           }
         } else {
           throw new Error('No valid leads found in response');

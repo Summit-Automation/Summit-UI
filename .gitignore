@@ -47,3 +47,6 @@ next-env.d.ts
 # database dumps
 supabaseDump.sql
 *.sql
+
+# prompts - contains sensitive AI agent configurations
+/src/prompts/

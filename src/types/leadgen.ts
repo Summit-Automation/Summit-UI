@@ -31,6 +31,41 @@ export interface Lead {
   created_at: string;
   updated_at: string;
   last_contacted_at?: string;
+  
+  // Enhanced Business Intelligence Fields
+  business_summary?: string;
+  business_history?: string;
+  technology_stack?: string;
+  growth_indicators?: string;
+  recent_activities?: string;
+  
+  // Contact Intelligence Fields
+  contact_discovery_method?: string;
+  additional_contacts?: AdditionalContact[];
+  contact_verification?: string;
+  
+  // Opportunity Analysis Fields
+  automation_opportunities?: string;
+  budget_indicators?: string;
+  decision_timeline?: string;
+  competitive_landscape?: string;
+  
+  // Verification & Quality Fields
+  business_verification?: string;
+  relevance_justification?: string;
+  verification_sources?: string[];
+  selection_reasoning?: string;
+  
+  // Company URLs
+  website_url?: string;
+  linkedin_url?: string;
+}
+
+export interface AdditionalContact {
+  name: string;
+  title: string;
+  role: string;
+  contact_method: string;
 }
 
 export interface NewLead {
@@ -60,6 +95,34 @@ export interface NewLead {
   company_size?: string;
   notes?: string;
   tags?: string[];
+  
+  // Enhanced Business Intelligence Fields
+  business_summary?: string;
+  business_history?: string;
+  technology_stack?: string;
+  growth_indicators?: string;
+  recent_activities?: string;
+  
+  // Contact Intelligence Fields
+  contact_discovery_method?: string;
+  additional_contacts?: AdditionalContact[];
+  contact_verification?: string;
+  
+  // Opportunity Analysis Fields
+  automation_opportunities?: string;
+  budget_indicators?: string;
+  decision_timeline?: string;
+  competitive_landscape?: string;
+  
+  // Verification & Quality Fields
+  business_verification?: string;
+  relevance_justification?: string;
+  verification_sources?: string[];
+  selection_reasoning?: string;
+  
+  // Company URLs
+  website_url?: string;
+  linkedin_url?: string;
 }
 
 export interface Activity {
