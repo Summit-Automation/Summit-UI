@@ -23,6 +23,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { 
   Edit, 
   Trash2, 
@@ -32,7 +40,15 @@ import {
   DollarSign,
   Calendar,
   Star,
-  UserPlus
+  UserPlus,
+  Building,
+  Target,
+  TrendingUp,
+  Users,
+  Lightbulb,
+  CheckCircle,
+  Globe,
+  Linkedin
 } from "lucide-react";
 
 interface LeadTableProps {
@@ -41,6 +57,236 @@ interface LeadTableProps {
   onDelete?: (leadId: string) => void;
   onConvertToCustomer?: (leadId: string) => void;
 }
+
+// Business Intelligence Modal Component
+const BusinessIntelligenceModal = React.memo(function BusinessIntelligenceModal({ lead }: { lead: Lead }) {
+  const hasBusinessIntelligence = lead.business_summary || lead.automation_opportunities || 
+    lead.technology_stack || lead.growth_indicators || lead.recent_activities;
+  
+  if (!hasBusinessIntelligence) {
+    return <span className="text-xs text-gray-400">No data</span>;
+  }
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" className="text-xs">
+          <Building className="h-3 w-3 mr-1" />
+          View Intel
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-slate-900 border-slate-700">
+        <DialogHeader>
+          <DialogTitle className="text-white flex items-center gap-2">
+            <Building className="h-5 w-5 text-blue-400" />
+            Business Intelligence - {lead.company}
+          </DialogTitle>
+          <DialogDescription className="text-slate-300">
+            Comprehensive business research and analysis for {lead.first_name} {lead.last_name}
+          </DialogDescription>
+        </DialogHeader>
+        
+        {/* Company Links Section */}
+        {(lead.website_url || lead.linkedin_url) && (
+          <div className="mb-6">
+            <Card className="border-slate-600 bg-slate-800">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-blue-400 flex items-center gap-2 text-base">
+                  <Globe className="h-4 w-4" />
+                  Company Links
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="flex flex-wrap gap-3">
+                  {lead.website_url && (
+                    <a 
+                      href={lead.website_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm transition-colors"
+                    >
+                      <Globe className="h-4 w-4" />
+                      Visit Website
+                    </a>
+                  )}
+                  {lead.linkedin_url && (
+                    <a 
+                      href={lead.linkedin_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-3 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-md text-sm transition-colors"
+                    >
+                      <Linkedin className="h-4 w-4" />
+                      LinkedIn Page
+                    </a>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Company Overview Section */}
+          <div className="space-y-4">
+            {/* Business Summary */}
+            {lead.business_summary && (
+              <Card className="border-slate-600 bg-slate-800">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-blue-400 flex items-center gap-2 text-base">
+                    <Building className="h-4 w-4" />
+                    Business Overview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <p className="text-sm text-slate-300 leading-relaxed">{lead.business_summary}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Technology Stack */}
+            {lead.technology_stack && (
+              <Card className="border-slate-600 bg-slate-800">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-purple-400 flex items-center gap-2 text-base">
+                    <Globe className="h-4 w-4" />
+                    Current Technology
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <p className="text-sm text-slate-300 leading-relaxed">{lead.technology_stack}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Growth Indicators */}
+            {lead.growth_indicators && (
+              <Card className="border-slate-600 bg-slate-800">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-orange-400 flex items-center gap-2 text-base">
+                    <TrendingUp className="h-4 w-4" />
+                    Growth Signals
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <p className="text-sm text-slate-300 leading-relaxed">{lead.growth_indicators}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Business History */}
+            {lead.business_history && (
+              <Card className="border-slate-600 bg-slate-800">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-indigo-400 flex items-center gap-2 text-base">
+                    <Calendar className="h-4 w-4" />
+                    Business History
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <p className="text-sm text-slate-300 leading-relaxed">{lead.business_history}</p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Opportunities & Analysis Section */}
+          <div className="space-y-4">
+            {/* Service Opportunities */}
+            {lead.automation_opportunities && (
+              <Card className="border-slate-600 bg-slate-800">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-green-400 flex items-center gap-2 text-base">
+                    <Target className="h-4 w-4" />
+                    How You Can Help
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <p className="text-sm text-slate-300 leading-relaxed">{lead.automation_opportunities}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Budget Indicators */}
+            {lead.budget_indicators && (
+              <Card className="border-slate-600 bg-slate-800">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-emerald-400 flex items-center gap-2 text-base">
+                    <DollarSign className="h-4 w-4" />
+                    Budget Indicators
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <p className="text-sm text-slate-300 leading-relaxed">{lead.budget_indicators}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Additional Contacts */}
+            {lead.additional_contacts && lead.additional_contacts.length > 0 && (
+              <Card className="border-slate-600 bg-slate-800">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-cyan-400 flex items-center gap-2 text-base">
+                    <Users className="h-4 w-4" />
+                    Key Contacts
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="space-y-3">
+                    {lead.additional_contacts.map((contact, index) => (
+                      <div key={index} className="border-l-2 border-slate-600 pl-3">
+                        <div className="font-medium text-slate-200">{contact.name} - {contact.title}</div>
+                        <div className="text-xs text-slate-400">{contact.role}</div>
+                        <div className="text-xs text-slate-400 mt-1">{contact.contact_method}</div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Selection Reasoning for AI leads */}
+            {lead.source === 'ai_agent' && lead.selection_reasoning && (
+              <Card className="border-slate-600 bg-slate-800">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-yellow-400 flex items-center gap-2 text-base">
+                    <Lightbulb className="h-4 w-4" />
+                    Why This Lead
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <p className="text-sm text-slate-300 leading-relaxed">{lead.selection_reasoning}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Verification Sources */}
+            {lead.verification_sources && lead.verification_sources.length > 0 && (
+              <Card className="border-slate-600 bg-slate-800">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-green-400 flex items-center gap-2 text-base">
+                    <CheckCircle className="h-4 w-4" />
+                    Verified Sources
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="flex flex-wrap gap-2">
+                    {lead.verification_sources.map((source, index) => (
+                      <Badge key={index} variant="outline" className="text-xs border-slate-600 text-slate-300">
+                        {source.includes('linkedin') && <Linkedin className="h-3 w-3 mr-1" />}
+                        {source.length > 40 ? `${source.substring(0, 40)}...` : source}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+});
 
 const MobileLeadCard = React.memo(function MobileLeadCard({ lead, onEdit, onDelete, onConvertToCustomer }: { 
   lead: Lead; 
@@ -187,6 +433,9 @@ const MobileLeadCard = React.memo(function MobileLeadCard({ lead, onEdit, onDele
           <Badge variant="outline" className="text-xs">
             {lead.source === 'manual' ? 'Manual Entry' : 'AI Generated'}
           </Badge>
+
+          {/* Business Intelligence for Mobile */}
+          <BusinessIntelligenceModal lead={lead} />
         </div>
       </CardContent>
     </Card>
@@ -270,6 +519,7 @@ function LeadTable({ leads, onEdit, onDelete, onConvertToCustomer }: LeadTablePr
               <TableHead>Score</TableHead>
               <TableHead>Est. Deal Value</TableHead>
               <TableHead>Source</TableHead>
+              <TableHead>Business Intel</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -345,6 +595,10 @@ function LeadTable({ leads, onEdit, onDelete, onConvertToCustomer }: LeadTablePr
                   <Badge variant="outline">
                     {lead.source === 'manual' ? 'Manual' : 'AI'}
                   </Badge>
+                </TableCell>
+                
+                <TableCell>
+                  <BusinessIntelligenceModal lead={lead} />
                 </TableCell>
                 
                 <TableCell>
