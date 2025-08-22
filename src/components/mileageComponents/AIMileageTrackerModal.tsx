@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { createMileageEntry } from '@/app/lib/services/mileageServices/createMileageEntry';
+import { calculateMileage as calculateMileageSecure } from '@/app/lib/services/mileageServices/calculateMileage';
 import { Customer } from '@/types/customer';
 import { Navigation, Brain, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
 
@@ -63,66 +64,28 @@ export default function AIMileageTrackerModal({
         setAiResponse(null);
 
         try {
-            // Call your Flowise AI agent
-            const response = await fetch(`${process.env.NEXT_PUBLIC_FLOWISE_API_URL || 'https://flowise.summitautomation.io'}/api/v1/prediction/${process.env.NEXT_PUBLIC_FLOWISE_MILEAGE_ID || '5dff09da-5fca-4b84-a017-bdac5e412107'}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    question: `Calculate driving distance and time from "${startLocation}" to "${endLocation}". Return the result in this exact JSON format: {"miles": number, "duration": "X hours Y minutes", "route": "brief route description", "success": true}`,
-                }),
+            // SECURITY: Call secure server action instead of client-side Flowise API
+            const response = await calculateMileageSecure({
+                start_location: startLocation,
+                end_location: endLocation,
+                trip_purpose: '' // Optional field
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to calculate mileage');
+            if (!response.success) {
+                throw new Error(response.message);
             }
 
-            const data = await response.json();
-            
-            // Parse the AI response (assuming it returns JSON in the text field)
-            let parsedResponse: AIResponse;
-            try {
-                // First, try to find JSON in the response text
-                const jsonMatch = data.text?.match(/\{[^}]*"miles"[^}]*\}/);
-                if (jsonMatch) {
-                    const jsonStr = jsonMatch[0];
-                    const tempResponse = JSON.parse(jsonStr);
-                    parsedResponse = {
-                        miles: typeof tempResponse.miles === 'number' ? tempResponse.miles : parseFloat(tempResponse.miles) || 0,
-                        duration: tempResponse.duration || 'Unknown',
-                        route: tempResponse.route || 'Route calculated successfully',
-                        success: tempResponse.success === true,
-                    };
-                } else {
-                    // Fallback: try to parse the entire response as JSON
-                    if (data.text && data.text.trim().startsWith('{')) {
-                        const tempResponse = JSON.parse(data.text.trim());
-                        parsedResponse = {
-                            miles: typeof tempResponse.miles === 'number' ? tempResponse.miles : parseFloat(tempResponse.miles) || 0,
-                            duration: tempResponse.duration || 'Unknown',
-                            route: tempResponse.route || 'Route calculated successfully',
-                            success: tempResponse.success === true,
-                        };
-                    } else {
-                        // Last resort: text parsing
-                        const milesMatch = data.text?.match(/(\d+\.?\d*)\s*miles?/i);
-                        const durationMatch = data.text?.match(/(\d+\.?\d*)\s*(hours?|hrs?|minutes?|mins?)/i);
-                        
-                        parsedResponse = {
-                            miles: milesMatch ? parseFloat(milesMatch[1]) : 0,
-                            duration: durationMatch ? `${durationMatch[1]} ${durationMatch[2]}` : 'Unknown',
-                            route: data.text || 'Route calculated successfully',
-                            success: true,
-                        };
-                    }
-                }
-            } catch (parseError) {
-                console.error('JSON Parse Error:', parseError);
-                console.log('Full response data:', data);
-                console.log('Response text:', data.text);
-                throw new Error('Unable to parse AI response');
+            if (!response.data) {
+                throw new Error('No mileage data received');
             }
+
+            // Convert server response to component format
+            const parsedResponse: AIResponse = {
+                miles: response.data.miles,
+                duration: response.data.duration,
+                route: response.data.route,
+                success: response.data.success,
+            };
 
             console.log('Parsed AI Response:', parsedResponse);
             setAiResponse(parsedResponse);

@@ -50,12 +50,14 @@ import {
   Globe,
   Linkedin
 } from "lucide-react";
+import EmailDraftsDisplay from "./EmailDraftsDisplay";
 
 interface LeadTableProps {
   leads: Lead[];
   onEdit?: (lead: Lead) => void;
   onDelete?: (leadId: string) => void;
   onConvertToCustomer?: (leadId: string) => void;
+  onViewEmails?: (lead: Lead) => void;
 }
 
 // Business Intelligence Modal Component
@@ -288,11 +290,12 @@ const BusinessIntelligenceModal = React.memo(function BusinessIntelligenceModal(
   );
 });
 
-const MobileLeadCard = React.memo(function MobileLeadCard({ lead, onEdit, onDelete, onConvertToCustomer }: { 
+const MobileLeadCard = React.memo(function MobileLeadCard({ lead, onEdit, onDelete, onConvertToCustomer, onViewEmails }: { 
   lead: Lead; 
   onEdit?: (lead: Lead) => void; 
   onDelete?: (leadId: string) => void; 
   onConvertToCustomer?: (leadId: string) => void;
+  onViewEmails?: (lead: Lead) => void;
 }) {
   const statusColors = {
     new: "bg-blue-100 text-blue-800",
@@ -335,6 +338,17 @@ const MobileLeadCard = React.memo(function MobileLeadCard({ lead, onEdit, onDele
             </div>
           </div>
           <div className="flex gap-2">
+            {onViewEmails && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onViewEmails(lead)}
+                title="View Email Drafts"
+                className="text-blue-600 hover:text-blue-700"
+              >
+                <Mail className="h-4 w-4" />
+              </Button>
+            )}
             {onConvertToCustomer && lead.status !== 'converted' && (
               <Button
                 variant="outline"
@@ -442,8 +456,23 @@ const MobileLeadCard = React.memo(function MobileLeadCard({ lead, onEdit, onDele
   );
 });
 
-function LeadTable({ leads, onEdit, onDelete, onConvertToCustomer }: LeadTableProps) {
+function LeadTable({ leads, onEdit, onDelete, onConvertToCustomer, onViewEmails }: LeadTableProps) {
   const [isMobile, setIsMobile] = useState(false);
+  const [emailDraftsOpen, setEmailDraftsOpen] = useState(false);
+  const [selectedLeadForEmails, setSelectedLeadForEmails] = useState<Lead | null>(null);
+
+  const handleViewEmails = (lead: Lead) => {
+    setSelectedLeadForEmails(lead);
+    setEmailDraftsOpen(true);
+    if (onViewEmails) {
+      onViewEmails(lead);
+    }
+  };
+
+  const handleCloseEmailDrafts = () => {
+    setEmailDraftsOpen(false);
+    setSelectedLeadForEmails(null);
+  };
 
   // Check if we should show mobile view
   React.useEffect(() => {
@@ -486,201 +515,210 @@ function LeadTable({ leads, onEdit, onDelete, onConvertToCustomer }: LeadTablePr
     urgent: "bg-red-100 text-red-800",
   };
 
-  if (isMobile) {
-    return (
-      <div className="space-y-4">
-        {leads.map((lead) => (
-          <MobileLeadCard
-            key={lead.id}
-            lead={lead}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onConvertToCustomer={onConvertToCustomer}
-          />
-        ))}
-      </div>
-    );
-  }
-
   return (
-    <Card className="card-enhanced" data-appear>
-      <CardHeader>
-        <CardTitle>Leads</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Company</TableHead>
-              <TableHead>Contact</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Priority</TableHead>
-              <TableHead>Score</TableHead>
-              <TableHead>Est. Deal Value</TableHead>
-              <TableHead>Source</TableHead>
-              <TableHead>Business Intel</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {leads.map((lead) => (
-              <TableRow key={lead.id}>
-                <TableCell>
-                  <div>
-                    <div className="font-medium">
-                      {lead.first_name} {lead.last_name}
-                    </div>
-                    {lead.job_title && (
-                      <div className="text-sm text-muted-foreground">
-                        {lead.job_title}
+    <>
+      {isMobile ? (
+        <div className="space-y-4">
+          {leads.map((lead) => (
+            <MobileLeadCard
+              key={lead.id}
+              lead={lead}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onConvertToCustomer={onConvertToCustomer}
+              onViewEmails={handleViewEmails}
+            />
+          ))}
+        </div>
+      ) : (
+        <Card className="card-enhanced" data-appear>
+          <CardHeader>
+            <CardTitle>Leads</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Company</TableHead>
+                  <TableHead>Contact</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Priority</TableHead>
+                  <TableHead>Score</TableHead>
+                  <TableHead>Est. Deal Value</TableHead>
+                  <TableHead>Source</TableHead>
+                  <TableHead>Business Intel</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {leads.map((lead) => (
+                  <TableRow key={lead.id}>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">
+                          {lead.first_name} {lead.last_name}
+                        </div>
+                        {lead.job_title && (
+                          <div className="text-sm text-muted-foreground">
+                            {lead.job_title}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </TableCell>
-                
-                <TableCell>
-                  {lead.company || "-"}
-                </TableCell>
-                
-                <TableCell>
-                  <div className="space-y-1">
-                    {lead.email && (
-                      <div className="flex items-center gap-1 text-sm">
-                        <Mail className="h-3 w-3" />
-                        <span className="truncate max-w-[150px]">{lead.email}</span>
+                    </TableCell>
+                    
+                    <TableCell>
+                      {lead.company || "-"}
+                    </TableCell>
+                    
+                    <TableCell>
+                      <div className="space-y-1">
+                        {lead.email && (
+                          <div className="flex items-center gap-1 text-sm">
+                            <Mail className="h-3 w-3" />
+                            <span className="truncate max-w-[150px]">{lead.email}</span>
+                          </div>
+                        )}
+                        {lead.phone && (
+                          <div className="flex items-center gap-1 text-sm">
+                            <Phone className="h-3 w-3" />
+                            <span>{lead.phone}</span>
+                          </div>
+                        )}
                       </div>
-                    )}
-                    {lead.phone && (
-                      <div className="flex items-center gap-1 text-sm">
-                        <Phone className="h-3 w-3" />
-                        <span>{lead.phone}</span>
-                      </div>
-                    )}
-                  </div>
-                </TableCell>
-                
-                <TableCell>
-                  <Badge 
-                    className={`${statusColors[lead.status as keyof typeof statusColors] || statusColors.new}`}
-                  >
-                    {lead.status.replace('_', ' ').toUpperCase()}
-                  </Badge>
-                </TableCell>
-                
-                <TableCell>
-                  <Badge 
-                    className={`${priorityColors[lead.priority as keyof typeof priorityColors] || priorityColors.medium}`}
-                  >
-                    {lead.priority.toUpperCase()}
-                  </Badge>
-                </TableCell>
-                
-                <TableCell>
-                  <div className="flex items-center gap-1">
-                    <Star className="h-4 w-4 text-yellow-500" />
-                    <span>{lead.score}/100</span>
-                  </div>
-                </TableCell>
-                
-                <TableCell>
-                  {lead.estimated_value ? (
-                    <span className="text-muted-foreground" title="Estimated deal value - for reference only">
-                      ~${lead.estimated_value.toLocaleString()}
-                    </span>
-                  ) : "-"}
-                </TableCell>
-                
-                <TableCell>
-                  <Badge variant="outline">
-                    {lead.source === 'manual' ? 'Manual' : 'AI'}
-                  </Badge>
-                </TableCell>
-                
-                <TableCell>
-                  <BusinessIntelligenceModal lead={lead} />
-                </TableCell>
-                
-                <TableCell>
-                  <div className="flex gap-2">
-                    {onConvertToCustomer && lead.status !== 'converted' && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onConvertToCustomer(lead.id)}
-                        className="text-green-600 hover:text-green-700"
-                        title="Convert to Customer"
+                    </TableCell>
+                    
+                    <TableCell>
+                      <Badge 
+                        className={`${statusColors[lead.status as keyof typeof statusColors] || statusColors.new}`}
                       >
-                        <UserPlus className="h-4 w-4" />
-                      </Button>
-                    )}
-                    {onEdit && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onEdit(lead)}
-                        title="Edit Lead"
+                        {lead.status.replace('_', ' ').toUpperCase()}
+                      </Badge>
+                    </TableCell>
+                    
+                    <TableCell>
+                      <Badge 
+                        className={`${priorityColors[lead.priority as keyof typeof priorityColors] || priorityColors.medium}`}
                       >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                    )}
-                    {onDelete && (
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
+                        {lead.priority.toUpperCase()}
+                      </Badge>
+                    </TableCell>
+                    
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Star className="h-4 w-4 text-yellow-500" />
+                        <span>{lead.score}/100</span>
+                      </div>
+                    </TableCell>
+                    
+                    <TableCell>
+                      {lead.estimated_value ? (
+                        <span className="text-muted-foreground" title="Estimated deal value - for reference only">
+                          ~${lead.estimated_value.toLocaleString()}
+                        </span>
+                      ) : "-"}
+                    </TableCell>
+                    
+                    <TableCell>
+                      <Badge variant="outline">
+                        {lead.source === 'manual' ? 'Manual' : 'AI'}
+                      </Badge>
+                    </TableCell>
+                    
+                    <TableCell>
+                      <BusinessIntelligenceModal lead={lead} />
+                    </TableCell>
+                    
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleViewEmails(lead)}
+                          title="View Email Drafts"
+                          className="text-blue-600 hover:text-blue-700"
+                        >
+                          <Mail className="h-4 w-4" />
+                        </Button>
+                        {onConvertToCustomer && lead.status !== 'converted' && (
                           <Button
                             variant="outline"
                             size="sm"
-                            title="Delete Lead"
+                            onClick={() => onConvertToCustomer(lead.id)}
+                            className="text-green-600 hover:text-green-700"
+                            title="Convert to Customer"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <UserPlus className="h-4 w-4" />
                           </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent className="bg-slate-900 border-slate-700">
-                          <AlertDialogHeader>
-                            <AlertDialogTitle className="text-white">Confirm deletion</AlertDialogTitle>
-                            <AlertDialogDescription className="text-slate-300">
-                              Are you sure you want to permanently delete this lead for {lead.first_name} {lead.last_name}? 
-                              This action cannot be undone.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <div className="flex justify-end space-x-2 pt-4">
-                            <AlertDialogCancel asChild>
-                              <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800">Cancel</Button>
-                            </AlertDialogCancel>
-                            <AlertDialogAction asChild>
-                              <Button variant="destructive" onClick={() => onDelete(lead.id)}>
-                                Yes, delete
+                        )}
+                        {onEdit && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => onEdit(lead)}
+                            title="Edit Lead"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        )}
+                        {onDelete && (
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                title="Delete Lead"
+                              >
+                                <Trash2 className="h-4 w-4" />
                               </Button>
-                            </AlertDialogAction>
-                          </div>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    )}
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        
-        {leads.length === 0 && (
-          <div className="text-center py-8 text-muted-foreground">
-            No leads found. Create your first lead to get started.
-          </div>
-        )}
-      </CardContent>
-    </Card>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent className="bg-slate-900 border-slate-700">
+                              <AlertDialogHeader>
+                                <AlertDialogTitle className="text-white">Confirm deletion</AlertDialogTitle>
+                                <AlertDialogDescription className="text-slate-300">
+                                  Are you sure you want to permanently delete this lead for {lead.first_name} {lead.last_name}? 
+                                  This action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <div className="flex justify-end space-x-2 pt-4">
+                                <AlertDialogCancel asChild>
+                                  <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800">Cancel</Button>
+                                </AlertDialogCancel>
+                                <AlertDialogAction asChild>
+                                  <Button variant="destructive" onClick={() => onDelete(lead.id)}>
+                                    Yes, delete
+                                  </Button>
+                                </AlertDialogAction>
+                              </div>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            
+            {leads.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground">
+                No leads found. Create your first lead to get started.
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+      
+      {selectedLeadForEmails && emailDraftsOpen && (
+        <EmailDraftsDisplay
+          leadId={selectedLeadForEmails.id}
+          lead={selectedLeadForEmails}
+          isOpen={emailDraftsOpen}
+          onClose={handleCloseEmailDrafts}
+        />
+      )}
+    </>
   );
 }
 
-// Memoize the component to prevent unnecessary re-renders
-export default React.memo(LeadTable, (prevProps, nextProps) => {
-  // Only re-render if leads array or callback functions have actually changed
-  return (
-    prevProps.leads.length === nextProps.leads.length &&
-    prevProps.leads.every((lead, index) => lead.id === nextProps.leads[index]?.id) &&
-    prevProps.onEdit === nextProps.onEdit &&
-    prevProps.onDelete === nextProps.onDelete &&
-    prevProps.onConvertToCustomer === nextProps.onConvertToCustomer
-  );
-});
+export default LeadTable;

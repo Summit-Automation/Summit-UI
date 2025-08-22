@@ -33,15 +33,18 @@ export default function LeadGenContent() {
   const {
     isNewLeadModalOpen,
     isAIModalOpen,
+    isEmailGenerationModalOpen,
     isEditModalOpen,
     isFilterModalOpen,
     editingLead,
     openNewLeadModal,
     openAIModal,
+    openEmailGenerationModal,
     openEditModal,
     openFilterModal,
     closeNewLeadModal,
     closeAIModal,
+    closeEmailGenerationModal,
     closeEditModal,
     closeFilterModal
   } = useLeadModals();
@@ -76,6 +79,10 @@ export default function LeadGenContent() {
     closeEditModal();
   };
 
+  const handleEmailGenerationModalClose = () => {
+    closeEmailGenerationModal();
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -87,6 +94,7 @@ export default function LeadGenContent() {
       <LeadActions
         onNewLead={openNewLeadModal}
         onAIGenerate={openAIModal}
+        onEmailGenerate={openEmailGenerationModal}
         onRefresh={refreshData}
         onExport={exportLeadsData}
         onFilter={openFilterModal}
@@ -102,12 +110,15 @@ export default function LeadGenContent() {
       <LeadModals
         isNewLeadModalOpen={isNewLeadModalOpen}
         isAIModalOpen={isAIModalOpen}
+        isEmailGenerationModalOpen={isEmailGenerationModalOpen}
         isEditModalOpen={isEditModalOpen}
         isFilterModalOpen={isFilterModalOpen}
         editingLead={editingLead}
         currentFilters={currentFilters}
+        leads={leads}
         onCloseNewLead={handleModalClose}
         onCloseAI={handleAIModalClose}
+        onCloseEmailGeneration={handleEmailGenerationModalClose}
         onCloseEdit={handleEditModalClose}
         onCloseFilter={closeFilterModal}
         onApplyFilters={handleApplyFilters}

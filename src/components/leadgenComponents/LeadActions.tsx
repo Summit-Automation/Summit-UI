@@ -2,11 +2,12 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, Bot, Download, Filter, RefreshCw } from "lucide-react";
+import { Plus, Bot, Download, Filter, RefreshCw, Mail } from "lucide-react";
 
 interface LeadActionsProps {
   onNewLead: () => void;
   onAIGenerate: () => void;
+  onEmailGenerate?: () => void;
   onRefresh?: () => void;
   onExport?: () => void;
   onFilter?: () => void;
@@ -15,6 +16,7 @@ interface LeadActionsProps {
 function LeadActions({ 
   onNewLead, 
   onAIGenerate, 
+  onEmailGenerate,
   onRefresh,
   onExport, 
   onFilter 
@@ -37,6 +39,16 @@ function LeadActions({
           <Bot className="mr-2 h-4 w-4" />
           AI Generate
         </Button>
+
+        {onEmailGenerate && (
+          <Button 
+            onClick={onEmailGenerate}
+            variant="outline"
+          >
+            <Mail className="mr-2 h-4 w-4" />
+            Generate Emails
+          </Button>
+        )}
       </div>
       
       <div className="flex gap-3 sm:ml-auto">

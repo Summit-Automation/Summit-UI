@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { createTransaction } from '@/app/lib/services/bookkeeperServices/createTransaction';
+import { processReceipt as processReceiptSecure } from '@/app/lib/services/receiptServices/processReceipt';
 import { Customer } from '@/types/customer';
 import { Camera, Upload, Brain, CheckCircle, AlertCircle, FileImage, Loader2 } from 'lucide-react';
 
@@ -124,53 +125,31 @@ export default function AIReceiptUploadModal({
                 reader.readAsDataURL(selectedFile);
             });
 
-            // Send to Flowise AI agent
-            const response = await fetch(`${process.env.NEXT_PUBLIC_FLOWISE_API_URL || 'https://flowise.summitautomation.io'}/api/v1/prediction/${process.env.NEXT_PUBLIC_FLOWISE_RECEIPT_ID || 'a622964c-9a9c-4dec-8024-a1174779fa5c'}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    question: 'Analyze this receipt and extract the business information',
-                    uploads: [{
-                        data: `data:${selectedFile.type};base64,${base64}`,
-                        type: 'file',
-                        name: selectedFile.name,
-                        mime: selectedFile.type
-                    }]
-                }),
+            // SECURITY: Call secure server action instead of client-side Flowise API
+            const response = await processReceiptSecure({
+                file: {
+                    name: selectedFile.name,
+                    type: selectedFile.type,
+                    size: selectedFile.size,
+                    data: base64
+                }
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to process receipt');
+            if (!response.success) {
+                throw new Error(response.message);
             }
 
-            const data = await response.json();
-
-            // Parse the AI response - check for Flowise format first
-            let jsonData = null;
-            if (data.json && typeof data.json === 'object') {
-                jsonData = data.json;
-            } else {
-                // Fallback: try to parse from text
-                const responseText = data.text || JSON.stringify(data);
-                const businessNameMatch = responseText.match(/\{[^{}]*"businessName"[^{}]*\}/);
-                if (businessNameMatch) {
-                    jsonData = JSON.parse(businessNameMatch[0]);
-                }
-            }
-            
-            if (!jsonData) {
-                throw new Error('Could not find receipt data in AI response');
+            if (!response.data) {
+                throw new Error('No receipt data received');
             }
 
-            // Validate and normalize the data
+            // Convert server response to component format
             const parsedData: ReceiptData = {
-                businessName: jsonData.businessName || 'Unknown Business',
-                itemNames: jsonData.itemNames || 'Various items',
-                itemQuantity: jsonData.itemQuantity || '',
-                itemCosts: jsonData.itemCosts || '',
-                grossTotal: parseFloat(jsonData.grossTotal || '0')
+                businessName: response.data.businessName,
+                itemNames: response.data.items.map(item => item.description).join(', ') || 'Various items',
+                itemQuantity: response.data.items.map(() => '1').join(', '), // Default quantities
+                itemCosts: response.data.items.map(item => item.amount).join(', ') || '',
+                grossTotal: parseFloat(response.data.total) || 0
             };
 
             // Create detailed description with quantities
