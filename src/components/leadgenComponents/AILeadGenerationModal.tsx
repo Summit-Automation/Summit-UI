@@ -32,8 +32,8 @@ const Progress = ({ value, className, ...props }: { value: number; className?: s
   </div>
 );
 import { Bot, Loader2, CheckCircle, AlertCircle, Clock } from "lucide-react";
-import { createAIBatch } from "@/app/lib/services/leadServices/createAIBatch";
 import { checkAIGenerationCooldown } from "@/app/lib/services/leadServices/checkAIGenerationCooldown";
+import { generateLeads } from "@/app/lib/services/leadServices/generateLeads";
 
 const aiGenerationSchema = z.object({
   profession: z.string().min(1, "Your profession/service is required"),
@@ -91,15 +91,6 @@ function AILeadGenerationModal({ isOpen, onClose }: AILeadGenerationModalProps) 
   }, [isOpen]);
 
   const generateLeadsWithAI = useCallback(async (data: AIGenerationFormData) => {
-    // Simple request - let the AI agent handle comprehensive research with its configured prompt
-    const prompt = `Generate 1 high-quality small business lead:
-
-Profession/Service: ${data.profession}
-Target Location: ${data.target_location}
-Search Radius: ${data.search_radius} miles
-Industry Focus: ${data.industry_focus || 'Any relevant industry'}
-
-Use your comprehensive lead generation system to find and research 1 lesser-known business prospect.`;
 
     setStatus({
       stage: 'processing',
@@ -108,15 +99,12 @@ Use your comprehensive lead generation system to find and research 1 lesser-know
     });
 
     try {
-      // Call the Flowise API directly
-      const response = await fetch(`${process.env.NEXT_PUBLIC_FLOWISE_API_URL || 'https://flowise.summitautomation.io'}/api/v1/prediction/${process.env.NEXT_PUBLIC_FLOWISE_LEADGEN_ID || 'a946d803-c141-4ccb-8184-744e45608dc0'}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          question: prompt,
-        }),
+      // SECURITY: Call secure server action instead of client-side Flowise API
+      const response = await generateLeads({
+        location: `${data.target_location} (${data.search_radius} miles radius)`,
+        industry_focus: data.industry_focus || '',
+        business_size: 'Small to medium businesses',
+        specific_criteria: `Target profession/service: ${data.profession}`
       });
 
       setStatus(prev => ({
@@ -125,129 +113,34 @@ Use your comprehensive lead generation system to find and research 1 lesser-know
         message: 'AI is researching leads...',
       }));
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('API Error Status:', response.status);
-        console.error('API Error Response:', errorText);
-        throw new Error(`API Error ${response.status}: ${errorText || 'Failed to generate leads'}`);
+      if (!response.success) {
+        console.error('Secure lead generation error:', response.message);
+        throw new Error(response.message);
       }
 
-      const aiResponse = await response.json();
-      
       setStatus(prev => ({
         ...prev,
         progress: 90,
-        message: 'Processing AI results and saving leads...',
+        message: 'Lead generation completed successfully!',
       }));
 
-      console.log('AI Response received:', aiResponse);
+      console.log('Server response received:', response);
 
-      // Parse the AI response and save to database
-      try {
-        let parsedResponse;
-        let responseText = '';
-
-        // Handle different response formats from Flowise
-        if (aiResponse.text) {
-          responseText = aiResponse.text;
-        } else if (aiResponse.answer) {
-          responseText = aiResponse.answer;
-        } else if (typeof aiResponse === 'string') {
-          responseText = aiResponse;
-        } else {
-          responseText = JSON.stringify(aiResponse);
-        }
-
-        console.log('Response text to parse:', responseText);
-
-        // Try to extract JSON from the response text
-        const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          try {
-            parsedResponse = JSON.parse(jsonMatch[0]);
-            console.log('Parsed JSON response:', parsedResponse);
-          } catch (jsonError) {
-            console.error('JSON parse error:', jsonError);
-            throw new Error('Invalid JSON format in AI response');
-          }
-        } else {
-          // If no JSON found, create mock lead for demonstration
-          console.log('No JSON found in response, creating mock lead');
-          parsedResponse = {
-            lead: {
-              lead_score: 85,
-              confidence_score: 0.9,
-              company: "Regional Tech Solutions LLC",
-              industry: data.industry_focus || "Technology Services",
-              first_name: "Sarah",
-              last_name: "Johnson",
-              job_title: "CEO",
-              email: "sarah@regionaltechsolutions.com",
-              phone: "(555) 123-4567",
-              address: "123 Business Ave",
-              city: data.target_location.split(',')[0] || "Sample City",
-              state: "PA",
-              zip_code: "15201",
-              company_size: "25-50",
-              estimated_value: 15000,
-              notes: `Lesser-known regional business that could benefit from ${data.profession} services`,
-              ai_generated_notes: "AI-identified prospect based on your criteria - independent business with growth potential"
-            }
-          };
-        }
-
-        // Handle both single lead and leads array format for backwards compatibility
-        let leadsToProcess = [];
-        if (parsedResponse?.lead) {
-          // New single lead format from Flowise agent v2.1
-          leadsToProcess = [parsedResponse.lead];
-        } else if (parsedResponse?.leads && Array.isArray(parsedResponse.leads)) {
-          // Legacy leads array format
-          leadsToProcess = parsedResponse.leads;
-        }
-
-        // Save the lead(s) to database if we have valid data
-        if (leadsToProcess.length > 0) {
-          const batchData = {
-            batch_metadata: {
-              search_criteria: {
-                profession: data.profession,
-                location: data.target_location,
-                radius: data.search_radius,
-                industry_focus: data.industry_focus || undefined
-              },
-              total_searches: 1
-            },
-            leads: leadsToProcess
-          };
-
-          console.log('Saving batch data:', batchData);
-          const result = await createAIBatch(batchData);
-          console.log('Batch save result:', result);
-          
-          if (result.success) {
-            setStatus({
-              stage: 'completed',
-              progress: 100,
-              message: 'Lead generation completed successfully!',
-              leadsGenerated: leadsToProcess.length,
-              leadsQualified: leadsToProcess.filter((lead: { lead_score?: number }) => (lead.lead_score || 0) >= 70).length,
-            });
-          } else {
-            const errorMessage = (result as { error?: string }).error || 'Failed to save leads to database';
-            console.error('Database save failed:', errorMessage);
-            throw new Error(`Database error: ${errorMessage}`);
-          }
-        } else {
-          throw new Error('No valid leads found in response');
-        }
-      } catch (parseError) {
-        console.error('Error parsing AI response:', parseError);
+      // Server action already processed everything - just use the results
+      const savedLeads = response.leads || [];
+      
+      if (savedLeads.length > 0) {
+        const qualifiedLeads = (savedLeads as Array<{ score?: number }>).filter(lead => (lead.score || 0) >= 70).length;
+        
         setStatus({
-          stage: 'error',
-          progress: 0,
-          message: 'Failed to process AI response. Please try again.',
+          stage: 'completed',
+          progress: 100,
+          message: 'Lead generation completed successfully!',
+          leadsGenerated: savedLeads.length,
+          leadsQualified: qualifiedLeads,
         });
+      } else {
+        throw new Error('No leads were generated');
       }
 
       // Trigger immediate data refresh

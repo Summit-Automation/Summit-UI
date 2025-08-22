@@ -26,7 +26,8 @@ import {
     EyeOff,
     Settings,
     Save,
-    RefreshCw
+    RefreshCw,
+    Building
 } from "lucide-react";
 
 interface UserSettings {
@@ -50,6 +51,24 @@ interface UserSettings {
     position?: string;
 }
 
+interface OrganizationSettings {
+    id: string;
+    name: string;
+    slug: string;
+    company_description?: string;
+    company_services?: string;
+    company_industry?: string;
+    company_size?: string;
+    company_website?: string;
+    value_proposition?: string;
+    target_market?: string;
+    unique_selling_points?: string;
+    case_studies?: string;
+    pricing_model?: string;
+    created_at?: string;
+    updated_at?: string;
+}
+
 const defaultSettings: UserSettings = {
     email_notifications: true,
     push_notifications: true,
@@ -69,17 +88,34 @@ const defaultSettings: UserSettings = {
     position: ''
 };
 
+const defaultOrgSettings: Partial<OrganizationSettings> = {
+    company_description: '',
+    company_services: '',
+    company_industry: '',
+    company_size: '',
+    company_website: '',
+    value_proposition: '',
+    target_market: '',
+    unique_selling_points: '',
+    case_studies: '',
+    pricing_model: ''
+};
+
 export default function SettingsContent() {
     const [settings, setSettings] = useState<UserSettings>(defaultSettings);
+    const [orgSettings, setOrgSettings] = useState<Partial<OrganizationSettings>>(defaultOrgSettings);
     const [user, setUser] = useState<SupabaseUser | null>(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [savingOrg, setSavingOrg] = useState(false);
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+    const [hasUnsavedOrgChanges, setHasUnsavedOrgChanges] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const originalSettingsRef = useRef<UserSettings>(defaultSettings);
+    const originalOrgSettingsRef = useRef<Partial<OrganizationSettings>>(defaultOrgSettings);
 
     const supabase = createClient();
     const { theme, setTheme } = useTheme();
@@ -121,6 +157,25 @@ export default function SettingsContent() {
                     toast.error(`Error creating user settings: ${error.message || JSON.stringify(error)}`);
                 }
                 originalSettingsRef.current = defaultSettings;
+            }
+
+            // Load organization settings
+            const organizationId = user.user_metadata?.organization_id;
+            if (organizationId) {
+                const { data: organization } = await supabase
+                    .from('organizations')
+                    .select('*')
+                    .eq('id', organizationId)
+                    .single();
+
+                if (organization) {
+                    const newOrgSettings = {
+                        ...defaultOrgSettings,
+                        ...organization
+                    };
+                    setOrgSettings(newOrgSettings);
+                    originalOrgSettingsRef.current = newOrgSettings;
+                }
             }
         } catch (error) {
             console.error('Error loading user data:', error);
@@ -183,6 +238,47 @@ export default function SettingsContent() {
         }
     }, [user, settings, supabase]);
 
+    const saveOrgSettings = useCallback(async (showToast = true) => {
+        setSavingOrg(true);
+        try {
+            if (!user || !user.user_metadata?.organization_id) return;
+
+            const { error } = await supabase
+                .from('organizations')
+                .update({
+                    company_description: orgSettings.company_description,
+                    company_services: orgSettings.company_services,
+                    company_industry: orgSettings.company_industry,
+                    company_size: orgSettings.company_size,
+                    company_website: orgSettings.company_website,
+                    value_proposition: orgSettings.value_proposition,
+                    target_market: orgSettings.target_market,
+                    unique_selling_points: orgSettings.unique_selling_points,
+                    case_studies: orgSettings.case_studies,
+                    pricing_model: orgSettings.pricing_model,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', user.user_metadata.organization_id);
+
+            if (error) throw error;
+
+            // Update the original settings reference
+            originalOrgSettingsRef.current = { ...orgSettings };
+            setHasUnsavedOrgChanges(false);
+
+            if (showToast) {
+                toast.success('Company settings saved successfully!');
+            }
+        } catch (error) {
+            console.error('Error saving organization settings:', error);
+            if (showToast) {
+                toast.error(`Failed to save company settings: ${error instanceof Error ? error.message : JSON.stringify(error)}`);
+            }
+        } finally {
+            setSavingOrg(false);
+        }
+    }, [user, orgSettings, supabase]);
+
     // Auto-save functionality
     const autoSave = useCallback(() => {
         if (autoSaveTimeoutRef.current) {
@@ -193,18 +289,24 @@ export default function SettingsContent() {
             if (hasUnsavedChanges) {
                 saveSettings(false); // Auto-save without toast
             }
+            if (hasUnsavedOrgChanges) {
+                saveOrgSettings(false); // Auto-save without toast
+            }
         }, 2000); // Auto-save after 2 seconds of inactivity
-    }, [hasUnsavedChanges, saveSettings]);
+    }, [hasUnsavedChanges, hasUnsavedOrgChanges, saveSettings, saveOrgSettings]);
 
     // Check for unsaved changes
     const checkForChanges = useCallback(() => {
         const hasChanges = JSON.stringify(settings) !== JSON.stringify(originalSettingsRef.current);
         setHasUnsavedChanges(hasChanges);
         
-        if (hasChanges) {
+        const hasOrgChanges = JSON.stringify(orgSettings) !== JSON.stringify(originalOrgSettingsRef.current);
+        setHasUnsavedOrgChanges(hasOrgChanges);
+        
+        if (hasChanges || hasOrgChanges) {
             autoSave();
         }
-    }, [settings, autoSave]);
+    }, [settings, orgSettings, autoSave]);
 
     // Effect to check for changes whenever settings change
     useEffect(() => {
@@ -249,6 +351,10 @@ export default function SettingsContent() {
 
     const handleSettingChange = (key: keyof UserSettings, value: string | boolean | number) => {
         setSettings(prev => ({ ...prev, [key]: value }));
+    };
+
+    const handleOrgSettingChange = (key: keyof OrganizationSettings, value: string) => {
+        setOrgSettings(prev => ({ ...prev, [key]: value }));
     };
 
     const handleExportData = async (type: 'crm' | 'accounting' | 'all') => {
@@ -303,7 +409,7 @@ export default function SettingsContent() {
     return (
         <div className="space-y-6">
             {/* Unsaved changes indicator */}
-            {hasUnsavedChanges && (
+            {(hasUnsavedChanges || hasUnsavedOrgChanges) && (
                 <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center gap-2">
                     <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
                     <p className="text-sm text-amber-400">
@@ -313,7 +419,7 @@ export default function SettingsContent() {
             )}
 
             <Tabs defaultValue="profile" className="w-full">
-                <TabsList className="grid w-full grid-cols-4 h-11 bg-slate-900/60 rounded-2xl border border-slate-800/40 p-1 overflow-x-auto">
+                <TabsList className="grid w-full grid-cols-5 h-11 bg-slate-900/60 rounded-2xl border border-slate-800/40 p-1 overflow-x-auto">
                     <TabsTrigger 
                         value="profile" 
                         className="flex items-center gap-2 text-sm px-2 lg:px-4 rounded-xl data-[state=active]:bg-slate-800 data-[state=active]:text-white data-[state=active]:shadow-md text-slate-400 hover:text-slate-300 transition-all duration-200 font-medium min-w-0 flex-shrink-0"
@@ -341,6 +447,13 @@ export default function SettingsContent() {
                     >
                         <Database className="h-4 w-4 flex-shrink-0" />
                         <span className="hidden sm:inline truncate">Data</span>
+                    </TabsTrigger>
+                    <TabsTrigger 
+                        value="company" 
+                        className="flex items-center gap-2 text-sm px-2 lg:px-4 rounded-xl data-[state=active]:bg-slate-800 data-[state=active]:text-white data-[state=active]:shadow-md text-slate-400 hover:text-slate-300 transition-all duration-200 font-medium min-w-0 flex-shrink-0"
+                    >
+                        <Building className="h-4 w-4 flex-shrink-0" />
+                        <span className="hidden sm:inline truncate">Company</span>
                     </TabsTrigger>
                 </TabsList>
 
@@ -653,12 +766,141 @@ export default function SettingsContent() {
                         </CardContent>
                     </Card>
                 </TabsContent>
+
+                {/* Company Settings */}
+                <TabsContent value="company" className="mt-6 space-y-6">
+                    <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6 card-bg">
+                        <CardHeader className="pb-6">
+                            <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg card-title">
+                                <div className="p-2.5 bg-orange-500/20 rounded-xl">
+                                    <Building className="h-5 w-5 text-orange-400" />
+                                </div>
+                                Company Information
+                            </CardTitle>
+                            <CardDescription className="text-slate-400 text-sm mt-2 card-description">
+                                Organization-wide company information used for AI agent context and email generation
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="companyDescription" className="text-[rgb(var(--color-text-secondary))]">Company Description</Label>
+                                    <Input
+                                        id="companyDescription"
+                                        value={orgSettings.company_description || ''}
+                                        onChange={(e) => handleOrgSettingChange('company_description', e.target.value)}
+                                        className="bg-slate-800 border-slate-600 text-slate-100"
+                                        placeholder="Brief description of your company"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="companyServices" className="text-[rgb(var(--color-text-secondary))]">Services Offered</Label>
+                                    <Input
+                                        id="companyServices"
+                                        value={orgSettings.company_services || ''}
+                                        onChange={(e) => handleOrgSettingChange('company_services', e.target.value)}
+                                        className="bg-slate-800 border-slate-600 text-slate-100"
+                                        placeholder="Key services and solutions"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="companyIndustry" className="text-[rgb(var(--color-text-secondary))]">Industry</Label>
+                                    <Input
+                                        id="companyIndustry"
+                                        value={orgSettings.company_industry || ''}
+                                        onChange={(e) => handleOrgSettingChange('company_industry', e.target.value)}
+                                        className="bg-slate-800 border-slate-600 text-slate-100"
+                                        placeholder="Primary industry sector"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="companySize" className="text-[rgb(var(--color-text-secondary))]">Company Size</Label>
+                                    <Select 
+                                        value={orgSettings.company_size || ''} 
+                                        onValueChange={(value) => handleOrgSettingChange('company_size', value)}
+                                    >
+                                        <SelectTrigger className="bg-slate-800 border-slate-600 text-slate-100">
+                                            <SelectValue placeholder="Select company size" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="1-10">1-10 employees</SelectItem>
+                                            <SelectItem value="11-50">11-50 employees</SelectItem>
+                                            <SelectItem value="51-200">51-200 employees</SelectItem>
+                                            <SelectItem value="201-500">201-500 employees</SelectItem>
+                                            <SelectItem value="500+">500+ employees</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="companyWebsite" className="text-[rgb(var(--color-text-secondary))]">Company Website</Label>
+                                    <Input
+                                        id="companyWebsite"
+                                        value={orgSettings.company_website || ''}
+                                        onChange={(e) => handleOrgSettingChange('company_website', e.target.value)}
+                                        className="bg-slate-800 border-slate-600 text-slate-100"
+                                        placeholder="https://yourcompany.com"
+                                    />
+                                </div>
+                                <div className="space-y-2 md:col-span-2">
+                                    <Label htmlFor="valueProposition" className="text-[rgb(var(--color-text-secondary))]">Value Proposition</Label>
+                                    <Input
+                                        id="valueProposition"
+                                        value={orgSettings.value_proposition || ''}
+                                        onChange={(e) => handleOrgSettingChange('value_proposition', e.target.value)}
+                                        className="bg-slate-800 border-slate-600 text-slate-100"
+                                        placeholder="What unique value do you provide to clients?"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="targetMarket" className="text-[rgb(var(--color-text-secondary))]">Target Market</Label>
+                                    <Input
+                                        id="targetMarket"
+                                        value={orgSettings.target_market || ''}
+                                        onChange={(e) => handleOrgSettingChange('target_market', e.target.value)}
+                                        className="bg-slate-800 border-slate-600 text-slate-100"
+                                        placeholder="Who are your ideal clients?"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="uniqueSellingPoints" className="text-[rgb(var(--color-text-secondary))]">Unique Selling Points</Label>
+                                    <Input
+                                        id="uniqueSellingPoints"
+                                        value={orgSettings.unique_selling_points || ''}
+                                        onChange={(e) => handleOrgSettingChange('unique_selling_points', e.target.value)}
+                                        className="bg-slate-800 border-slate-600 text-slate-100"
+                                        placeholder="What makes you different?"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="caseStudies" className="text-[rgb(var(--color-text-secondary))]">Case Studies/Success Stories</Label>
+                                    <Input
+                                        id="caseStudies"
+                                        value={orgSettings.case_studies || ''}
+                                        onChange={(e) => handleOrgSettingChange('case_studies', e.target.value)}
+                                        className="bg-slate-800 border-slate-600 text-slate-100"
+                                        placeholder="Brief client success examples"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="pricingModel" className="text-[rgb(var(--color-text-secondary))]">Pricing Model</Label>
+                                    <Input
+                                        id="pricingModel"
+                                        value={orgSettings.pricing_model || ''}
+                                        onChange={(e) => handleOrgSettingChange('pricing_model', e.target.value)}
+                                        className="bg-slate-800 border-slate-600 text-slate-100"
+                                        placeholder="How do you price your services?"
+                                    />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
             </Tabs>
 
             {/* Save Button - Only show if manual save is needed */}
             <div className="flex justify-between items-center">
                 <div className="text-sm text-[rgb(var(--color-text-muted))]">
-                    {hasUnsavedChanges ? (
+                    {(hasUnsavedChanges || hasUnsavedOrgChanges) ? (
                         <span className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
                             Auto-saving changes...
@@ -670,24 +912,44 @@ export default function SettingsContent() {
                         </span>
                     )}
                 </div>
-                <Button 
-                    onClick={() => saveSettings(true)}
-                    disabled={saving || !hasUnsavedChanges}
-                    variant={hasUnsavedChanges ? "default" : "outline"}
-                    className={hasUnsavedChanges ? "bg-[rgb(var(--color-primary))] hover:bg-[rgb(var(--color-primary-dark))] text-white px-8" : "border-[rgb(var(--color-border))] text-[rgb(var(--color-text-muted))] px-8"}
-                >
-                    {saving ? (
-                        <>
-                            <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                            Saving...
-                        </>
-                    ) : (
-                        <>
-                            <Save className="h-4 w-4 mr-2" />
-                            Save Now
-                        </>
-                    )}
-                </Button>
+                <div className="flex gap-2">
+                    <Button 
+                        onClick={() => saveSettings(true)}
+                        disabled={saving || !hasUnsavedChanges}
+                        variant={hasUnsavedChanges ? "default" : "outline"}
+                        className={hasUnsavedChanges ? "bg-[rgb(var(--color-primary))] hover:bg-[rgb(var(--color-primary-dark))] text-white px-6" : "border-[rgb(var(--color-border))] text-[rgb(var(--color-text-muted))] px-6"}
+                    >
+                        {saving ? (
+                            <>
+                                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                                Saving Profile...
+                            </>
+                        ) : (
+                            <>
+                                <Save className="h-4 w-4 mr-2" />
+                                Save Profile
+                            </>
+                        )}
+                    </Button>
+                    <Button 
+                        onClick={() => saveOrgSettings(true)}
+                        disabled={savingOrg || !hasUnsavedOrgChanges}
+                        variant={hasUnsavedOrgChanges ? "default" : "outline"}
+                        className={hasUnsavedOrgChanges ? "bg-[rgb(var(--color-primary))] hover:bg-[rgb(var(--color-primary-dark))] text-white px-6" : "border-[rgb(var(--color-border))] text-[rgb(var(--color-text-muted))] px-6"}
+                    >
+                        {savingOrg ? (
+                            <>
+                                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                                Saving Company...
+                            </>
+                        ) : (
+                            <>
+                                <Building className="h-4 w-4 mr-2" />
+                                Save Company
+                            </>
+                        )}
+                    </Button>
+                </div>
             </div>
         </div>
     );

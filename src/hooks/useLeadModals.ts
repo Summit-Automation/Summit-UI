@@ -4,15 +4,18 @@ import { Lead } from '@/types/leadgen';
 interface UseLeadModalsReturn {
   isNewLeadModalOpen: boolean;
   isAIModalOpen: boolean;
+  isEmailGenerationModalOpen: boolean;
   isEditModalOpen: boolean;
   isFilterModalOpen: boolean;
   editingLead: Lead | null;
   openNewLeadModal: () => void;
   openAIModal: () => void;
+  openEmailGenerationModal: () => void;
   openEditModal: (lead: Lead) => void;
   openFilterModal: () => void;
   closeNewLeadModal: () => void;
   closeAIModal: () => void;
+  closeEmailGenerationModal: () => void;
   closeEditModal: () => void;
   closeFilterModal: () => void;
 }
@@ -20,6 +23,7 @@ interface UseLeadModalsReturn {
 export function useLeadModals(): UseLeadModalsReturn {
   const [isNewLeadModalOpen, setIsNewLeadModalOpen] = useState(false);
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
+  const [isEmailGenerationModalOpen, setIsEmailGenerationModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
@@ -30,6 +34,10 @@ export function useLeadModals(): UseLeadModalsReturn {
 
   const openAIModal = useCallback(() => {
     setIsAIModalOpen(true);
+  }, []);
+
+  const openEmailGenerationModal = useCallback(() => {
+    setIsEmailGenerationModalOpen(true);
   }, []);
 
   const openEditModal = useCallback((lead: Lead) => {
@@ -49,6 +57,10 @@ export function useLeadModals(): UseLeadModalsReturn {
     setIsAIModalOpen(false);
   }, []);
 
+  const closeEmailGenerationModal = useCallback(() => {
+    setIsEmailGenerationModalOpen(false);
+  }, []);
+
   const closeEditModal = useCallback(() => {
     setIsEditModalOpen(false);
     setEditingLead(null);
@@ -61,15 +73,18 @@ export function useLeadModals(): UseLeadModalsReturn {
   return {
     isNewLeadModalOpen,
     isAIModalOpen,
+    isEmailGenerationModalOpen,
     isEditModalOpen,
     isFilterModalOpen,
     editingLead,
     openNewLeadModal,
     openAIModal,
+    openEmailGenerationModal,
     openEditModal,
     openFilterModal,
     closeNewLeadModal,
     closeAIModal,
+    closeEmailGenerationModal,
     closeEditModal,
     closeFilterModal
   };

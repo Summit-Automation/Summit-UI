@@ -257,6 +257,83 @@ export const multipleIdsSchema = z.object({
   ids: z.array(uuidSchema).min(1, 'At least one ID is required'),
 });
 
+// ===== EMAIL GENERATION SCHEMAS =====
+export const tonePreferenceSchema = z.enum(['professional', 'friendly', 'casual', 'urgent'], {
+  message: 'Invalid tone preference'
+});
+
+export const emailGenerationFormSchema = z.object({
+  lead_id: uuidSchema,
+  user_comments: z.string()
+    .min(10, 'Comments must be at least 10 characters')
+    .max(5000, 'Comments cannot exceed 5000 characters')
+    .trim(),
+  specific_requirements: z.string()
+    .max(2000, 'Requirements cannot exceed 2000 characters')
+    .trim()
+    .optional()
+    .or(z.literal('')),
+  tone_preference: tonePreferenceSchema.default('professional'),
+  call_to_action: z.string()
+    .max(500, 'Call to action cannot exceed 500 characters')
+    .trim()
+    .optional()
+    .or(z.literal('')),
+  include_case_study: z.boolean().default(false),
+  include_pricing: z.boolean().default(false),
+  follow_up_sequence: z.boolean().default(false),
+});
+
+// ===== RECEIPT PROCESSING SCHEMAS =====
+export const receiptUploadSchema = z.object({
+  file: z.object({
+    name: z.string().min(1, 'Filename is required').max(255, 'Filename too long'),
+    type: z.string().regex(/^image\/(jpeg|jpg|png|gif|bmp|webp)$/, 'Only image files are allowed'),
+    size: z.number().max(10485760, 'File size cannot exceed 10MB'), // 10MB limit
+    data: z.string().min(100, 'File data is required'), // Base64 string
+  })
+});
+
+// ===== LEAD GENERATION SCHEMAS =====
+export const leadGenerationSchema = z.object({
+  location: z.string()
+    .min(2, 'Location must be at least 2 characters')
+    .max(100, 'Location cannot exceed 100 characters')
+    .trim(),
+  industry_focus: z.string()
+    .max(100, 'Industry focus cannot exceed 100 characters')
+    .trim()
+    .optional()
+    .or(z.literal('')),
+  business_size: z.string()
+    .max(50, 'Business size cannot exceed 50 characters')
+    .trim()
+    .optional()
+    .or(z.literal('')),
+  specific_criteria: z.string()
+    .max(1000, 'Criteria cannot exceed 1000 characters')
+    .trim()
+    .optional()
+    .or(z.literal(''))
+});
+
+// ===== MILEAGE TRACKING SCHEMAS =====
+export const mileageCalculationSchema = z.object({
+  start_location: z.string()
+    .min(3, 'Start location must be at least 3 characters')
+    .max(200, 'Start location cannot exceed 200 characters')
+    .trim(),
+  end_location: z.string()
+    .min(3, 'End location must be at least 3 characters') 
+    .max(200, 'End location cannot exceed 200 characters')
+    .trim(),
+  trip_purpose: z.string()
+    .max(500, 'Trip purpose cannot exceed 500 characters')
+    .trim()
+    .optional()
+    .or(z.literal(''))
+});
+
 // Type exports for use in service functions
 export type CreateTransactionInput = z.infer<typeof createTransactionSchema>;
 export type UpdateTransactionInput = z.infer<typeof updateTransactionSchema>;
@@ -273,6 +350,10 @@ export type CreateMileageEntryInput = z.infer<typeof createMileageEntrySchema>;
 export type UpdateMileageEntryInput = z.infer<typeof updateMileageEntrySchema>;
 export type CreateInteractionInput = z.infer<typeof createInteractionSchema>;
 export type UpdateInteractionInput = z.infer<typeof updateInteractionSchema>;
+export type EmailGenerationFormInput = z.infer<typeof emailGenerationFormSchema>;
+export type ReceiptUploadInput = z.infer<typeof receiptUploadSchema>;
+export type LeadGenerationInput = z.infer<typeof leadGenerationSchema>;
+export type MileageCalculationInput = z.infer<typeof mileageCalculationSchema>;
 export type ExportFilterInput = z.infer<typeof exportFilterSchema>;
 export type PaginationInput = z.infer<typeof paginationSchema>;
 export type SearchInput = z.infer<typeof searchSchema>;
