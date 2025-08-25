@@ -24,15 +24,14 @@ import {
   DollarSign,
   MapPin,
   Barcode,
-  ShoppingCart,
-  Building2
+  ShoppingCart
 } from 'lucide-react';
 import EditItemModal from './EditItemModal';
 import { UpdateInventoryItemRequest, InventoryItem } from '@/types/inventory';
 import { editInventoryItem, deleteInventoryItemAction } from '@/app/inventory/actions';
 import { exportInventoryToCSV, exportInventoryToJSON } from '@/app/lib/services/inventoryServices/exportInventory';
 
-import { EnhancedTable, EnhancedColumn } from '@/components/ui/enhanced-table';
+import { ModernTable, ModernColumn } from '@/components/ui/modern-table';
 
 interface InventoryTableEnhancedProps {
   items: InventoryItem[];
@@ -123,7 +122,7 @@ const InventoryTableEnhanced = React.memo(function InventoryTableEnhanced({
   };
 
   // Column definitions for the enhanced table
-  const columns: EnhancedColumn<InventoryItem>[] = [
+  const columns: ModernColumn<InventoryItem>[] = [
     {
       id: 'name',
       key: 'name',
@@ -131,10 +130,11 @@ const InventoryTableEnhanced = React.memo(function InventoryTableEnhanced({
       primary: true,
       sortable: true,
       searchable: true,
+      width: '200px',
       render: (value) => (
         <div className="flex items-center gap-2">
-          <Package className="h-4 w-4 text-muted-foreground" />
-          <span className="font-medium text-foreground">{value as string}</span>
+          <Package className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+          <span className="font-medium text-foreground truncate" title={value as string}>{value as string}</span>
         </div>
       )
     },
@@ -250,11 +250,12 @@ const InventoryTableEnhanced = React.memo(function InventoryTableEnhanced({
       searchable: true,
       filterable: true,
       hideOnMobile: true,
+      width: '140px',
       render: (value) => (
         value ? (
           <div className="flex items-center gap-2">
-            <MapPin className="h-3 w-3 text-muted-foreground" />
-            <span className="text-foreground">{value as string}</span>
+            <MapPin className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+            <span className="text-foreground truncate" title={value as string}>{value as string}</span>
           </div>
         ) : (
           <span className="text-muted-foreground italic text-sm">No location</span>
@@ -267,9 +268,9 @@ const InventoryTableEnhanced = React.memo(function InventoryTableEnhanced({
       label: 'Actions',
       align: 'center',
       sticky: true,
-      width: '120px',
+      width: '140px',
       render: (_, item) => (
-        <div className="flex items-center justify-center gap-1">
+        <div className="flex items-center justify-center gap-1 min-w-[120px]">
           <Button 
             variant="outline" 
             size="sm"
@@ -323,180 +324,10 @@ const InventoryTableEnhanced = React.memo(function InventoryTableEnhanced({
     }
   ];
 
-  // Expanded row content for mobile and additional details
-  const renderExpanded = (item: InventoryItem) => (
-    <div className="space-y-4 pt-2">
-      {/* Basic Information */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* SKU & Barcode */}
-        <div className="space-y-2">
-          <div className="text-xs text-muted-foreground uppercase font-medium">SKU & Barcode</div>
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <Barcode className="h-3 w-3 text-muted-foreground" />
-              <span className="text-sm text-foreground">
-                {item.sku ? (
-                  <span className="bg-muted px-2 py-1 rounded text-xs border font-mono">
-                    {item.sku}
-                  </span>
-                ) : (
-                  <span className="text-muted-foreground italic">No SKU</span>
-                )}
-              </span>
-            </div>
-            {item.barcode && (
-              <div className="text-xs text-muted-foreground">
-                Barcode: {item.barcode}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Stock Details */}
-        <div className="space-y-2">
-          <div className="text-xs text-muted-foreground uppercase font-medium">Stock Details</div>
-          <div className="space-y-1">
-            <div className="text-sm">
-              <span className="text-muted-foreground">Current: </span>
-              <span className={`font-semibold ${
-                item.current_quantity === 0 ? 'text-red-600 dark:text-red-400' :
-                item.current_quantity <= item.minimum_threshold ? 'text-orange-600 dark:text-orange-400' :
-                'text-green-600 dark:text-green-400'
-              }`}>
-                {item.current_quantity} {item.unit_of_measurement}
-              </span>
-            </div>
-            <div className="text-sm text-muted-foreground">
-              Min: {item.minimum_threshold} {item.unit_of_measurement}
-            </div>
-            {item.maximum_capacity && (
-              <div className="text-sm text-muted-foreground">
-                Max: {item.maximum_capacity} {item.unit_of_measurement}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Pricing */}
-        <div className="space-y-2">
-          <div className="text-xs text-muted-foreground uppercase font-medium">Pricing</div>
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-sm">
-              <DollarSign className="h-3 w-3 text-muted-foreground" />
-              <span className="text-muted-foreground">Cost:</span>
-              <span className="text-foreground font-medium">${item.unit_cost.toFixed(2)}</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <ShoppingCart className="h-3 w-3 text-muted-foreground" />
-              <span className="text-muted-foreground">Price:</span>
-              <span className="text-foreground font-medium">${item.unit_price.toFixed(2)}</span>
-            </div>
-            <div className="text-xs text-muted-foreground">
-              Value: ${(item.current_quantity * item.unit_cost).toFixed(2)}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Description & Location */}
-      {(item.description || item.location || item.supplier) && (
-        <div className="border-t border-border pt-4 space-y-3">
-          {item.description && (
-            <div>
-              <div className="text-xs text-muted-foreground uppercase font-medium mb-1">Description</div>
-              <div className="text-sm text-foreground p-3 bg-muted/30 rounded-lg">
-                {item.description}
-              </div>
-            </div>
-          )}
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {item.location && (
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                <div>
-                  <div className="text-xs text-muted-foreground uppercase">Location</div>
-                  <div className="text-sm text-foreground">{item.location}</div>
-                </div>
-              </div>
-            )}
-            
-            {item.supplier && (
-              <div className="flex items-center gap-2">
-                <Building2 className="h-4 w-4 text-muted-foreground" />
-                <div>
-                  <div className="text-xs text-muted-foreground uppercase">Supplier</div>
-                  <div className="text-sm text-foreground">{item.supplier}</div>
-                  {item.supplier_contact && (
-                    <div className="text-xs text-muted-foreground">{item.supplier_contact}</div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Mobile action buttons */}
-      <div className="md:hidden flex flex-col gap-2 pt-3 border-t border-border">
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => handleEdit(item)}
-            className="flex-1 flex items-center justify-center gap-2"
-          >
-            <Edit className="h-4 w-4" />
-            Edit Item
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => handleQRCode(item)}
-            className="flex-1 flex items-center justify-center gap-2"
-          >
-            <QrCode className="h-4 w-4" />
-            QR Code
-          </Button>
-        </div>
-        
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button 
-              variant="destructive" 
-              size="sm"
-              className="w-full flex items-center justify-center gap-2"
-            >
-              <Trash2 className="h-4 w-4" />
-              Delete Item
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent className="bg-card border-border">
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-foreground">Confirm deletion</AlertDialogTitle>
-              <AlertDialogDescription className="text-muted-foreground">
-                Are you sure you want to permanently delete &quot;{item.name}&quot;? This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <div className="flex justify-end space-x-2 pt-4">
-              <AlertDialogCancel asChild>
-                <Button variant="outline">Cancel</Button>
-              </AlertDialogCancel>
-              <AlertDialogAction asChild>
-                <Button variant="destructive" onClick={() => handleDelete(item)}>
-                  Yes, delete
-                </Button>
-              </AlertDialogAction>
-            </div>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
-    </div>
-  );
 
   return (
     <>
-      <EnhancedTable
+      <ModernTable
         data={items}
         columns={columns}
         keyExtractor={(item) => item.id}
@@ -504,21 +335,18 @@ const InventoryTableEnhanced = React.memo(function InventoryTableEnhanced({
         description={description}
         loading={loading}
         searchable={true}
-        filterable={true}
         sortable={true}
         exportable={true}
         exportService={{
           onExport: handleExport,
           isExporting
         }}
-        renderExpanded={renderExpanded}
         emptyState={{
           title: "No inventory items found",
           description: "Start by adding your first inventory item to track your stock.",
           icon: <Package className="h-8 w-8 text-muted-foreground" />,
         }}
         className="w-full"
-        striped={true}
       />
 
       <EditItemModal

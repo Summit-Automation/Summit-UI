@@ -6,12 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { 
   Trash2, 
-  User, 
-  Clipboard, 
-  CheckCircle, 
   DollarSign,
   Calendar,
-  FileText,
   TrendingUp,
   TrendingDown
 } from 'lucide-react';
@@ -32,7 +28,7 @@ import { exportTransactions } from '@/app/lib/services/bookkeeperServices/export
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
-import { EnhancedTable, EnhancedColumn } from '@/components/ui/enhanced-table';
+import { ModernTable, ModernColumn } from '@/components/ui/modern-table';
 
 interface TransactionTableEnhancedProps {
   transactions: Transaction[];
@@ -102,17 +98,9 @@ const TransactionTableEnhanced = React.memo(function TransactionTableEnhanced({
       : { variant: 'destructive' as const, className: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300" };
   };
 
-  const getSourceBadgeProps = (source: string) => {
-    const sourceMap = {
-      manual: { className: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300" },
-      ai_agent: { className: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300" },
-      import: { className: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300" },
-    };
-    return sourceMap[source as keyof typeof sourceMap] || sourceMap.manual;
-  };
 
   // Column definitions for the enhanced table
-  const columns: EnhancedColumn<Transaction>[] = [
+  const columns: ModernColumn<Transaction>[] = [
     {
       id: 'date',
       key: 'timestamp',
@@ -137,9 +125,10 @@ const TransactionTableEnhanced = React.memo(function TransactionTableEnhanced({
       primary: true,
       sortable: true,
       searchable: true,
+      width: '300px',
       render: (value) => (
-        <div className="max-w-[200px] md:max-w-[300px]" title={value as string}>
-          <span className="break-words whitespace-normal leading-tight text-foreground font-medium">
+        <div className="max-w-[280px]" title={value as string}>
+          <span className="break-words whitespace-normal leading-tight text-foreground font-medium truncate block">
             {value as string}
           </span>
         </div>
@@ -197,6 +186,7 @@ const TransactionTableEnhanced = React.memo(function TransactionTableEnhanced({
       filterable: true,
       searchable: true,
       hideOnMobile: true,
+      width: '160px',
       render: (value) => (
         <div className="max-w-[150px]" title={value as string}>
           <span className="truncate block text-foreground">{value as string}</span>
@@ -204,33 +194,14 @@ const TransactionTableEnhanced = React.memo(function TransactionTableEnhanced({
       )
     },
     {
-      id: 'source',
-      key: 'source',
-      label: 'Source',
-      sortable: true,
-      filterable: true,
-      hideOnMobile: true,
-      width: '120px',
-      render: (value) => {
-        const source = value as string;
-        const badgeProps = getSourceBadgeProps(source);
-        const sourceLabel = source === 'manual' ? 'Manual' : source === 'ai_agent' ? 'AI Agent' : 'Import';
-        return (
-          <Badge variant="outline" className={badgeProps.className}>
-            {sourceLabel}
-          </Badge>
-        );
-      }
-    },
-    {
       id: 'actions',
       key: 'id',
       label: 'Actions',
       align: 'center',
       sticky: true,
-      width: '100px',
+      width: '120px',
       render: (_, transaction) => (
-        <div className="flex gap-1 justify-center">
+        <div className="flex gap-1 justify-center min-w-[100px]">
           <UpdateTransactionModal
             transaction={transaction}
             onSuccess={() => router.refresh()}
@@ -270,103 +241,9 @@ const TransactionTableEnhanced = React.memo(function TransactionTableEnhanced({
     }
   ];
 
-  // Expanded row content for mobile and desktop
-  const renderExpanded = (transaction: Transaction) => (
-    <div className="space-y-4 pt-2">
-      {/* Additional details */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* Customer */}
-        <div className="flex items-start space-x-2">
-          <User className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-          <div className="min-w-0 flex-1">
-            <div className="text-xs text-muted-foreground uppercase font-medium">Customer</div>
-            <div className="text-sm text-foreground break-words">
-              {transaction.customer_name || 'N/A'}
-            </div>
-          </div>
-        </div>
-
-        {/* Interaction */}
-        <div className="flex items-start space-x-2">
-          <Clipboard className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-          <div className="min-w-0 flex-1">
-            <div className="text-xs text-muted-foreground uppercase font-medium">Interaction</div>
-            <div className="text-sm text-foreground break-words">
-              {transaction.interaction_title || 'N/A'}
-            </div>
-          </div>
-        </div>
-
-        {/* Outcome */}
-        <div className="flex items-start space-x-2">
-          <CheckCircle className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-          <div className="min-w-0 flex-1">
-            <div className="text-xs text-muted-foreground uppercase font-medium">Outcome</div>
-            <div className="text-sm text-foreground break-words">
-              {transaction.interaction_outcome || 'None recorded'}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Full Description */}
-      <div className="border-t border-border pt-4">
-        <div className="flex items-center gap-2 mb-2">
-          <FileText className="h-4 w-4 text-muted-foreground" />
-          <div className="text-xs text-muted-foreground uppercase font-medium">Full Description</div>
-        </div>
-        <div className="text-sm text-foreground p-3 bg-muted/30 rounded-lg break-words whitespace-pre-wrap">
-          {transaction.description}
-        </div>
-      </div>
-
-      {/* Mobile action buttons */}
-      <div className="md:hidden flex flex-col gap-2 pt-3 border-t border-border">
-        <UpdateTransactionModal
-          transaction={transaction}
-          onSuccess={() => router.refresh()}
-        />
-
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button 
-              variant="destructive" 
-              size="sm" 
-              className="w-full flex items-center justify-center space-x-2"
-            >
-              <Trash2 className="h-4 w-4" />
-              <span>Delete Transaction</span>
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent className="bg-card border-border">
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-foreground">Confirm deletion</AlertDialogTitle>
-              <AlertDialogDescription className="text-muted-foreground">
-                Are you sure you want to permanently delete this transaction? This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <div className="flex flex-col-reverse sm:flex-row justify-end space-y-2 space-y-reverse sm:space-y-0 sm:space-x-2 pt-4">
-              <AlertDialogCancel asChild>
-                <Button variant="outline" className="w-full sm:w-auto">Cancel</Button>
-              </AlertDialogCancel>
-              <AlertDialogAction asChild>
-                <Button 
-                  variant="destructive" 
-                  onClick={() => deleteTransactionHandler(transaction.id)}
-                  className="w-full sm:w-auto"
-                >
-                  Yes, delete
-                </Button>
-              </AlertDialogAction>
-            </div>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
-    </div>
-  );
 
   return (
-    <EnhancedTable
+    <ModernTable
       data={sortedTransactions}
       columns={columns}
       keyExtractor={(transaction) => transaction.id}
@@ -374,14 +251,12 @@ const TransactionTableEnhanced = React.memo(function TransactionTableEnhanced({
       description={description}
       loading={loading}
       searchable={true}
-      filterable={true}
       sortable={true}
       exportable={true}
       exportService={{
         onExport: handleExport,
         isExporting
       }}
-      renderExpanded={renderExpanded}
       emptyState={{
         title: "No transactions found",
         description: "Start by adding your first transaction to track your finances.",

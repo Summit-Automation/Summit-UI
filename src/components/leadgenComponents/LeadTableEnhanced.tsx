@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Lead } from "@/types/leadgen";
+import { cn } from '@/lib/utils';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -41,7 +42,7 @@ import {
   Linkedin
 } from "lucide-react";
 
-import { EnhancedTable, EnhancedColumn } from '@/components/ui/enhanced-table';
+import { ModernTable, ModernColumn } from '@/components/ui/modern-table';
 import { exportLeads } from '@/app/lib/services/leadServices/exportLeads';
 import EmailDraftsDisplay from "./EmailDraftsDisplay";
 
@@ -73,7 +74,7 @@ const BusinessIntelligenceModal = React.memo(function BusinessIntelligenceModal(
           View Intel
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-card border-border">
+      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-xl">
         <DialogHeader>
           <DialogTitle className="text-foreground flex items-center gap-2">
             <Building className="h-5 w-5 text-primary" />
@@ -313,34 +314,34 @@ export default function LeadTableEnhanced({
     }
   };
 
-  // Status and priority color mappings
+  // Modern status and priority color mappings
   const getStatusBadgeProps = (status: string) => {
     const statusMap = {
-      new: { className: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300" },
-      contacted: { className: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300" },
-      qualified: { className: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300" },
-      proposal_sent: { className: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300" },
-      negotiating: { className: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300" },
-      closed_won: { className: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300" },
-      closed_lost: { className: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300" },
-      nurturing: { className: "bg-gray-100 text-gray-800 dark:bg-gray-800/30 dark:text-gray-300" },
-      converted: { className: "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300" },
+      new: { className: "bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800" },
+      contacted: { className: "bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800" },
+      qualified: { className: "bg-green-50 text-green-700 border border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800" },
+      proposal_sent: { className: "bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-950 dark:text-purple-300 dark:border-purple-800" },
+      negotiating: { className: "bg-orange-50 text-orange-700 border border-orange-200 dark:bg-orange-950 dark:text-orange-300 dark:border-orange-800" },
+      closed_won: { className: "bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800" },
+      closed_lost: { className: "bg-red-50 text-red-700 border border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800" },
+      nurturing: { className: "bg-gray-50 text-gray-700 border border-gray-200 dark:bg-gray-950 dark:text-gray-300 dark:border-gray-800" },
+      converted: { className: "bg-teal-50 text-teal-700 border border-teal-200 dark:bg-teal-950 dark:text-teal-300 dark:border-teal-800" },
     };
     return statusMap[status as keyof typeof statusMap] || statusMap.new;
   };
 
   const getPriorityBadgeProps = (priority: string) => {
     const priorityMap = {
-      low: { className: "bg-gray-100 text-gray-800 dark:bg-gray-800/30 dark:text-gray-300" },
-      medium: { className: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300" },
-      high: { className: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300" },
-      urgent: { className: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300" },
+      low: { className: "bg-gray-50 text-gray-600 border border-gray-200 dark:bg-gray-950 dark:text-gray-400 dark:border-gray-800" },
+      medium: { className: "bg-blue-50 text-blue-600 border border-blue-200 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800" },
+      high: { className: "bg-orange-50 text-orange-600 border border-orange-200 dark:bg-orange-950 dark:text-orange-400 dark:border-orange-800" },
+      urgent: { className: "bg-red-50 text-red-600 border border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-800" },
     };
     return priorityMap[priority as keyof typeof priorityMap] || priorityMap.medium;
   };
 
-  // Column definitions for the enhanced table
-  const columns: EnhancedColumn<Lead>[] = [
+  // Column definitions for the modern table
+  const columns: ModernColumn<Lead>[] = [
     {
       id: 'name',
       key: 'first_name',
@@ -350,11 +351,11 @@ export default function LeadTableEnhanced({
       searchable: true,
       render: (_, lead) => (
         <div className="space-y-1">
-          <div className="font-medium text-foreground">
+          <div className="font-semibold text-gray-900 dark:text-gray-100">
             {lead.first_name} {lead.last_name}
           </div>
           {lead.job_title && (
-            <div className="text-xs text-muted-foreground">
+            <div className="text-xs text-gray-500 dark:text-gray-400">
               {lead.job_title}
             </div>
           )}
@@ -368,8 +369,14 @@ export default function LeadTableEnhanced({
       primary: true,
       sortable: true,
       searchable: true,
+      width: '180px',
       render: (value) => (
-        <span className="text-foreground">{(value as string) || "-"}</span>
+        <div className="flex items-center gap-2">
+          <Building className="h-4 w-4 text-gray-400 flex-shrink-0" />
+          <span className="text-gray-900 dark:text-gray-100 font-medium truncate" title={value as string || "-"}>
+            {(value as string) || "-"}
+          </span>
+        </div>
       )
     },
     {
@@ -377,18 +384,19 @@ export default function LeadTableEnhanced({
       key: 'email',
       label: 'Contact',
       hideOnMobile: true,
+      width: '200px',
       render: (_, lead) => (
         <div className="space-y-1">
           {lead.email && (
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <Mail className="h-3 w-3 flex-shrink-0" />
-              <span className="truncate max-w-[150px]">{lead.email}</span>
+              <span className="truncate max-w-[180px]" title={lead.email}>{lead.email}</span>
             </div>
           )}
           {lead.phone && (
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <Phone className="h-3 w-3 flex-shrink-0" />
-              <span>{lead.phone}</span>
+              <span title={lead.phone}>{lead.phone}</span>
             </div>
           )}
         </div>
@@ -405,7 +413,7 @@ export default function LeadTableEnhanced({
         const status = value as string;
         const badgeProps = getStatusBadgeProps(status);
         return (
-          <Badge className={badgeProps.className}>
+          <Badge className={cn("px-2.5 py-0.5 text-xs font-medium rounded-full", badgeProps.className)}>
             {status.replace('_', ' ').toUpperCase()}
           </Badge>
         );
@@ -435,6 +443,7 @@ export default function LeadTableEnhanced({
       sortable: true,
       hideOnMobile: true,
       align: 'center',
+      width: '100px',
       render: (value) => (
         <div className="flex items-center justify-center gap-1">
           <Star className="h-4 w-4 text-yellow-500" />
@@ -448,37 +457,35 @@ export default function LeadTableEnhanced({
       label: 'Est. Deal Value',
       sortable: true,
       hideOnMobile: true,
-      align: 'right',
+      align: 'center',
+      width: '140px',
       render: (value) => {
         const estimatedValue = value as number;
-        return estimatedValue ? (
-          <span className="text-muted-foreground" title="Estimated deal value - for reference only">
-            ~${estimatedValue.toLocaleString()}
-          </span>
-        ) : (
-          <span className="text-muted-foreground">-</span>
+        return (
+          <div className="text-center">
+            {estimatedValue ? (
+              <span className="text-muted-foreground" title="Estimated deal value - for reference only">
+                ~${estimatedValue.toLocaleString()}
+              </span>
+            ) : (
+              <span className="text-muted-foreground">-</span>
+            )}
+          </div>
         );
       }
-    },
-    {
-      id: 'source',
-      key: 'source',
-      label: 'Source',
-      sortable: true,
-      filterable: true,
-      hideOnMobile: true,
-      render: (value) => (
-        <Badge variant="outline" className="text-xs">
-          {value === 'manual' ? 'Manual' : 'AI'}
-        </Badge>
-      )
     },
     {
       id: 'business_intel',
       key: 'business_summary',
       label: 'Business Intel',
       hideOnMobile: true,
-      render: (_, lead) => <BusinessIntelligenceModal lead={lead} />
+      align: 'center',
+      width: '140px',
+      render: (_, lead) => (
+        <div className="flex items-center justify-center">
+          <BusinessIntelligenceModal lead={lead} />
+        </div>
+      )
     },
     {
       id: 'actions',
@@ -486,8 +493,9 @@ export default function LeadTableEnhanced({
       label: 'Actions',
       align: 'center',
       sticky: true,
+      width: '160px',
       render: (_, lead) => (
-        <div className="flex gap-1 justify-center">
+        <div className="flex gap-1 justify-center min-w-[140px]">
           <Button
             variant="outline"
             size="sm"
@@ -557,7 +565,8 @@ export default function LeadTableEnhanced({
     }
   ];
 
-  // Expanded row content for mobile
+  // Expanded row content for mobile (currently not used in ModernTable)
+  /*
   const renderExpanded = (lead: Lead) => (
     <div className="space-y-3 pt-2">
       <div className="grid grid-cols-2 gap-4 text-xs">
@@ -591,10 +600,11 @@ export default function LeadTableEnhanced({
       </div>
     </div>
   );
+  */
 
   return (
     <>
-      <EnhancedTable
+      <ModernTable
         data={leads}
         columns={columns}
         keyExtractor={(lead) => lead.id}
@@ -602,18 +612,16 @@ export default function LeadTableEnhanced({
         description={description}
         loading={loading}
         searchable={true}
-        filterable={true}
         sortable={true}
         exportable={true}
         exportService={{
           onExport: handleExport,
           isExporting
         }}
-        renderExpanded={renderExpanded}
         emptyState={{
           title: "No leads found",
           description: "Create your first lead to get started with lead management.",
-          icon: <Users className="h-8 w-8 text-muted-foreground" />,
+          icon: <Users className="h-8 w-8 text-gray-400" />,
         }}
         className="w-full"
       />
