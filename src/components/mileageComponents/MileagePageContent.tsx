@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import {Header} from '@/components/globalComponents/Header';
 import MileageSummary from '@/components/mileageComponents/MileageSummary';
 import MileageActions from '@/components/mileageComponents/MileageActions';
-import MileageTable from '@/components/mileageComponents/MileageTable';
+import MileageTableEnhanced from '@/components/mileageComponents/MileageTableEnhanced';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Activity, BarChart3, Car } from 'lucide-react';
@@ -78,7 +78,7 @@ export default function MileagePageContent({ mileageEntries }: MileagePageConten
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-0">
-                        <MileageTable mileageEntries={mileageEntries} />
+                        <MileageTableEnhanced mileageEntries={mileageEntries} />
                     </CardContent>
                 </Card>
             </div>
@@ -119,7 +119,7 @@ export default function MileagePageContent({ mileageEntries }: MileagePageConten
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <MileageTable mileageEntries={mileageEntries} />
+                                <MileageTableEnhanced mileageEntries={mileageEntries} />
                             </CardContent>
                         </Card>
                     </TabsContent>

@@ -19,8 +19,6 @@ import {
     Palette, 
     Shield, 
     Database,
-    Moon,
-    Sun,
     Lock,
     Eye,
     EyeOff,
@@ -118,7 +116,7 @@ export default function SettingsContent() {
     const originalOrgSettingsRef = useRef<Partial<OrganizationSettings>>(defaultOrgSettings);
 
     const supabase = createClient();
-    const { theme, setTheme } = useTheme();
+    const { theme } = useTheme();
     const { currency, setCurrency } = useCurrency();
 
     const loadUserData = useCallback(async () => {
@@ -535,34 +533,17 @@ export default function SettingsContent() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <Label className="text-slate-300">Theme</Label>
-                                    <Select value={theme} onValueChange={(value: 'light' | 'dark' | 'system') => {
-                                        setTheme(value);
-                                        handleSettingChange('theme', value);
-                                    }}>
-                                        <SelectTrigger className="bg-[rgb(var(--color-background-tertiary))] border-[rgb(var(--color-border))] text-[rgb(var(--color-text-primary))]">
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="light">
-                                                <div className="flex items-center gap-2">
-                                                    <Sun className="h-4 w-4" />
-                                                    Light
-                                                </div>
-                                            </SelectItem>
-                                            <SelectItem value="dark">
-                                                <div className="flex items-center gap-2">
-                                                    <Moon className="h-4 w-4" />
-                                                    Dark
-                                                </div>
-                                            </SelectItem>
-                                            <SelectItem value="system">
-                                                <div className="flex items-center gap-2">
-                                                    <Settings className="h-4 w-4" />
-                                                    System
-                                                </div>
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                    <div className="relative">
+                                        <Select value={theme} disabled={true}>
+                                            <SelectTrigger className="bg-[rgb(var(--color-background-tertiary))] border-[rgb(var(--color-border))] text-[rgb(var(--color-text-primary))] opacity-50 cursor-not-allowed">
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                        </Select>
+                                        <div className="mt-2 text-xs text-amber-400 flex items-center gap-2">
+                                            <Settings className="h-3 w-3" />
+                                            Light mode is not implemented yet. Currently using dark theme.
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="space-y-2">

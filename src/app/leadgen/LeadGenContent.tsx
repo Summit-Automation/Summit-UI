@@ -3,7 +3,7 @@
 import React from "react";
 import LeadSummary from "@/components/leadgenComponents/LeadSummary";
 import LeadActions from "@/components/leadgenComponents/LeadActions";
-import LeadTable from "@/components/leadgenComponents/LeadTable";
+import LeadTableEnhanced from "@/components/leadgenComponents/LeadTableEnhanced";
 import LeadModals from "@/components/leadgenComponents/LeadModals";
 import { useLeadManagement } from "@/hooks/useLeadManagement";
 import { useLeadFilters } from "@/hooks/useLeadFilters";
@@ -100,7 +100,7 @@ export default function LeadGenContent() {
         onFilter={openFilterModal}
       />
       
-      <LeadTable
+      <LeadTableEnhanced
         leads={leads}
         onEdit={openEditModal}
         onDelete={deleteLead}

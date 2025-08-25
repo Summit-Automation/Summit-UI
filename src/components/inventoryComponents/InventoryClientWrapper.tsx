@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Activity, BarChart3, Package, AlertTriangle } from 'lucide-react';
 import InventorySummary from './InventorySummary';
 import InventoryActions from './InventoryActions';
-import InventoryTable from './InventoryTable';
+import InventoryTableEnhanced from './InventoryTableEnhanced';
 import InventoryChart from './InventoryChart';
 import InventoryAlerts from './InventoryAlerts';
 import { InventoryItem, InventoryAlert, InventoryFilters } from '@/types/inventory';
@@ -155,7 +155,7 @@ export default function InventoryClientWrapper({ initialItems, initialAlerts }: 
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-0">
-                        <InventoryTable items={filteredItems} onItemsChange={fetchData} />
+                        <InventoryTableEnhanced items={filteredItems} onItemsChange={fetchData} />
                     </CardContent>
                 </Card>
             </div>
@@ -208,7 +208,7 @@ export default function InventoryClientWrapper({ initialItems, initialAlerts }: 
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <InventoryTable items={filteredItems} onItemsChange={fetchData} />
+                                <InventoryTableEnhanced items={filteredItems} onItemsChange={fetchData} />
                             </CardContent>
                         </Card>
                     </TabsContent>

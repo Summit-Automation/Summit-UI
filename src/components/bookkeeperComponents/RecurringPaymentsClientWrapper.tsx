@@ -3,7 +3,7 @@
 import * as React from 'react';
 import {RecurringPayment} from '@/types/recurringPayment';
 import {getRecurringPayments} from '@/app/lib/services/bookkeeperServices/getRecurringPaymentsClient';
-import RecurringPaymentsTable from './RecurringPaymentsTable';
+import RecurringPaymentsTableEnhanced from './RecurringPaymentsTableEnhanced';
 
 export default function RecurringPaymentsClientWrapper({
     initialData
@@ -32,7 +32,7 @@ export default function RecurringPaymentsClientWrapper({
     };
 
     return (
-        <RecurringPaymentsTable 
+        <RecurringPaymentsTableEnhanced 
             recurringPayments={recurringPayments} 
             onUpdate={handleUpdateData}
         />

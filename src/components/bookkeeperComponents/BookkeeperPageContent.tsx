@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import {Header} from '@/components/globalComponents/Header';
 import BookkeeperSummary from '@/components/bookkeeperComponents/BookkeeperSummary';
 import BookkeeperActions from '@/components/bookkeeperComponents/BookkeeperActions';
-import TransactionTable from '@/components/bookkeeperComponents/TransactionTable';
+import TransactionTableEnhanced from '@/components/bookkeeperComponents/TransactionTableEnhanced';
 import RecurringPaymentsClientWrapper from '@/components/bookkeeperComponents/RecurringPaymentsClientWrapper';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
@@ -99,7 +99,7 @@ export default function BookkeeperPageContent({ transactions, recurringPayments 
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-0">
-                        <TransactionTable transactions={transactions}/>
+                        <TransactionTableEnhanced transactions={transactions}/>
                     </CardContent>
                 </Card>
             </div>
@@ -147,7 +147,7 @@ export default function BookkeeperPageContent({ transactions, recurringPayments 
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <TransactionTable transactions={transactions}/>
+                                <TransactionTableEnhanced transactions={transactions}/>
                             </CardContent>
                         </Card>
                     </TabsContent>
