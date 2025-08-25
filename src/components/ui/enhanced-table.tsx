@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { AnimatePresence } from 'framer-motion';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useDebounce } from 'use-debounce';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -349,10 +348,10 @@ export function EnhancedTable<T>({
 
       {/* Desktop Table */}
       <div className="hidden md:block">
-        <Card className="border-0 shadow-2xl backdrop-blur-sm bg-card/95 overflow-hidden">
+        <Card className="border-0 shadow-lg bg-card overflow-hidden">
           <div 
             ref={parentRef}
-            className="overflow-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border/20 hover:scrollbar-thumb-border/40"
+            className="overflow-auto"
             style={{ height: virtualizeRows ? '600px' : 'auto' }}
           >
             <table className="w-full border-collapse">
@@ -415,32 +414,30 @@ export function EnhancedTable<T>({
 
       {/* Mobile Cards */}
       <div className="md:hidden space-y-3">
-        <AnimatePresence mode="popLayout">
-          {sortedData.map((item, index) => {
-            const key = keyExtractor(item, index);
-            const isSelected = selectedRows.has(key);
-            const isExpanded = expandedRows.has(key);
+        {sortedData.map((item, index) => {
+          const key = keyExtractor(item, index);
+          const isSelected = selectedRows.has(key);
+          const isExpanded = expandedRows.has(key);
 
-            return (
-              <MobileTableCard
-                key={key}
-                item={item}
-                index={index}
-                columns={displayColumns}
-                getValue={getValue}
-                isSelected={isSelected}
-                isExpanded={isExpanded}
-                selectable={selectable}
-                onSelectionChange={(selected) => handleRowSelection(key, selected)}
-                onExpansionChange={() => handleRowExpansion(key)}
-                onClick={onRowClick}
-                onDoubleClick={onRowDoubleClick}
-                renderExpanded={renderExpanded}
-                compact={compact}
-              />
-            );
-          })}
-        </AnimatePresence>
+          return (
+            <MobileTableCard
+              key={key}
+              item={item}
+              index={index}
+              columns={displayColumns}
+              getValue={getValue}
+              isSelected={isSelected}
+              isExpanded={isExpanded}
+              selectable={selectable}
+              onSelectionChange={(selected) => handleRowSelection(key, selected)}
+              onExpansionChange={() => handleRowExpansion(key)}
+              onClick={onRowClick}
+              onDoubleClick={onRowDoubleClick}
+              renderExpanded={renderExpanded}
+              compact={compact}
+            />
+          );
+        })}
       </div>
 
       {/* Pagination */}

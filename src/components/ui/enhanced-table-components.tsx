@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Virtualizer } from '@tanstack/react-virtual';
 import {
   Search,
@@ -89,7 +88,7 @@ export function TableHeader<T>({
       {(title || description) && (
         <div className="space-y-1">
           {title && (
-            <h2 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">
               {title}
             </h2>
           )}
@@ -133,7 +132,7 @@ export function TableHeader<T>({
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="bg-background/50 backdrop-blur-sm border-border/50 hover:bg-muted/50"
+                  className="bg-background border-border hover:bg-muted/50"
                 >
                   <Filter className="h-4 w-4 mr-2" />
                   Filters
@@ -187,7 +186,7 @@ export function TableHeader<T>({
               <Button 
                 variant="outline" 
                 size="sm"
-                className="bg-background/50 backdrop-blur-sm border-border/50 hover:bg-muted/50"
+                className="bg-background border-border hover:bg-muted/50"
               >
                 <Eye className="h-4 w-4 mr-2" />
                 Columns
@@ -388,14 +387,10 @@ export function RegularTableBody<T>({
 
         return (
           <React.Fragment key={key}>
-            <motion.tr
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.15, delay: index * 0.02 }}
+            <tr
               className={cn(
-                "border-b border-border/30 transition-all duration-150 group",
-                "hover:bg-gradient-to-r hover:from-muted/20 hover:to-muted/10 hover:shadow-md",
+                "border-b border-border/30 transition-colors duration-150 group",
+                "hover:bg-muted/30",
                 striped && index % 2 === 0 && "bg-muted/10",
                 isSelected && "bg-primary/5 border-primary/20",
                 onRowClick && "cursor-pointer"
@@ -456,25 +451,18 @@ export function RegularTableBody<T>({
                   </Button>
                 </td>
               )}
-            </motion.tr>
+            </tr>
 
             {/* Expanded row */}
-            <AnimatePresence>
-              {isExpanded && renderExpanded && (
-                <motion.tr
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <td colSpan={columns.length + (selectable ? 1 : 0) + (expandable ? 1 : 0)} className="p-0">
-                    <div className="bg-gradient-to-r from-muted/10 to-muted/5 border-t border-border/20 p-4">
-                      {renderExpanded(item, index)}
-                    </div>
-                  </td>
-                </motion.tr>
-              )}
-            </AnimatePresence>
+            {isExpanded && renderExpanded && (
+              <tr>
+                <td colSpan={columns.length + (selectable ? 1 : 0) + (expandable ? 1 : 0)} className="p-0">
+                  <div className="bg-muted/10 border-t border-border/20 p-4">
+                    {renderExpanded(item, index)}
+                  </div>
+                </td>
+              </tr>
+            )}
           </React.Fragment>
         );
       })}
@@ -515,14 +503,12 @@ export function VirtualizedTableBody<T>({
 
         return (
           <React.Fragment key={key}>
-            <motion.tr
+            <tr
               data-index={virtualItem.index}
               ref={virtualizer.measureElement}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
               className={cn(
-                "border-b border-border/30 transition-all duration-150 group",
-                "hover:bg-gradient-to-r hover:from-muted/20 hover:to-muted/10 hover:shadow-md",
+                "border-b border-border/30 transition-colors duration-150 group",
+                "hover:bg-muted/30",
                 striped && virtualItem.index % 2 === 0 && "bg-muted/10",
                 isSelected && "bg-primary/5 border-primary/20",
                 onRowClick && "cursor-pointer"
@@ -582,12 +568,12 @@ export function VirtualizedTableBody<T>({
                   </Button>
                 </td>
               )}
-            </motion.tr>
+            </tr>
 
             {isExpanded && renderExpanded && (
               <tr>
                 <td colSpan={columns.length + (selectable ? 1 : 0) + (expandable ? 1 : 0)} className="p-0">
-                  <div className="bg-gradient-to-r from-muted/10 to-muted/5 border-t border-border/20 p-4">
+                  <div className="bg-muted/10 border-t border-border/20 p-4">
                     {renderExpanded(item, virtualItem.index)}
                   </div>
                 </td>
@@ -637,18 +623,11 @@ export function MobileTableCard<T>({
   const hasSecondaryData = secondaryColumns.length > 0 || renderExpanded;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.2, delay: index * 0.02 }}
-      layout
-    >
       <Card className={cn(
-        "overflow-hidden transition-all duration-200 hover:shadow-lg group",
-        "bg-gradient-to-br from-card/95 to-card/90 backdrop-blur-sm border-border/50",
+        "overflow-hidden transition-colors duration-200 hover:shadow-md group",
+        "bg-card border-border",
         isSelected && "ring-2 ring-primary/20 border-primary/30 bg-primary/5",
-        onClick && "cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+        onClick && "cursor-pointer hover:bg-muted/20"
       )}>
         <CardContent className={compact ? "p-3" : "p-4"}>
           {/* Header with selection */}
@@ -702,15 +681,8 @@ export function MobileTableCard<T>({
                 )}
               </Button>
 
-              <AnimatePresence>
-                {isExpanded && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="mt-3 pt-3 border-t border-border/30 space-y-2 overflow-hidden"
-                  >
+              {isExpanded && (
+                <div className="mt-3 pt-3 border-t border-border/30 space-y-2 overflow-hidden">
                     {secondaryColumns.map((column, colIndex) => {
                       const value = getValue(item, column);
                       const displayValue = column.render ? column.render(value, item, index) : String(value || '');
@@ -732,14 +704,12 @@ export function MobileTableCard<T>({
                         {renderExpanded(item, index)}
                       </div>
                     )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                </div>
+              )}
             </>
           )}
         </CardContent>
       </Card>
-    </motion.div>
   );
 }
 
