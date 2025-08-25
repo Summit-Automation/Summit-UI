@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import {Header} from '@/components/globalComponents/Header';
 import MileageSummary from '@/components/mileageComponents/MileageSummary';
 import MileageActions from '@/components/mileageComponents/MileageActions';
-import MileageTable from '@/components/mileageComponents/MileageTable';
+import MileageTableEnhanced from '@/components/mileageComponents/MileageTableEnhanced';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Activity, BarChart3, Car } from 'lucide-react';
@@ -42,7 +42,7 @@ export default function MileagePageContent({ mileageEntries }: MileagePageConten
             {/* Desktop: Full Layout | Mobile: Tabbed Layout */}
             <div className="hidden lg:block space-y-6">
                 {/* Chart - Desktop Only */}
-                <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 backdrop-blur-sm p-6">
+                <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-colors duration-200 p-6">
                     <CardHeader className="pb-6">
                         <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
                             <div className="p-2.5 bg-blue-500/20 rounded-xl">
@@ -78,7 +78,7 @@ export default function MileagePageContent({ mileageEntries }: MileagePageConten
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-0">
-                        <MileageTable mileageEntries={mileageEntries} />
+                        <MileageTableEnhanced mileageEntries={mileageEntries} />
                     </CardContent>
                 </Card>
             </div>
@@ -119,7 +119,7 @@ export default function MileagePageContent({ mileageEntries }: MileagePageConten
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <MileageTable mileageEntries={mileageEntries} />
+                                <MileageTableEnhanced mileageEntries={mileageEntries} />
                             </CardContent>
                         </Card>
                     </TabsContent>

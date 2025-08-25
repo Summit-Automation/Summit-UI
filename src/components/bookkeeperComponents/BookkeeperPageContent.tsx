@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import {Header} from '@/components/globalComponents/Header';
 import BookkeeperSummary from '@/components/bookkeeperComponents/BookkeeperSummary';
 import BookkeeperActions from '@/components/bookkeeperComponents/BookkeeperActions';
-import TransactionTable from '@/components/bookkeeperComponents/TransactionTable';
+import TransactionTableEnhanced from '@/components/bookkeeperComponents/TransactionTableEnhanced';
 import RecurringPaymentsClientWrapper from '@/components/bookkeeperComponents/RecurringPaymentsClientWrapper';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
@@ -45,7 +45,7 @@ export default function BookkeeperPageContent({ transactions, recurringPayments 
             {/* Desktop: Full Layout | Mobile: Tabbed Layout */}
             <div className="hidden lg:block space-y-6">
                 {/* Chart - Desktop Only */}
-                <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 backdrop-blur-sm p-6">
+                <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-colors duration-200 p-6">
                     <CardHeader className="pb-6">
                         <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
                             <div className="p-2.5 bg-emerald-500/20 rounded-xl">
@@ -68,7 +68,7 @@ export default function BookkeeperPageContent({ transactions, recurringPayments 
                 <BookkeeperActions/>
 
                 {/* Recurring Payments - Desktop */}
-                <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
+                <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-colors duration-200 p-6">
                     <CardHeader className="pb-6">
                         <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
                             <div className="p-2.5 bg-blue-500/20 rounded-xl">
@@ -86,7 +86,7 @@ export default function BookkeeperPageContent({ transactions, recurringPayments 
                 </Card>
 
                 {/* Table - Desktop */}
-                <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
+                <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-colors duration-200 p-6">
                     <CardHeader className="pb-6">
                         <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
                             <div className="p-2.5 bg-purple-500/20 rounded-xl">
@@ -99,7 +99,7 @@ export default function BookkeeperPageContent({ transactions, recurringPayments 
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-0">
-                        <TransactionTable transactions={transactions}/>
+                        <TransactionTableEnhanced transactions={transactions}/>
                     </CardContent>
                 </Card>
             </div>
@@ -110,21 +110,21 @@ export default function BookkeeperPageContent({ transactions, recurringPayments 
                     <TabsList className="grid w-full grid-cols-3 h-11 bg-slate-900/60 rounded-2xl border border-slate-800/40 p-1">
                         <TabsTrigger 
                             value="transactions" 
-                            className="flex items-center gap-2 text-sm px-2 lg:px-4 rounded-xl data-[state=active]:bg-slate-800 data-[state=active]:text-white data-[state=active]:shadow-md text-slate-400 hover:text-slate-300 transition-all duration-200 font-medium"
+                            className="flex items-center gap-2 text-sm px-2 lg:px-4 rounded-xl data-[state=active]:bg-slate-800 data-[state=active]:text-white data-[state=active]:shadow-md text-slate-400 hover:text-slate-300 transition-colors duration-200 font-medium"
                         >
                             <DollarSign className="h-4 w-4" />
                             <span className="hidden sm:inline">Transactions</span>
                         </TabsTrigger>
                         <TabsTrigger 
                             value="recurring" 
-                            className="flex items-center gap-2 text-sm px-2 lg:px-4 rounded-xl data-[state=active]:bg-slate-800 data-[state=active]:text-white data-[state=active]:shadow-md text-slate-400 hover:text-slate-300 transition-all duration-200 font-medium"
+                            className="flex items-center gap-2 text-sm px-2 lg:px-4 rounded-xl data-[state=active]:bg-slate-800 data-[state=active]:text-white data-[state=active]:shadow-md text-slate-400 hover:text-slate-300 transition-colors duration-200 font-medium"
                         >
                             <RefreshCw className="h-4 w-4" />
                             <span className="hidden sm:inline">Recurring</span>
                         </TabsTrigger>
                         <TabsTrigger 
                             value="analytics" 
-                            className="flex items-center gap-2 text-sm px-2 lg:px-4 rounded-xl data-[state=active]:bg-slate-800 data-[state=active]:text-white data-[state=active]:shadow-md text-slate-400 hover:text-slate-300 transition-all duration-200 font-medium"
+                            className="flex items-center gap-2 text-sm px-2 lg:px-4 rounded-xl data-[state=active]:bg-slate-800 data-[state=active]:text-white data-[state=active]:shadow-md text-slate-400 hover:text-slate-300 transition-colors duration-200 font-medium"
                         >
                             <BarChart3 className="h-4 w-4" />
                             <span className="hidden sm:inline">Charts</span>
@@ -134,7 +134,7 @@ export default function BookkeeperPageContent({ transactions, recurringPayments 
                     <TabsContent value="transactions" className="mt-4 space-y-4">
                         <BookkeeperActions/>
                         
-                        <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
+                        <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-colors duration-200 p-6">
                             <CardHeader className="pb-6">
                                 <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
                                     <div className="p-2.5 bg-purple-500/20 rounded-xl">
@@ -147,13 +147,13 @@ export default function BookkeeperPageContent({ transactions, recurringPayments 
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <TransactionTable transactions={transactions}/>
+                                <TransactionTableEnhanced transactions={transactions}/>
                             </CardContent>
                         </Card>
                     </TabsContent>
 
                     <TabsContent value="recurring" className="mt-4 space-y-4">
-                        <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
+                        <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-colors duration-200 p-6">
                             <CardHeader className="pb-6">
                                 <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
                                     <div className="p-2.5 bg-blue-500/20 rounded-xl">
@@ -172,7 +172,7 @@ export default function BookkeeperPageContent({ transactions, recurringPayments 
                     </TabsContent>
 
                     <TabsContent value="analytics" className="mt-4">
-                        <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
+                        <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-colors duration-200 p-6">
                             <CardHeader className="pb-6">
                                 <CardTitle className="flex items-center gap-3 text-slate-50 font-semibold text-lg">
                                     <div className="p-2.5 bg-emerald-500/20 rounded-xl">
