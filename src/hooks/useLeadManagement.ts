@@ -51,17 +51,14 @@ export function useLeadManagement(): UseLeadManagementReturn {
       return;
     }
 
-    try {
-      const success = await deleteLeadEntry(leadId);
-      if (success) {
-        leadDataService.invalidateCache();
-        await refreshData(true);
-        window.dispatchEvent(new CustomEvent('leadDataRefresh'));
-      }
-    } catch (error) {
-      console.error('Error deleting lead:', error);
+    const result = await deleteLeadEntry(leadId);
+    if (result.success) {
+      leadDataService.invalidateCache();
+      await refreshData(true);
+      window.dispatchEvent(new CustomEvent('leadDataRefresh'));
+    } else {
+      console.error('Error deleting lead:', result.error);
       alert('Failed to delete lead. Please try again.');
-      throw error;
     }
   }, [refreshData]);
 

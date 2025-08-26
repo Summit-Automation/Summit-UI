@@ -145,9 +145,9 @@ export default function EditLeadModal({ isOpen, onClose, lead }: EditLeadModalPr
         tags: tags.length > 0 ? tags : undefined,
       };
 
-      const success = await updateLeadEntry(lead.id, leadData);
+      const result = await updateLeadEntry(lead.id, leadData);
       
-      if (success) {
+      if (result.success) {
         form.reset();
         setTags([]);
         setTagInput("");
@@ -155,6 +155,8 @@ export default function EditLeadModal({ isOpen, onClose, lead }: EditLeadModalPr
         router.refresh();
         // Trigger refresh event
         window.dispatchEvent(new CustomEvent('leadDataRefresh'));
+      } else {
+        console.error('Error updating lead:', result.error);
       }
     } catch (error) {
       console.error('Error updating lead:', error);

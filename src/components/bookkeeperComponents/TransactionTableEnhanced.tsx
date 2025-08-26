@@ -55,11 +55,11 @@ const TransactionTableEnhanced = React.memo(function TransactionTableEnhanced({
   );
 
   const deleteTransactionHandler = async (id: string) => {
-    try {
-      await deleteTransaction(id);
+    const result = await deleteTransaction(id);
+    if (result.success) {
       router.refresh();
-    } catch (error) {
-      console.error('Failed to delete transaction:', error);
+    } else {
+      console.error('Failed to delete transaction:', result.error);
     }
   };
 

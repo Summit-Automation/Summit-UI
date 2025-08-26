@@ -17,6 +17,7 @@ import {
     AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import UpdateCustomerModal from '@/components/crmComponents/UpdateCustomerModal';
+import UpdateInteractionClientWrapper from '@/components/crmComponents/CRMActions/UpdateInteractionClientWrapper';
 import { deleteCustomer } from '@/app/lib/services/crmServices/customer/deleteCustomer';
 import { useRouter } from 'next/navigation';
 import type { Customer } from '@/types/customer';
@@ -58,11 +59,11 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
     }, [customers, searchTerm]);
 
     const deleteCustomerHandler = async (id: string) => {
-        try {
-            await deleteCustomer(id);
+        const result = await deleteCustomer(id);
+        if (result.success) {
             router.refresh();
-        } catch (error) {
-            console.error('Failed to delete customer:', error);
+        } else {
+            console.error('Failed to delete customer:', result.error);
         }
     };
 
@@ -131,7 +132,6 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
             primary: true,
             align: 'center',
             width: '140px',
-            hideOnMobile: true,
             render: (_, customer) => {
                 const customerInteractions = interactionsById.get(customer.id) ?? [];
                 const isExpanded = expandedCustomer === customer.id;
@@ -306,7 +306,7 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                                     {customerInteractions.map((interaction) => (
                                         <div 
                                             key={interaction.id} 
-                                            className="bg-slate-900/70 rounded-lg p-3 border border-slate-700/50"
+                                            className="bg-slate-900/70 rounded-lg p-3 border border-slate-700/50 hover:bg-slate-900/90 transition-colors"
                                         >
                                             <div className="flex items-start justify-between gap-3 mb-2">
                                                 <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -323,24 +323,40 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                                                 </div>
                                             </div>
                                             
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <Badge 
-                                                    variant={interaction.type === 'call' ? 'default' : 'secondary'} 
-                                                    className="text-xs px-2 py-0.5"
-                                                >
-                                                    {interaction.type}
-                                                </Badge>
-                                                {interaction.follow_up_required && (
-                                                    <Badge variant="destructive" className="text-xs px-2 py-0.5">
-                                                        Follow-up Required
+                                            <div className="flex items-center justify-between gap-2 mb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <Badge 
+                                                        variant={interaction.type === 'call' ? 'default' : 'secondary'} 
+                                                        className="text-xs px-2 py-0.5"
+                                                    >
+                                                        {interaction.type}
                                                     </Badge>
-                                                )}
+                                                    {interaction.follow_up_required && (
+                                                        <Badge variant="destructive" className="text-xs px-2 py-0.5 flex items-center gap-1">
+                                                            <AlertCircle className="h-2.5 w-2.5" />
+                                                            Follow-up Required
+                                                        </Badge>
+                                                    )}
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    <UpdateInteractionClientWrapper 
+                                                        interaction={interaction}
+                                                        onSuccess={() => router.refresh()}
+                                                    />
+                                                </div>
                                             </div>
                                             
                                             {interaction.notes && (
                                                 <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap line-clamp-3">
                                                     {interaction.notes}
                                                 </p>
+                                            )}
+                                            
+                                            {interaction.outcome && (
+                                                <div className="mt-2 pt-2 border-t border-slate-700/30">
+                                                    <span className="text-xs text-slate-400 font-medium">Outcome: </span>
+                                                    <span className="text-xs text-slate-300">{interaction.outcome}</span>
+                                                </div>
                                             )}
                                         </div>
                                     ))}
