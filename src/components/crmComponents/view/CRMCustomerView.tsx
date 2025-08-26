@@ -5,7 +5,7 @@ import { ModernTable, ModernColumn } from '@/components/ui/modern-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Building, Trash2, AlertCircle, Search, X } from 'lucide-react';
+import { Building, Trash2, AlertCircle, Search, X, ChevronDown, ChevronUp, MessageSquare, Calendar, User } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -31,6 +31,7 @@ interface Props {
 export default function CRMCustomerView({ customers, interactions }: Props) {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
+    const [expandedCustomer, setExpandedCustomer] = useState<string | null>(null);
     
     // Build a lookup map once
     const interactionsById = useMemo(() => {
@@ -118,6 +119,45 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                             </Badge>
                         ) : (
                             <span className="text-muted-foreground text-xs">—</span>
+                        )}
+                    </div>
+                );
+            }
+        },
+        {
+            id: 'interactions',
+            key: 'interactions',
+            label: 'Interactions',
+            primary: true,
+            align: 'center',
+            width: '140px',
+            hideOnMobile: true,
+            render: (_, customer) => {
+                const customerInteractions = interactionsById.get(customer.id) ?? [];
+                const isExpanded = expandedCustomer === customer.id;
+                
+                return (
+                    <div className="flex items-center justify-center">
+                        {customerInteractions.length > 0 ? (
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setExpandedCustomer(isExpanded ? null : customer.id)}
+                                className="h-8 px-2 text-xs hover:bg-slate-700/50 flex items-center gap-1"
+                            >
+                                <MessageSquare className="h-3 w-3" />
+                                <span className="font-medium">{customerInteractions.length}</span>
+                                {isExpanded ? (
+                                    <ChevronUp className="h-3 w-3 ml-1" />
+                                ) : (
+                                    <ChevronDown className="h-3 w-3 ml-1" />
+                                )}
+                            </Button>
+                        ) : (
+                            <span className="text-muted-foreground text-xs flex items-center gap-1">
+                                <MessageSquare className="h-3 w-3" />
+                                0
+                            </span>
                         )}
                     </div>
                 );
@@ -250,6 +290,65 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
                 searchable={false}
                 sortable={true}
                 exportable={false}
+                expandedRowRenderer={(customer) => {
+                    if (expandedCustomer !== customer.id) return null;
+                    const customerInteractions = interactionsById.get(customer.id) ?? [];
+                    if (customerInteractions.length === 0) return null;
+                    
+                    return (
+                        <div className="p-4 bg-slate-800/50 border-t border-slate-700">
+                            <div className="space-y-3">
+                                <div className="flex items-center gap-2 text-sm font-medium text-slate-200">
+                                    <MessageSquare className="h-4 w-4" />
+                                    Interactions for {customer.full_name || 'Not Specified'}
+                                </div>
+                                <div className="grid gap-3 max-h-64 overflow-y-auto">
+                                    {customerInteractions.map((interaction) => (
+                                        <div 
+                                            key={interaction.id} 
+                                            className="bg-slate-900/70 rounded-lg p-3 border border-slate-700/50"
+                                        >
+                                            <div className="flex items-start justify-between gap-3 mb-2">
+                                                <div className="flex items-center gap-2 flex-1 min-w-0">
+                                                    <User className="h-3 w-3 text-slate-400 flex-shrink-0" />
+                                                    <span className="font-medium text-sm text-slate-200 truncate">
+                                                        {interaction.title}
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center gap-2 flex-shrink-0">
+                                                    <Calendar className="h-3 w-3 text-slate-400" />
+                                                    <span className="text-xs text-slate-400">
+                                                        {new Date(interaction.created_at).toLocaleDateString()}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <Badge 
+                                                    variant={interaction.type === 'call' ? 'default' : 'secondary'} 
+                                                    className="text-xs px-2 py-0.5"
+                                                >
+                                                    {interaction.type}
+                                                </Badge>
+                                                {interaction.follow_up_required && (
+                                                    <Badge variant="destructive" className="text-xs px-2 py-0.5">
+                                                        Follow-up Required
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                            
+                                            {interaction.notes && (
+                                                <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap line-clamp-3">
+                                                    {interaction.notes}
+                                                </p>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    );
+                }}
                 emptyState={{
                     title: searchTerm ? "No customers match your search" : "No customers found",
                     description: searchTerm ? "Try adjusting your search terms" : "Start by adding your first customer to track relationships",

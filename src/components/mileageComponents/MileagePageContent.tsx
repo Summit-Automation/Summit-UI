@@ -11,12 +11,14 @@ import { Activity, BarChart3, Car } from 'lucide-react';
 import MileageChart from "@/components/mileageComponents/MileageChart";
 
 import type { MileageEntry } from '@/types/mileage';
+import type { Customer } from '@/types/customer';
 
 interface MileagePageContentProps {
     mileageEntries: MileageEntry[];
+    customers: Customer[];
 }
 
-export default function MileagePageContent({ mileageEntries }: MileagePageContentProps) {
+export default function MileagePageContent({ mileageEntries, customers }: MileagePageContentProps) {
     const router = useRouter();
 
     const handleSettings = () => router.push('/settings');
@@ -62,7 +64,7 @@ export default function MileagePageContent({ mileageEntries }: MileagePageConten
                 </Card>
 
                 {/* Actions - Desktop */}
-                <MileageActions />
+                <MileageActions customers={customers} />
 
                 {/* Table - Desktop */}
                 <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
@@ -104,7 +106,7 @@ export default function MileagePageContent({ mileageEntries }: MileagePageConten
                     </TabsList>
 
                     <TabsContent value="entries" className="mt-4 space-y-4">
-                        <MileageActions />
+                        <MileageActions customers={customers} />
                         
                         <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-all duration-300 backdrop-blur-sm p-6">
                             <CardHeader className="pb-6">

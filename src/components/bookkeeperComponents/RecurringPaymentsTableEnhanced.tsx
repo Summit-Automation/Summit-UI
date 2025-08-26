@@ -25,8 +25,6 @@ import {
   TrendingUp,
   TrendingDown,
   Target,
-  AlertCircle,
-  CheckCircle,
   Trash2
 } from 'lucide-react';
 
@@ -112,35 +110,6 @@ export default function RecurringPaymentsTableEnhanced({
     return labels[frequency as keyof typeof labels] || frequency;
   };
 
-  const getStatusInfo = (payment: RecurringPayment) => {
-    const nextPayment = new Date(payment.next_payment_date);
-    const now = new Date();
-    
-    if (!payment.is_active) {
-      return { 
-        label: 'Inactive', 
-        variant: 'secondary' as const, 
-        className: "bg-gray-100 text-gray-800 dark:bg-gray-800/30 dark:text-gray-300",
-        icon: AlertCircle 
-      };
-    }
-    
-    if (nextPayment <= now) {
-      return { 
-        label: 'Due', 
-        variant: 'destructive' as const, 
-        className: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
-        icon: AlertCircle 
-      };
-    }
-    
-    return { 
-      label: 'Active', 
-      variant: 'default' as const, 
-      className: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
-      icon: CheckCircle 
-    };
-  };
 
   const getTypeBadgeProps = (type: string) => {
     return type === 'income' 
@@ -239,24 +208,6 @@ export default function RecurringPaymentsTableEnhanced({
           </span>
         </div>
       )
-    },
-    {
-      id: 'status',
-      key: 'is_active',
-      label: 'Status',
-      sortable: true,
-      filterable: true,
-      hideOnMobile: true,
-      render: (_, payment) => {
-        const statusInfo = getStatusInfo(payment);
-        const StatusIcon = statusInfo.icon;
-        return (
-          <Badge className={statusInfo.className}>
-            <StatusIcon className="h-3 w-3 mr-1" />
-            {statusInfo.label}
-          </Badge>
-        );
-      }
     },
     {
       id: 'customer',

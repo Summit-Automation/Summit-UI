@@ -76,6 +76,7 @@ export interface ModernTableProps<T> {
   onRowDoubleClick?: (item: T, index: number) => void;
   onSelectionChange?: (selectedItems: T[]) => void;
   onSort?: (sortBy: string, sortDirection: 'asc' | 'desc') => void;
+  expandedRowRenderer?: (item: T) => React.ReactNode;
   
   // Export
   exportService?: {
@@ -390,6 +391,7 @@ export function ModernTable<T>({
   onSelectionChange,
   onSort,
   exportService,
+  expandedRowRenderer,
 }: ModernTableProps<T>) {
   // Suppress unused variable warnings
   void sortable;
@@ -497,18 +499,20 @@ export function ModernTable<T>({
       {/* Mobile View */}
       <div className="block lg:hidden space-y-3">
         {filteredData.map((item, index) => (
-          <MobileCard
-            key={keyExtractor(item, index)}
-            item={item}
-            index={index}
-            columns={columns}
-            getValue={getValue}
-            selectable={selectable}
-            isSelected={selectedRows.has(keyExtractor(item, index))}
-            onSelectionChange={(selected) => handleRowSelection(keyExtractor(item, index), selected)}
-            onRowClick={onRowClick}
-            onRowDoubleClick={onRowDoubleClick}
-          />
+          <div key={keyExtractor(item, index)} className="space-y-0">
+            <MobileCard
+              item={item}
+              index={index}
+              columns={columns}
+              getValue={getValue}
+              selectable={selectable}
+              isSelected={selectedRows.has(keyExtractor(item, index))}
+              onSelectionChange={(selected) => handleRowSelection(keyExtractor(item, index), selected)}
+              onRowClick={onRowClick}
+              onRowDoubleClick={onRowDoubleClick}
+            />
+            {expandedRowRenderer && expandedRowRenderer(item)}
+          </div>
         ))}
       </div>
 
@@ -553,18 +557,20 @@ export function ModernTable<T>({
         {/* Rows */}
         <div>
           {filteredData.map((item, index) => (
-            <DesktopRow
-              key={keyExtractor(item, index)}
-              item={item}
-              index={index}
-              columns={columns}
-              getValue={getValue}
-              selectable={selectable}
-              isSelected={selectedRows.has(keyExtractor(item, index))}
-              onSelectionChange={(selected) => handleRowSelection(keyExtractor(item, index), selected)}
-              onRowClick={onRowClick}
-              onRowDoubleClick={onRowDoubleClick}
-            />
+            <div key={keyExtractor(item, index)}>
+              <DesktopRow
+                item={item}
+                index={index}
+                columns={columns}
+                getValue={getValue}
+                selectable={selectable}
+                isSelected={selectedRows.has(keyExtractor(item, index))}
+                onSelectionChange={(selected) => handleRowSelection(keyExtractor(item, index), selected)}
+                onRowClick={onRowClick}
+                onRowDoubleClick={onRowDoubleClick}
+              />
+              {expandedRowRenderer && expandedRowRenderer(item)}
+            </div>
           ))}
         </div>
       </div>
