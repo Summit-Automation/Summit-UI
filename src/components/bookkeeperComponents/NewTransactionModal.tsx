@@ -58,7 +58,7 @@ export default function NewTransactionModal({
             interaction_id: '',
             is_recurring: false,
             frequency: 'monthly',
-            start_date: '',
+            start_date: new Date().toISOString().split('T')[0], // Format as YYYY-MM-DD
             end_date: '',
             day_of_month: 1,
             day_of_week: 0,
@@ -89,8 +89,8 @@ export default function NewTransactionModal({
                     description: values.description,
                     amount: values.amount.toString(),
                     frequency: values.frequency || 'monthly',
-                    start_date: values.start_date || new Date().toISOString(),
-                    end_date: values.end_date || undefined,
+                    start_date: values.start_date ? new Date(values.start_date + 'T00:00:00.000Z').toISOString() : new Date().toISOString(),
+                    end_date: values.end_date ? new Date(values.end_date + 'T23:59:59.999Z').toISOString() : undefined,
                     day_of_month: frequency === 'monthly' || frequency === 'quarterly' || frequency === 'yearly' ? 
                         values.day_of_month : undefined,
                     day_of_week: frequency === 'weekly' ? values.day_of_week : undefined,
