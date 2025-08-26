@@ -1,11 +1,35 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+# Dependabot configuration for automatic dependency updates
+# Documentation: https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  # Main npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily" # Check for updates daily
+      time: "09:00"
+      timezone: "America/New_York"
+    # Allow up to 10 open PRs at once
+    open-pull-requests-limit: 10
+    # Group minor and patch updates together to reduce PR noise
+    groups:
+      # Group all non-major updates together
+      all-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    # Automatically approve and merge patch updates for trusted packages
+    assignees:
+      - "@me"
+    reviewers:
+      - "@me"
+    # Target specific branch if you use different branching strategy
+    target-branch: "main"
+    # Commit message configuration
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
