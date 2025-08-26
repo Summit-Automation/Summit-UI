@@ -108,7 +108,7 @@ const TransactionTableEnhanced = React.memo(function TransactionTableEnhanced({
       primary: true,
       sortable: true,
       searchable: true,
-      width: '120px',
+      width: '110px',
       render: (value) => (
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -125,10 +125,10 @@ const TransactionTableEnhanced = React.memo(function TransactionTableEnhanced({
       primary: true,
       sortable: true,
       searchable: true,
-      width: '300px',
+      width: 'minmax(200px, 2fr)',
       render: (value) => (
-        <div className="max-w-[280px]" title={value as string}>
-          <span className="break-words whitespace-normal leading-tight text-foreground font-medium truncate block">
+        <div className="min-w-0" title={value as string}>
+          <span className="text-foreground font-medium truncate block">
             {value as string}
           </span>
         </div>
@@ -141,7 +141,7 @@ const TransactionTableEnhanced = React.memo(function TransactionTableEnhanced({
       primary: true,
       sortable: true,
       align: 'right',
-      width: '120px',
+      width: '130px',
       render: (value, transaction) => (
         <div className="flex items-center justify-end gap-2">
           {transaction.type === 'income' ? (
@@ -186,9 +186,9 @@ const TransactionTableEnhanced = React.memo(function TransactionTableEnhanced({
       filterable: true,
       searchable: true,
       hideOnMobile: true,
-      width: '160px',
+      width: 'minmax(120px, 1fr)',
       render: (value) => (
-        <div className="max-w-[150px]" title={value as string}>
+        <div className="min-w-0" title={value as string}>
           <span className="truncate block text-foreground">{value as string}</span>
         </div>
       )
@@ -201,7 +201,7 @@ const TransactionTableEnhanced = React.memo(function TransactionTableEnhanced({
       sticky: true,
       width: '120px',
       render: (_, transaction) => (
-        <div className="flex gap-1 justify-center min-w-[100px]">
+        <div className="flex gap-1 justify-center">
           <UpdateTransactionModal
             transaction={transaction}
             onSuccess={() => router.refresh()}
