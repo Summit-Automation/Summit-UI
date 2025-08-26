@@ -13,13 +13,17 @@ import CashFlowArea from "@/components/dashboardComponents/CashFlowArea";
 
 import type { Transaction } from '@/types/transaction';
 import type { RecurringPayment } from '@/types/recurringPayment';
+import type { Customer } from '@/types/customer';
+import type { Interaction } from '@/types/interaction';
 
 interface BookkeeperPageContentProps {
     transactions: Transaction[];
     recurringPayments: RecurringPayment[];
+    customers: Customer[];
+    interactions: Interaction[];
 }
 
-export default function BookkeeperPageContent({ transactions, recurringPayments }: BookkeeperPageContentProps) {
+export default function BookkeeperPageContent({ transactions, recurringPayments, customers, interactions }: BookkeeperPageContentProps) {
     const router = useRouter();
 
     const handleSettings = () => router.push('/settings');
@@ -65,7 +69,7 @@ export default function BookkeeperPageContent({ transactions, recurringPayments 
                 </Card>
 
                 {/* Actions - Desktop */}
-                <BookkeeperActions/>
+                <BookkeeperActions customers={customers} interactions={interactions}/>
 
                 {/* Recurring Payments - Desktop */}
                 <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-colors duration-200 p-6">
@@ -132,7 +136,7 @@ export default function BookkeeperPageContent({ transactions, recurringPayments 
                     </TabsList>
 
                     <TabsContent value="transactions" className="mt-4 space-y-4">
-                        <BookkeeperActions/>
+                        <BookkeeperActions customers={customers} interactions={interactions}/>
                         
                         <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl transition-colors duration-200 p-6">
                             <CardHeader className="pb-6">

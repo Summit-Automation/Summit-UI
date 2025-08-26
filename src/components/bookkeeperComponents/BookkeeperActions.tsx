@@ -1,14 +1,14 @@
 'use client';
 
-import { useEffect, useState, useRef, lazy, Suspense } from 'react';
+import { useRef, lazy, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 
 // Lazy load heavy modals
 const CreateTransactionClientWrapper = lazy(() => import('@/components/bookkeeperComponents/bookkeeperActions/CreateTransactionClientWrapper'));
 const AIReceiptUploadModal = lazy(() => import('@/components/bookkeeperComponents/AIReceiptUploadModal'));
-import { getCustomers } from '@/app/lib/services/crmServices/customer/getCustomers';
 import { getTransactions } from '@/app/lib/services/bookkeeperServices/getTransactions';
 import { Customer } from '@/types/customer';
+import { Interaction } from '@/types/interaction';
 import { Button } from '@/components/ui/button';
 import { Download, Upload, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
@@ -51,17 +51,9 @@ function generateCSV(data: Array<Record<string, string | number>>): string {
     return csvRows.join('\n');
 }
 
-export default function BookkeeperActions() {
+export default function BookkeeperActions({ customers, interactions }: { customers: Customer[], interactions: Interaction[] }) {
     const router = useRouter();
-    const [customers, setCustomers] = useState<Customer[]>([]);
-    const [loading, setLoading] = useState(true);
     const fileInputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        getCustomers()
-            .then(setCustomers)
-            .finally(() => setLoading(false));
-    }, []);
 
     const handleExportTransactions = async () => {
         try {
@@ -211,20 +203,16 @@ export default function BookkeeperActions() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {/* Add Transaction */}
                 <Suspense fallback={<div className="h-10 bg-slate-800 border border-slate-600 rounded-lg animate-pulse" />}>
-                    <CreateTransactionClientWrapper />
+                    <CreateTransactionClientWrapper customers={customers} interactions={interactions} />
                 </Suspense>
 
                 {/* AI Receipt Upload */}
-                {loading ? (
-                    <div className="h-10 bg-slate-800 border border-slate-600 rounded-lg animate-pulse" />
-                ) : (
-                    <Suspense fallback={<div className="h-10 bg-slate-800 border border-slate-600 rounded-lg animate-pulse" />}>
-                        <AIReceiptUploadModal
-                            customers={customers}
-                            onSuccess={() => router.refresh()}
-                        />
-                    </Suspense>
-                )}
+                <Suspense fallback={<div className="h-10 bg-slate-800 border border-slate-600 rounded-lg animate-pulse" />}>
+                    <AIReceiptUploadModal
+                        customers={customers}
+                        onSuccess={() => router.refresh()}
+                    />
+                </Suspense>
 
                 {/* Import CSV */}
                 <Button
