@@ -1,34 +1,42 @@
 'use server';
 
 import { createClient } from '@/utils/supabase/server';
-import { MileageEntry } from "@/types/mileage";
+import { Result, success, error } from '@/types/result';
+import { updateMileageEntrySchema } from '@/lib/validation/schemas';
+import { validateInput, formatValidationErrors } from '@/lib/validation/validator';
 
-type UpdateMileageEntryInput = Omit<MileageEntry, 'created_at' | 'updated_at' | 'user_id'>;
+export async function updateMileageEntry(input: unknown): Promise<Result<void, string>> {
+    // Validate input
+    const validationResult = validateInput(updateMileageEntrySchema, input);
+    if (!validationResult.success) {
+        return error(formatValidationErrors(validationResult.error));
+    }
 
-export async function updateMileageEntry(input: UpdateMileageEntryInput): Promise<boolean> {
+    const validatedInput = validationResult.data;
+
     try {
         const supabase = await createClient();
 
         // Call the proxy function in public schema
-        const { error } = await supabase.rpc('update_mileage_entry', {
-            p_id: input.id,
-            p_date: input.date,
-            p_purpose: input.purpose,
-            p_miles: input.miles,
-            p_is_business: input.is_business,
-            p_start_location: input.start_location,
-            p_end_location: input.end_location,
-            p_customer_id: input.customer_id,
-            p_notes: input.notes,
+        const { error: updateError } = await supabase.rpc('update_mileage_entry', {
+            p_id: validatedInput.id,
+            p_date: validatedInput.date,
+            p_purpose: validatedInput.purpose,
+            p_miles: validatedInput.miles,
+            p_is_business: validatedInput.is_business,
+            p_start_location: validatedInput.start_location,
+            p_end_location: validatedInput.end_location,
+            p_customer_id: validatedInput.customer_id,
+            p_notes: validatedInput.notes,
         });
 
-        if (error) {
-            console.error('Error updating mileage entry:', error);
-            return false;
+        if (updateError) {
+            console.error('Error updating mileage entry:', updateError);
+            return error('Failed to update mileage entry');
         }
-        return true;
+        return success(undefined);
     } catch (err) {
         console.error('Exception in updateMileageEntry:', err);
-        return false;
+        return error(err instanceof Error ? err.message : 'Unknown error occurred');
     }
 }

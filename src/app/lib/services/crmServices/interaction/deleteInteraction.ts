@@ -2,26 +2,27 @@
 
 import { revalidatePath } from 'next/cache';
 import { getAuthenticatedUser } from '@/app/lib/services/shared/authUtils';
+import { Result, success, error } from '@/types/result';
 
-export async function deleteInteraction(id: string): Promise<boolean> {
+export async function deleteInteraction(id: string): Promise<Result<void, string>> {
     try {
         const { supabase } = await getAuthenticatedUser();
 
-        const { error } = await supabase.rpc('delete_interaction', {
+        const { error: deleteError } = await supabase.rpc('delete_interaction', {
             p_id: id
         });
 
-        if (error) {
-            console.error('Error deleting interaction:', error);
-            return false;
+        if (deleteError) {
+            console.error('Error deleting interaction:', deleteError);
+            return error('Failed to delete interaction');
         }
         
         // Revalidate the CRM page to reflect the deleted interaction
         revalidatePath('/crm');
         
-        return true;
+        return success(undefined);
     } catch (err) {
         console.error('Exception in deleteInteraction:', err);
-        return false;
+        return error(err instanceof Error ? err.message : 'Unknown error occurred');
     }
 }

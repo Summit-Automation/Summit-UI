@@ -35,13 +35,13 @@ export default function UpdateCustomerModal({
     const {handleSubmit, control, setError} = form;
 
     const onSubmit = async (values: FormValues) => {
-        const ok = await updateCustomer({id: customer.id, ...values});
-        if (ok) {
+        const result = await updateCustomer({id: customer.id, ...values});
+        if (result.success) {
             form.reset();
             setOpen(false);
             onSuccess?.();
         } else {
-            setError('full_name', {message: 'Failed to update customer'});
+            setError('full_name', {message: result.error || 'Failed to update customer'});
         }
     };
 

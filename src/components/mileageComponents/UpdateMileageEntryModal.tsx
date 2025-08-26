@@ -59,27 +59,23 @@ export default function UpdateMileageEntryModal({
     const onSubmit = async (values: FormValues) => {
         setIsSubmitting(true);
         
-        try {
-            const success = await updateMileageEntry({
-                id: mileageEntry.id,
-                ...values,
-                miles: parseFloat(values.miles),
-                customer_id: values.customer_id || null,
-                customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
-            });
+        const result = await updateMileageEntry({
+            id: mileageEntry.id,
+            ...values,
+            miles: parseFloat(values.miles),
+            customer_id: values.customer_id || null,
+            customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
+        });
 
-            if (success) {
-                setOpen(false);
-                onSuccess?.();
-            } else {
-                form.setError('purpose', { message: 'Failed to update mileage entry' });
-            }
-        } catch (err) {
-            console.error('Failed to update mileage entry:', err);
-            form.setError('purpose', { message: 'Failed to update mileage entry' });
-        } finally {
-            setIsSubmitting(false);
+        if (result.success) {
+            setOpen(false);
+            onSuccess?.();
+        } else {
+            console.error('Failed to update mileage entry:', result.error);
+            form.setError('purpose', { message: result.error || 'Failed to update mileage entry' });
         }
+        
+        setIsSubmitting(false);
     };
 
     React.useEffect(() => {

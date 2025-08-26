@@ -183,13 +183,15 @@ export const updateInventoryItemSchema = createInventoryItemSchema.partial().ext
 
 // ===== MILEAGE SCHEMAS =====
 export const createMileageEntrySchema = z.object({
-  date: z.string().datetime('Invalid date'),
-  start_location: nonEmptyString,
-  end_location: nonEmptyString,
-  distance: positiveNumber,
+  date: dateString,
+  start_location: z.string().nullable().optional(),
+  end_location: z.string().nullable().optional(),
+  miles: positiveNumber,
   purpose: nonEmptyString,
-  vehicle: optionalString,
-  rate_per_mile: decimalString.optional(),
+  is_business: z.boolean().default(true),
+  customer_id: z.string().uuid().nullable().optional(),
+  customer_name: z.string().nullable().optional(),
+  notes: z.string().nullable().optional(),
 });
 
 export const updateMileageEntrySchema = createMileageEntrySchema.partial().extend({
@@ -197,22 +199,17 @@ export const updateMileageEntrySchema = createMileageEntrySchema.partial().exten
 });
 
 // ===== INTERACTION SCHEMAS =====
-export const interactionTypeSchema = z.enum(['call', 'email', 'meeting', 'service', 'support'], {
+export const interactionTypeSchema = z.enum(['call', 'email', 'meeting', 'site visit', 'other'], {
   message: 'Invalid interaction type'
-});
-
-export const interactionOutcomeSchema = z.enum(['successful', 'follow_up_needed', 'resolved', 'escalated'], {
-  message: 'Invalid interaction outcome'
 });
 
 export const createInteractionSchema = z.object({
   customer_id: uuidSchema,
   type: interactionTypeSchema,
   title: nonEmptyString,
-  description: optionalString,
-  outcome: interactionOutcomeSchema.optional(),
-  follow_up_date: dateString,
-  priority: leadPrioritySchema.optional(),
+  notes: optionalString,
+  outcome: optionalString,
+  follow_up_required: z.boolean().default(false),
 });
 
 export const updateInteractionSchema = createInteractionSchema.partial().extend({

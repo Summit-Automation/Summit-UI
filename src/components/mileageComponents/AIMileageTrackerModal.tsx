@@ -111,37 +111,33 @@ export default function AIMileageTrackerModal({
 
         setIsSubmitting(true);
         
-        try {
-            const success = await createMileageEntry({
-                ...values,
-                miles: aiResponse.miles,
-                customer_id: values.customer_id || null,
-                customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
-                notes: values.notes + (values.notes ? '\n\n' : '') + `AI Calculated Route: ${aiResponse.route}`,
-            });
+        const result = await createMileageEntry({
+            ...values,
+            miles: aiResponse.miles,
+            customer_id: values.customer_id || null,
+            customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
+            notes: values.notes + (values.notes ? '\n\n' : '') + `AI Calculated Route: ${aiResponse.route}`,
+        });
 
-            if (success) {
-                form.reset({
-                    date: new Date().toISOString().split('T')[0],
-                    start_location: '',
-                    end_location: '',
-                    purpose: '',
-                    is_business: true,
-                    customer_id: '',
-                    notes: '',
-                });
-                setAiResponse(null);
-                setOpen(false);
-                onSuccess?.();
-            } else {
-                form.setError('purpose', { message: 'Failed to create mileage entry' });
-            }
-        } catch (err) {
-            console.error('Failed to create mileage entry:', err);
-            form.setError('purpose', { message: 'Failed to create mileage entry' });
-        } finally {
-            setIsSubmitting(false);
+        if (result.success) {
+            form.reset({
+                date: new Date().toISOString().split('T')[0],
+                start_location: '',
+                end_location: '',
+                purpose: '',
+                is_business: true,
+                customer_id: '',
+                notes: '',
+            });
+            setAiResponse(null);
+            setOpen(false);
+            onSuccess?.();
+        } else {
+            console.error('Failed to create mileage entry:', result.error);
+            form.setError('purpose', { message: result.error || 'Failed to create mileage entry' });
         }
+        
+        setIsSubmitting(false);
     };
 
     const handleCalculate = () => {

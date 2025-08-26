@@ -68,34 +68,30 @@ export default function NewInteractionModal({
     const onSubmit = async (values: FormValues) => {
         setIsSubmitting(true);
         
-        try {
-            const success = await createInteraction(values);
+        const result = await createInteraction(values);
+        
+        if (result.success) {
+            // Reset form
+            form.reset({
+                customer_id: '',
+                type: 'call',
+                title: '',
+                notes: '',
+                outcome: '',
+                follow_up_required: false,
+            });
             
-            if (success) {
-                // Reset form
-                form.reset({
-                    customer_id: '',
-                    type: 'call',
-                    title: '',
-                    notes: '',
-                    outcome: '',
-                    follow_up_required: false,
-                });
-                
-                // Close modal
-                setOpen(false);
-                
-                // Call success callback
-                onSuccess?.();
-            } else {
-                form.setError('title', { message: 'Failed to log interaction' });
-            }
-        } catch (err) {
-            console.error('Failed to log interaction:', err);
-            form.setError('title', { message: 'Failed to log interaction' });
-        } finally {
-            setIsSubmitting(false);
+            // Close modal
+            setOpen(false);
+            
+            // Call success callback
+            onSuccess?.();
+        } else {
+            console.error('Failed to log interaction:', result.error);
+            form.setError('title', { message: result.error || 'Failed to log interaction' });
         }
+        
+        setIsSubmitting(false);
     };
 
     // Reset form when modal closes

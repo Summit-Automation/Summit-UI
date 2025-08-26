@@ -54,7 +54,7 @@ export default function UpdateInteractionModal({
     const {handleSubmit, control, setError} = form;
 
     const onSubmit = async (values: FormValues) => {
-        const ok = await updateInteraction({
+        const result = await updateInteraction({
             id: interaction.id,
             customer_id: values.customer_id,
             type: values.type,
@@ -63,11 +63,11 @@ export default function UpdateInteractionModal({
             outcome: values.outcome,
             follow_up_required: values.follow_up_required,
         });
-        if (ok) {
+        if (result.success) {
             setOpen(false);
             onSuccess?.();
         } else {
-            setError('title', {message: 'Failed to update interaction'});
+            setError('title', {message: result.error || 'Failed to update interaction'});
         }
     };
 

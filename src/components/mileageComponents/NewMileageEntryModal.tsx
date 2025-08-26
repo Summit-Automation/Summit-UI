@@ -57,36 +57,32 @@ export default function NewMileageEntryModal({
     const onSubmit = async (values: FormValues) => {
         setIsSubmitting(true);
         
-        try {
-            const success = await createMileageEntry({
-                ...values,
-                miles: parseFloat(values.miles),
-                customer_id: values.customer_id || null,
-                customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
-            });
+        const result = await createMileageEntry({
+            ...values,
+            miles: parseFloat(values.miles),
+            customer_id: values.customer_id || null,
+            customer_name: customers.find((c) => c.id === values.customer_id)?.full_name || null,
+        });
 
-            if (success) {
-                form.reset({
-                    date: new Date().toISOString().split('T')[0],
-                    start_location: '',
-                    end_location: '',
-                    purpose: '',
-                    miles: '',
-                    is_business: true,
-                    customer_id: '',
-                    notes: '',
-                });
-                setIsOpen(false);
-                onSuccess?.();
-            } else {
-                form.setError('miles', { message: 'Failed to create mileage entry' });
-            }
-        } catch (err) {
-            console.error('Failed to create mileage entry:', err);
-            form.setError('miles', { message: 'Failed to create mileage entry' });
-        } finally {
-            setIsSubmitting(false);
+        if (result.success) {
+            form.reset({
+                date: new Date().toISOString().split('T')[0],
+                start_location: '',
+                end_location: '',
+                purpose: '',
+                miles: '',
+                is_business: true,
+                customer_id: '',
+                notes: '',
+            });
+            setIsOpen(false);
+            onSuccess?.();
+        } else {
+            console.error('Failed to create mileage entry:', result.error);
+            form.setError('miles', { message: result.error || 'Failed to create mileage entry' });
         }
+        
+        setIsSubmitting(false);
     };
 
     // Reset form when modal closes

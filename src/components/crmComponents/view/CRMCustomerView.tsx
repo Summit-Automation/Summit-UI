@@ -58,11 +58,11 @@ export default function CRMCustomerView({ customers, interactions }: Props) {
     }, [customers, searchTerm]);
 
     const deleteCustomerHandler = async (id: string) => {
-        try {
-            await deleteCustomer(id);
+        const result = await deleteCustomer(id);
+        if (result.success) {
             router.refresh();
-        } catch (error) {
-            console.error('Failed to delete customer:', error);
+        } else {
+            console.error('Failed to delete customer:', result.error);
         }
     };
 

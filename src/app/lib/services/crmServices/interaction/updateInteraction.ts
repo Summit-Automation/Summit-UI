@@ -2,42 +2,50 @@
 
 import { revalidatePath } from 'next/cache';
 import { getAuthenticatedUser } from '@/app/lib/services/shared/authUtils';
-import { Interaction } from '@/types/interaction';
-
-type UpdateInteractionInput = Omit<Interaction, 'customer_name' | 'created_at' | 'updated_at' | 'interaction_index'>
+import { Result, success, error } from '@/types/result';
+import { updateInteractionSchema } from '@/lib/validation/schemas';
+import { validateInput, formatValidationErrors } from '@/lib/validation/validator';
 
 /**
  * Updates an existing interaction in the CRM system.
  * This function uses Supabase to update the interaction data.
  * @param input the details of the interaction to be updated, including the ID.
- * @return {Promise<boolean>} returns true if the interaction was successfully updated, false otherwise.
+ * @return {Promise<Result<void, string>>} returns success if the interaction was successfully updated, error otherwise.
  */
-export async function updateInteraction(input: UpdateInteractionInput): Promise<boolean> {
+export async function updateInteraction(input: unknown): Promise<Result<void, string>> {
+    // Validate input
+    const validationResult = validateInput(updateInteractionSchema, input);
+    if (!validationResult.success) {
+        return error(formatValidationErrors(validationResult.error));
+    }
+
+    const validatedInput = validationResult.data;
+
     try {
         const { supabase } = await getAuthenticatedUser();
 
-        const { error } = await supabase.rpc('update_interaction', {
-            p_id: input.id,
-            p_customer_id: input.customer_id,
-            p_type: input.type,
-            p_title: input.title,
-            p_notes: input.notes,
-            p_outcome: input.outcome,
-            p_follow_up_required: input.follow_up_required,
+        const { error: updateError } = await supabase.rpc('update_interaction', {
+            p_id: validatedInput.id,
+            p_customer_id: validatedInput.customer_id,
+            p_type: validatedInput.type,
+            p_title: validatedInput.title,
+            p_notes: validatedInput.notes,
+            p_outcome: validatedInput.outcome,
+            p_follow_up_required: validatedInput.follow_up_required,
         }
         );
 
-        if (error) {
-            console.error('Error updating interaction:', error);
-            return false;
+        if (updateError) {
+            console.error('Error updating interaction:', updateError);
+            return error('Failed to update interaction');
         }
         
         // Revalidate the CRM page to reflect the updated interaction
         revalidatePath('/crm');
         
-        return true;
+        return success(undefined);
     } catch (err) {
         console.error('Exception in updateInteraction:', err);
-        return false;
+        return error(err instanceof Error ? err.message : 'Unknown error occurred');
     }
 }

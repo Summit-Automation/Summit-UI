@@ -52,14 +52,14 @@ export default function MileageTableEnhanced({
   const handleDelete = async (id: string) => {
     setLoadingStates(prev => ({ ...prev, [id]: true }));
     
-    try {
-      await deleteMileageEntry(id);
+    const result = await deleteMileageEntry(id);
+    if (result.success) {
       onUpdate?.();
-    } catch (error) {
-      console.error('Error deleting mileage entry:', error);
-    } finally {
-      setLoadingStates(prev => ({ ...prev, [id]: false }));
+    } else {
+      console.error('Error deleting mileage entry:', result.error);
     }
+    
+    setLoadingStates(prev => ({ ...prev, [id]: false }));
   };
 
   // Export handling

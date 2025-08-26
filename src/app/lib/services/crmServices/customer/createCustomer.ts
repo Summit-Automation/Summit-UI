@@ -33,7 +33,7 @@ export async function createCustomer(input: unknown): Promise<Result<void, strin
 
         if (rpcError) {
             console.error('Error inserting new customer:', rpcError);
-            return error(rpcError.message);
+            return error('Failed to create customer');
         }
 
         return success(undefined);
