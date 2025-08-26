@@ -7,27 +7,26 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "daily" # Check for updates daily
+      interval: "daily"
       time: "09:00"
       timezone: "America/New_York"
-    # Allow up to 10 open PRs at once
     open-pull-requests-limit: 10
-    # Group minor and patch updates together to reduce PR noise
+    assignees:
+      - "Brandon-Allshouse"
+    reviewers:
+      - "Brandon-Allshouse"
+    target-branch: "main"
+    
+    # Group updates to reduce PR noise
     groups:
-      # Group all non-major updates together
-      all-dependencies:
+      # Group all minor and patch updates together
+      minor-and-patch:
         patterns:
           - "*"
         update-types:
           - "minor"
           - "patch"
-    # Automatically approve and merge patch updates for trusted packages
-    assignees:
-      - "@me"
-    reviewers:
-      - "@me"
-    # Target specific branch if you use different branching strategy
-    target-branch: "main"
+    
     # Commit message configuration
     commit-message:
       prefix: "deps"
