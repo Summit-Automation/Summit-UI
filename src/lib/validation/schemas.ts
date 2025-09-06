@@ -10,7 +10,8 @@ import {
 const uuidSchema = z.string().uuid('Invalid UUID format');
 const optionalUuidSchema = z.string().uuid('Invalid UUID format').optional().or(z.literal('').transform(() => undefined));
 const emailSchema = z.string().email('Invalid email format').max(255, 'Email too long');
-const phoneSchema = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number format').optional();
+const optionalEmailSchema = z.union([z.literal(''), z.string().email('Invalid email format').max(255, 'Email too long')]).optional();
+const phoneSchema = z.union([z.literal(''), z.string().regex(/^([\+]?[1-9][\d]{0,15}|[\d]{3}-[\d]{3}-[\d]{4}|[\+]?[1-9][\d\s\-\(\)]{0,20})$/, 'Invalid phone number format')]).optional();
 const nonEmptyString = z.string().min(1, 'This field is required').max(1000, 'Text too long');
 const optionalString = z.string().max(1000, 'Text too long').optional();
 const positiveNumber = z.number().positive('Must be a positive number');
@@ -47,13 +48,13 @@ export const updateTransactionSchema = z.object({
 });
 
 // ===== CUSTOMER SCHEMAS =====
-export const customerStatusSchema = z.enum(['active', 'inactive', 'prospect', 'qualified'], {
+export const customerStatusSchema = z.enum(['active', 'inactive', 'prospect', 'qualified', 'lead', 'contacted', 'proposal', 'closed'], {
   message: 'Invalid customer status'
 });
 
 export const createCustomerSchema = z.object({
   full_name: nonEmptyString,
-  email: emailSchema,
+  email: optionalEmailSchema,
   phone: phoneSchema,
   business: optionalString,
   status: customerStatusSchema,
@@ -62,7 +63,7 @@ export const createCustomerSchema = z.object({
 export const updateCustomerSchema = z.object({
   id: uuidSchema,
   full_name: optionalString,
-  email: emailSchema.optional(),
+  email: optionalEmailSchema,
   phone: phoneSchema,
   business: optionalString,
   status: customerStatusSchema.optional(),

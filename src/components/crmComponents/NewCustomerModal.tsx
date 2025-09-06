@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 import {useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import {
     Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog';
@@ -13,18 +15,21 @@ import {createCustomer} from '@/app/lib/services/crmServices/customer/createCust
 import {formatPhoneNumber} from '@/lib/phoneUtils';
 import {isSuccess} from '@/types/result';
 
-type FormValues = {
-    full_name: string;
-    email: string;
-    phone: string;
-    business: string;
-    status: 'lead' | 'prospect' | 'contacted' | 'qualified' | 'proposal' | 'closed';
-};
+const customerFormSchema = z.object({
+    full_name: z.string().min(1, 'Full name is required'),
+    email: z.union([z.literal(''), z.string().email('Invalid email')]).optional(),
+    phone: z.union([z.literal(''), z.string()]).optional(),
+    business: z.union([z.literal(''), z.string()]).optional(),
+    status: z.string(),
+});
+
+type FormValues = z.infer<typeof customerFormSchema>;
 
 export default function NewCustomerModal({onSuccess}: { onSuccess?: () => void }) {
     const [open, setOpen] = React.useState(false);
 
     const form = useForm<FormValues>({
+        resolver: zodResolver(customerFormSchema),
         defaultValues: {
             full_name: '', email: '', phone: '', business: '', status: 'lead',
         }, mode: 'onBlur',
