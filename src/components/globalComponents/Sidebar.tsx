@@ -241,7 +241,11 @@ export default function Sidebar() {
 
             {/* Mobile Overlay */}
             {isOpen && (
-                <div className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-200" />
+                <div 
+                    className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-200" 
+                    onClick={() => setIsOpen(false)}
+                    onTouchEnd={() => setIsOpen(false)}
+                />
             )}
 
             {/* Sidebar - Desktop (collapsible) + Mobile (slide in) */}
@@ -264,14 +268,19 @@ export default function Sidebar() {
                     
                     {/* Desktop Collapse Button */}
                     <button
-                        onClick={() => setIsCollapsed(!isCollapsed)}
-                        className="hidden lg:flex absolute -right-3 top-6 z-10 bg-slate-900/95 border border-slate-700 p-1.5 rounded-full shadow-lg transition-all duration-200 hover:bg-slate-800 hover:border-slate-600"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setIsCollapsed(!isCollapsed);
+                        }}
+                        className="hidden lg:flex absolute -right-3 top-6 z-[60] bg-slate-900/95 border border-slate-700 p-1.5 rounded-full shadow-lg transition-all duration-200 hover:bg-slate-800 hover:border-slate-600 hover:scale-110 active:scale-95 pointer-events-auto"
                         aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                        title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
                     >
                         {isCollapsed ? (
-                            <ChevronRight className="h-4 w-4 text-slate-300" />
+                            <ChevronRight className="h-4 w-4 text-slate-300 transition-transform duration-200" />
                         ) : (
-                            <ChevronLeft className="h-4 w-4 text-slate-300" />
+                            <ChevronLeft className="h-4 w-4 text-slate-300 transition-transform duration-200" />
                         )}
                     </button>
                     
@@ -297,9 +306,10 @@ export default function Sidebar() {
                 </div>
 
                 {/* Navigation */}
-                <nav className="flex-1 p-4 overflow-y-auto custom-scrollbar">
+                <nav className="flex-1 p-4 overflow-y-auto custom-scrollbar" style={{pointerEvents: 'auto'}}>
                     <div className="space-y-6">
-                        {loading || permissionsLoading ? (
+                        {/* Always show navigation, even while loading */}
+                        {(!allowedNavItems || allowedNavItems.length === 0) && (loading || permissionsLoading) ? (
                             <div className="space-y-4">
                                 {[1, 2, 3, 4, 5].map((i) => (
                                     <div key={i} className="space-y-2">
@@ -325,17 +335,31 @@ export default function Sidebar() {
                                         const isActive = pathname === href;
 
                                         return (
-                                            <Link key={href} href={href}>
-                                                <div
-                                                    className={cn(
-                                                        "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 group relative sidebar-nav-item",
-                                                        isCollapsed && "lg:justify-center lg:px-2",
-                                                        isActive 
-                                                            ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/25 border border-blue-500/20 sidebar-nav-active" 
-                                                            : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 hover:border-slate-700/30 border border-transparent"
-                                                    )}
-                                                    title={isCollapsed ? label : undefined}
-                                                >
+                                            <Link 
+                                                key={href} 
+                                                href={href}
+                                                className={cn(
+                                                    "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 group relative sidebar-nav-item block w-full",
+                                                    isCollapsed && "lg:justify-center lg:px-2 lg:mx-1",
+                                                    isActive 
+                                                        ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/25 border border-blue-500/20 sidebar-nav-active" 
+                                                        : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 hover:border-slate-700/30 border border-transparent"
+                                                )}
+                                                title={isCollapsed ? label : undefined}
+                                                onClick={(e) => {
+                                                    // Ensure navigation works by preventing event conflicts
+                                                    e.stopPropagation();
+                                                    // Close mobile menu on navigation
+                                                    if (isOpen) {
+                                                        setIsOpen(false);
+                                                    }
+                                                }}
+                                                onTouchEnd={(e) => {
+                                                    // Prevent touch conflicts on mobile
+                                                    e.stopPropagation();
+                                                }}
+                                                style={{touchAction: 'manipulation'}}
+                                            >
                                                     <Icon className={cn(
                                                         "h-5 w-5 flex-shrink-0 transition-all duration-200",
                                                         isActive ? "text-white drop-shadow-sm" : "text-slate-500 group-hover:text-slate-300 group-hover:scale-110"
@@ -357,7 +381,6 @@ export default function Sidebar() {
                                                     {isActive && (
                                                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-white/40 rounded-r-full shadow-lg" />
                                                     )}
-                                                </div>
                                             </Link>
                                         );
                                     })}
@@ -381,8 +404,79 @@ export default function Sidebar() {
                             </div>
                         </div>
                     ) : (
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className={cn("flex items-center", isCollapsed ? "lg:justify-center lg:flex-col lg:gap-2" : "justify-between")}>
+                            {/* Collapsed state: Center avatar with logout on click */}
+                            {isCollapsed ? (
+                                <div className="hidden lg:flex flex-col items-center gap-2">
+                                    <div 
+                                        className="relative group cursor-pointer"
+                                        onClick={handleSignOut}
+                                        title={`${getDisplayName()} - Click to sign out`}
+                                    >
+                                        {user?.avatar_url ? (
+                                            <Image 
+                                                src={user.avatar_url} 
+                                                alt="User avatar"
+                                                width={32}
+                                                height={32}
+                                                className="rounded-full ring-2 ring-slate-700/50 shadow-lg group-hover:ring-blue-500/50 transition-all duration-200"
+                                            />
+                                        ) : (
+                                            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center shadow-lg ring-2 ring-blue-500/20 group-hover:ring-blue-500/50 transition-all duration-200">
+                                                <span className="text-white text-xs font-bold">
+                                                    {user ? getUserInitials(getDisplayName()) : 'U'}
+                                                </span>
+                                            </div>
+                                        )}
+                                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                                            <LogOut className="h-2 w-2 text-white" />
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                /* Expanded state: Normal layout */
+                                <>
+                                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                                        {user?.avatar_url ? (
+                                            <div className="relative">
+                                                <Image 
+                                                    src={user.avatar_url} 
+                                                    alt="User avatar"
+                                                    width={36}
+                                                    height={36}
+                                                    className="rounded-full flex-shrink-0 ring-2 ring-slate-700/50 shadow-lg"
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-blue-500/20">
+                                                <span className="text-white text-sm font-bold">
+                                                    {user ? getUserInitials(getDisplayName()) : 'U'}
+                                                </span>
+                                            </div>
+                                        )}
+                                        <div className="min-w-0 flex-1">
+                                            <p className="text-sm font-semibold text-slate-200 truncate sidebar-text" title={getDisplayName()}>
+                                                {getDisplayName()}
+                                            </p>
+                                            <p className="text-xs text-slate-500 truncate sidebar-text-secondary font-medium" title={user?.email}>
+                                                {user?.email || 'user@example.com'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <Button 
+                                        variant="ghost" 
+                                        size="sm" 
+                                        className="text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 flex-shrink-0 ml-2 transition-all duration-200 rounded-lg"
+                                        onClick={handleSignOut}
+                                        title="Sign out"
+                                    >
+                                        <LogOut className="h-4 w-4" />
+                                    </Button>
+                                </>
+                            )}
+                            
+                            {/* Mobile: Always show normal layout */}
+                            <div className="lg:hidden flex items-center gap-3 min-w-0 flex-1">
                                 {user?.avatar_url ? (
                                     <div className="relative">
                                         <Image 
@@ -412,7 +506,7 @@ export default function Sidebar() {
                             <Button 
                                 variant="ghost" 
                                 size="sm" 
-                                className="text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 flex-shrink-0 ml-2 transition-all duration-200 rounded-lg"
+                                className="lg:hidden text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 flex-shrink-0 ml-2 transition-all duration-200 rounded-lg"
                                 onClick={handleSignOut}
                                 title="Sign out"
                             >
@@ -421,8 +515,12 @@ export default function Sidebar() {
                         </div>
                     )}
                     
-                    <div className="mt-4 pt-3 border-t border-slate-800/40 text-center text-xs text-slate-600 sidebar-text-muted font-medium">
+                    <div className={cn("mt-4 pt-3 border-t border-slate-800/40 text-center text-xs text-slate-600 sidebar-text-muted font-medium", isCollapsed && "lg:hidden")}>
                         © 2025 Summit Automation
+                    </div>
+                    {/* Collapsed state: Show minimal copyright */}
+                    <div className={cn("mt-2 pt-2 border-t border-slate-800/40 text-center text-xs text-slate-600 sidebar-text-muted font-medium hidden", isCollapsed && "lg:block")}>
+                        © &apos;25
                     </div>
                 </div>
             </aside>
