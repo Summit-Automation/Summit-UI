@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import OrganizationDisplay from '@/components/organizationComponents/OrganizationDisplay';
+import { useAllowedNavItems } from '@/hooks/useUserPermissions';
 import {
     LayoutDashboard,
     Users,
@@ -19,6 +20,9 @@ import {
     LogOut,
     Menu,
     X,
+    Kanban,
+    ChevronLeft,
+    ChevronRight,
 } from 'lucide-react';
 
 const navItems = [
@@ -60,6 +64,13 @@ const navItems = [
         category: 'Marketing',
         badge: 'AI'
     },
+    {
+        href: '/project-manager',
+        label: 'Project Manager',
+        icon: Kanban,
+        category: 'Operations',
+        badge: 'New'
+    },
 ];
 
 interface UserData {
@@ -75,11 +86,26 @@ export default function Sidebar() {
     const [user, setUser] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('sidebar-collapsed') === 'true';
+        }
+        return false;
+    });
+    const { allowedItems: allowedNavItems, loading: permissionsLoading } = useAllowedNavItems(navItems);
 
     // Close mobile menu when route changes
     useEffect(() => {
         setIsOpen(false);
     }, [pathname]);
+
+    // Save collapsed state to localStorage and update CSS property
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('sidebar-collapsed', isCollapsed.toString());
+            document.documentElement.style.setProperty('--sidebar-width', isCollapsed ? '4rem' : '16rem');
+        }
+    }, [isCollapsed]);
 
     // Close mobile menu when clicking outside
     useEffect(() => {
@@ -218,23 +244,38 @@ export default function Sidebar() {
                 <div className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-200" />
             )}
 
-            {/* Sidebar - Desktop (always visible) + Mobile (slide in) */}
+            {/* Sidebar - Desktop (collapsible) + Mobile (slide in) */}
             <aside
                 id="mobile-sidebar"
                 className={cn(
-                    "fixed inset-y-0 left-0 z-50 w-64 bg-slate-950/98 backdrop-blur-xl border-r border-slate-800/40 flex flex-col transition-transform duration-300 ease-in-out custom-scrollbar sidebar-bg shadow-2xl",
-                    // Desktop: always visible
+                    "fixed inset-y-0 left-0 z-50 bg-slate-950/98 backdrop-blur-xl border-r border-slate-800/40 flex flex-col transition-all duration-300 ease-in-out custom-scrollbar sidebar-bg shadow-2xl",
+                    // Desktop: collapsible
+                    isCollapsed ? "lg:w-16" : "lg:w-64",
                     "lg:translate-x-0",
-                    // Mobile: slide in/out
+                    // Mobile: slide in/out (always full width on mobile)
+                    "w-64",
                     isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
                 )}
             >
                 {/* Header */}
-                <div className="p-6 border-b border-slate-800/30 sidebar-border">
+                <div className="p-6 border-b border-slate-800/30 sidebar-border relative">
                     {/* Mobile: Add top padding to account for hamburger button */}
                     <div className="lg:hidden h-8" />
                     
-                    <div className="flex items-center justify-center mb-4">
+                    {/* Desktop Collapse Button */}
+                    <button
+                        onClick={() => setIsCollapsed(!isCollapsed)}
+                        className="hidden lg:flex absolute -right-3 top-6 z-10 bg-slate-900/95 border border-slate-700 p-1.5 rounded-full shadow-lg transition-all duration-200 hover:bg-slate-800 hover:border-slate-600"
+                        aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                    >
+                        {isCollapsed ? (
+                            <ChevronRight className="h-4 w-4 text-slate-300" />
+                        ) : (
+                            <ChevronLeft className="h-4 w-4 text-slate-300" />
+                        )}
+                    </button>
+                    
+                    <div className={cn("flex items-center justify-center mb-4", isCollapsed && "lg:hidden")}>
                         <div className="relative">
                             <Image
                                 src="/logo.svg"
@@ -250,7 +291,7 @@ export default function Sidebar() {
                     </div>
                     
                     {/* Organization Display */}
-                    <div className="mt-4 p-4 bg-gradient-to-br from-slate-900/70 to-slate-800/50 rounded-xl border border-slate-700/30 transition-all duration-200 hover:from-slate-900/80 hover:to-slate-800/60 hover:border-slate-600/40 sidebar-org-bg shadow-lg backdrop-blur-sm">
+                    <div className={cn("mt-4 p-4 bg-gradient-to-br from-slate-900/70 to-slate-800/50 rounded-xl border border-slate-700/30 transition-all duration-200 hover:from-slate-900/80 hover:to-slate-800/60 hover:border-slate-600/40 sidebar-org-bg shadow-lg backdrop-blur-sm", isCollapsed && "lg:hidden")}>
                         <OrganizationDisplay />
                     </div>
                 </div>
@@ -258,15 +299,25 @@ export default function Sidebar() {
                 {/* Navigation */}
                 <nav className="flex-1 p-4 overflow-y-auto custom-scrollbar">
                     <div className="space-y-6">
-                        {Object.entries(
-                            navItems.reduce((acc, item) => {
-                                if (!acc[item.category]) acc[item.category] = [];
-                                acc[item.category].push(item);
-                                return acc;
-                            }, {} as Record<string, typeof navItems>)
-                        ).map(([category, items]) => (
+                        {loading || permissionsLoading ? (
+                            <div className="space-y-4">
+                                {[1, 2, 3, 4, 5].map((i) => (
+                                    <div key={i} className="space-y-2">
+                                        <div className="h-4 w-20 bg-slate-800/50 rounded animate-pulse"></div>
+                                        <div className="h-10 w-full bg-slate-800/30 rounded-xl animate-pulse"></div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            Object.entries(
+                                allowedNavItems.reduce((acc, item) => {
+                                    if (!acc[item.category]) acc[item.category] = [];
+                                    acc[item.category].push(item);
+                                    return acc;
+                                }, {} as Record<string, typeof allowedNavItems>)
+                            ).map(([category, items]) => (
                             <div key={category}>
-                                <h3 className="px-4 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider sidebar-text mb-2 border-b border-slate-800/30 pb-2">
+                                <h3 className={cn("px-4 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider sidebar-text mb-2 border-b border-slate-800/30 pb-2", isCollapsed && "lg:hidden")}>
                                     {category}
                                 </h3>
                                 <div className="space-y-1">
@@ -278,17 +329,19 @@ export default function Sidebar() {
                                                 <div
                                                     className={cn(
                                                         "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 group relative sidebar-nav-item",
+                                                        isCollapsed && "lg:justify-center lg:px-2",
                                                         isActive 
                                                             ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/25 border border-blue-500/20 sidebar-nav-active" 
                                                             : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 hover:border-slate-700/30 border border-transparent"
                                                     )}
+                                                    title={isCollapsed ? label : undefined}
                                                 >
                                                     <Icon className={cn(
                                                         "h-5 w-5 flex-shrink-0 transition-all duration-200",
                                                         isActive ? "text-white drop-shadow-sm" : "text-slate-500 group-hover:text-slate-300 group-hover:scale-110"
                                                     )} />
-                                                    <span className="truncate flex-1">{label}</span>
-                                                    {badge && (
+                                                    <span className={cn("truncate flex-1", isCollapsed && "lg:hidden")}>{label}</span>
+                                                    {badge && !isCollapsed && (
                                                         <span className={cn(
                                                             "px-2 py-0.5 text-xs font-bold rounded-full transition-all duration-200",
                                                             badge === 'AI' 
@@ -297,6 +350,9 @@ export default function Sidebar() {
                                                         )}>
                                                             {badge}
                                                         </span>
+                                                    )}
+                                                    {badge && isCollapsed && (
+                                                        <div className="hidden lg:block absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full shadow-sm"></div>
                                                     )}
                                                     {isActive && (
                                                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-white/40 rounded-r-full shadow-lg" />
@@ -307,7 +363,8 @@ export default function Sidebar() {
                                     })}
                                 </div>
                             </div>
-                        ))}
+                        ))
+                        )}
                     </div>
                 </nav>
 

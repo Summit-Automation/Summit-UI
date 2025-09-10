@@ -29,7 +29,7 @@ function ThemedContent({ children }: { children: React.ReactNode }) {
         // Regular pages get responsive sidebar + main content
         <>
           <Sidebar />
-          <main className="lg:ml-64 min-h-screen">
+          <main className="lg:ml-[var(--sidebar-width,16rem)] min-h-screen transition-all duration-300 ease-in-out">
             {/* Mobile: Add top padding for hamburger button */}
             <div className="pt-16 lg:pt-0">
               {children}

@@ -315,6 +315,72 @@ export const leadGenerationSchema = z.object({
     .or(z.literal(''))
 });
 
+// ===== PROJECT MANAGER SCHEMAS =====
+export const projectStatusSchema = z.enum(['active', 'completed', 'on_hold', 'archived'], {
+  message: 'Invalid project status'
+});
+
+export const projectPrioritySchema = z.enum(['low', 'medium', 'high', 'urgent'], {
+  message: 'Invalid project priority'
+});
+
+export const taskStatusSchema = z.enum(['backlog', 'in_progress', 'review', 'done', 'blocked'], {
+  message: 'Invalid task status'
+});
+
+export const taskPrioritySchema = z.enum(['low', 'medium', 'high', 'urgent'], {
+  message: 'Invalid task priority'
+});
+
+export const createProjectSchema = z.object({
+  name: z.string()
+    .min(1, 'Project name is required')
+    .max(100, 'Project name must be less than 100 characters')
+    .trim(),
+  description: z.string()
+    .max(1000, 'Description must be less than 1000 characters')
+    .trim()
+    .optional()
+    .or(z.literal('')),
+  status: projectStatusSchema.default('active'),
+  priority: projectPrioritySchema.default('medium'),
+  start_date: dateString,
+  due_date: dateString,
+}).refine((data) => {
+  if (data.start_date && data.due_date) {
+    return new Date(data.start_date) <= new Date(data.due_date);
+  }
+  return true;
+}, {
+  message: 'Due date must be after start date',
+  path: ['due_date'],
+});
+
+export const updateProjectSchema = createProjectSchema.partial();
+
+export const createTaskSchema = z.object({
+  project_id: uuidSchema,
+  title: z.string()
+    .min(1, 'Task title is required')
+    .max(200, 'Task title must be less than 200 characters')
+    .trim(),
+  description: z.string()
+    .max(2000, 'Description must be less than 2000 characters')
+    .trim()
+    .optional()
+    .or(z.literal('')),
+  status: taskStatusSchema.default('backlog'),
+  priority: taskPrioritySchema.default('medium'),
+  assigned_to: optionalUuidSchema,
+  due_date: dateString,
+  estimated_hours: z.number()
+    .min(0, 'Estimated hours must be non-negative')
+    .max(1000, 'Estimated hours must be less than 1000')
+    .optional(),
+});
+
+export const updateTaskSchema = createTaskSchema.partial().omit({ project_id: true });
+
 // ===== MILEAGE TRACKING SCHEMAS =====
 export const mileageCalculationSchema = z.object({
   start_location: z.string()
@@ -352,6 +418,10 @@ export type EmailGenerationFormInput = z.infer<typeof emailGenerationFormSchema>
 export type ReceiptUploadInput = z.infer<typeof receiptUploadSchema>;
 export type LeadGenerationInput = z.infer<typeof leadGenerationSchema>;
 export type MileageCalculationInput = z.infer<typeof mileageCalculationSchema>;
+export type CreateProjectInput = z.infer<typeof createProjectSchema>;
+export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;
+export type CreateTaskInput = z.infer<typeof createTaskSchema>;
+export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
 export type ExportFilterInput = z.infer<typeof exportFilterSchema>;
 export type PaginationInput = z.infer<typeof paginationSchema>;
 export type SearchInput = z.infer<typeof searchSchema>;
