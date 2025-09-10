@@ -36,12 +36,6 @@ export default function TaskDetailsModal({
         setCurrentDate(new Date());
     }, []);
 
-    useEffect(() => {
-        if (isOpen && task.id) {
-            fetchTimeEntries();
-        }
-    }, [isOpen, task.id, fetchTimeEntries]);
-
     const fetchTimeEntries = useCallback(async () => {
         setLoading(true);
         try {
@@ -54,6 +48,12 @@ export default function TaskDetailsModal({
             setLoading(false);
         }
     }, [task.id]);
+
+    useEffect(() => {
+        if (isOpen && task.id) {
+            fetchTimeEntries();
+        }
+    }, [isOpen, task.id, fetchTimeEntries]);
 
     const getPriorityColor = (priority: string) => {
         switch (priority) {
