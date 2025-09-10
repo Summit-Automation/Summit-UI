@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, useEffect, memo } from 'react';
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, closestCorners, PointerSensor, TouchSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -79,7 +79,7 @@ interface DraggableTaskCardProps {
     isDragging?: boolean;
 }
 
-function SortableTaskCard({ task, onEditTask, onDeleteTask, onLogTime, onOpenDetails }: DraggableTaskCardProps) {
+const SortableTaskCard = memo(function SortableTaskCard({ task, onEditTask, onDeleteTask, onLogTime, onOpenDetails }: DraggableTaskCardProps) {
     const {
         attributes,
         listeners,
@@ -87,7 +87,13 @@ function SortableTaskCard({ task, onEditTask, onDeleteTask, onLogTime, onOpenDet
         transform,
         transition,
         isDragging,
-    } = useSortable({ id: task.id });
+    } = useSortable({ 
+        id: task.id,
+        transition: {
+            duration: 150,
+            easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+        },
+    });
 
     const style = {
         transform: CSS.Transform.toString(transform),
@@ -112,9 +118,9 @@ function SortableTaskCard({ task, onEditTask, onDeleteTask, onLogTime, onOpenDet
             />
         </div>
     );
-}
+});
 
-function TaskCard({ task, onEditTask, onDeleteTask, onLogTime, onOpenDetails, isDragging = false }: DraggableTaskCardProps) {
+const TaskCard = memo(function TaskCard({ task, onEditTask, onDeleteTask, onLogTime, onOpenDetails, isDragging = false }: DraggableTaskCardProps) {
     const [currentDate, setCurrentDate] = useState<Date>(new Date());
     
     useEffect(() => {
@@ -135,7 +141,7 @@ function TaskCard({ task, onEditTask, onDeleteTask, onLogTime, onOpenDetails, is
 
     return (
         <Card 
-            className={`bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-800 dark:to-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 shadow-sm hover:shadow-lg active:shadow-xl transition-all duration-200 cursor-pointer group select-none backdrop-blur-sm ${isDragging ? 'shadow-2xl rotate-2 scale-105 border-blue-300 dark:border-blue-600' : ''} ${overdue ? 'border-red-300/80 dark:border-red-700/80 bg-gradient-to-br from-red-50 to-red-100/30 dark:from-red-900/20 dark:to-red-900/10 shadow-red-100 dark:shadow-red-900/20' : ''}`}
+            className={`bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-800 dark:to-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 shadow-sm hover:shadow-lg transition-shadow duration-150 cursor-pointer group select-none ${isDragging ? 'opacity-50' : ''} ${overdue ? 'border-red-300/80 dark:border-red-700/80 bg-gradient-to-br from-red-50 to-red-100/30 dark:from-red-900/20 dark:to-red-900/10' : ''}`}
             onClick={() => onOpenDetails?.(task)}
         >
             <CardContent className="p-4">
@@ -154,7 +160,7 @@ function TaskCard({ task, onEditTask, onDeleteTask, onLogTime, onOpenDetails, is
                                     <Button
                                         variant="ghost"
                                         size="sm"
-                                        className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 hover:bg-slate-100/80 dark:hover:bg-slate-700/80 rounded-md transition-all duration-200"
+                                        className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 hover:bg-slate-100/80 dark:hover:bg-slate-700/80 rounded-md transition-opacity duration-150"
                                     >
                                         <MoreHorizontal className="h-4 w-4" />
                                     </Button>
@@ -249,7 +255,7 @@ function TaskCard({ task, onEditTask, onDeleteTask, onLogTime, onOpenDetails, is
                                 e.stopPropagation();
                                 onLogTime?.(task);
                             }}
-                            className="w-full h-7 text-xs opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-200/50 dark:border-blue-800/50"
+                            className="w-full h-7 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-150 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-200/50 dark:border-blue-800/50"
                         >
                             <Clock className="h-3 w-3 mr-1.5" />
                             Log Time
@@ -259,9 +265,9 @@ function TaskCard({ task, onEditTask, onDeleteTask, onLogTime, onOpenDetails, is
             </CardContent>
         </Card>
     );
-}
+});
 
-function KanbanColumn({ 
+const KanbanColumn = memo(function KanbanColumn({ 
     column, 
     tasks, 
     onCreateTask, 
@@ -307,7 +313,7 @@ function KanbanColumn({
                     <Button
                         size="sm"
                         variant="ghost"
-                        className={`h-7 w-7 p-0 rounded-lg transition-all duration-200 hover:scale-110 ${column.iconColor} hover:bg-white/70 dark:hover:bg-slate-800/70`}
+                        className={`h-7 w-7 p-0 rounded-lg transition-transform duration-150 hover:scale-110 ${column.iconColor} hover:bg-white/70 dark:hover:bg-slate-800/70`}
                         onClick={onCreateTask}
                     >
                         <Plus className="h-4 w-4" />
@@ -341,7 +347,7 @@ function KanbanColumn({
             </div>
         </div>
     );
-}
+});
 
 export default function KanbanBoardView({ 
     tasks, 
@@ -360,13 +366,13 @@ export default function KanbanBoardView({
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                distance: 8,
+                distance: 3,
             },
         }),
         useSensor(TouchSensor, {
             activationConstraint: {
-                delay: 250,
-                tolerance: 5,
+                delay: 150,
+                tolerance: 8,
             },
         })
     );
@@ -557,16 +563,24 @@ export default function KanbanBoardView({
             </div>
 
             {/* Drag Overlay */}
-            <DragOverlay>
+            <DragOverlay
+                adjustScale={false}
+                dropAnimation={{
+                    duration: 200,
+                    easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
+                }}
+            >
                 {draggedTask ? (
-                    <TaskCard
-                        task={draggedTask}
-                        onEditTask={onEditTask}
-                        onDeleteTask={onDeleteTask}
-                        onLogTime={handleLogTime}
-                        onOpenDetails={handleOpenTaskDetails}
-                        isDragging={true}
-                    />
+                    <div className="rotate-3 scale-105 cursor-grabbing">
+                        <TaskCard
+                            task={draggedTask}
+                            onEditTask={onEditTask}
+                            onDeleteTask={onDeleteTask}
+                            onLogTime={handleLogTime}
+                            onOpenDetails={handleOpenTaskDetails}
+                            isDragging={false}
+                        />
+                    </div>
                 ) : null}
             </DragOverlay>
 
