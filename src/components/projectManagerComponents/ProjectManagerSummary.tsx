@@ -1,8 +1,10 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { FolderOpen, CheckCircle, Clock, Calendar, AlertCircle } from "lucide-react";
 import { GrowthIndicator } from "@/components/ui/growth-indicator";
+import { isOverdue } from '@/utils/dateUtils';
 
 import type { ProjectWithStats } from '@/types/project';
 import type { TaskWithDetails } from '@/types/task';
@@ -15,18 +17,21 @@ interface ProjectManagerSummaryProps {
 }
 
 export default function ProjectManagerSummary({ projects, tasks, timeEntries }: ProjectManagerSummaryProps) {
+    const [currentDate, setCurrentDate] = useState<Date>(new Date());
+    
+    useEffect(() => {
+        setCurrentDate(new Date());
+    }, []);
+    
     const activeProjects = projects.filter(p => p.status === 'active').length;
     const completedProjects = projects.filter(p => p.status === 'completed').length;
     const totalTasks = tasks.length;
     const completedTasks = tasks.filter(t => t.status === 'done').length;
     const inProgressTasks = tasks.filter(t => t.status === 'in_progress').length;
-    const overdueTasks = tasks.filter(t => {
-        if (!t.due_date) return false;
-        return new Date(t.due_date) < new Date() && t.status !== 'done';
-    }).length;
+    const overdueTasks = tasks.filter(t => isOverdue(t.due_date, t.status, currentDate)).length;
     
     // Calculate total hours logged this week
-    const oneWeekAgo = new Date();
+    const oneWeekAgo = new Date(currentDate);
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     const thisWeekEntries = timeEntries.filter(entry => new Date(entry.entry_date) >= oneWeekAgo);
     const thisWeekHours = thisWeekEntries.reduce((sum, entry) => sum + (entry.minutes / 60), 0);

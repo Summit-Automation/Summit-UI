@@ -1,14 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { X, Clock, Calendar, User, MessageSquare, Edit, Trash2, Plus, AlertCircle } from "lucide-react";
+import { useState, useEffect, useCallback } from 'react';
+import { X, Clock, Calendar, MessageSquare, Edit, Trash2, Plus, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { formatDistanceToNow, format } from 'date-fns';
 import Avatar from 'react-avatar';
 import { getTimeEntries } from '@/app/lib/services/projectManagerServices/timeEntryServices';
 import { toast } from 'sonner';
+import { isOverdue } from '@/utils/dateUtils';
 import type { TaskWithDetails, TimeEntryWithUser } from '@/types/task';
 
 interface TaskDetailsModalProps {
@@ -30,14 +30,19 @@ export default function TaskDetailsModal({
 }: TaskDetailsModalProps) {
     const [timeEntries, setTimeEntries] = useState<TimeEntryWithUser[]>([]);
     const [loading, setLoading] = useState(false);
+    const [currentDate, setCurrentDate] = useState<Date>(new Date());
+    
+    useEffect(() => {
+        setCurrentDate(new Date());
+    }, []);
 
     useEffect(() => {
         if (isOpen && task.id) {
             fetchTimeEntries();
         }
-    }, [isOpen, task.id]);
+    }, [isOpen, task.id, fetchTimeEntries]);
 
-    const fetchTimeEntries = async () => {
+    const fetchTimeEntries = useCallback(async () => {
         setLoading(true);
         try {
             const entries = await getTimeEntries(task.id);
@@ -48,7 +53,7 @@ export default function TaskDetailsModal({
         } finally {
             setLoading(false);
         }
-    };
+    }, [task.id]);
 
     const getPriorityColor = (priority: string) => {
         switch (priority) {
@@ -154,7 +159,7 @@ export default function TaskDetailsModal({
                                 <div>
                                     <h4 className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Project</h4>
                                     <p className="text-sm text-slate-900 dark:text-slate-100 font-medium">
-                                        {task.project?.name || 'No Project'}
+                                        {task.project_name || 'No Project'}
                                     </p>
                                 </div>
                                 
@@ -162,13 +167,13 @@ export default function TaskDetailsModal({
                                     <h4 className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Assignee</h4>
                                     <div className="flex items-center gap-2">
                                         <Avatar
-                                            name={task.assignee?.email || 'Unassigned'}
+                                            name={task.assigned_to_email || 'Unassigned'}
                                             size="24"
                                             round={true}
                                             className="text-xs"
                                         />
                                         <span className="text-sm text-slate-900 dark:text-slate-100">
-                                            {task.assignee?.email || 'Unassigned'}
+                                            {task.assigned_to_name || 'Unassigned'}
                                         </span>
                                     </div>
                                 </div>
@@ -199,7 +204,7 @@ export default function TaskDetailsModal({
                             </div>
                         </div>
 
-                        {task.due_date && new Date(task.due_date) < new Date() && task.status !== 'done' && (
+                        {task.due_date && isOverdue(task.due_date, task.status, currentDate) && (
                             <div className="mb-6 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2">
                                 <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
                                 <span className="text-sm text-red-700 dark:text-red-300 font-medium">

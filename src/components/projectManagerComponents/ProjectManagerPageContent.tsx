@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Header } from '@/components/globalComponents/Header';
 import ErrorBoundary from '@/components/globalComponents/ErrorBoundary';
@@ -60,36 +60,38 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
     const [deleteType, setDeleteType] = useState<'project' | 'task'>('project');
     const [deleteError, setDeleteError] = useState<string | null>(null);
 
-    // Filter tasks based on current filters
-    const filteredTasks = tasks.filter(task => {
-        // Search filter
-        if (filters.search && !task.title.toLowerCase().includes(filters.search.toLowerCase()) && 
-            !task.description?.toLowerCase().includes(filters.search.toLowerCase())) {
-            return false;
-        }
+    // Filter tasks based on current filters - memoized for performance
+    const filteredTasks = useMemo(() => {
+        return tasks.filter(task => {
+            // Search filter
+            if (filters.search && !task.title.toLowerCase().includes(filters.search.toLowerCase()) && 
+                !task.description?.toLowerCase().includes(filters.search.toLowerCase())) {
+                return false;
+            }
 
-        // Status filter
-        if (filters.status.length > 0 && !filters.status.includes(task.status)) {
-            return false;
-        }
+            // Status filter
+            if (filters.status.length > 0 && !filters.status.includes(task.status)) {
+                return false;
+            }
 
-        // Priority filter
-        if (filters.priority.length > 0 && !filters.priority.includes(task.priority)) {
-            return false;
-        }
+            // Priority filter
+            if (filters.priority.length > 0 && !filters.priority.includes(task.priority)) {
+                return false;
+            }
 
-        // Assignee filter
-        if (filters.assignee.length > 0 && (!task.assigned_to || !filters.assignee.includes(task.assigned_to))) {
-            return false;
-        }
+            // Assignee filter
+            if (filters.assignee.length > 0 && (!task.assigned_to || !filters.assignee.includes(task.assigned_to))) {
+                return false;
+            }
 
-        // Project filter
-        if (filters.projectId.length > 0 && !filters.projectId.includes(task.project_id)) {
-            return false;
-        }
+            // Project filter
+            if (filters.projectId.length > 0 && !filters.projectId.includes(task.project_id)) {
+                return false;
+            }
 
-        return true;
-    });
+            return true;
+        });
+    }, [tasks, filters]);
 
     const handleSettings = () => router.push('/settings');
     const handleHelp = () => {
@@ -190,7 +192,7 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
                 onHelp={handleHelp}
             />
 
-            <div className="flex h-[calc(100vh-120px)] relative">
+            <div className="flex h-[calc(100vh-120px)] relative overflow-hidden">
                 {/* Mobile Sidebar Overlay */}
                 {isSidebarOpen && (
                     <div 
@@ -202,7 +204,7 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
                 {/* Sidebar */}
                 <div className={`${
                     isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                } lg:translate-x-0 fixed lg:relative z-50 lg:z-auto transition-transform duration-300 ease-in-out`}>
+                } lg:translate-x-0 fixed lg:relative z-50 lg:z-auto transition-transform duration-300 ease-in-out w-80 lg:w-auto h-full`}>
                     <ProjectSidebar
                         projects={projects}
                         tasks={tasks}
@@ -214,7 +216,7 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
                 </div>
 
                 {/* Main Content */}
-                <div className="flex-1 overflow-hidden lg:ml-0">
+                <div className="flex-1 overflow-hidden lg:ml-0 min-w-0">
                     {/* Mobile Header with Sidebar Toggle */}
                     <div className="lg:hidden flex items-center p-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
                         <Button
@@ -230,7 +232,7 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
                         </h1>
                     </div>
 
-                    <div className="p-6 h-full space-y-6 overflow-y-auto">
+                    <div className="p-4 lg:p-6 h-full space-y-4 lg:space-y-6 overflow-y-auto">
 
                 {/* Summary - Always Visible */}
                 <div className="w-full">
@@ -370,7 +372,7 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
                                 <CardContent>
                                     <ErrorBoundary>
                                         {viewMode === 'board' ? (
-                                            <div className="h-[70vh] overflow-hidden">
+                                            <div className="h-[60vh] sm:h-[70vh] overflow-auto">
                                                 <KanbanBoardView
                                                     tasks={filteredTasks}
                                                     onCreateTask={() => setShowCreateTaskModal(true)}

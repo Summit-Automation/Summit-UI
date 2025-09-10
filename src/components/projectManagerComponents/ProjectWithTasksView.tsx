@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback, memo } from 'react';
+import { useState, useMemo, useCallback, memo, useEffect } from 'react';
 import { Plus, FolderOpen, Calendar, Users, Clock, MoreHorizontal, Flag, CheckCircle2, CircleDot, Pause, Archive, Play, Timer, AlertTriangle, ChevronDown, ChevronRight, Kanban } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +12,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { isOverdue as checkOverdue, formatDate as formatDateUtil } from '@/utils/dateUtils';
 
 import type { ProjectWithStats } from '@/types/project';
 import type { TaskWithDetails } from '@/types/task';
@@ -40,6 +41,11 @@ function ProjectWithTasksView({
     onDeleteTask
 }: ProjectWithTasksViewProps) {
     const [expandedProjects, setExpandedProjects] = useState<Set<string>>(new Set());
+    const [currentDate, setCurrentDate] = useState<Date>(new Date());
+    
+    useEffect(() => {
+        setCurrentDate(new Date());
+    }, []);
 
     const toggleProject = useCallback((projectId: string) => {
         const newExpanded = new Set(expandedProjects);
@@ -131,7 +137,7 @@ function ProjectWithTasksView({
     };
 
     const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
+        return formatDateUtil(dateString, {
             month: 'short',
             day: 'numeric',
             year: 'numeric'
@@ -139,8 +145,7 @@ function ProjectWithTasksView({
     };
 
     const isOverdue = (dueDateString: string | undefined, status: string) => {
-        if (!dueDateString || status === 'done') return false;
-        return new Date(dueDateString) < new Date();
+        return checkOverdue(dueDateString, status, currentDate);
     };
 
     if (projects.length === 0) {
@@ -214,7 +219,23 @@ function ProjectWithTasksView({
                                         
                                         <FolderOpen className="h-4 w-4 text-blue-400" />
                                         
-                                        <div className="flex-1 min-w-0">
+                                        <div 
+                                            className="flex-1 min-w-0 cursor-pointer hover:bg-slate-700/20 rounded-lg p-2 -m-2 transition-colors"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onViewProjectDetails?.(project);
+                                            }}
+                                            role="button"
+                                            tabIndex={0}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    onViewProjectDetails?.(project);
+                                                }
+                                            }}
+                                            aria-label={`View details for project ${project.name}`}
+                                        >
                                             <h3 id={`project-${project.id}-title`} className="pm-card-title text-base font-medium">
                                                 {project.name}
                                             </h3>

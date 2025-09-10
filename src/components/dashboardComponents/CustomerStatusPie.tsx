@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Cell, Pie, PieChart } from 'recharts';
 import { Customer } from '@/types/customer';
 import { Chart } from '@/components/ui/chart';
@@ -21,6 +21,18 @@ export default function CustomerStatusPie({
     customers,
     size = 'md',
 }: CustomerStatusPieProps) {
+    const [isMobile, setIsMobile] = useState(false);
+    
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
     const data: StatusCount[] = useMemo(() => 
         Object.entries(
             customers.reduce((acc, curr) => {
@@ -54,10 +66,10 @@ export default function CustomerStatusPie({
                     nameKey="name"
                     cx="50%"
                     cy="40%"
-                    outerRadius={typeof window !== 'undefined' && window.innerWidth < 768 ? mobileRadius : radius}
-                    innerRadius={typeof window !== 'undefined' && window.innerWidth < 768 ? mobileRadius * 0.6 : radius * 0.6}
+                    outerRadius={isMobile ? mobileRadius : radius}
+                    innerRadius={isMobile ? mobileRadius * 0.6 : radius * 0.6}
                     label={({ name, percent }) => 
-                        typeof window !== 'undefined' && window.innerWidth >= 768 && (percent ?? 0) > 0.05
+                        !isMobile && (percent ?? 0) > 0.05
                             ? `${name} ${((percent ?? 0) * 100).toFixed(0)}%` 
                             : ''
                     }

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Cell, Pie, PieChart } from 'recharts';
 import { Interaction } from '@/types/interaction';
 import { Chart } from '@/components/ui/chart';
@@ -7,6 +8,18 @@ import { Chart } from '@/components/ui/chart';
 const COLORS = ['#dc2626', '#059669']; // Professional red for required, emerald for no follow-up
 
 export default function FollowUpPie({ interactions }: { interactions: Interaction[] }) {
+    const [isMobile, setIsMobile] = useState(false);
+    
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
     const followUpRequired = interactions.filter(i => i.follow_up_required).length;
     const noFollowUp = interactions.length - followUpRequired;
 
@@ -32,9 +45,9 @@ export default function FollowUpPie({ interactions }: { interactions: Interactio
                     nameKey="name"
                     cx="50%"
                     cy="40%"
-                    outerRadius={typeof window !== 'undefined' && window.innerWidth < 768 ? 50 : 80}
+                    outerRadius={isMobile ? 50 : 80}
                     label={({ name, percent }) => 
-                        typeof window !== 'undefined' && window.innerWidth >= 768 && percent
+                        !isMobile && percent
                             ? `${name.split(' ')[0]} ${(percent * 100).toFixed(0)}%` 
                             : ''
                     }

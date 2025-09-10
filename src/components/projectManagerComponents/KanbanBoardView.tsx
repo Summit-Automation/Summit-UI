@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, closestCorners, PointerSensor, TouchSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -17,6 +17,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Avatar from 'react-avatar';
+import { isOverdue, formatDate } from '@/utils/dateUtils';
 
 import type { TaskWithDetails } from '@/types/task';
 import { updateTask } from '@/app/lib/services/projectManagerServices/updateTask';
@@ -114,6 +115,12 @@ function SortableTaskCard({ task, onEditTask, onDeleteTask, onLogTime, onOpenDet
 }
 
 function TaskCard({ task, onEditTask, onDeleteTask, onLogTime, onOpenDetails, isDragging = false }: DraggableTaskCardProps) {
+    const [currentDate, setCurrentDate] = useState<Date>(new Date());
+    
+    useEffect(() => {
+        setCurrentDate(new Date());
+    }, []);
+    
     const getPriorityColor = (priority: string) => {
         switch (priority) {
             case 'urgent': return 'text-red-500';
@@ -124,12 +131,7 @@ function TaskCard({ task, onEditTask, onDeleteTask, onLogTime, onOpenDetails, is
         }
     };
 
-    const isOverdue = (dueDateString: string | undefined, status: string) => {
-        if (!dueDateString || status === 'done') return false;
-        return new Date(dueDateString) < new Date();
-    };
-
-    const overdue = isOverdue(task.due_date, task.status);
+    const overdue = isOverdue(task.due_date, task.status, currentDate);
 
     return (
         <Card 
@@ -219,7 +221,7 @@ function TaskCard({ task, onEditTask, onDeleteTask, onLogTime, onOpenDetails, is
                                 {task.due_date ? (
                                     <div className={`flex items-center gap-1 ${overdue ? 'text-red-600 dark:text-red-400 font-medium' : 'text-slate-500 dark:text-slate-400'}`}>
                                         <Calendar className="h-3 w-3" />
-                                        <span>{new Date(task.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                                        <span>{formatDate(task.due_date, { month: 'short', day: 'numeric' })}</span>
                                         {overdue && <AlertTriangle className="h-3 w-3 text-red-500" />}
                                     </div>
                                 ) : (
@@ -265,7 +267,8 @@ function KanbanColumn({
     onCreateTask, 
     onEditTask, 
     onDeleteTask,
-    onLogTime 
+    onLogTime,
+    onOpenDetails
 }: { 
     column: typeof COLUMNS[0]; 
     tasks: TaskWithDetails[];
@@ -273,6 +276,7 @@ function KanbanColumn({
     onEditTask?: (task: TaskWithDetails) => void;
     onDeleteTask?: (task: TaskWithDetails) => void;
     onLogTime?: (task: TaskWithDetails) => void;
+    onOpenDetails?: (task: TaskWithDetails) => void;
 }) {
     const { setNodeRef, isOver } = useDroppable({
         id: column.id,
@@ -312,7 +316,7 @@ function KanbanColumn({
             </div>
 
             {/* Column Content */}
-            <div className={`flex-1 p-3 space-y-3 bg-gradient-to-b from-slate-50/50 to-slate-100/30 dark:from-slate-900/30 dark:to-slate-900/50 ${column.borderColor} border-l border-r border-b rounded-b-xl min-h-[500px] max-h-[calc(100vh-300px)] overflow-y-auto backdrop-blur-sm`}>
+            <div className={`flex-1 p-3 space-y-3 bg-gradient-to-b from-slate-50/50 to-slate-100/30 dark:from-slate-900/30 dark:to-slate-900/50 ${column.borderColor} border-l border-r border-b rounded-b-xl min-h-[400px] sm:min-h-[500px] max-h-[calc(100vh-300px)] overflow-y-auto backdrop-blur-sm`}>
                 <SortableContext items={tasks.map(task => task.id)} strategy={verticalListSortingStrategy}>
                     {tasks.map((task) => (
                         <SortableTaskCard
@@ -321,6 +325,7 @@ function KanbanColumn({
                             onEditTask={onEditTask}
                             onDeleteTask={onDeleteTask}
                             onLogTime={onLogTime}
+                            onOpenDetails={onOpenDetails}
                         />
                     ))}
                 </SortableContext>
@@ -509,22 +514,44 @@ export default function KanbanBoardView({
 
                 {/* Kanban Board */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 h-[calc(100vh-200px)] overflow-x-auto min-w-0">
-                    <div className={`contents ${isUpdating ? 'pointer-events-none opacity-60' : ''}`}>
-                    {COLUMNS.map((column) => {
-                        const columnTasks = tasksByStatus[column.id] || [];
-                        return (
-                            <div key={column.id} id={column.id} className="flex flex-col">
-                                <KanbanColumn
-                                    column={column}
-                                    tasks={columnTasks}
-                                    onCreateTask={onCreateTask}
-                                    onEditTask={onEditTask}
-                                    onDeleteTask={onDeleteTask}
-                                    onLogTime={handleLogTime}
-                                />
-                            </div>
-                        );
-                    })}
+                    {/* Mobile: Horizontal scroll container */}
+                    <div className="lg:hidden flex gap-4 min-w-max pb-4">
+                        {COLUMNS.map((column) => {
+                            const columnTasks = tasksByStatus[column.id] || [];
+                            return (
+                                <div key={column.id} className="w-80 flex-shrink-0">
+                                    <KanbanColumn
+                                        column={column}
+                                        tasks={columnTasks}
+                                        onCreateTask={onCreateTask}
+                                        onEditTask={onEditTask}
+                                        onDeleteTask={onDeleteTask}
+                                        onLogTime={handleLogTime}
+                                        onOpenDetails={handleOpenTaskDetails}
+                                    />
+                                </div>
+                            );
+                        })}
+                    </div>
+                    
+                    {/* Desktop: Grid layout */}
+                    <div className="hidden lg:contents">
+                        {COLUMNS.map((column) => {
+                            const columnTasks = tasksByStatus[column.id] || [];
+                            return (
+                                <div key={column.id} id={column.id} className={`flex flex-col ${isUpdating ? 'pointer-events-none opacity-60' : ''}`}>
+                                    <KanbanColumn
+                                        column={column}
+                                        tasks={columnTasks}
+                                        onCreateTask={onCreateTask}
+                                        onEditTask={onEditTask}
+                                        onDeleteTask={onDeleteTask}
+                                        onLogTime={handleLogTime}
+                                        onOpenDetails={handleOpenTaskDetails}
+                                    />
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
@@ -537,6 +564,7 @@ export default function KanbanBoardView({
                         onEditTask={onEditTask}
                         onDeleteTask={onDeleteTask}
                         onLogTime={handleLogTime}
+                        onOpenDetails={handleOpenTaskDetails}
                         isDragging={true}
                     />
                 ) : null}
@@ -548,6 +576,18 @@ export default function KanbanBoardView({
                     isOpen={showLogTimeModal}
                     onClose={handleCloseTimeLogModal}
                     task={selectedTaskForTimeLog}
+                />
+            )}
+
+            {/* Task Details Modal */}
+            {showTaskDetailsModal && selectedTaskForDetails && (
+                <TaskDetailsModal
+                    isOpen={showTaskDetailsModal}
+                    onClose={handleCloseTaskDetails}
+                    task={selectedTaskForDetails}
+                    onEditTask={onEditTask}
+                    onDeleteTask={onDeleteTask}
+                    onLogTime={handleLogTime}
                 />
             )}
         </DndContext>
