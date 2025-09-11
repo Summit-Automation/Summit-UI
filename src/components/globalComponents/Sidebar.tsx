@@ -86,13 +86,14 @@ export default function Sidebar() {
     const [user, setUser] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
-    const [isCollapsed, setIsCollapsed] = useState(() => {
-        if (typeof window !== 'undefined') {
-            return localStorage.getItem('sidebar-collapsed') === 'true';
-        }
-        return false;
-    });
+    const [isCollapsed, setIsCollapsed] = useState(false);
     const { allowedItems: allowedNavItems, loading: permissionsLoading } = useAllowedNavItems(navItems);
+
+    // Initialize collapsed state from localStorage after hydration
+    useEffect(() => {
+        const savedCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+        setIsCollapsed(savedCollapsed);
+    }, []);
 
     // Close mobile menu when route changes
     useEffect(() => {
@@ -101,10 +102,8 @@ export default function Sidebar() {
 
     // Save collapsed state to localStorage and update CSS property
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('sidebar-collapsed', isCollapsed.toString());
-            document.documentElement.style.setProperty('--sidebar-width', isCollapsed ? '4rem' : '16rem');
-        }
+        localStorage.setItem('sidebar-collapsed', isCollapsed.toString());
+        document.documentElement.style.setProperty('--sidebar-width', isCollapsed ? '4rem' : '16rem');
     }, [isCollapsed]);
 
     // Close mobile menu when clicking outside
