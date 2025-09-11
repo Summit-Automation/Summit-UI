@@ -86,13 +86,14 @@ export default function Sidebar() {
     const [user, setUser] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
-    const [isCollapsed, setIsCollapsed] = useState(() => {
-        if (typeof window !== 'undefined') {
-            return localStorage.getItem('sidebar-collapsed') === 'true';
-        }
-        return false;
-    });
+    const [isCollapsed, setIsCollapsed] = useState(false);
     const { allowedItems: allowedNavItems, loading: permissionsLoading } = useAllowedNavItems(navItems);
+
+    // Initialize collapsed state from localStorage after hydration
+    useEffect(() => {
+        const savedCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+        setIsCollapsed(savedCollapsed);
+    }, []);
 
     // Close mobile menu when route changes
     useEffect(() => {
@@ -101,10 +102,8 @@ export default function Sidebar() {
 
     // Save collapsed state to localStorage and update CSS property
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('sidebar-collapsed', isCollapsed.toString());
-            document.documentElement.style.setProperty('--sidebar-width', isCollapsed ? '4rem' : '16rem');
-        }
+        localStorage.setItem('sidebar-collapsed', isCollapsed.toString());
+        document.documentElement.style.setProperty('--sidebar-width', isCollapsed ? '4rem' : '16rem');
     }, [isCollapsed]);
 
     // Close mobile menu when clicking outside
@@ -137,7 +136,6 @@ export default function Sidebar() {
     useEffect(() => {
         const supabase = createClient();
 
-        // Get initial user
         const getInitialUser = async () => {
             const { data: { user }, error } = await supabase.auth.getUser();
             
@@ -154,7 +152,6 @@ export default function Sidebar() {
             setLoading(false);
         };
 
-        // Function to refresh user data
         const refreshUserData = async () => {
             const { data: { user }, error } = await supabase.auth.getUser();
             if (user && !error) {
@@ -225,7 +222,6 @@ export default function Sidebar() {
 
     return (
         <>
-            {/* Mobile Hamburger Button */}
             <button
                 id="hamburger-button"
                 onClick={() => setIsOpen(!isOpen)}
@@ -239,7 +235,6 @@ export default function Sidebar() {
                 )}
             </button>
 
-            {/* Mobile Overlay */}
             {isOpen && (
                 <div 
                     className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-200" 
@@ -248,7 +243,6 @@ export default function Sidebar() {
                 />
             )}
 
-            {/* Sidebar - Desktop (collapsible) + Mobile (slide in) */}
             <aside
                 id="mobile-sidebar"
                 className={cn(
@@ -261,12 +255,10 @@ export default function Sidebar() {
                     isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
                 )}
             >
-                {/* Header */}
                 <div className="p-6 border-b border-slate-800/30 sidebar-border relative">
                     {/* Mobile: Add top padding to account for hamburger button */}
                     <div className="lg:hidden h-8" />
                     
-                    {/* Desktop Collapse Button */}
                     <button
                         onClick={(e) => {
                             e.preventDefault();
@@ -294,21 +286,17 @@ export default function Sidebar() {
                                 priority
                                 className="max-w-full h-auto drop-shadow-xl"
                             />
-                            {/* Enhanced glow effect behind logo */}
                             <div className="absolute inset-0 -z-10 bg-blue-500/25 blur-2xl rounded-full transform scale-150 opacity-60" />
                         </div>
                     </div>
                     
-                    {/* Organization Display */}
                     <div className={cn("mt-4 p-4 bg-gradient-to-br from-slate-900/70 to-slate-800/50 rounded-xl border border-slate-700/30 transition-all duration-200 hover:from-slate-900/80 hover:to-slate-800/60 hover:border-slate-600/40 sidebar-org-bg shadow-lg backdrop-blur-sm", isCollapsed && "lg:hidden")}>
                         <OrganizationDisplay />
                     </div>
                 </div>
 
-                {/* Navigation */}
                 <nav className="flex-1 p-4 overflow-y-auto custom-scrollbar" style={{pointerEvents: 'auto'}}>
                     <div className="space-y-6">
-                        {/* Always show navigation, even while loading */}
                         {(!allowedNavItems || allowedNavItems.length === 0) && (loading || permissionsLoading) ? (
                             <div className="space-y-4">
                                 {[1, 2, 3, 4, 5].map((i) => (
@@ -391,7 +379,6 @@ export default function Sidebar() {
                     </div>
                 </nav>
 
-                {/* Footer */}
                 <div className="p-4 border-t border-slate-800/30 sidebar-border">
                     {loading ? (
                         <div className="flex items-center justify-between">
@@ -404,115 +391,121 @@ export default function Sidebar() {
                             </div>
                         </div>
                     ) : (
-                        <div className={cn("flex items-center", isCollapsed ? "lg:justify-center lg:flex-col lg:gap-2" : "justify-between")}>
-                            {/* Collapsed state: Center avatar with logout on click */}
-                            {isCollapsed ? (
-                                <div className="hidden lg:flex flex-col items-center gap-2">
-                                    <div 
-                                        className="relative group cursor-pointer"
-                                        onClick={handleSignOut}
-                                        title={`${getDisplayName()} - Click to sign out`}
-                                    >
-                                        {user?.avatar_url ? (
+                        <>
+                            {/* Desktop: Responsive collapsed/expanded layout */}
+                            <div className="hidden lg:block">
+                                <div className={cn("flex items-center", isCollapsed ? "justify-center flex-col gap-2" : "justify-between")}>
+                                    {/* Collapsed state: Center avatar with logout on click */}
+                                    {isCollapsed ? (
+                                        <div className="flex flex-col items-center gap-2">
+                                            <div 
+                                                className="relative group cursor-pointer"
+                                                onClick={handleSignOut}
+                                                title={`${getDisplayName()} - Click to sign out`}
+                                            >
+                                                {user?.avatar_url ? (
+                                                    <Image 
+                                                        src={user.avatar_url} 
+                                                        alt="User avatar"
+                                                        width={32}
+                                                        height={32}
+                                                        className="rounded-full ring-2 ring-slate-700/50 shadow-lg group-hover:ring-blue-500/50 transition-all duration-200"
+                                                    />
+                                                ) : (
+                                                    <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center shadow-lg ring-2 ring-blue-500/20 group-hover:ring-blue-500/50 transition-all duration-200">
+                                                        <span className="text-white text-xs font-bold">
+                                                            {user ? getUserInitials(getDisplayName()) : 'U'}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                                                    <LogOut className="h-2 w-2 text-white" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div className="flex items-center gap-3 min-w-0 flex-1">
+                                                {user?.avatar_url ? (
+                                                    <div className="relative">
+                                                        <Image 
+                                                            src={user.avatar_url} 
+                                                            alt="User avatar"
+                                                            width={36}
+                                                            height={36}
+                                                            className="rounded-full flex-shrink-0 ring-2 ring-slate-700/50 shadow-lg"
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-blue-500/20">
+                                                        <span className="text-white text-sm font-bold">
+                                                            {user ? getUserInitials(getDisplayName()) : 'U'}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="text-sm font-semibold text-slate-200 truncate sidebar-text" title={getDisplayName()}>
+                                                        {getDisplayName()}
+                                                    </p>
+                                                    <p className="text-xs text-slate-500 truncate sidebar-text-secondary font-medium" title={user?.email}>
+                                                        {user?.email || 'user@example.com'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <Button 
+                                                variant="ghost" 
+                                                size="sm" 
+                                                className="text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 flex-shrink-0 ml-2 transition-all duration-200 rounded-lg"
+                                                onClick={handleSignOut}
+                                                title="Sign out"
+                                            >
+                                                <LogOut className="h-4 w-4" />
+                                            </Button>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                            
+                            {/* Mobile: Always show expanded layout */}
+                            <div className="lg:hidden flex items-center justify-between w-full">
+                                <div className="flex items-center gap-3 min-w-0 flex-1">
+                                    {user?.avatar_url ? (
+                                        <div className="relative">
                                             <Image 
                                                 src={user.avatar_url} 
                                                 alt="User avatar"
-                                                width={32}
-                                                height={32}
-                                                className="rounded-full ring-2 ring-slate-700/50 shadow-lg group-hover:ring-blue-500/50 transition-all duration-200"
+                                                width={36}
+                                                height={36}
+                                                className="rounded-full flex-shrink-0 ring-2 ring-slate-700/50 shadow-lg"
                                             />
-                                        ) : (
-                                            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center shadow-lg ring-2 ring-blue-500/20 group-hover:ring-blue-500/50 transition-all duration-200">
-                                                <span className="text-white text-xs font-bold">
-                                                    {user ? getUserInitials(getDisplayName()) : 'U'}
-                                                </span>
-                                            </div>
-                                        )}
-                                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                                            <LogOut className="h-2 w-2 text-white" />
                                         </div>
+                                    ) : (
+                                        <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-blue-500/20">
+                                            <span className="text-white text-sm font-bold">
+                                                {user ? getUserInitials(getDisplayName()) : 'U'}
+                                            </span>
+                                        </div>
+                                    )}
+                                    <div className="min-w-0 flex-1">
+                                        <p className="text-sm font-semibold text-slate-200 truncate sidebar-text" title={getDisplayName()}>
+                                            {getDisplayName()}
+                                        </p>
+                                        <p className="text-xs text-slate-500 truncate sidebar-text-secondary font-medium" title={user?.email}>
+                                            {user?.email || 'user@example.com'}
+                                        </p>
                                     </div>
                                 </div>
-                            ) : (
-                                /* Expanded state: Normal layout */
-                                <>
-                                    <div className="flex items-center gap-3 min-w-0 flex-1">
-                                        {user?.avatar_url ? (
-                                            <div className="relative">
-                                                <Image 
-                                                    src={user.avatar_url} 
-                                                    alt="User avatar"
-                                                    width={36}
-                                                    height={36}
-                                                    className="rounded-full flex-shrink-0 ring-2 ring-slate-700/50 shadow-lg"
-                                                />
-                                            </div>
-                                        ) : (
-                                            <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-blue-500/20">
-                                                <span className="text-white text-sm font-bold">
-                                                    {user ? getUserInitials(getDisplayName()) : 'U'}
-                                                </span>
-                                            </div>
-                                        )}
-                                        <div className="min-w-0 flex-1">
-                                            <p className="text-sm font-semibold text-slate-200 truncate sidebar-text" title={getDisplayName()}>
-                                                {getDisplayName()}
-                                            </p>
-                                            <p className="text-xs text-slate-500 truncate sidebar-text-secondary font-medium" title={user?.email}>
-                                                {user?.email || 'user@example.com'}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <Button 
-                                        variant="ghost" 
-                                        size="sm" 
-                                        className="text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 flex-shrink-0 ml-2 transition-all duration-200 rounded-lg"
-                                        onClick={handleSignOut}
-                                        title="Sign out"
-                                    >
-                                        <LogOut className="h-4 w-4" />
-                                    </Button>
-                                </>
-                            )}
-                            
-                            {/* Mobile: Always show normal layout */}
-                            <div className="lg:hidden flex items-center gap-3 min-w-0 flex-1">
-                                {user?.avatar_url ? (
-                                    <div className="relative">
-                                        <Image 
-                                            src={user.avatar_url} 
-                                            alt="User avatar"
-                                            width={36}
-                                            height={36}
-                                            className="rounded-full flex-shrink-0 ring-2 ring-slate-700/50 shadow-lg"
-                                        />
-                                    </div>
-                                ) : (
-                                    <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-blue-500/20">
-                                        <span className="text-white text-sm font-bold">
-                                            {user ? getUserInitials(getDisplayName()) : 'U'}
-                                        </span>
-                                    </div>
-                                )}
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-sm font-semibold text-slate-200 truncate sidebar-text" title={getDisplayName()}>
-                                        {getDisplayName()}
-                                    </p>
-                                    <p className="text-xs text-slate-500 truncate sidebar-text-secondary font-medium" title={user?.email}>
-                                        {user?.email || 'user@example.com'}
-                                    </p>
-                                </div>
+                                <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    className="text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 flex-shrink-0 ml-2 transition-all duration-200 rounded-lg"
+                                    onClick={handleSignOut}
+                                    title="Sign out"
+                                >
+                                    <LogOut className="h-4 w-4" />
+                                </Button>
                             </div>
-                            <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="lg:hidden text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 flex-shrink-0 ml-2 transition-all duration-200 rounded-lg"
-                                onClick={handleSignOut}
-                                title="Sign out"
-                            >
-                                <LogOut className="h-4 w-4" />
-                            </Button>
-                        </div>
+                        </>
                     )}
                     
                     <div className={cn("mt-4 pt-3 border-t border-slate-800/40 text-center text-xs text-slate-600 sidebar-text-muted font-medium", isCollapsed && "lg:hidden")}>

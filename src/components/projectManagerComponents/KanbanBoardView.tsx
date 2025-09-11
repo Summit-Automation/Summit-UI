@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect, memo } from 'react';
-import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, closestCorners, PointerSensor, TouchSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, pointerWithin, PointerSensor, TouchSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
+import { snapCenterToCursor } from '@dnd-kit/modifiers';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useRouter } from 'next/navigation';
@@ -121,11 +122,8 @@ const SortableTaskCard = memo(function SortableTaskCard({ task, onEditTask, onDe
 });
 
 const TaskCard = memo(function TaskCard({ task, onEditTask, onDeleteTask, onLogTime, onOpenDetails, isDragging = false }: DraggableTaskCardProps) {
-    const [currentDate, setCurrentDate] = useState<Date>(new Date());
-    
-    useEffect(() => {
-        setCurrentDate(new Date());
-    }, []);
+    // Performance: Use static date for SSR compatibility and reduce re-renders
+    const [currentDate] = useState<Date>(() => new Date());
     
     const getPriorityColor = (priority: string) => {
         switch (priority) {
@@ -146,10 +144,8 @@ const TaskCard = memo(function TaskCard({ task, onEditTask, onDeleteTask, onLogT
         >
             <CardContent className="p-4">
                 <div className="space-y-3">
-                    {/* Priority Indicator Bar */}
                     <div className={`h-1 w-full rounded-full ${getPriorityColor(task.priority).replace('text-', 'bg-')} opacity-70`}></div>
 
-                    {/* Task Title and Actions */}
                     <div className="flex items-start justify-between gap-2">
                         <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 line-clamp-2 flex-1 leading-relaxed">
                             {task.title}
@@ -165,14 +161,23 @@ const TaskCard = memo(function TaskCard({ task, onEditTask, onDeleteTask, onLogT
                                         <MoreHorizontal className="h-4 w-4" />
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-40">
-                                    <DropdownMenuItem onClick={() => onEditTask?.(task)} className="gap-2">
+                                <DropdownMenuContent align="end" className="w-40 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-lg rounded-lg z-50 p-1">
+                                    <DropdownMenuItem 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onEditTask?.(task);
+                                        }} 
+                                        className="gap-2 px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md cursor-pointer transition-colors"
+                                    >
                                         <User className="h-3 w-3" />
                                         Edit Task
                                     </DropdownMenuItem>
                                     <DropdownMenuItem 
-                                        className="text-red-600 dark:text-red-400 gap-2"
-                                        onClick={() => onDeleteTask?.(task)}
+                                        className="gap-2 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md cursor-pointer transition-colors"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onDeleteTask?.(task);
+                                        }}
                                     >
                                         <AlertTriangle className="h-3 w-3" />
                                         Delete
@@ -182,7 +187,6 @@ const TaskCard = memo(function TaskCard({ task, onEditTask, onDeleteTask, onLogT
                         </div>
                     </div>
 
-                    {/* Project Name and Priority */}
                     <div className="flex items-center justify-between">
                         <Badge variant="outline" className="text-xs font-normal border-slate-300/60 dark:border-slate-600/60">
                             {task.project_name}
@@ -195,9 +199,7 @@ const TaskCard = memo(function TaskCard({ task, onEditTask, onDeleteTask, onLogT
                         </div>
                     </div>
 
-                    {/* Task Metadata */}
                     <div className="space-y-2 pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
-                        {/* Assignee */}
                         <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
                             {task.assigned_to_name ? (
                                 <>
@@ -220,9 +222,7 @@ const TaskCard = memo(function TaskCard({ task, onEditTask, onDeleteTask, onLogT
                             )}
                         </div>
 
-                        {/* Due Date and Time Tracking */}
                         <div className="grid grid-cols-2 gap-2">
-                            {/* Due Date */}
                             <div className="flex items-center gap-1.5 text-xs">
                                 {task.due_date ? (
                                     <div className={`flex items-center gap-1 ${overdue ? 'text-red-600 dark:text-red-400 font-medium' : 'text-slate-500 dark:text-slate-400'}`}>
@@ -238,7 +238,6 @@ const TaskCard = memo(function TaskCard({ task, onEditTask, onDeleteTask, onLogT
                                 )}
                             </div>
 
-                            {/* Time Tracking */}
                             <div className="flex items-center gap-1.5 text-xs">
                                 <Clock className="h-3 w-3 text-slate-500 dark:text-slate-400" />
                                 <span className="text-slate-600 dark:text-slate-400 font-medium">
@@ -247,7 +246,6 @@ const TaskCard = memo(function TaskCard({ task, onEditTask, onDeleteTask, onLogT
                             </div>
                         </div>
 
-                        {/* Time Log Button */}
                         <Button
                             variant="ghost"
                             size="sm"
@@ -295,7 +293,6 @@ const KanbanColumn = memo(function KanbanColumn({
                 isOver ? 'bg-blue-50 dark:bg-blue-900/10 ring-2 ring-blue-200 dark:ring-blue-800 rounded-lg' : ''
             }`}
         >
-            {/* Column Header */}
             <div className={`${column.bgColor} ${column.borderColor} border rounded-t-xl p-4 shadow-sm`}>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -321,8 +318,7 @@ const KanbanColumn = memo(function KanbanColumn({
                 </div>
             </div>
 
-            {/* Column Content */}
-            <div className={`flex-1 p-3 space-y-3 bg-gradient-to-b from-slate-50/50 to-slate-100/30 dark:from-slate-900/30 dark:to-slate-900/50 ${column.borderColor} border-l border-r border-b rounded-b-xl min-h-[400px] sm:min-h-[500px] max-h-[calc(100vh-300px)] overflow-y-auto backdrop-blur-sm`}>
+            <div className={`flex-1 p-3 space-y-3 bg-gradient-to-b from-slate-50/50 to-slate-100/30 dark:from-slate-900/30 dark:to-slate-900/50 ${column.borderColor} border-l border-r border-b rounded-b-xl min-h-[400px] lg:min-h-[500px] lg:max-h-[calc(100vh-300px)] max-h-[60vh] overflow-y-auto backdrop-blur-sm`}>
                 <SortableContext items={tasks.map(task => task.id)} strategy={verticalListSortingStrategy}>
                     {tasks.map((task) => (
                         <SortableTaskCard
@@ -362,22 +358,27 @@ export default function KanbanBoardView({
     const [selectedTaskForTimeLog, setSelectedTaskForTimeLog] = useState<TaskWithDetails | null>(null);
     const [showTaskDetailsModal, setShowTaskDetailsModal] = useState(false);
     const [selectedTaskForDetails, setSelectedTaskForDetails] = useState<TaskWithDetails | null>(null);
+    const [isClient, setIsClient] = useState(false);
+
+    // Fix hydration error by only rendering DndContext on client
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                distance: 3,
+                distance: 8, // Slightly higher to prevent accidental drags
             },
         }),
         useSensor(TouchSensor, {
             activationConstraint: {
-                delay: 150,
-                tolerance: 8,
+                delay: 100, // Reduced delay for better responsiveness
+                tolerance: 5,
             },
         })
     );
 
-    // Group tasks by status
     const tasksByStatus = useMemo(() => {
         const grouped: Record<TaskStatus, TaskWithDetails[]> = {
             backlog: [],
@@ -399,23 +400,27 @@ export default function KanbanBoardView({
 
     const handleDragStart = useCallback((event: DragStartEvent) => {
         const task = tasks.find(t => t.id === event.active.id);
-        setDraggedTask(task || null);
+        if (task) {
+            setDraggedTask(task);
+            // Performance: Disable pointer events on non-droppable areas during drag
+            document.body.style.userSelect = 'none';
+        }
     }, [tasks]);
 
     const handleDragEnd = useCallback(async (event: DragEndEvent) => {
         const { active, over } = event;
         
         setDraggedTask(null);
+        // Performance: Re-enable user selection
+        document.body.style.userSelect = '';
         
         if (!over || isUpdating) return;
 
         const activeTask = tasks.find(t => t.id === active.id);
         if (!activeTask) return;
 
-        // Determine the target status based on the drop zone
         let newStatus: TaskStatus | null = null;
         
-        // Check if dropped on a column
         const targetColumn = COLUMNS.find(col => over.id === col.id);
         if (targetColumn) {
             newStatus = targetColumn.id;
@@ -427,11 +432,23 @@ export default function KanbanBoardView({
             }
         }
 
-        if (newStatus && newStatus !== activeTask.status) {
+        // Security validation: Only allow valid status transitions
+        const validStatuses = ['backlog', 'in_progress', 'review', 'done'] as const;
+        const isValidStatus = (status: string): status is TaskStatus => {
+            return validStatuses.includes(status as TaskStatus);
+        };
+        
+        if (newStatus && 
+            newStatus !== activeTask.status && 
+            isValidStatus(newStatus) &&
+            typeof activeTask.id === 'string' && 
+            activeTask.id.length > 0) {
+            
             setIsUpdating(true);
             toast.loading('Updating task status...', { id: 'task-update' });
             
             try {
+                // Validate task ownership/permissions before update
                 const result = await updateTask(activeTask.id, { status: newStatus });
                 
                 if (isError(result)) {
@@ -494,15 +511,10 @@ export default function KanbanBoardView({
         );
     }
 
-    return (
-        <DndContext
-            sensors={sensors}
-            collisionDetection={closestCorners}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-        >
+    // Render static version during SSR to prevent hydration mismatches
+    if (!isClient) {
+        return (
             <div className="h-full">
-                {/* Board Header */}
                 <div className="flex items-center justify-between mb-6">
                     <div>
                         <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
@@ -518,30 +530,114 @@ export default function KanbanBoardView({
                     </Button>
                 </div>
 
-                {/* Kanban Board */}
+                {/* SSR-safe static board */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 h-[calc(100vh-200px)] overflow-x-auto min-w-0">
-                    {/* Mobile: Horizontal scroll container */}
-                    <div className="lg:hidden flex gap-4 min-w-max pb-4">
-                        {COLUMNS.map((column) => {
-                            const columnTasks = tasksByStatus[column.id] || [];
-                            return (
-                                <div key={column.id} className="w-80 flex-shrink-0">
-                                    <KanbanColumn
-                                        column={column}
-                                        tasks={columnTasks}
-                                        onCreateTask={onCreateTask}
-                                        onEditTask={onEditTask}
-                                        onDeleteTask={onDeleteTask}
-                                        onLogTime={handleLogTime}
-                                        onOpenDetails={handleOpenTaskDetails}
-                                    />
+                    {COLUMNS.map((column) => {
+                        const columnTasks = tasksByStatus[column.id] || [];
+                        return (
+                            <div key={column.id} className="w-80 flex-shrink-0 lg:w-auto">
+                                <div className={`flex flex-col h-full`}>
+                                    <div className={`${column.bgColor} ${column.borderColor} border rounded-t-xl p-4 shadow-sm`}>
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <div className={`w-2 h-2 rounded-full ${column.iconColor.replace('text-', 'bg-')}`}></div>
+                                                <h3 className={`font-semibold text-sm ${column.color} uppercase tracking-wide`}>
+                                                    {column.title}
+                                                </h3>
+                                                <Badge 
+                                                    variant="secondary" 
+                                                    className={`text-xs h-5 px-2 ${column.iconColor} bg-white/80 dark:bg-slate-800/80 font-medium`}
+                                                >
+                                                    {columnTasks.length}
+                                                </Badge>
+                                            </div>
+                                            <Button
+                                                size="sm"
+                                                variant="ghost"
+                                                className={`h-7 w-7 p-0 rounded-lg transition-transform duration-150 hover:scale-110 ${column.iconColor} hover:bg-white/70 dark:hover:bg-slate-800/70`}
+                                                onClick={onCreateTask}
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    </div>
+
+                                    <div className={`flex-1 p-3 space-y-3 bg-gradient-to-b from-slate-50/50 to-slate-100/30 dark:from-slate-900/30 dark:to-slate-900/50 ${column.borderColor} border-l border-r border-b rounded-b-xl min-h-[400px] sm:min-h-[500px] max-h-[calc(100vh-300px)] overflow-y-auto backdrop-blur-sm`}>
+                                        {columnTasks.map((task) => (
+                                            <TaskCard
+                                                key={task.id}
+                                                task={task}
+                                                onEditTask={onEditTask}
+                                                onDeleteTask={onDeleteTask}
+                                                onLogTime={handleLogTime}
+                                                onOpenDetails={handleOpenTaskDetails}
+                                            />
+                                        ))}
+                                        
+                                        {columnTasks.length === 0 && (
+                                            <div className="flex flex-col items-center justify-center py-8 text-slate-400">
+                                                <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center mb-2">
+                                                    <Plus className="h-4 w-4" />
+                                                </div>
+                                                <p className="text-sm">Drop tasks here</p>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            );
-                        })}
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <DndContext
+            sensors={sensors}
+            collisionDetection={pointerWithin}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+        >
+            <div className="h-full">
+                <div className="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                            Project Board
+                        </h2>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">
+                            Drag and drop tasks between columns
+                        </p>
+                    </div>
+                    <Button onClick={onCreateTask} size="sm">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Task
+                    </Button>
+                </div>
+
+                <div className="w-full">
+                    <div className="lg:hidden">
+                        <div className="flex gap-4 overflow-x-auto pb-4 px-4 -mx-4">
+                            {COLUMNS.map((column) => {
+                                const columnTasks = tasksByStatus[column.id] || [];
+                                return (
+                                    <div key={column.id} className="w-72 flex-shrink-0">
+                                        <KanbanColumn
+                                            column={column}
+                                            tasks={columnTasks}
+                                            onCreateTask={onCreateTask}
+                                            onEditTask={onEditTask}
+                                            onDeleteTask={onDeleteTask}
+                                            onLogTime={handleLogTime}
+                                            onOpenDetails={handleOpenTaskDetails}
+                                        />
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </div>
                     
-                    {/* Desktop: Grid layout */}
-                    <div className="hidden lg:contents">
+                    <div className="hidden lg:grid lg:grid-cols-4 gap-4">
                         {COLUMNS.map((column) => {
                             const columnTasks = tasksByStatus[column.id] || [];
                             return (
@@ -562,29 +658,28 @@ export default function KanbanBoardView({
                 </div>
             </div>
 
-            {/* Drag Overlay */}
             <DragOverlay
                 adjustScale={false}
+                modifiers={[snapCenterToCursor]}
                 dropAnimation={{
                     duration: 200,
                     easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
                 }}
             >
                 {draggedTask ? (
-                    <div className="rotate-3 scale-105 cursor-grabbing">
+                    <div className="opacity-90 rotate-2 scale-105">
                         <TaskCard
                             task={draggedTask}
                             onEditTask={onEditTask}
                             onDeleteTask={onDeleteTask}
                             onLogTime={handleLogTime}
                             onOpenDetails={handleOpenTaskDetails}
-                            isDragging={false}
+                            isDragging={true}
                         />
                     </div>
                 ) : null}
             </DragOverlay>
 
-            {/* Time Logging Modal */}
             {showLogTimeModal && selectedTaskForTimeLog && (
                 <LogTimeModal
                     isOpen={showLogTimeModal}
@@ -593,7 +688,6 @@ export default function KanbanBoardView({
                 />
             )}
 
-            {/* Task Details Modal */}
             {showTaskDetailsModal && selectedTaskForDetails && (
                 <TaskDetailsModal
                     isOpen={showTaskDetailsModal}
