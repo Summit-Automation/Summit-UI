@@ -38,7 +38,7 @@ type ViewMode = 'list' | 'board';
 export default function ProjectManagerPageContent({ projects, tasks, timeEntries }: ProjectManagerPageContentProps) {
     const router = useRouter();
     const [viewMode, setViewMode] = useState<ViewMode>('board');
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [filters, setFilters] = useState<TaskFilters>({
         search: '',
         status: [],
@@ -63,28 +63,23 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
     // Filter tasks based on current filters - memoized for performance
     const filteredTasks = useMemo(() => {
         return tasks.filter(task => {
-            // Search filter
             if (filters.search && !task.title.toLowerCase().includes(filters.search.toLowerCase()) && 
                 !task.description?.toLowerCase().includes(filters.search.toLowerCase())) {
                 return false;
             }
 
-            // Status filter
             if (filters.status.length > 0 && !filters.status.includes(task.status)) {
                 return false;
             }
 
-            // Priority filter
             if (filters.priority.length > 0 && !filters.priority.includes(task.priority)) {
                 return false;
             }
 
-            // Assignee filter
             if (filters.assignee.length > 0 && (!task.assigned_to || !filters.assignee.includes(task.assigned_to))) {
                 return false;
             }
 
-            // Project filter
             if (filters.projectId.length > 0 && !filters.projectId.includes(task.project_id)) {
                 return false;
             }
@@ -95,7 +90,6 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
 
     const handleSettings = () => router.push('/settings');
     const handleHelp = () => {
-        // Navigate to dashboard help
         router.push('/?tab=help');
     };
 
@@ -183,8 +177,7 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
     };
 
     return (
-        <div className="space-y-8">
-            {/* Enhanced Header */}
+        <div className="min-h-screen bg-slate-950 text-slate-50">
             <Header 
                 title="Project Manager"
                 subtitle="Track projects, manage tasks, and monitor time efficiently"
@@ -192,8 +185,7 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
                 onHelp={handleHelp}
             />
 
-            <div className="flex h-[calc(100vh-120px)] relative overflow-hidden">
-                {/* Mobile Sidebar Overlay */}
+            <div className="flex min-h-[calc(100vh-160px)]">
                 {isSidebarOpen && (
                     <div 
                         className="lg:hidden fixed inset-0 z-40 bg-black bg-opacity-50"
@@ -201,10 +193,9 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
                     />
                 )}
 
-                {/* Sidebar */}
                 <div className={`${
                     isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                } lg:translate-x-0 fixed lg:relative z-50 lg:z-auto transition-transform duration-300 ease-in-out w-80 lg:w-auto h-full`}>
+                } lg:translate-x-0 fixed lg:relative z-50 lg:z-auto transition-transform duration-300 ease-in-out h-full w-80 lg:w-72 bg-slate-900 lg:bg-transparent border-r border-slate-800 lg:border-r-slate-700`}>
                     <ProjectSidebar
                         projects={projects}
                         tasks={tasks}
@@ -215,26 +206,27 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
                     />
                 </div>
 
-                {/* Main Content */}
-                <div className="flex-1 overflow-hidden lg:ml-0 min-w-0">
-                    {/* Mobile Header with Sidebar Toggle */}
-                    <div className="lg:hidden flex items-center p-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                            className="mr-2"
-                        >
-                            {isSidebarOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-                        </Button>
-                        <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                            Project Manager
-                        </h1>
+                <div className="flex-1 min-w-0 flex flex-col bg-slate-950">
+                    {/* Responsive mobile header */}
+                    <div className="lg:hidden flex items-center justify-between p-4 bg-slate-900 border-b border-slate-800 sticky top-0 z-30">
+                        <div className="flex items-center">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                                className="mr-3 text-slate-300 hover:text-white hover:bg-slate-800"
+                            >
+                                {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                            </Button>
+                            <h1 className="text-lg font-semibold text-slate-100">
+                                Project Manager
+                            </h1>
+                        </div>
                     </div>
 
-                    <div className="p-4 lg:p-6 h-full space-y-4 lg:space-y-6 overflow-y-auto">
+                    <div className="flex-1 p-4 lg:p-6 space-y-4 lg:space-y-6 bg-slate-950">
 
-                {/* Summary - Always Visible */}
+                {/* Summary component - always rendered */}
                 <div className="w-full">
                     <ErrorBoundary>
                         <ProjectManagerSummary 
@@ -245,9 +237,7 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
                     </ErrorBoundary>
                 </div>
 
-                {/* Desktop: Full Layout | Mobile: Tabbed Layout */}
                 <div className="hidden lg:block space-y-6">
-                    {/* Main Project & Tasks View - Jira Style */}
                     <Card className="bg-slate-900/90 border border-slate-800/50 rounded-2xl shadow-sm hover:border-slate-700/60 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 backdrop-blur-sm p-6">
                         <CardHeader className="pb-6">
                             <div className="flex items-center justify-between">
@@ -267,7 +257,6 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
                                     </CardDescription>
                                 </div>
                                 
-                                {/* View Toggle */}
                                 <div className="flex items-center gap-2 bg-slate-800/50 rounded-lg p-1">
                                     <Button
                                         variant={viewMode === 'board' ? 'default' : 'ghost'}
@@ -317,7 +306,6 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
                     </Card>
                 </div>
 
-                {/* Mobile: Tabbed Layout - Hide on desktop */}
                 <div className="block lg:hidden">
                     <Tabs defaultValue="projects" className="w-full">
                         <TabsList className="grid w-full grid-cols-2 bg-slate-900/50 border border-slate-800/30 p-1.5 rounded-xl backdrop-blur-sm">
@@ -348,7 +336,6 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
                                             </CardDescription>
                                         </div>
                                         
-                                        {/* Mobile View Toggle */}
                                         <div className="flex items-center gap-1 bg-slate-800/50 rounded-lg p-1">
                                             <Button
                                                 variant={viewMode === 'board' ? 'default' : 'ghost'}
@@ -419,7 +406,6 @@ export default function ProjectManagerPageContent({ projects, tasks, timeEntries
                 </div>
             </div>
 
-            {/* Modals */}
             <CreateProjectModal
                 isOpen={showCreateProjectModal}
                 onClose={() => setShowCreateProjectModal(false)}

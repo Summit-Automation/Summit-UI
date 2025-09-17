@@ -16,21 +16,18 @@ function ThemedContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { actualTheme } = useTheme();
   
-  // Routes that should not have the sidebar (full screen)
-  const authRoutes = ['/login', '/signup', '/auth', '/error'];
-  const isAuthPage = authRoutes.some(route => pathname.startsWith(route));
+  // Routes that should not have the global sidebar (full screen or custom layout)
+  const noSidebarRoutes = ['/login', '/signup', '/auth', '/error', '/project-manager'];
+  const isNoSidebarPage = noSidebarRoutes.some(route => pathname.startsWith(route));
 
   return (
     <body className={`bg-slate-950 text-slate-50 font-sans transition-colors duration-300 ${inter.className}`}>
-      {isAuthPage ? (
-        // Auth pages get full screen - no sidebar, no margins
+      {isNoSidebarPage ? (
         <>{children}</>
       ) : (
-        // Regular pages get responsive sidebar + main content
         <>
           <Sidebar />
           <main className="lg:ml-[var(--sidebar-width,16rem)] min-h-screen transition-all duration-300 ease-in-out">
-            {/* Mobile: Add top padding for hamburger button */}
             <div className="pt-16 lg:pt-0">
               {children}
             </div>
